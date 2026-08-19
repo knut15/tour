@@ -1,7 +1,7 @@
 import type { Locale } from "@/domain/shared/locale";
 import type { Category } from "@/domain/spot/category";
 import type { Coordinate } from "@/domain/spot/coordinate";
-import type { DistrictCode } from "@/domain/spot/district";
+import type { AreaCode, DistrictCode } from "@/domain/spot/region";
 import type { SpotImage } from "@/domain/spot/image";
 
 /**
@@ -40,6 +40,8 @@ export type Spot = {
   readonly name: SpotName;
   readonly category: Category;
   readonly address: string | null;
+  /** 시도. 시군구 코드는 이것 없이는 지역을 식별하지 못한다 (region.ts) */
+  readonly areaCode: AreaCode | null;
   readonly districtCode: DistrictCode | null;
   readonly coordinate: Coordinate | null;
   readonly image: SpotImage | null;

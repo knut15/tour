@@ -1,5 +1,5 @@
 {
-  "brand": "あなたのソウル",
+  "brand": "あなたの韓国",
   "nav": {
     "explore": "見てまわる",
     "switchLocale": "言語",
@@ -7,10 +7,12 @@
   },
   "explore": {
     "eyebrow": "並べるのではなく、選んだもの",
-    "title": "あなたのソウルを、額に。",
+    "title": "あなたの韓国を、額に。",
     "subtitle": "一度に数か所ずつ。見て、行く。",
-    "allDistricts": "ソウル全域",
-    "districtLabel": "エリア",
+    "areaLabel": "地域",
+    "allAreas": "全国",
+    "districtLabel": "市郡区",
+    "allDistricts": "この地域すべて",
     "categoryLabel": "何をお探しですか",
     "showAnother": "もっと見る",
     "sourceNote": "場所の情報は韓国観光公社が提供しています。"

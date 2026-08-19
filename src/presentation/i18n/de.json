@@ -1,5 +1,5 @@
 {
-  "brand": "Dein Seoul",
+  "brand": "Dein Korea",
   "nav": {
     "explore": "Entdecken",
     "switchLocale": "Sprache",
@@ -7,10 +7,12 @@
   },
   "explore": {
     "eyebrow": "Ausgewählt, nicht aufgelistet",
-    "title": "Dein Seoul, gerahmt.",
+    "title": "Dein Korea, gerahmt.",
     "subtitle": "Ein paar Orte auf einmal. Ansehen, dann hingehen.",
-    "allDistricts": "Ganz Seoul",
-    "districtLabel": "Stadtteil",
+    "areaLabel": "Region",
+    "allAreas": "Ganz Korea",
+    "districtLabel": "Bezirk",
+    "allDistricts": "Alle Bezirke",
     "categoryLabel": "Wonach suchst du",
     "showAnother": "Mehr Orte",
     "sourceNote": "Ortsdaten von der Korea Tourism Organization."

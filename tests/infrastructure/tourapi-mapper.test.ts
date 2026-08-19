@@ -49,9 +49,24 @@ describe("toSpot", () => {
     expect(toSpot({ ...REAL_EN, contenttypeid: "" }, "en", "culture")?.category).toBe("culture");
   });
 
-  it("서울 밖 sigungucode 는 null 로 둔다", () => {
-    expect(toSpot({ ...REAL_EN, sigungucode: "99" }, "en")?.districtCode).toBeNull();
+  it("빈 sigungucode 는 null 로 둔다", () => {
     expect(toSpot({ ...REAL_EN, sigungucode: "" }, "en")?.districtCode).toBeNull();
+  });
+
+  it("시도가 없으면 시군구도 버린다", () => {
+    // 시군구 코드는 시도 안에서만 고유하다 (domain/spot/region.ts).
+    // 시도 없는 시군구 코드를 살려 두면 서울 23(종로구)과 경기 23(파주시)이
+    // 같은 값으로 섞인다 — 지역 이름이 그럴듯하게 붙어서 눈에 띄지 않는다.
+    const out = toSpot({ ...REAL_EN, areacode: "", sigungucode: "23" }, "en");
+    expect(out?.areaCode).toBeNull();
+    expect(out?.districtCode).toBeNull();
+  });
+
+  it("서울 밖 시도도 그대로 싣는다 — 전국이 대상이다", () => {
+    // 경기(31)의 시군구 코드는 1~31 이다. 상한값으로 검사한다
+    const out = toSpot({ ...REAL_EN, areacode: "31", sigungucode: "31" }, "en");
+    expect(out?.areaCode).toBe(31);
+    expect(out?.districtCode).toBe(31);
   });
 
   it("좌표가 깨지면 null 로 둔다", () => {
