@@ -14,16 +14,23 @@ export function ButtonLink({
   href,
   variant = "primary",
   fullWidth = false,
+  scroll,
   children,
 }: {
   href: string;
   variant?: "primary" | "weak";
   fullWidth?: boolean;
+  /**
+   * `false` 면 이동 후 스크롤 위치를 지킨다.
+   * 목록이 아래로 늘어나는 더보기처럼, 화면이 바뀌는 게 아니라 이어지는 경우에 쓴다.
+   */
+  scroll?: boolean;
   children: ReactNode;
 }) {
   return (
     <Link
       href={href}
+      scroll={scroll}
       className={
         TDS_BUTTON +
         " " +
