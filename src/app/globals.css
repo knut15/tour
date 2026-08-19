@@ -1,26 +1,186 @@
 @import "tailwindcss";
 
+/*
+ * ─────────────────────────────────────────────────────────────
+ * 토큰 두 층
+ *
+ * 1. 토스 디자인 시스템 — 컨트롤·상태·간격·반경.
+ *    검증 출처: TDS Mobile 문서 + toss.im 실측 (2026-07-11).
+ *    **TDS(제품)와 toss.im(마케팅) 값을 섞거나 평균내지 않는다** — 문서의 명시적 금지 사항이다.
+ *    (16px TDS 반경과 7px 마케팅 반경을 평균내지 마라)
+ *
+ * 2. Direction A — 콘텐츠 구도. 세리프 헤드라인, 헤어라인, 넓은 여백.
+ *
+ * 컨트롤은 토스가, 사진과 글은 A 가 진다.
+ * ─────────────────────────────────────────────────────────────
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* ── 토스: 색 ── */
+  --toss-primary: #3182f6;
+  --toss-primary-hover: #2272eb;
+  --toss-canvas: #ffffff;
+  --toss-foreground: #191f28;
+  --toss-body: #4e5968;
+  --toss-muted: #8b95a1;
+  --toss-surface: #f2f4f6;
+  --toss-border: #e5e8eb;
+  --toss-on-primary: #ffffff;
+  --toss-weak-bg: #e8f3ff;
+  --toss-weak-fg: #1b64da;
+  --toss-danger: #e42939;
+
+  /* ── 토스: 간격 (4/6/8/16/24/32) ── */
+  --space-xs: 4px;
+  --space-sm: 6px;
+  --space-md: 8px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+  --space-xxl: 32px;
+
+  /* ── 토스: 반경 ── */
+  --round-sm: 4px;
+  --round-md: 6px;
+  --round-btn-sm: 8px;
+  --round-btn-md: 10px;
+  --round-btn-lg: 14px;
+  --round-btn-xl: 16px;
+  /* toss.im 마케팅 CTA 는 별도 값이다. TDS 와 합치지 않는다 */
+  --round-marketing: 7px;
+
+  /* ── 앱 역할 매핑 ── */
+  --paper-canvas: var(--toss-canvas);
+  --paper-surface: var(--toss-surface);
+  --ink-primary: var(--toss-foreground);
+  --ink-body: var(--toss-body);
+  --ink-muted: var(--toss-muted);
+  --line-subtle: var(--toss-border);
+  --focus-ring: var(--toss-primary);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
+/*
+ * 테마 선택은 **양성 매칭**으로만 한다.
+ *
+ * `:root:not([data-theme="light"])` 처럼 *매칭 실패*에 의존하면, 속성을 나중에 바꿨을 때
+ * 브라우저가 커스텀 프로퍼티를 재계산하지 않는 경우가 있다 — 루트 변수는 새 값인데
+ * 규칙이 참조한 계산값만 옛 값으로 남는다. 실제로 이 프로젝트에서 재현됐다
+ * (`--toss-weak-bg` 가 루트에서 #e8f3ff 인데 버튼 배경은 #17263c 로 계산됨).
+ *
+ * 그래서 세 갈래를 전부 명시한다:
+ *   1. 선택 없음 + OS 다크  → 다크
+ *   2. data-theme="dark"   → 다크
+ *   3. data-theme="light"  → 라이트 (값을 다시 선언한다)
+ */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  :root:not([data-theme]) {
+  --paper-canvas: #17171a;
+  --paper-surface: #1f2024;
+  --ink-primary: #eef0f3;
+  --ink-body: #b6bdc7;
+  --ink-muted: #868e99;
+  --line-subtle: #2c2e33;
+  --toss-primary: #4a92f8;
+  --toss-primary-hover: #6aa6fa;
+  --toss-weak-bg: #17263c;
+  --toss-weak-fg: #8ab6f5;
+  --focus-ring: #4a92f8;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+:root[data-theme="dark"] {
+  --paper-canvas: #17171a;
+  --paper-surface: #1f2024;
+  --ink-primary: #eef0f3;
+  --ink-body: #b6bdc7;
+  --ink-muted: #868e99;
+  --line-subtle: #2c2e33;
+  --toss-primary: #4a92f8;
+  --toss-primary-hover: #6aa6fa;
+  --toss-weak-bg: #17263c;
+  --toss-weak-fg: #8ab6f5;
+  --focus-ring: #4a92f8;
 }
+
+:root[data-theme="light"] {
+  --paper-canvas: var(--toss-canvas);
+  --paper-surface: var(--toss-surface);
+  --ink-primary: var(--toss-foreground);
+  --ink-body: var(--toss-body);
+  --ink-muted: var(--toss-muted);
+  --line-subtle: var(--toss-border);
+  --toss-primary: #3182f6;
+  --toss-primary-hover: #2272eb;
+  --toss-weak-bg: #e8f3ff;
+  --toss-weak-fg: #1b64da;
+  --focus-ring: #3182f6;
+}
+
+@theme inline {
+  --color-canvas: var(--paper-canvas);
+  --color-surface: var(--paper-surface);
+  --color-ink: var(--ink-primary);
+  --color-body: var(--ink-body);
+  --color-muted: var(--ink-muted);
+  --color-line: var(--line-subtle);
+  --color-focus: var(--focus-ring);
+  --color-primary: var(--toss-primary);
+  --color-primary-hover: var(--toss-primary-hover);
+  --color-on-primary: var(--toss-on-primary);
+  --color-weak-bg: var(--toss-weak-bg);
+  --color-weak-fg: var(--toss-weak-fg);
+  --color-danger: var(--toss-danger);
+
+  /*
+   * Toss Product Sans 는 **재배포 권리가 확인되지 않았다.**
+   * 호스팅하거나 CDN 으로 불러오지 않는다. 스택에 선언만 하고
+   * 설치된 환경에서만 쓰이며 나머지는 Pretendard 로 폴백한다.
+   * 근거: 토스 디자인 문서의 "Official distributed asset / Unresolved" 항목
+   */
+  --font-sans: "Toss Product Sans", "Pretendard Variable", Pretendard, system-ui, sans-serif;
+  /* Direction A: 콘텐츠 헤드라인은 세리프가 진다 */
+  --font-display: var(--font-newsreader), "Newsreader", Georgia, serif;
+
+  --radius-sm: var(--round-sm);
+  --radius-md: var(--round-md);
+  --radius-btn: var(--round-btn-xl);
+  --radius-marketing: var(--round-marketing);
+
+  --ease-signature: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html {
+  background: var(--paper-canvas);
+}
+
+body {
+  background: var(--paper-canvas);
+  color: var(--ink-primary);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 24px;
+}
+
+/* 한글은 라틴보다 세로 공간이 더 필요하고 어절 중간에서 끊기면 안 된다 */
+:lang(ko),
+.ko {
+  word-break: keep-all;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/*
+ * 컴포넌트 클래스를 손으로 쓰지 않는다.
+ *
+ * `.tds-btn { background: var(--toss-weak-bg) }` 형태로 두었더니, 루트의 커스텀
+ * 프로퍼티는 테마에 따라 바뀌는데 그 규칙의 계산값만 옛 값에 고정되는 현상이 재현됐다
+ * (루트 #e8f3ff / 버튼 #17263c). 같은 토큰을 Tailwind 유틸리티로 쓰면 정상 전환된다.
+ *
+ * 그래서 TDS 기하·색은 컴포넌트에서 유틸리티 조합으로 표현한다.
+ * 값의 정본은 `presentation/components/tds.ts` 다.
+ */

@@ -1,0 +1,63 @@
+{
+  "brand": "Your Seoul",
+  "nav": {
+    "explore": "Explore",
+    "switchLocale": "한국어",
+    "theme": "Switch light or dark"
+  },
+  "explore": {
+    "eyebrow": "Chosen, not listed",
+    "title": "Your Seoul, framed.",
+    "subtitle": "A few places at a time. Look, then go.",
+    "allDistricts": "Anywhere in Seoul",
+    "districtLabel": "Neighbourhood",
+    "categoryLabel": "What are you after",
+    "showAnother": "More places",
+    "sourceNote": "Place data from the Korea Tourism Organization."
+  },
+  "category": {
+    "attraction": "Places",
+    "culture": "Culture",
+    "food": "Food",
+    "festival": "Happening"
+  },
+  "state": {
+    "emptyFilter": "Nothing matches that combination.",
+    "emptyFilterAction": "Clear the filter",
+    "error": "We couldn't load these places.",
+    "errorAction": "Try again",
+    "loading": "Finding places…"
+  },
+  "frame": {
+    "save": "Save",
+    "saved": "Saved",
+    "noCrop": "Shown uncropped"
+  },
+  "detail": {
+    "back": "Back to places",
+    "noInfo": "Not published",
+    "official": "Official site",
+    "openInMaps": "Open in maps",
+    "sourceNote": "Place data from the Korea Tourism Organization. Photo used unmodified.",
+    "localeSwitchNote": "This place has no matching entry in the other language, so you'll land on the list.",
+    "fact": {
+      "address": "Address",
+      "openingHours": "Hours",
+      "closedDays": "Closed",
+      "admission": "Admission",
+      "inquiry": "Enquiries",
+      "parking": "Parking",
+      "eventPeriod": "Dates",
+      "eventPlace": "Venue"
+    },
+    "notFound": {
+      "title": "We couldn't find this place.",
+      "retry": "Try again",
+      "toList": "Back to places"
+    }
+  },
+  "a11y": {
+    "placeList": "Places",
+    "placeListIn": "Places in {district}"
+  }
+}
