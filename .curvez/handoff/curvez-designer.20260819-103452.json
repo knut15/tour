@@ -1,0 +1,76 @@
+{
+  "from": "curvez-designer",
+  "to": ["curvez-orchestrator", "curvez-nextjs", "curvez-qa"],
+  "status": "done",
+  "summary": "화면 5개(home, explore, spot-detail, plan, course-detail)와 컴포넌트 5개(SpotFrame, Wall, DayLane, SaveChip, Button)를 값으로 확정했다. 시그니처는 액자(Frame)와 벽(Wall)이다 — 카탈로그를 유지하되 항목을 매트+이미지 이중 구조의 액자로 제시하고 비대칭으로 걸어 '기관의 목록'이 아니라 '내 벽'으로 읽히게 한다. 레인(Lane)은 순서가 실제 정보인 코스의 하루에만 쓴다. 토큰 45개를 라이트·다크 동시에 정의했고 대비 12쌍(라이트 7, 다크 5) 실측 전부 통과했다. 지도·공유·로그인 화면은 이번 라운드 범위 밖이며 미결 질문 5건을 index.md 에 남겼다.",
+  "artifacts": [
+    { "path": ".curvez/design/index.md", "kind": "decision", "note": "디자인 방향, 화면·컴포넌트 목록, 커버리지, 미결 질문 5건" },
+    { "path": ".curvez/design/tokens.md", "kind": "decision", "note": "토큰 45개 라이트·다크 동시 정의 + 대비 검증 12쌍" },
+    { "path": ".curvez/design/screens/home.md", "kind": "spec" },
+    { "path": ".curvez/design/screens/explore.md", "kind": "spec" },
+    { "path": ".curvez/design/screens/spot-detail.md", "kind": "spec" },
+    { "path": ".curvez/design/screens/plan.md", "kind": "spec" },
+    { "path": ".curvez/design/screens/course-detail.md", "kind": "spec" },
+    { "path": ".curvez/design/components/SpotFrame.md", "kind": "spec", "note": "시그니처. 매트+이미지 이중 구조" },
+    { "path": ".curvez/design/components/Wall.md", "kind": "spec", "note": "비대칭 배치. pattern 3종" },
+    { "path": ".curvez/design/components/DayLane.md", "kind": "spec" },
+    { "path": ".curvez/design/components/SaveChip.md", "kind": "spec" },
+    { "path": ".curvez/design/components/Button.md", "kind": "spec" }
+  ],
+  "decisions": [
+    {
+      "what": "시그니처를 레인(Lane)에서 액자·벽(Frame & Wall)으로 교체했다",
+      "why": "초안은 모토를 구조 문제로 오독해 '첫 화면은 카탈로그가 아니다'로 풀었다. 사용자 정정에 따라 카탈로그를 유지하고 제시 방식으로 푸는 쪽으로 바꿨다. 근거는 사용자가 준 레퍼런스 IMG_3824(binder_office)다 — 그것도 카탈로그인데 검색 결과로 안 보이는 이유가 항목마다 누군가의 방 벽에 걸린 액자로 찍혀 있기 때문이다. 레인은 순서가 실제 정보인 코스의 하루에만 남겼다",
+      "reversible_at": ".curvez/design/index.md:디자인 방향"
+    },
+    {
+      "what": "디스플레이 서체를 Fraunces(세리프)에서 Jost(지오메트릭 산세리프)로 바꿨다",
+      "why": "웨스 앤더슨의 실제 타이틀 서체는 Futura 계열 지오메트릭 산세리프다. 또 '따뜻한 크림 배경 + 고대비 세리프 + 테라코타 액센트'는 frontend-design 스킬이 지목한 현재 AI 생성 디자인의 1번 기본값이고, 초안 팔레트가 그것과 거의 일치했다. Jost 는 Google Fonts 의 Futura 계열이다",
+      "reversible_at": ".curvez/design/tokens.md:타이포"
+    },
+    {
+      "what": "바탕을 따뜻한 크림(#FAF6EF)에서 페일 본(#EFEEE7)으로 식혔다",
+      "why": "사용자가 레퍼런스를 '시원하고 깔끔한 느낌'이라고 표현했고 IMG_3827 의 옥상 트랙이 쿨톤이다. 또 #F4F1EA 근방의 따뜻한 크림이 AI 기본값 1번의 핵심 신호다",
+      "reversible_at": ".curvez/design/tokens.md:색"
+    },
+    {
+      "what": "본문 서체를 Pretendard 로 고정했다",
+      "why": "한글·라틴을 한 벌로 처리하고 supanova 금지 목록(Inter, Noto Sans KR, Roboto, Malgun Gothic 등)에 없다. 한글 서체를 따로 두면 영문·한글 병기(GOAL §5-2)에서 두 서체의 시각 크기가 어긋난다",
+      "reversible_at": ".curvez/design/tokens.md:타이포"
+    },
+    {
+      "what": "Wall 의 비대칭을 CSS order 나 grid-auto-flow: dense 로 만들지 않고 명시적 grid-column/grid-row 로만 만든다",
+      "why": "두 방식 모두 키보드 포커스 순서를 시각 순서와 어긋나게 만든다. 비대칭 배치가 이 디자인의 핵심이라 접근성 비용을 스펙 시점에 못박았다",
+      "reversible_at": ".curvez/design/components/Wall.md:a11y"
+    },
+    {
+      "what": "총 건수와 페이지 번호를 화면에 표시하지 않는다. explore 의 더 보기는 '다른 벽 보기'다",
+      "why": "'3,412건 중 1–20' 같은 문구 하나가 기관 느낌의 핵심이다. 다만 무한 스크롤인지 묶음 교체인지는 정하지 못해 미결로 남겼다 — 무한 스크롤은 편집된 느낌을 깨뜨린다",
+      "reversible_at": ".curvez/design/index.md:미결 질문"
+    },
+    {
+      "what": "DayLane 을 모바일에서 세로 목록으로 무너뜨리지 않고 가로 스크롤로 유지한다",
+      "why": "순서가 정보이므로 가로 흐름이 그 정보를 담는다. 대신 끌어 옮기기의 키보드 대체 수단(위/아래 이동 버튼)을 필수로 못박았다",
+      "reversible_at": ".curvez/design/components/DayLane.md:responsive"
+    },
+    {
+      "what": "curvez-requirements 산출물 없이 GOAL.md 를 근거로 스펙을 썼다",
+      "why": "스킬은 requirements 부재 시 blocked 로 규정한다. 실제로는 없으나 GOAL.md 가 v1 기능 4개·제외 목록·완료 기준을 확정하고 있어 근거로 삼았다. 수용 기준(AC-<번호>)이 없어 화면 목표는 GOAL 의 기능 서술에서 도출했고, 지어낸 목표는 없다",
+      "reversible_at": ".curvez/design/index.md:화면 목록"
+    },
+    {
+      "what": "Wall 의 pattern 을 3종(a/b/c)으로 고정했다",
+      "why": "근거 우선순위 4단계(기본 스케일)까지 내려온 결정이다. TourAPI 이미지의 실제 종횡비 분포를 모르는 상태에서 정했으므로, 가로 이미지가 대부분이면 세로 액자 슬롯이 빈다. 실데이터 확인 후 재조정이 필요하다",
+      "reversible_at": ".curvez/design/components/Wall.md:props"
+    }
+  ],
+  "blocked_on": [],
+  "verification": [
+    { "command": "test -f index.md / tokens.md; find screens|components -name '*.md' | wc -l", "result": "MISSING-DOC 0줄, screens=5, components=5", "passed": true },
+    { "command": "화면별 state:default/loading/empty/error + focus-order grep", "result": "screen-missing=0", "passed": true },
+    { "command": "컴포넌트별 a11y:label/focus/contrast/target/role + ## props/states/a11y/responsive grep", "result": "component-missing=0", "passed": true },
+    { "command": "awk 로 토큰 표의 라이트/다크 빈 칸 검출 (스킬 SKILL.md 검증 4번의 awk 가 인자 치환 버그로 손상돼 있어 g=$3, d=$4 로 고쳐 실행)", "result": "token-half-defined=0", "passed": true },
+    { "command": "node 로 ## 대비 검증 줄 파싱 후 WCAG 상대 명도 대비 계산", "result": "pairs=12 light=7 dark=5 contrast-fail=0", "passed": true },
+    { "command": "find .curvez/design -name '*.tsx' -o -name '*.ts' -o -name '*.css' | wc -l", "result": "impl-files=0", "passed": true }
+  ]
+}

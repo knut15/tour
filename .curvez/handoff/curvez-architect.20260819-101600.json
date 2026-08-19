@@ -1,0 +1,89 @@
+{
+  "from": "curvez-architect",
+  "to": ["curvez-orchestrator", "curvez-nextjs", "curvez-structure-reviewer", "curvez-qa"],
+  "status": "done",
+  "summary": "DDD 4레이어(domain/application/infrastructure/presentation)로 확정했다. 금지 import 14건을 ERE 로 굳혔고 전부 문법 검사를 통과했다. 프리셋 기본 10건에 ARCH-011(presentation→infrastructure 금지, 인터뷰 결정), ARCH-012·013('use client' 위치), ARCH-014(도메인의 process.env 읽기 금지)를 추가했다. 예외는 컴포지션 루트 1곳뿐이고 만료 조건을 함께 적었다. 소스 트리에 레이어 디렉터리가 아직 없어 위반 실측은 전 규칙 검사 대상 0개다 — 정규식 문법 검사만 통과했고 실측은 구현 후 curvez-structure-reviewer 가 한다. curvez-requirements 핸드오프 없이 GOAL.md 를 근거로 확정했다.",
+  "artifacts": [
+    { "path": ".curvez/architecture.md", "kind": "decision", "note": "필수 헤딩 7개 + 금지 import 14건 + 예외 1건 + 결정 로그 11행" }
+  ],
+  "decisions": [
+    {
+      "what": "application 레이어를 둔다",
+      "why": "수치 판정선(라우트 12 미만 그리고 엔티티 8 미만)으로는 빼는 쪽이다 — 라우트 실측 10~11개, 엔티티 4~5개. 그러나 '합치지 말아야 할 신호' 중 '같은 조회 조합이 화면 여럿에서 반복'이 이미 성립한다(탐색·지도·AI추천이 같은 스팟 조회를 다르게 조합). generate-itinerary 가 Route Handler 와 Server Action 양쪽에서 불린다. 라우트가 11/12로 경계선이고 지역 확장이 GOAL 에 예정돼 있다",
+      "reversible_at": ".curvez/architecture.md:레이어 정의"
+    },
+    {
+      "what": "레이어 이름을 프리셋 기본값으로 둔다",
+      "why": "인터뷰 1번 답. DDD 문헌과 용어가 일치해 검색 시 설명이 바로 나오고, 금지 import 검사 경로도 프리셋 값을 그대로 쓴다",
+      "reversible_at": ".curvez/architecture.md:레이어 정의"
+    },
+    {
+      "what": "최상위 shared/ 를 두지 않는다. 순수 유틸은 domain/shared/, 프레임워크 유틸은 presentation/lib/",
+      "why": "인터뷰 2번 답. shared/ 는 모든 레이어에서 불리므로 프레임워크 코드가 한 줄만 들어와도 도메인 독립이 깨진다",
+      "reversible_at": ".curvez/architecture.md:폴더 구조"
+    },
+    {
+      "what": "ARCH-011 을 추가한다 (presentation → infrastructure 금지)",
+      "why": "인터뷰 3번 답. Next.js 에서 '서버 컴포넌트니까 괜찮겠지'가 가장 흔한 경계 붕괴 경로다",
+      "reversible_at": ".curvez/architecture.md:금지 import"
+    },
+    {
+      "what": "컴포지션 루트 src/presentation/lib/container.ts 1곳만 ARCH-011 예외로 연다",
+      "why": "인터뷰 3번 답. ARCH-011 을 켜면 의존성 조립 지점이 반드시 걸린다. 만료 조건(DI 라이브러리 도입 또는 컴포지션 루트를 application 진입점으로 이전)을 함께 적었다",
+      "reversible_at": ".curvez/architecture.md:예외"
+    },
+    {
+      "what": "그 밖의 예외는 미리 열지 않는다",
+      "why": "인터뷰 4번 답. 미리 열어둔 예외는 쓰이지 않아도 '여긴 안 지켜도 된다'는 선례로 남는다",
+      "reversible_at": ".curvez/architecture.md:예외"
+    },
+    {
+      "what": "ARCH-012·013·014 를 추가한다",
+      "why": "프리셋의 ## 스택 매핑과 ## 레이어 정의가 서술로만 갖고 있던 규칙('use client' 위치, 도메인의 환경 변수 읽기 금지)을 검사 가능한 형태로 승격했다. 검사할 수 없는 규칙은 위반해도 아무 일이 없다",
+      "reversible_at": ".curvez/architecture.md:금지 import"
+    },
+    {
+      "what": "바운디드 컨텍스트를 나누지 않는다",
+      "why": "판정선은 컨텍스트 3개 이상 그리고 모듈당 소스 30개 이상이다. spot·course·itinerary 3개지만 소스 파일이 0개다",
+      "reversible_at": ".curvez/architecture.md:폴더 구조"
+    },
+    {
+      "what": "curvez-requirements 핸드오프 없이 확정했다",
+      "why": "에이전트 정의는 이 핸드오프를 필수 입력으로 요구하고 없으면 blocked 로 규정한다. 실제로는 없으나 GOAL.md 가 v1 범위·기능 4개·제외 목록·완료 기준을 확정하고 있어 그것을 근거로 삼았다. 요구사항이 이 문서와 어긋나면 아키텍처를 구부리지 말고 curvez-requirements 로 되돌린다",
+      "reversible_at": ".curvez/architecture.md:결정 로그"
+    },
+    {
+      "what": "라우트 루트를 src/presentation/app/ 으로 둔다",
+      "why": "프리셋이 정한 배치다. src/app/ 으로 되돌리면 ARCH-011 의 검사 경로(src/presentation/)가 라우트를 덮지 못해 규칙이 무력화된다. 현재 스캐폴드는 src/app/ 이므로 curvez-nextjs 가 이전해야 한다",
+      "reversible_at": ".curvez/architecture.md:폴더 구조"
+    }
+  ],
+  "blocked_on": [],
+  "verification": [
+    {
+      "command": "for h in \"레이어 정의\" \"의존 방향\" \"금지 import\" \"폴더 구조\" \"스택 매핑\" \"예외\" \"결정 로그\"; do grep -q \"^## $h\" .curvez/architecture.md && echo OK || echo MISSING; done",
+      "result": "OK 7건, MISSING 0건",
+      "passed": true
+    },
+    {
+      "command": "grep -cE '^\\| ARCH-[0-9]{3} \\|' .curvez/architecture.md",
+      "result": "14 (기준: 3 이상)",
+      "passed": true
+    },
+    {
+      "command": "awk -F' \\\\| ' '/^\\| ARCH-[0-9]{3} \\|/ { p=$3; gsub(/\\\\\\|/,\"|\",p); print p }' .curvez/architecture.md | while IFS= read -r re; do grep -Eq \"$re\" /dev/null 2>/dev/null; [ $? -le 1 ] && echo REGEX-OK || echo REGEX-BAD; done",
+      "result": "REGEX-OK 14건, REGEX-BAD 0건. 출력 줄 수 14 = 규칙 수 14 일치. 스킬 SKILL.md 5단계 (3) 의 awk 가 'p=nextjs' 로 적혀 있어 초기화되지 않은 변수를 읽는다 — p=$3 으로 고쳐 실행했다",
+      "passed": true
+    },
+    {
+      "command": "규칙별 grep -rInE \"<패턴>\" <검사경로> --include='*.ts' --include='*.tsx'",
+      "result": "전 14건 검사 대상 0개 (src/domain, src/application, src/infrastructure, src/presentation 미생성). 실측은 구현 후 curvez-structure-reviewer 가 한다",
+      "passed": true
+    },
+    {
+      "command": "awk '/^## 결정 로그/,0' .curvez/architecture.md | grep -cE '^\\| .+ \\| .+ \\| `\\.curvez/architecture\\.md:.+` \\|$'",
+      "result": "11 (데이터 행 11개 전부 되돌릴 위치가 .curvez/architecture.md:<헤딩> 형식)",
+      "passed": true
+    }
+  ]
+}

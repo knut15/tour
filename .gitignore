@@ -39,3 +39,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# curvez 실행 부산물 — 재현 가치가 없다
+.curvez/tmp/
+
+# 템플릿은 커밋한다 — 값이 없다
+!.env.example
+
+# OMC 세션 상태 — 재현 가치가 없다
+.omc/

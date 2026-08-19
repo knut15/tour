@@ -1,0 +1,192 @@
+{
+  "from": "curvez-researcher",
+  "to": [
+    "curvez-orchestrator",
+    "curvez-architect",
+    "curvez-designer",
+    "curvez-nextjs",
+    "curvez-requirements"
+  ],
+  "status": "partial",
+  "summary": "EngService2 활용신청 승인 후 영문 서비스를 직접 호출해 조사했다(브리프 tourapi-english-coverage.md). 답한 질문: 영문 파라미터 체계·데이터 커버리지·이미지 커버리지·로케일 간 스팟 연결 가능 여부. 앞선 핸드오프의 blocked_on 중 2건(EngService2 스키마, 영문 커버리지)이 해소됐고 새 미결 4건이 생겨 총 18건이다. 결론이 제품 제약을 바꾸므로 summary 만 읽고 진행하지 마라 — 특히 contentid 분리와 이미지 34% 는 완료 기준과 디자인 전제를 직접 뒤집는다.",
+  "artifacts": [
+    {
+      "path": ".curvez/research/tourapi-english-coverage.md",
+      "kind": "research",
+      "note": "사실 13건, 확인불가 4건. API 직접 호출 약 60회"
+    },
+    {
+      "path": "GOAL.md",
+      "kind": "decision",
+      "note": "§4 에 영문 실측 표 추가, §6 완료 기준의 로케일 전환 항목을 화면별로 분리"
+    },
+    {
+      "path": ".curvez/design/index.md",
+      "kind": "decision",
+      "note": "카테고리 표에 로케일별 contentTypeId 와 실측 건수 반영"
+    }
+  ],
+  "decisions": [
+    {
+      "what": "영문 로케일에서 이미지 없는 스팟을 목록에서 제외한다",
+      "why": "영문 관광지 405건 중 이미지 있는 것이 137건(34%)이다. 그대로 두면 액자 벽이 색면으로 뒤덮여 이미지가 먼저다 라는 전제가 무너진다. 137건은 한 벽 9개 기준 15벽분이라 GOAL §0.5-3 편집 원칙과 같은 방향이다. GOAL §8 의 열린 질문에 대한 답이기도 하다",
+      "reversible_at": "GOAL.md:0.5 모토"
+    },
+    {
+      "what": "국문과 영문을 번역쌍이 아니라 독립된 두 카탈로그로 다룬다",
+      "why": "contentid 공간이 분리돼 있다. 영문 아차산 1349267 을 KorService2 로 조회하면 0건이고, 국문 키워드 검색은 전혀 다른 ID 를 준다. contentTypeId 체계도 다르다",
+      "reversible_at": "GOAL.md:4. 기술 결정"
+    },
+    {
+      "what": "상세 화면의 로케일 전환은 목록으로 보낸다",
+      "why": "contentid 가 분리돼 대응하는 반대 로케일 URL 을 만들 수 없다. GOAL §6 의 완료 기준을 화면별로 나눴다. 조용히 실패하지 말고 그렇게 동작한다고 알린다",
+      "reversible_at": "GOAL.md:6. 완료 기준"
+    },
+    {
+      "what": "detailCommon2 전건 실패를 contentid 미공유로 바로 결론짓지 않고 내 호출 오류 가능성을 먼저 검증했다",
+      "why": "국문에 확실히 존재하는 contentId=1116925 로 정상 동작을 확인한 뒤에야 확정했다. 그 과정에서 contentTypeId 를 함께 주면 응답이 깨진다는 별도 사실을 얻었다",
+      "reversible_at": ".curvez/research/tourapi-english-coverage.md:확인된 사실 10"
+    }
+  ],
+  "blocked_on": [
+    {
+      "question": "Cache Components 를 켤 것인가? 켜면 generateStaticParams 가 필수가 된다",
+      "who": "curvez-architect"
+    },
+    {
+      "question": "proxy 가 nodejs 런타임 고정일 때 로케일 리디렉트의 실측 지연은?",
+      "who": "curvez-qa"
+    },
+    {
+      "question": "Tailwind v4 가 i18n 라우팅과 상호작용하는 지점이 있는가?",
+      "who": "curvez-researcher"
+    },
+    {
+      "question": "TourAPI 일일 트래픽 제한과 개발/운영 계정 승인 방식의 차이는?",
+      "who": "user"
+    },
+    {
+      "question": "국문과 영문 스팟을 잇는 공식 매핑 수단이 있는가? contentid 로는 불가능함이 확인됐다",
+      "who": "curvez-researcher"
+    },
+    {
+      "question": "영문 쇼핑(79)의 전국 11071 대 서울 40 이라는 극단적 편중의 원인은?",
+      "who": "curvez-researcher"
+    },
+    {
+      "question": "영문 관광지에 섞인 의료관광 항목을 cat2/cat3/lclsSystm 으로 거를 수 있는가? cat1 은 A01/A02 뿐이라 못 거른다",
+      "who": "curvez-researcher"
+    },
+    {
+      "question": "영문 축제(85)는 이미지 기준 약 9건뿐이다. 영문 로케일에서 1급 카테고리로 둘 것인가?",
+      "who": "curvez-requirements"
+    },
+    {
+      "question": "kakao CustomOverlay 생성자 옵션의 정확한 타입과 기본값",
+      "who": "curvez-researcher"
+    },
+    {
+      "question": "한 지도에 올릴 수 있는 CustomOverlay 개수 상한과 성능 특성",
+      "who": "curvez-researcher"
+    },
+    {
+      "question": "카카오맵 타일 라벨을 영어로 전환할 수 있는가? 가능하면 지도 제공자 선택이 바뀐다",
+      "who": "curvez-researcher"
+    },
+    {
+      "question": "카카오맵 SDK script src URL 형식(appkey/autoload/libraries)",
+      "who": "curvez-researcher"
+    },
+    {
+      "question": "React 19 Strict Mode 이중 렌더에서 카카오맵 SDK 초기화가 중복되는가",
+      "who": "curvez-researcher"
+    },
+    {
+      "question": "Supabase PKCE 코드 교환용 callback Route Handler 의 경로와 코드",
+      "who": "curvez-researcher"
+    },
+    {
+      "question": "@supabase/ssr 의 middleware 예제가 Next.js 16 의 proxy.ts 와 호환되는가? 로케일 리디렉트와 토큰 갱신이 같은 파일에 들어가야 한다",
+      "who": "curvez-researcher"
+    },
+    {
+      "question": "signInWithOtp 로 팝업 없이 모달 안에서 로그인을 완결할 수 있는가",
+      "who": "curvez-researcher"
+    },
+    {
+      "question": "OAuth 팝업이 차단기에 걸렸을 때의 공식 권장 대응",
+      "who": "curvez-researcher"
+    },
+    {
+      "question": "로케일별 리디렉트 URL 을 Supabase 대시보드에 몇 개까지 등록할 수 있는가",
+      "who": "curvez-researcher"
+    }
+  ],
+  "verification": [
+    {
+      "command": "브리프 검증 (awk 로 확인된 사실 행 추출)",
+      "result": "행수13 URL없음0 날짜없음0 C등급0 섹션5 머리말4 확인불가4",
+      "passed": true
+    },
+    {
+      "command": "EngService2/areaBasedList2 파라미터 없이 호출",
+      "result": "code=0000 totalCount=15080",
+      "passed": true
+    },
+    {
+      "command": "국문 contentTypeId 8종을 EngService2 에 적용",
+      "result": "12,14,15,25,28,32,38,39 전부 totalCount=0",
+      "passed": true
+    },
+    {
+      "command": "영문 contentTypeId 스캔",
+      "result": "75=216, 76=2599, 78=464, 79=11071, 80=182, 82=307, 85=241. 합 15080 = 전체와 일치",
+      "passed": true
+    },
+    {
+      "command": "EngService2/categoryCode2",
+      "result": "A01=Nature, A02=Culture/Art/History, A03=Leisure/Sports, A04=Shopping, A05=Cuisine, B01=Transportation, B02=Accommodation",
+      "passed": true
+    },
+    {
+      "command": "contentTypeId=76 서울 100건 cat1 분포",
+      "result": "A02=91, A01=9. 표본에 Cheonggyecheon Stream, Cheonggyesan Mountain, Choi Sunu House 포함 → 관광지 확정",
+      "passed": true
+    },
+    {
+      "command": "국문 대 영문 서울 건수 비교 (7개 타입)",
+      "result": "관광지 418/405(97%), 문화시설 217/115(53%), 축제 80/34(43%), 레포츠 60/24(40%), 숙박 238/30(13%), 쇼핑 146/40(27%), 음식점 1007/66(7%). 합계 2166/714 = 33%",
+      "passed": true
+    },
+    {
+      "command": "영문 서울 이미지 커버리지",
+      "result": "관광지 405건 전수 스캔 137건(34%), 문화시설 71%, 축제 26%, 레포츠 67%, 숙박 87%, 쇼핑 93%, 음식점 82%",
+      "passed": true
+    },
+    {
+      "command": "영문 contentid 1349267(아차산)을 KorService2/detailCommon2 로 조회",
+      "result": "code=0000 totalCount=0 → contentid 공간 분리 확정",
+      "passed": true
+    },
+    {
+      "command": "detailCommon2 정상 동작 검증 (내 호출 오류 배제)",
+      "result": "contentId=1116925 단독 → code=0000 total=1 title=갈산공원. contentTypeId=12 추가 시 code=undefined",
+      "passed": true
+    },
+    {
+      "command": "KorService2/searchKeyword2 로 아차산 검색",
+      "result": "total=2, contentid 742972·2773309 — 영문 1349267 과 전혀 다름",
+      "passed": true
+    },
+    {
+      "command": "EngService2/areaCode2 서울 시군구",
+      "result": "25개, 1=Gangnam-gu … 25=Jungnang-gu",
+      "passed": true
+    },
+    {
+      "command": "문서 수정 후 디자인 스펙 재검증",
+      "result": "screen-missing=0, component-missing=0, impl-files=0",
+      "passed": true
+    }
+  ]
+}

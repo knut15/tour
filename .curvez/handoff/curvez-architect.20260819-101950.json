@@ -1,0 +1,104 @@
+{
+  "from": "curvez-architect",
+  "to": ["curvez-orchestrator", "curvez-nextjs", "curvez-structure-reviewer", "curvez-qa"],
+  "status": "done",
+  "summary": "앞선 핸드오프(같은 라운드, 14규칙 판)를 대체한다. DDD 4레이어로 확정하고 금지 import 18건을 ERE 로 굳혔다. 앞 판의 '라우트 루트를 src/presentation/app/ 에 둔다' 는 사실 확인 없이 쓴 오류였다 — Next.js 는 App Router 를 루트 app/ 또는 src/app/ 둘에서만 인식하고 appDir 는 경로 설정이 아니다. src/app/ 을 presentation 레이어의 일부로 취급하도록 고치고, 경로 이름에 기대던 규칙이 src/app/ 을 못 덮는 구멍을 ARCH-015~018 로 막았다. 예외는 컴포지션 루트 1곳뿐이다. 실측은 src/app/ 만 검사 대상이 있어 ARCH-015 가 2개 파일에서 위반 0건, 나머지 17건은 레이어 디렉터리 미생성으로 검사 대상 0개다.",
+  "artifacts": [
+    { "path": ".curvez/architecture.md", "kind": "decision", "note": "필수 헤딩 7개 + 금지 import 18건 + 예외 1건 + 권고 5건 + 결정 로그 12행" }
+  ],
+  "decisions": [
+    {
+      "what": "라우트 루트를 src/app/ 에 유지하고 presentation 레이어의 일부로 취급한다. 앞 핸드오프의 'src/presentation/app/ 로 옮긴다' 를 폐기한다",
+      "why": "Next.js 는 App Router 를 루트 app/ 또는 src/app/ 둘에서만 인식한다 (node_modules/next/dist/docs/01-app/03-api-reference/03-file-conventions/src-folder.md). next.config 의 appDir 는 App Router 를 켜는 legacy 플래그이지 경로 설정이 아니다 (같은 docs 의 05-config/01-next-config-js/appDir.md). src/presentation/app/ 에 두면 라우트가 인식되지 않는다",
+      "reversible_at": ".curvez/architecture.md:폴더 구조"
+    },
+    {
+      "what": "ARCH-015·016·017·018 을 추가한다",
+      "why": "라우트 루트를 옮길 수 없으므로 경로 이름(presentation/)에 기대던 ARCH-004·008·010·011 이 src/app/ 을 못 덮는 구멍이 생긴다. src/app/ 검사 경로와 @/app/ 패턴으로 막았다. 검사 경로를 한 칸에 둘 이상 적으면 단어 분리가 안 돼 위반 0건으로 위장되므로 규칙을 경로별로 나눴다",
+      "reversible_at": ".curvez/architecture.md:금지 import"
+    },
+    {
+      "what": "application 레이어를 둔다",
+      "why": "수치 판정선(라우트 12 미만 그리고 엔티티 8 미만)으로는 빼는 쪽이다 — 라우트 실측 10~11개, 엔티티 4~5개. 그러나 '합치지 말아야 할 신호' 중 '같은 조회 조합이 화면 여럿에서 반복'이 이미 성립한다. generate-itinerary 가 Route Handler 와 Server Action 양쪽에서 불린다. 라우트가 11/12로 경계선이고 지역 확장이 GOAL 에 예정돼 있다",
+      "reversible_at": ".curvez/architecture.md:레이어 정의"
+    },
+    {
+      "what": "레이어 이름을 프리셋 기본값으로 둔다",
+      "why": "인터뷰 1번 답",
+      "reversible_at": ".curvez/architecture.md:레이어 정의"
+    },
+    {
+      "what": "최상위 shared/ 를 두지 않는다. 순수 유틸은 domain/shared/, 프레임워크 유틸은 presentation/lib/",
+      "why": "인터뷰 2번 답. shared/ 는 모든 레이어에서 불리므로 프레임워크 코드가 한 줄만 들어와도 도메인 독립이 깨진다",
+      "reversible_at": ".curvez/architecture.md:폴더 구조"
+    },
+    {
+      "what": "ARCH-011 을 추가한다 (presentation → infrastructure 금지)",
+      "why": "인터뷰 3번 답. Next.js 에서 '서버 컴포넌트니까 괜찮겠지'가 가장 흔한 경계 붕괴 경로다",
+      "reversible_at": ".curvez/architecture.md:금지 import"
+    },
+    {
+      "what": "컴포지션 루트 src/presentation/lib/container.ts 1곳만 ARCH-011 예외로 연다. ARCH-015 에는 예외가 없다",
+      "why": "인터뷰 3번 답. 만료 조건(DI 라이브러리 도입 또는 컴포지션 루트를 application 진입점으로 이전)을 함께 적었다. 컴포지션 루트를 src/app/ 에 두지 않으므로 ARCH-015 는 예외가 필요 없다",
+      "reversible_at": ".curvez/architecture.md:예외"
+    },
+    {
+      "what": "그 밖의 예외는 미리 열지 않는다",
+      "why": "인터뷰 4번 답",
+      "reversible_at": ".curvez/architecture.md:예외"
+    },
+    {
+      "what": "ARCH-012·013·014 를 추가한다",
+      "why": "프리셋이 서술로만 갖고 있던 규칙('use client' 위치, 도메인의 환경 변수 읽기 금지)을 검사 가능한 형태로 승격했다",
+      "reversible_at": ".curvez/architecture.md:금지 import"
+    },
+    {
+      "what": "바운디드 컨텍스트를 나누지 않는다",
+      "why": "판정선은 컨텍스트 3개 이상 그리고 모듈당 소스 30개 이상이다. spot·course·itinerary 3개지만 소스 파일이 0개다",
+      "reversible_at": ".curvez/architecture.md:폴더 구조"
+    },
+    {
+      "what": "curvez-requirements 핸드오프 없이 확정했다",
+      "why": "에이전트 정의는 이 핸드오프를 필수 입력으로 요구하고 없으면 blocked 로 규정한다. 실제로는 없으나 GOAL.md 가 v1 범위·기능 4개·제외 목록·완료 기준을 확정하고 있어 그것을 근거로 삼았다. 요구사항이 이 문서와 어긋나면 아키텍처를 구부리지 말고 curvez-requirements 로 되돌린다",
+      "reversible_at": ".curvez/architecture.md:결정 로그"
+    }
+  ],
+  "blocked_on": [],
+  "verification": [
+    {
+      "command": "필수 헤딩 7개 grep",
+      "result": "OK 7건, MISSING 0건",
+      "passed": true
+    },
+    {
+      "command": "grep -cE '^\\| ARCH-[0-9]{3} \\|' .curvez/architecture.md",
+      "result": "18 (기준: 3 이상)",
+      "passed": true
+    },
+    {
+      "command": "awk 로 3열 ERE 추출 후 각각 grep -Eq 로 문법 검사",
+      "result": "REGEX-OK 18건, REGEX-BAD 0건. 출력 줄 수 18 = 규칙 수 18 일치",
+      "passed": true
+    },
+    {
+      "command": "grep -rInE \"from ['\\\"][^'\\\"]*infrastructure/\" src/app/ --include='*.ts' --include='*.tsx' | wc -l",
+      "result": "0 (ARCH-015. src/app/ 의 ts/tsx 2개 파일 대상)",
+      "passed": true
+    },
+    {
+      "command": "나머지 17개 규칙의 검사 경로 존재 확인",
+      "result": "src/domain, src/application, src/infrastructure, src/presentation 전부 미생성 → 검사 대상 0개. 실측은 구현 후 curvez-structure-reviewer 가 한다",
+      "passed": true
+    },
+    {
+      "command": "awk '/^## 결정 로그/,0' .curvez/architecture.md | grep -cE 되돌릴위치형식",
+      "result": "12 (데이터 행 12개 전부 .curvez/architecture.md:<헤딩> 형식)",
+      "passed": true
+    },
+    {
+      "command": "node scripts/validate-handoff.mjs .curvez/handoff/",
+      "result": "직전 판 기준 검사 1건, 통과 1건, 실패 0건, 오류 0개, 경고 0개. 이 파일 포함 재실행 결과는 아래 보고 참조",
+      "passed": true
+    }
+  ]
+}

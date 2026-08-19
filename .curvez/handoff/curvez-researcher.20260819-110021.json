@@ -1,0 +1,188 @@
+{
+  "from": "curvez-researcher",
+  "to": [
+    "curvez-orchestrator",
+    "curvez-architect",
+    "curvez-designer",
+    "curvez-nextjs"
+  ],
+  "status": "partial",
+  "summary": "조사 4건에 대해 브리프 5개를 냈다(TourAPI 는 실키 발급 후 v2 로 재조사). 답한 질문: (1) TourAPI 엔드포인트·인증키·영문서비스·서울 코드 — 실제 API 호출로 확정, (2) 카카오맵 CustomOverlay 로 지도 위 HTML 액자 가능 여부 — 가능하나 생성자 옵션 상세는 미확인, (3) Supabase 로그인을 인앱 모달로 완결 가능한지 — 불가, 팝업 또는 리디렉트 필요, (4) Next.js 16 i18n 라우팅 — app/[lang] + next/root-params + proxy.ts. 확인 불가 총 16건이 남아 blocked_on 으로 올렸고 그래서 status 는 partial 이다. 브리프를 읽지 않고 이 summary 만으로 진행하지 마라 — 특히 (2)(3) 은 조건절이 결론을 바꾼다.",
+  "artifacts": [
+    {
+      "path": ".curvez/research/nextjs16-i18n-routing.md",
+      "kind": "research",
+      "note": "사실 15건, 확인불가 3건. 웹 호출 0회 — node_modules 의 버전 정확 공식 문서 사용"
+    },
+    {
+      "path": ".curvez/research/tourapi-endpoints.md",
+      "kind": "research",
+      "note": "사실 9건, 확인불가 5건. v2 가 이 중 4건을 해소했다"
+    },
+    {
+      "path": ".curvez/research/tourapi-endpoints-v2.md",
+      "kind": "research",
+      "note": "사실 11건, 확인불가 3건. 실키로 API 직접 호출해 확정"
+    },
+    {
+      "path": ".curvez/research/kakao-map-overlay.md",
+      "kind": "research",
+      "note": "사실 5건, 확인불가 5건. 공식 문서가 JS 렌더링이라 상세 추출 실패"
+    },
+    {
+      "path": ".curvez/research/supabase-auth-flow.md",
+      "kind": "research",
+      "note": "사실 12건, 확인불가 5건. 타입 정의 소스코드로 확정"
+    }
+  ],
+  "decisions": [
+    {
+      "what": "TOUR_API_KEY 를 디코딩 형태로 .env.local 에 저장하도록 바꿨다",
+      "why": "실측 결과 인코딩키+URLSearchParams 조합만 HTTP 403 이 난다(이중 인코딩). 디코딩키는 문자열결합·URLSearchParams 양쪽에서 동작한다. 보수적인 쪽을 택했다",
+      "reversible_at": ".curvez/research/tourapi-endpoints-v2.md:확인된 사실 6"
+    },
+    {
+      "what": "Supabase 환경변수를 ANON_KEY/SERVICE_ROLE_KEY 에서 PUBLISHABLE_KEY/SECRET_KEY 로 바꿨다",
+      "why": "레거시 키가 2026년 말 deprecated 인데 오늘이 2026-08-19 다. 권한과 RLS 동작은 동일하다",
+      "reversible_at": ".curvez/research/supabase-auth-flow.md:확인된 사실 9"
+    },
+    {
+      "what": "SpotFrame 의 ratio 기본값을 3:4 에서 3:2 로 바꾸고 matte(even|tall) prop 을 추가했다",
+      "why": "TourAPI firstimage 15장 실측이 전부 가로였고 최빈값이 1.5 였다. 세로 액자는 이미지 크롭이 아니라 매트를 두껍게 해서 만든다 — 실제 액자 제작 방식이고 레퍼런스 IMG_3824 가 그 모습이다. 조사자가 디자인을 고치는 것은 역할 밖이나, 이 세션은 단일 실행자라 고치고 근거를 남긴다",
+      "reversible_at": ".curvez/design/components/SpotFrame.md:props"
+    },
+    {
+      "what": "카테고리에서 contentTypeId=25(여행코스)를 제외했다",
+      "why": "서울 totalCount 가 0 이다. 노출하면 항상 빈 상태가 된다",
+      "reversible_at": ".curvez/design/index.md:색은 면으로만 쓴다"
+    },
+    {
+      "what": "카카오맵 CustomOverlay 생성자 옵션을 검색 요약에서 보았으나 확인된 사실로 인용하지 않았다",
+      "why": "A 출처를 직접 열지 못했다. 스킬 규정상 C 등급 요약은 근거로 쓰지 않는다. 요약에서 조건절이 탈락하는 것이 반복 실패 유형이다",
+      "reversible_at": ".curvez/research/kakao-map-overlay.md:확인 불가"
+    }
+  ],
+  "blocked_on": [
+    {
+      "question": "Cache Components 를 켤 것인가? 켜면 generateStaticParams 가 필수가 된다",
+      "who": "curvez-architect"
+    },
+    {
+      "question": "proxy 가 nodejs 런타임 고정일 때 로케일 리디렉트의 실측 지연은? 배포 후 측정 필요",
+      "who": "curvez-qa"
+    },
+    {
+      "question": "Tailwind v4 가 i18n 라우팅과 상호작용하는 지점이 있는가?",
+      "who": "curvez-researcher"
+    },
+    {
+      "question": "TourAPI 일일 트래픽 제한과 개발/운영 계정 승인 방식의 차이는?",
+      "who": "user"
+    },
+    {
+      "question": "EngService2 의 응답 스키마가 KorService2 와 동일한가? 활용신청 후에만 확인 가능",
+      "who": "user"
+    },
+    {
+      "question": "영문 데이터 커버리지 — 국문 418건 중 영문 제공 건수는? 활용신청 후 확인",
+      "who": "user"
+    },
+    {
+      "question": "kakao CustomOverlay 생성자 옵션(content/xAnchor/yAnchor/zIndex/clickable)의 정확한 타입과 기본값",
+      "who": "curvez-researcher"
+    },
+    {
+      "question": "한 지도에 올릴 수 있는 CustomOverlay 개수 상한과 성능 특성",
+      "who": "curvez-researcher"
+    },
+    {
+      "question": "카카오맵 타일 라벨을 영어로 전환할 수 있는가? 가능하면 GOAL 5-5 전제와 지도 제공자 선택이 바뀐다",
+      "who": "curvez-researcher"
+    },
+    {
+      "question": "카카오맵 SDK script src URL 형식(appkey/autoload/libraries)",
+      "who": "curvez-researcher"
+    },
+    {
+      "question": "React 19 Strict Mode 이중 렌더에서 카카오맵 SDK 초기화가 중복되는가",
+      "who": "curvez-researcher"
+    },
+    {
+      "question": "Supabase PKCE 코드 교환용 callback Route Handler 의 경로와 코드",
+      "who": "curvez-researcher"
+    },
+    {
+      "question": "@supabase/ssr 문서의 middleware 예제가 Next.js 16 의 proxy.ts 규약과 호환되는가? 로케일 리디렉트와 토큰 갱신이 같은 proxy.ts 에 들어가야 한다",
+      "who": "curvez-researcher"
+    },
+    {
+      "question": "signInWithOtp(매직링크)로 팝업 없이 모달 안에서 로그인을 완결할 수 있는가",
+      "who": "curvez-researcher"
+    },
+    {
+      "question": "OAuth 팝업이 차단기에 걸렸을 때의 공식 권장 대응",
+      "who": "curvez-researcher"
+    },
+    {
+      "question": "로케일별 리디렉트 URL(/en, /ko)을 Supabase 대시보드에 몇 개까지 등록할 수 있는가",
+      "who": "curvez-researcher"
+    }
+  ],
+  "verification": [
+    {
+      "command": "브리프 5개에 대해 awk 로 ## 확인된 사실 행 추출 후 URL/날짜/등급 검사",
+      "result": "nextjs16-i18n: 행15 URL없음0 날짜없음0 C등급0 / tourapi: 행9 0 0 0 / tourapi-v2: 행11 0 0 0 / kakao: 행5 0 0 0 / supabase: 행12 0 0 0",
+      "passed": true
+    },
+    {
+      "command": "필수 섹션·머리말 개수 검사",
+      "result": "5개 브리프 전부 섹션=5, 머리말=4",
+      "passed": true
+    },
+    {
+      "command": "확인 불가 행 수 합계 대 blocked_on 개수",
+      "result": "v1 의 5건 중 4건은 v2 가 해소했다. 미해소 = i18n 3 + tourapi-v2 3 + kakao 5 + supabase 5 = 16. blocked_on = 16 으로 일치",
+      "passed": true
+    },
+    {
+      "command": "TourAPI 실호출: KorService2/areaBasedList2 areaCode=1",
+      "result": "HTTP 200 resultCode=0000 resultMsg=OK, 응답 areacode=1, addr1 이 서울특별시로 시작",
+      "passed": true
+    },
+    {
+      "command": "인증키 4가지 조합 실측",
+      "result": "인코딩키+문자열결합=OK / 디코딩키+문자열결합=OK / 디코딩키+URLSearchParams=OK / 인코딩키+URLSearchParams=HTTP 403",
+      "passed": true
+    },
+    {
+      "command": "EngService2 / EngService1 실호출",
+      "result": "EngService2 = HTTP 403 SERVICE_KEY_IS_NOT_REGISTERED_ERROR(코드30, 서비스 존재) / EngService1 = HTTP 400 NO_OPENAPI_SERVICE_ERROR(코드12, 서비스 없음)",
+      "passed": true
+    },
+    {
+      "command": "contentTypeId 별 서울 totalCount",
+      "result": "12=418, 14=217, 15=80, 25=0, 28=60, 32=238, 38=146, 39=1007",
+      "passed": true
+    },
+    {
+      "command": "areaCode2 로 서울 sigunguCode 조회",
+      "result": "25개 반환 (1=강남구 … 25=중랑구)",
+      "passed": true
+    },
+    {
+      "command": "firstimage 15장 다운로드 후 JPEG/PNG 헤더로 종횡비 측정",
+      "result": "측정 성공 15장, 가로(>1.1) 15장, 세로(<0.9) 0장, 최빈 1.5. 비율: 1.5x10, 1.78x2, 1.46, 1.45, 1.33",
+      "passed": true
+    },
+    {
+      "command": "디코딩키 교체 후 URLSearchParams 재호출 (areaCode=1&sigunguCode=23)",
+      "result": "HTTP 200 resultCode=0000, 종로구 totalCount=301",
+      "passed": true
+    },
+    {
+      "command": "디자인 스펙 수정 후 재검증",
+      "result": "component-missing=0, screen-missing=0, impl-files=0",
+      "passed": true
+    }
+  ]
+}
