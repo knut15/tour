@@ -566,8 +566,8 @@ details[open] > .dropdown-panel {
     transform 0.2s var(--ease-signature);
 }
 
-.group:hover .card-actions,
-.group:focus-within .card-actions {
+.card-thumb:hover .card-actions,
+.card-thumb:focus-within .card-actions {
   opacity: 1;
   transform: none;
 }
