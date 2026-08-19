@@ -38,7 +38,7 @@ export default async function SpotDetailPage({ params }: PageProps<"/[locale]/sp
 
   return (
     <>
-      <Masthead locale={locale} t={t} />
+      <Masthead locale={locale} t={t} koreanName={spot.titleKorean} />
 
       <main className="mx-auto w-full max-w-[1200px] flex-1 px-6 pb-32 md:pb-16">
         {/*
@@ -174,7 +174,16 @@ function Actions({ spot, t }: { spot: SpotDetailView; t: Dictionary }) {
   );
 }
 
-function Masthead({ locale, t }: { locale: Locale; t: Dictionary }) {
+function Masthead({
+  locale,
+  t,
+  koreanName,
+}: {
+  locale: Locale;
+  t: Dictionary;
+  /** 언어를 바꿀 때 상대 카탈로그를 찾는 열쇠. 없으면 목록으로 간다 */
+  koreanName?: string | null;
+}) {
   return (
     <header className="mx-auto flex w-full max-w-[1200px] items-center justify-between px-6 py-5">
       <Link
@@ -192,12 +201,18 @@ function Masthead({ locale, t }: { locale: Locale; t: Dictionary }) {
       <div className="flex items-center gap-2">
         <ThemeToggle label={t.nav.theme} />
         {/*
-          상세에서 언어를 바꾸면 목록으로 간다. contentid 공간이 언어마다 분리돼 있어
-          같은 장소로 이어갈 수 없다. title 로 그 사실을 알린다
+          언어를 바꿔도 **보던 장소를 유지한다.** contentid 공간이 언어마다 분리돼
+          있어 ID 를 그대로 쓸 수 없으므로, 두 카탈로그를 잇는 한글 원명을 들려
+          `resolve` 로 보내 그 언어의 카탈로그에서 다시 찾게 한다.
+          한글 원명이 없거나 상대 카탈로그에 없으면 목록으로 간다 — title 로 알린다.
         */}
         <LocaleSwitcher
           current={locale}
-          hrefFor={(l) => `/${l}/explore`}
+          hrefFor={(l) =>
+            koreanName
+              ? `/${l}/spots/resolve?ko=${encodeURIComponent(koreanName)}`
+              : `/${l}/explore`
+          }
           label={t.nav.switchLocale}
           note={t.detail.localeSwitchNote}
         />

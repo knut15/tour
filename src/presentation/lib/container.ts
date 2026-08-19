@@ -3,6 +3,7 @@ import type {
   AirQualityRepository,
   WeatherRepository,
 } from "@/domain/weather/weather-repository";
+import { makeFindSpotInLocale } from "@/application/spot/find-spot-in-locale";
 import { makeGetSpotDetail } from "@/application/spot/get-spot-detail";
 import { makeListAreas, makeListDistricts } from "@/application/spot/list-regions";
 import { makeListNearbySpots } from "@/application/spot/list-nearby-spots";
@@ -43,6 +44,7 @@ const spotRepository = createSpotRepository();
 export const listSpots = makeListSpots(spotRepository);
 export const listNearbySpots = makeListNearbySpots(spotRepository);
 export const getSpotDetail = makeGetSpotDetail(spotRepository);
+export const findSpotInLocale = makeFindSpotInLocale(spotRepository);
 export const listAreas = makeListAreas(spotRepository);
 export const listDistricts = makeListDistricts(spotRepository);
 

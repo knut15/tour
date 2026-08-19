@@ -2,7 +2,7 @@ import type { Locale } from "@/domain/shared/locale";
 import { DEFAULT_PAGE, type Page } from "@/domain/shared/paging";
 import { contentTypeIdOf } from "@/domain/spot/category";
 import type { Area, AreaCode, District } from "@/domain/spot/region";
-import type { Spot, SpotId } from "@/domain/spot/spot";
+import { parseSpotName, type Spot, type SpotId } from "@/domain/spot/spot";
 import { EMPTY_FACTS, type SpotDetail } from "@/domain/spot/spot-detail";
 import type {
   ListSpotsQuery,
@@ -21,6 +21,15 @@ import {
   toFacts,
   toHomepageUrl,
 } from "@/infrastructure/tourapi/tourapi-detail-mapper";
+
+/**
+ * 한글명 검색에서 훑을 후보 수.
+ *
+ * 정확 일치가 상위에 오지 않는 경우가 있어 1건만 보면 놓친다. 반대로 너무 늘리면
+ * 이름이 우연히 겹치는 다른 장소까지 후보가 된다 — 정확 일치 판정이 있어 위험은
+ * 낮지만 응답만 무거워진다.
+ */
+const SEARCH_CANDIDATES = 20;
 
 export class TourApiSpotRepository implements SpotRepository {
   constructor(private readonly client: TourApiClient) {}
@@ -123,6 +132,43 @@ export class TourApiSpotRepository implements SpotRepository {
       homepage: toHomepageUrl(raw.homepage as string | undefined),
       facts: intro ? toFacts(intro.items[0], spot.category) : EMPTY_FACTS,
     };
+  }
+
+  /**
+   * 한글 원명으로 그 로케일의 카탈로그를 뒤진다.
+   *
+   * `searchKeyword2` 는 한글 키워드를 영문·일문 서비스에서도 받는다 —
+   * 제목에 한글 원명이 괄호로 병기돼 있기 때문이다
+   * (`Gyeongbokgung Palace (경복궁)`). 실측 2026-08-19.
+   *
+   * **상위 1건을 믿지 않는다.** 일문 서비스에서 `경복궁` 을 찾으면 상위 셋이
+   * 전부 "경복궁역점" 면세점이었다. 이름이 정확히 같은 것만 고른다.
+   */
+  async findByKoreanName(locale: Locale, koreanName: string): Promise<SpotId | null> {
+    const wanted = koreanName.trim();
+    if (!wanted) return null;
+
+    let result;
+    try {
+      result = await this.client.call(locale, "searchKeyword2", {
+        numOfRows: SEARCH_CANDIDATES,
+        pageNo: 1,
+        keyword: wanted,
+      });
+    } catch {
+      // 못 찾은 것과 같이 다룬다. 부르는 쪽이 목록으로 보낸다
+      return null;
+    }
+
+    for (const item of result.items) {
+      const title = item.title?.trim();
+      const contentId = item.contentid?.trim();
+      if (!title || !contentId) continue;
+      if (parseSpotName(title, locale).korean === wanted) {
+        return { contentId, locale };
+      }
+    }
+    return null;
   }
 
   /** `areaCode` 를 빼면 시도 목록이 온다. 실측 17건 */
