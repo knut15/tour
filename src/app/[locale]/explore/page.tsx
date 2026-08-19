@@ -329,6 +329,7 @@ async function Spots({
         labelSaved={t.frame.saved}
         labelLike={t.frame.like}
         labelLiked={t.frame.liked}
+        labelViews={t.frame.views}
         labelNoImage={t.frame.noImage}
         enterFrom={enterFrom(more, wall.items.length)}
       />

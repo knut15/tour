@@ -20,6 +20,7 @@ export function Wall({
   labelSaved,
   labelLike,
   labelLiked,
+  labelViews,
   labelNoImage,
   enterFrom,
 }: {
@@ -31,6 +32,7 @@ export function Wall({
   labelSaved: string;
   labelLike: string;
   labelLiked: string;
+  labelViews: string;
   labelNoImage: string;
   /**
    * 이 인덱스부터가 이번에 새로 붙은 카드다. 그 앞은 이미 화면에 있던 것이라
@@ -70,6 +72,7 @@ export function Wall({
             labelSaved={labelSaved}
             labelLike={labelLike}
             labelLiked={labelLiked}
+            labelViews={labelViews}
             labelNoImage={labelNoImage}
             priority={i < 3}
           />

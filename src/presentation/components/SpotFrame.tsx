@@ -3,6 +3,7 @@ import type { SpotView } from "@/application/spot/dto";
 import { NoImage } from "@/presentation/components/NoImage";
 import { CardActions } from "@/presentation/components/CardActions";
 import { SpotImage } from "@/presentation/components/SpotImage";
+import { mockStats } from "@/presentation/lib/mock-stats";
 
 export type FrameSize = "sm" | "md" | "lg";
 export type FrameMatte = "photo" | "portrait";
@@ -37,6 +38,7 @@ export function SpotFrame({
   labelSaved,
   labelLike,
   labelLiked,
+  labelViews,
   labelNoImage,
   priority = false,
 }: {
@@ -49,12 +51,26 @@ export function SpotFrame({
   labelSaved: string;
   labelLike: string;
   labelLiked: string;
+  labelViews: string;
   labelNoImage: string;
   priority?: boolean;
 }) {
   const titleSize =
     size === "lg" ? "text-[24px]" : size === "md" ? "text-[21px]" : "text-[18px]";
   const hasKorean = Boolean(spot.titleKorean && spot.titleKorean !== spot.titlePrimary);
+
+  /*
+    **목 데이터다** (`presentation/lib/mock-stats.ts`). 실제 출처가 아직 없다.
+    서버에서만 서식을 만든다 — `Intl` 의 결과는 런타임의 ICU 판에 따라 달라질 수 있어
+    클라이언트가 다시 계산하면 하이드레이션이 어긋난다. 이 컴포넌트는 서버 전용이라
+    그 계산이 한 번만 돈다.
+  */
+  const stats = mockStats(`${spot.locale}:${spot.contentId}`);
+  const likes = new Intl.NumberFormat(spot.locale).format(stats.likes);
+  const views = new Intl.NumberFormat(spot.locale, {
+    notation: "compact",
+    maximumFractionDigits: 1,
+  }).format(stats.views);
 
   return (
     // 카드 높이를 채우고 메타를 바닥에 붙인다. 제목이 두 줄로 넘쳐도
@@ -64,10 +80,14 @@ export function SpotFrame({
     // 아이템이라 기본 폭이 max-content 다. 지금까지는 `<img>` 의 고유 폭이 열을
     // 채워 줘서 가려져 있었는데, 사진이 없는 카드는 채울 것이 글자뿐이라
     // 그 카드만 열보다 좁아진다.
-    <article className="group relative flex h-full w-full min-w-0 flex-col">
+    <article className="relative flex h-full w-full min-w-0 flex-col">
+      {/*
+        호버 대상은 **사진뿐이다.** 카드 전체로 잡으면 제목이나 주소 위를 지나갈 때도
+        버튼이 떠올라, 읽으려던 글자를 가린다.
+      */}
       <div
         className={
-          "relative overflow-hidden rounded-sm bg-surface " + WINDOW_ASPECT[matte]
+          "card-thumb relative overflow-hidden rounded-sm bg-surface " + WINDOW_ASPECT[matte]
         }
       >
         {spot.imageUrl ? (
@@ -126,9 +146,37 @@ export function SpotFrame({
       )}
 
       {/* mt-auto 로 바닥에 붙인다 — 제목 줄 수가 달라도 주소가 한 줄에 정렬된다 */}
-      <div className="mt-auto border-t border-line pt-3">
-        <p className="truncate text-[12px] text-muted">
+      {/* 바닥 줄 — 왼쪽에 주소, 오른쪽에 좋아요·조회 */}
+      <div className="mt-auto flex items-center gap-3 border-t border-line pt-3">
+        <p className="min-w-0 flex-1 truncate text-[12px] text-muted">
           {spot.address ?? <span aria-hidden="true">&nbsp;</span>}
+        </p>
+        <p className="flex shrink-0 items-center gap-3 text-[12px] text-muted">
+          <span className="inline-flex items-center gap-1" aria-label={`${labelLike} ${likes}`}>
+            <svg viewBox="0 0 24 24" className="size-3.5" aria-hidden="true">
+              <path
+                d="M12 20.3 4.6 13a4.6 4.6 0 0 1 6.5-6.5l.9.9.9-.9A4.6 4.6 0 0 1 19.4 13Z"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinejoin="round"
+              />
+            </svg>
+            {likes}
+          </span>
+          <span className="inline-flex items-center gap-1" aria-label={`${labelViews} ${views}`}>
+            <svg viewBox="0 0 24 24" className="size-3.5" aria-hidden="true">
+              <path
+                d="M2.6 12S6 5.9 12 5.9 21.4 12 21.4 12 18 18.1 12 18.1 2.6 12 2.6 12Z"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinejoin="round"
+              />
+              <circle cx="12" cy="12" r="2.6" fill="none" stroke="currentColor" strokeWidth="1.6" />
+            </svg>
+            {views}
+          </span>
         </p>
       </div>
     </article>
