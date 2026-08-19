@@ -184,3 +184,48 @@ body {
  * 그래서 TDS 기하·색은 컴포넌트에서 유틸리티 조합으로 표현한다.
  * 값의 정본은 `presentation/components/tds.ts` 다.
  */
+
+/*
+ * 스켈레톤.
+ *
+ * **200ms 안에 끝나는 로딩에는 보이지 않는다.** 순식간에 나타났다 사라지는 스켈레톤은
+ * 화면이 깜빡이는 것으로만 읽혀 오히려 느려 보인다. 0.2s 지연 후 페이드인한다.
+ * 근거: .curvez/design/screens/explore.md state:loading
+ */
+@keyframes skeleton-appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+.skeleton-root {
+  animation: skeleton-appear 0.25s var(--ease-signature) 0.2s both;
+}
+
+.skeleton-block {
+  background: var(--paper-surface);
+  border-radius: var(--round-sm);
+  animation: skeleton-pulse 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-block {
+    animation: none;
+  }
+  .skeleton-root {
+    animation: skeleton-appear 0.01ms 0.2s both;
+  }
+}
