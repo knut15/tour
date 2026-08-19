@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { CATEGORIES, type Category } from "@/domain/spot/category";
 import { exploreHref } from "@/presentation/lib/explore-href";
+import { CategoryTabs } from "@/presentation/components/CategoryTabs";
 
 /**
  * 카테고리 선택.
@@ -29,32 +29,16 @@ export function CategoryPicker({
   labels: Record<Category, string>;
   groupLabel: string;
 }) {
-  return (
-    <nav aria-label={groupLabel}>
-      <ul className="flex flex-wrap items-center gap-x-8 border-b border-line sm:gap-x-9">
-        {CATEGORIES.map((c) => {
-          const active = c === current;
-          // 카테고리를 바꿔도 지역은 유지한다. 페이지는 1로 돌아간다
-          return (
-            <li key={c}>
-              <Link
-                href={exploreHref(locale, { category: c, areaCode, districtCode })}
-                aria-current={active ? "page" : undefined}
-                className={
-                  "inline-block pb-3.5 -mb-px border-b text-[15px] " +
-                  "transition-colors duration-200 ease-[var(--ease-signature)] " +
-                  "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-focus " +
-                  (active
-                    ? "border-ink font-semibold text-ink"
-                    : "border-transparent text-muted hover:text-ink")
-                }
-              >
-                {labels[c]}
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
-    </nav>
-  );
+  /*
+    링크를 여기서 만든다. URL 규칙은 서버 쪽 한 곳에 두고
+    (`presentation/lib/explore-href.ts`) 클라이언트 컴포넌트는 받은 것을 그리기만 한다.
+    카테고리를 바꿔도 지역은 유지한다. 페이지는 1로 돌아간다.
+  */
+  const tabs = CATEGORIES.map((c) => ({
+    key: c,
+    label: labels[c],
+    href: exploreHref(locale, { category: c, areaCode, districtCode }),
+  }));
+
+  return <CategoryTabs tabs={tabs} current={current} groupLabel={groupLabel} />;
 }
