@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [main, release]
+  pull_request:
+    branches: [main, release]
+
+# 같은 브랜치에 연달아 push 하면 앞의 실행을 취소한다.
+# 다만 main·release 의 실행은 취소하지 않는다 — 그 이력은 배포 판단의 근거다.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/release' }}
+
+permissions:
+  contents: read
+
+env:
+  # CI 는 비밀 값을 쓰지 않는다. TOUR_API_KEY 없이 목 데이터로 돈다.
+  # `isMockEnabled()` 의 기본값도 true 지만, 기본값에 기대지 않고 명시한다.
+  USE_MOCK_DATA: "true"
+  # Next.js 텔레메트리를 끈다.
+  NEXT_TELEMETRY_DISABLED: "1"
+
+jobs:
+  quality:
+    name: 타입·린트·테스트·빌드
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      # setup-node 의 `cache: pnpm` 이 pnpm 실행 파일을 필요로 하므로 먼저 깐다.
+      # 버전은 package.json 의 `packageManager` 에서 읽으므로 여기에 적지 않는다.
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # 아래 네 단계는 `!cancelled()` 로 이어 붙인다.
+      # 앞 단계가 실패해도 나머지를 돌려서 한 번의 실행으로 실패를 전부 본다.
+      # 타입 오류 고치고 다시 올렸더니 이번엔 린트가 터지는 왕복을 없앤다.
+      - name: 타입 체크
+        if: ${{ !cancelled() }}
+        run: pnpm typecheck
+
+      - name: 린트
+        if: ${{ !cancelled() }}
+        run: pnpm lint
+
+      - name: 테스트
+        if: ${{ !cancelled() }}
+        run: pnpm test
+
+      - name: 빌드
+        if: ${{ !cancelled() }}
+        run: pnpm build
+
+  architecture:
+    name: 레이어 경계
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+
+      # 의존성을 깔지 않는다. 스크립트는 node 내장 모듈과 grep 만 쓴다.
+      - name: 금지 import 검사
+        run: node scripts/check-architecture.mjs
