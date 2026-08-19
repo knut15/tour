@@ -46,9 +46,12 @@ export function SpotFrame({
 }) {
   const titleSize =
     size === "lg" ? "text-[24px]" : size === "md" ? "text-[21px]" : "text-[18px]";
+  const hasKorean = Boolean(spot.titleKorean && spot.titleKorean !== spot.titlePrimary);
 
   return (
-    <article className="group relative">
+    // 카드 높이를 채우고 메타를 바닥에 붙인다. 제목이 두 줄로 넘쳐도
+    // 한 행의 카드들이 같은 높이를 갖고 주소가 한 줄에 정렬된다
+    <article className="group relative flex h-full min-w-0 flex-col">
       <div
         className={
           "relative overflow-hidden rounded-sm bg-surface " + WINDOW_ASPECT[matte]
@@ -76,8 +79,8 @@ export function SpotFrame({
       </div>
 
       {/* 제목과 자치구가 같은 기준선에 놓인다 */}
-      <div className="flex items-baseline justify-between gap-3 pt-[18px]">
-        <h3 className={"font-display font-normal leading-[1.2] text-ink " + titleSize}>
+      <div className="flex min-w-0 items-baseline justify-between gap-3 pt-[18px]">
+        <h3 className={"min-w-0 font-display font-normal leading-[1.2] text-ink " + titleSize}>
           <Link
             href={href}
             className="after:absolute after:inset-0 after:content-[''] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-focus"
@@ -92,15 +95,26 @@ export function SpotFrame({
         )}
       </div>
 
-      {/* 한글 원명. 현장에서 보여줘야 하므로 보조가 아니라 본문이다 */}
-      {spot.titleKorean && spot.titleKorean !== spot.titlePrimary && (
+      {/*
+        한글 원명. 현장에서 보여줘야 하므로 보조가 아니라 본문이다.
+
+        **값이 없어도 줄을 지우지 않는다.** 지우면 그 카드만 아래 요소가 위로 올라와
+        한 행의 단이 어긋난다. 원명이 없거나(파싱 실패·번역 부재) 번역명과 같은 경우(ko)에도
+        같은 높이를 차지한다. 빈 줄은 스크린 리더가 읽지 않도록 감춘다.
+      */}
+      {hasKorean ? (
         <p lang="ko" className="mt-1.5 text-[14px] leading-[21px] text-body">
           {spot.titleKorean}
         </p>
+      ) : (
+        <p className="mt-1.5 h-[21px]" aria-hidden="true" />
       )}
 
-      <div className="mt-4 border-t border-line pt-3">
-        <p className="truncate text-[12px] text-muted">{spot.address ?? ""}</p>
+      {/* mt-auto 로 바닥에 붙인다 — 제목 줄 수가 달라도 주소가 한 줄에 정렬된다 */}
+      <div className="mt-auto border-t border-line pt-3">
+        <p className="truncate text-[12px] text-muted">
+          {spot.address ?? <span aria-hidden="true">&nbsp;</span>}
+        </p>
       </div>
     </article>
   );

@@ -34,7 +34,13 @@ export function Wall({
       className="grid grid-cols-1 gap-x-[34px] gap-y-16 sm:grid-cols-2 lg:grid-cols-3"
     >
       {items.map((spot, i) => (
-        <li key={`${spot.locale}:${spot.contentId}`}>
+        <li
+          key={`${spot.locale}:${spot.contentId}`}
+          // min-w-0 이 없으면 flex 아이템이 min-content 아래로 줄지 못한다.
+          // truncate 는 white-space: nowrap 이라 긴 주소 한 줄이 곧 min-content 폭이 되고,
+          // 그 카드가 자기 열을 밀어내 옆 칸을 덮는다
+          className="flex min-w-0"
+        >
           <SpotFrame
             spot={spot}
             href={hrefOf(spot)}
