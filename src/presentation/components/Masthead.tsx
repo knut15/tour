@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Suspense } from "react";
+import { Suspense, type ReactNode } from "react";
 import type { Locale } from "@/domain/shared/locale";
 import { getTodayWeather } from "@/presentation/lib/container";
 import { LocaleSwitcher } from "@/presentation/components/LocaleSwitcher";
@@ -9,7 +9,11 @@ import { WeatherChip } from "@/presentation/components/WeatherChip";
 import type { Dictionary } from "@/presentation/i18n/dictionaries";
 
 /**
- * 마스트헤드 — 브랜드 + 컨트롤 세 개.
+ * 마스트헤드 — 왼쪽 하나 + 컨트롤 세 개.
+ *
+ * **모든 화면이 이것을 쓴다.** 상세 화면이 자기 헤더를 따로 갖고 있던 동안 날씨 칩이
+ * 거기서만 빠져 있었다. 왼쪽에 무엇이 서는지만 화면마다 다르므로(브랜드 / 뒤로) 그것만
+ * 밖에서 받는다.
  *
  * **서버 컴포넌트다.** 날씨 조회만 `<Suspense>` 안의 별도 async 컴포넌트로 떼어
  * 기상청 응답이 느려도 브랜드·테마·언어는 즉시 뜬다.
@@ -24,11 +28,17 @@ export function Masthead({
   locale,
   t,
   localeHref,
+  localeNote,
+  leading,
 }: {
   locale: Locale;
   t: Dictionary;
   /** 언어 전환이 갈 곳. 화면마다 다르므로 밖에서 받는다 */
   localeHref: (locale: Locale) => string;
+  /** 언어 전환의 결과가 기대와 다를 수 있을 때 알리는 문구 */
+  localeNote?: string;
+  /** 왼쪽 자리. 생략하면 브랜드가 선다 */
+  leading?: ReactNode;
 }) {
   return (
     <>
@@ -39,18 +49,25 @@ export function Masthead({
       */}
       <header className="masthead-sticky fixed inset-x-0 top-0 z-[var(--layer-bar)] bg-canvas/85 backdrop-blur">
         <div className="mx-auto flex h-full w-full max-w-[1200px] items-center justify-between px-6">
-          <Link
-            href={`/${locale}`}
-            className="text-[13px] uppercase tracking-[0.16em] focus-visible:outline-2 focus-visible:outline-focus"
-          >
-            {t.brand}
-          </Link>
+          {leading ?? (
+            <Link
+              href={`/${locale}`}
+              className="text-[13px] uppercase tracking-[0.16em] focus-visible:outline-2 focus-visible:outline-focus"
+            >
+              {t.brand}
+            </Link>
+          )}
           <div className="flex items-center gap-2">
             <Suspense fallback={<WeatherChipSkeleton />}>
               <WeatherSlot locale={locale} t={t} />
             </Suspense>
             <ThemeToggle label={t.nav.theme} />
-            <LocaleSwitcher current={locale} hrefFor={localeHref} label={t.nav.switchLocale} />
+            <LocaleSwitcher
+              current={locale}
+              hrefFor={localeHref}
+              label={t.nav.switchLocale}
+              note={localeNote}
+            />
           </div>
         </div>
       </header>
