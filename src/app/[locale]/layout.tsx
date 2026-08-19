@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Newsreader } from "next/font/google";
-import Script from "next/script";
+import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
-import { LOCALES, isLocale } from "@/domain/shared/locale";
-import { THEME_INIT_SCRIPT } from "@/presentation/components/ThemeToggle";
+import { LOCALES, LOCALE_HTML_LANG, isLocale } from "@/domain/shared/locale";
+import { THEME_COOKIE, isTheme, type Theme } from "@/presentation/lib/theme";
 import "../globals.css";
 
 /**
@@ -32,32 +32,24 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
 
+  /*
+    테마 선택을 서버에서 읽어 `<html data-theme>` 로 심는다.
+    인라인 스크립트를 쓰지 않으므로 React 의 "script 태그" 경고도,
+    첫 페인트 깜빡임도, 하이드레이션 불일치도 없다.
+    대가: `cookies()` 는 이 라우트를 동적 렌더링으로 만든다.
+  */
+  const stored = (await cookies()).get(THEME_COOKIE)?.value;
+  const theme: Theme | undefined = isTheme(stored) ? stored : undefined;
+
   return (
     <html
-      lang={locale}
+      lang={LOCALE_HTML_LANG[locale]}
       className={`${newsreader.variable} h-full antialiased`}
-      /*
-        theme-init 스크립트가 하이드레이션 **전에** data-theme 를 붙인다.
-        서버 HTML 에는 그 속성이 없으므로 React 가 불일치로 잡는데, 이건 의도된 것이다.
-        suppressHydrationWarning 은 이 엘리먼트의 속성 한 겹만 덮으므로 자식의 진짜
-        불일치는 그대로 드러난다.
-      */
-      suppressHydrationWarning
+      data-theme={theme}
     >
       <head>
         {/* 본문·컨트롤은 Pretendard 폴백. Toss Product Sans 는 재배포 권리 미확인이라 싣지 않는다 */}
         <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="" />
-        {/*
-          저장된 테마 선택을 첫 페인트 전에 적용해 깜빡임을 막는다.
-          **맨 <script> 태그를 쓰지 않는다** — React 가 클라이언트 렌더에서 실행하지 않아
-          Next.js 16 이 콘솔 에러로 잡는다. 인라인 스크립트는 next/script 로 넣고
-          `id` 를 반드시 준다 (문서: "An id property must be assigned for inline scripts").
-        */}
-        <Script
-          id="theme-init"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }}
-        />
         <link
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"

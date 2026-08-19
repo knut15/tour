@@ -10,6 +10,7 @@ import { DistrictPicker } from "@/presentation/components/DistrictPicker";
 import { Wall } from "@/presentation/components/Wall";
 import { ButtonLink } from "@/presentation/components/Button";
 import { ThemeToggle } from "@/presentation/components/ThemeToggle";
+import { LocaleSwitcher } from "@/presentation/components/LocaleSwitcher";
 import { getDictionary, type Dictionary } from "@/presentation/i18n/dictionaries";
 
 function parseCategory(raw: string | string[] | undefined): Category {
@@ -165,7 +166,6 @@ function nextWallHref(
 }
 
 function Masthead({ locale, t }: { locale: Locale; t: Dictionary }) {
-  const other = locale === "en" ? "ko" : "en";
   return (
     <header className="mx-auto flex w-full max-w-[1200px] items-center justify-between px-6 py-5">
       <Link
@@ -176,12 +176,11 @@ function Masthead({ locale, t }: { locale: Locale; t: Dictionary }) {
       </Link>
       <div className="flex items-center gap-2">
         <ThemeToggle label={t.nav.theme} />
-        <Link
-          href={`/${other}/explore`}
-          className="rounded-full border border-line px-4 py-2 text-[13px] text-muted hover:text-ink focus-visible:outline-2 focus-visible:outline-focus"
-        >
-          {t.nav.switchLocale}
-        </Link>
+        <LocaleSwitcher
+          current={locale}
+          hrefFor={(l) => `/${l}/explore`}
+          label={t.nav.switchLocale}
+        />
       </div>
     </header>
   );

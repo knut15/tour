@@ -50,16 +50,24 @@ export type Spot = {
 };
 
 /**
- * 영문 `title` 은 `Cheonggyecheon Stream (청계천)` 형태로 로마자와 한글을 함께 담는다.
- * 괄호 안이 한글 원명이다. 괄호가 없으면 한글명은 없는 것으로 본다.
- * 근거: .curvez/research/tourapi-english-coverage.md 사실 12
+ * 다국어 `title` 은 `현지어 (한글)` 형태로 번역명과 한글 원명을 함께 담는다.
+ *
+ * **괄호 문자가 언어마다 다르다.** 일본어는 전각 괄호를 쓴다:
+ *   ja  `スパレイ（스파레이）`      ← 전각 （）
+ *   zh  `首爾遊覽船(서울크루즈)`     ← 반각 ()
+ *   de  `ARTEASPOON (아티스푼)`
+ *   fr  `세종마을 음식문화거리`       ← 번역이 없으면 한글만 온다
+ *
+ * 안쪽에 다른 괄호가 낀 경우도 있다: `崔赫(チェヒョク)韓医院 (최혁한의원)`.
+ * 그래서 **끝에 붙은, 한글을 담은 괄호 한 쌍**만 원명으로 본다.
+ * 근거: .curvez/research/tourapi-english-coverage.md 사실 12, 다국어 서비스 실측
  */
 export function parseSpotName(rawTitle: string, locale: Locale): SpotName {
   const title = rawTitle.trim();
   if (locale === "ko") {
     return { primary: title, korean: title };
   }
-  const match = title.match(/^(.*?)\s*\(([^()]*[가-힣][^()]*)\)\s*$/);
+  const match = title.match(/^(.*?)\s*[(（]([^()（）]*[가-힣][^()（）]*)[)）]\s*$/);
   if (!match) return { primary: title, korean: null };
   const primary = match[1].trim();
   const korean = match[2].trim();

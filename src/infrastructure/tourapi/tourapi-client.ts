@@ -4,12 +4,21 @@ import { normalizeItems, type TourApiItem, type TourApiResponse } from "@/infras
 
 /**
  * 로케일별 서비스 경로.
- * **국문과 영문은 별개 서비스이고 contentid 공간도 분리돼 있다.**
- * 근거: .curvez/research/tourapi-english-coverage.md 사실 9
+ *
+ * **언어마다 별개 서비스이고 contentid 공간도 서로 분리돼 있다.**
+ * 같은 장소도 언어마다 ID 가 다르므로 로케일을 넘나드는 조회는 성립하지 않는다.
+ * 서비스명은 실제 호출로 확인했다 — `JapService2`·`ChiService2` 같은 추측형은 존재하지 않는다.
+ *
+ * 중국어 간체(`ChsService2`)는 서비스가 존재하지만 활용신청이 필요하다.
+ * 근거: .curvez/research/tourapi-english-coverage.md 사실 9, 다국어 서비스 실측
  */
 const SERVICE: Record<Locale, string> = {
   ko: "KorService2",
   en: "EngService2",
+  ja: "JpnService2",
+  "zh-Hant": "ChtService2",
+  de: "GerService2",
+  fr: "FreService2",
 };
 
 const BASE = "https://apis.data.go.kr/B551011";

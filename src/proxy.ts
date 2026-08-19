@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { DEFAULT_LOCALE, LOCALES } from "@/domain/shared/locale";
+import { DEFAULT_LOCALE, LOCALES, type Locale } from "@/domain/shared/locale";
 
 /**
  * 로케일이 없는 경로를 로케일 경로로 보낸다.
@@ -13,13 +13,45 @@ export function proxy(request: NextRequest) {
   const hasLocale = LOCALES.some((l) => pathname === `/${l}` || pathname.startsWith(`/${l}/`));
   if (hasLocale) return;
 
-  const accepted = request.headers.get("accept-language") ?? "";
-  // 한국어 사용자만 ko 로 보내고 나머지는 영어다. 영어가 1급 시민이다 (GOAL.md §5-1)
-  const locale = /(^|,)\s*ko\b/i.test(accepted) ? "ko" : DEFAULT_LOCALE;
+  // Accept-Language 를 q 값 순으로 훑어 지원 로케일 중 첫 매치를 고른다.
+  // 매치가 없으면 영어다 — 영어가 1급 시민이다 (GOAL.md §5-1)
+  const locale = pickLocale(request.headers.get("accept-language"));
 
   const url = request.nextUrl.clone();
   url.pathname = `/${locale}${pathname === "/" ? "" : pathname}`;
   return NextResponse.redirect(url);
+}
+
+/**
+ * `ko-KR,ko;q=0.9,en;q=0.8` 같은 헤더에서 지원 로케일을 고른다.
+ * `zh-Hant`·`zh-TW`·`zh-HK` 는 번체로, 그 외 `zh` 는 지원 목록에 없으므로 건너뛴다.
+ */
+function pickLocale(header: string | null): Locale {
+  if (!header) return DEFAULT_LOCALE;
+  const tags = header
+    .split(",")
+    .map((part) => {
+      const [tag, ...params] = part.trim().split(";");
+      const q = params.find((p) => p.trim().startsWith("q="));
+      return { tag: tag.trim().toLowerCase(), q: q ? Number(q.split("=")[1]) : 1 };
+    })
+    .filter((t) => t.tag && Number.isFinite(t.q))
+    .sort((a, b) => b.q - a.q);
+
+  for (const { tag } of tags) {
+    if (tag === "*") break;
+    const exact = LOCALES.find((l) => l.toLowerCase() === tag);
+    if (exact) return exact;
+    if (/^zh\b/.test(tag)) {
+      // 번체를 쓰는 지역 태그만 받는다. 간체(ChsService2)는 아직 활용신청 전이다
+      if (/hant|tw|hk|mo/.test(tag)) return "zh-Hant";
+      continue;
+    }
+    const base = tag.split("-")[0];
+    const byBase = LOCALES.find((l) => l.split("-")[0] === base);
+    if (byBase) return byBase;
+  }
+  return DEFAULT_LOCALE;
 }
 
 export const config = {

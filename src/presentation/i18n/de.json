@@ -1,0 +1,63 @@
+{
+  "brand": "Dein Seoul",
+  "nav": {
+    "explore": "Entdecken",
+    "switchLocale": "Sprache",
+    "theme": "Hell oder dunkel"
+  },
+  "explore": {
+    "eyebrow": "Ausgewählt, nicht aufgelistet",
+    "title": "Dein Seoul, gerahmt.",
+    "subtitle": "Ein paar Orte auf einmal. Ansehen, dann hingehen.",
+    "allDistricts": "Ganz Seoul",
+    "districtLabel": "Stadtteil",
+    "categoryLabel": "Wonach suchst du",
+    "showAnother": "Mehr Orte",
+    "sourceNote": "Ortsdaten von der Korea Tourism Organization."
+  },
+  "category": {
+    "attraction": "Orte",
+    "culture": "Kultur",
+    "food": "Essen",
+    "festival": "Aktuell"
+  },
+  "state": {
+    "emptyFilter": "Zu dieser Kombination gibt es nichts.",
+    "emptyFilterAction": "Filter zurücksetzen",
+    "error": "Diese Orte konnten nicht geladen werden.",
+    "errorAction": "Erneut versuchen",
+    "loading": "Orte werden gesucht…"
+  },
+  "frame": {
+    "save": "Merken",
+    "saved": "Gemerkt",
+    "noCrop": "Unbeschnitten"
+  },
+  "detail": {
+    "back": "Zurück zur Liste",
+    "noInfo": "Keine Angabe",
+    "official": "Offizielle Website",
+    "openInMaps": "In Karten öffnen",
+    "sourceNote": "Ortsdaten von der Korea Tourism Organization. Foto unverändert verwendet.",
+    "localeSwitchNote": "Für diesen Ort gibt es keinen Eintrag in der anderen Sprache – du landest in der Liste.",
+    "fact": {
+      "address": "Adresse",
+      "openingHours": "Öffnungszeiten",
+      "closedDays": "Geschlossen",
+      "admission": "Eintritt",
+      "inquiry": "Kontakt",
+      "parking": "Parken",
+      "eventPeriod": "Zeitraum",
+      "eventPlace": "Ort"
+    },
+    "notFound": {
+      "title": "Wir konnten diesen Ort nicht finden.",
+      "retry": "Erneut versuchen",
+      "toList": "Zurück zur Liste"
+    }
+  },
+  "a11y": {
+    "placeList": "Orte",
+    "placeListIn": "Orte in {district}"
+  }
+}

@@ -19,9 +19,22 @@ export function isCategory(value: string): value is Category {
  * 근거: .curvez/research/tourapi-english-coverage.md 사실 2,
  *       신분류체계정보 관광타입정보 연계 정의서.xlsx 의 관광타입 매핑표
  */
+const MULTILINGUAL: Record<Category, number> = {
+  attraction: 76,
+  culture: 78,
+  food: 82,
+  festival: 85,
+};
+
 const CONTENT_TYPE_ID: Record<Locale, Record<Category, number>> = {
+  // 국문만 다른 체계를 쓴다. 국문 코드를 다국어 서비스에 넣으면 전부 0건이 나온다
   ko: { attraction: 12, culture: 14, food: 39, festival: 15 },
-  en: { attraction: 76, culture: 78, food: 82, festival: 85 },
+  // 다국어는 코드가 공통이다 (매뉴얼: "관광정보 (다국어 공통)"). 실측으로도 확인했다
+  en: MULTILINGUAL,
+  ja: MULTILINGUAL,
+  "zh-Hant": MULTILINGUAL,
+  de: MULTILINGUAL,
+  fr: MULTILINGUAL,
 };
 
 export function contentTypeIdOf(category: Category, locale: Locale): number {

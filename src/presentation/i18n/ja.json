@@ -1,0 +1,63 @@
+{
+  "brand": "あなたのソウル",
+  "nav": {
+    "explore": "見てまわる",
+    "switchLocale": "言語",
+    "theme": "明るさを切り替える"
+  },
+  "explore": {
+    "eyebrow": "並べるのではなく、選んだもの",
+    "title": "あなたのソウルを、額に。",
+    "subtitle": "一度に数か所ずつ。見て、行く。",
+    "allDistricts": "ソウル全域",
+    "districtLabel": "エリア",
+    "categoryLabel": "何をお探しですか",
+    "showAnother": "もっと見る",
+    "sourceNote": "場所の情報は韓国観光公社が提供しています。"
+  },
+  "category": {
+    "attraction": "見どころ",
+    "culture": "文化",
+    "food": "食べる",
+    "festival": "開催中"
+  },
+  "state": {
+    "emptyFilter": "その組み合わせに該当するものがありません。",
+    "emptyFilterAction": "条件をクリア",
+    "error": "場所を読み込めませんでした。",
+    "errorAction": "再試行",
+    "loading": "場所を探しています…"
+  },
+  "frame": {
+    "save": "保存",
+    "saved": "保存済み",
+    "noCrop": "原本のまま"
+  },
+  "detail": {
+    "back": "一覧へ戻る",
+    "noInfo": "情報なし",
+    "official": "公式サイト",
+    "openInMaps": "地図で見る",
+    "sourceNote": "場所の情報は韓国観光公社が提供しています。写真は原本のまま使用しています。",
+    "localeSwitchNote": "この場所は他の言語に対応する項目がないため、一覧へ移動します。",
+    "fact": {
+      "address": "住所",
+      "openingHours": "営業時間",
+      "closedDays": "休業日",
+      "admission": "利用料金",
+      "inquiry": "問い合わせ",
+      "parking": "駐車",
+      "eventPeriod": "期間",
+      "eventPlace": "会場"
+    },
+    "notFound": {
+      "title": "この場所が見つかりませんでした。",
+      "retry": "再試行",
+      "toList": "一覧へ戻る"
+    }
+  },
+  "a11y": {
+    "placeList": "場所の一覧",
+    "placeListIn": "{district}の場所"
+  }
+}

@@ -54,3 +54,57 @@ describe("parseSpotName", () => {
     expect(parseSpotName("(청계천)", "en")).toEqual({ primary: "(청계천)", korean: null });
   });
 });
+
+describe("parseSpotName — 다국어", () => {
+  it("일본어의 전각 괄호를 처리한다", () => {
+    // 실제 JpnService2 응답. 반각만 처리하면 한글 원명을 통째로 놓친다
+    expect(parseSpotName("スパレイ（스파레이）", "ja")).toEqual({
+      primary: "スパレイ",
+      korean: "스파레이",
+    });
+    expect(parseSpotName("仁寺洞広報館（인사동홍보관）", "ja")).toEqual({
+      primary: "仁寺洞広報館",
+      korean: "인사동홍보관",
+    });
+  });
+
+  it("안쪽에 다른 괄호가 껴 있어도 끝의 한글 괄호만 원명으로 본다", () => {
+    expect(parseSpotName("崔赫(チェヒョク)韓医院 (최혁한의원)", "ja")).toEqual({
+      primary: "崔赫(チェヒョク)韓医院",
+      korean: "최혁한의원",
+    });
+  });
+
+  it("중국어 번체", () => {
+    expect(parseSpotName("首爾遊覽船(서울크루즈)", "zh-Hant")).toEqual({
+      primary: "首爾遊覽船",
+      korean: "서울크루즈",
+    });
+  });
+
+  it("독일어·프랑스어", () => {
+    expect(parseSpotName("Straße Seosulla-gil (서순라길)", "de")).toEqual({
+      primary: "Straße Seosulla-gil",
+      korean: "서순라길",
+    });
+    expect(parseSpotName("Espace vert de Songhyeon ouvert (열린송현 녹지광장)", "fr")).toEqual({
+      primary: "Espace vert de Songhyeon ouvert",
+      korean: "열린송현 녹지광장",
+    });
+  });
+
+  it("번역이 없어 한글만 오는 경우를 버리지 않는다", () => {
+    // FreService2 에 실재한다. primary 를 비우면 이름 없는 카드가 된다
+    expect(parseSpotName("세종마을 음식문화거리", "fr")).toEqual({
+      primary: "세종마을 음식문화거리",
+      korean: null,
+    });
+  });
+
+  it("전각 괄호 안에 한글이 없으면 원명으로 보지 않는다", () => {
+    expect(parseSpotName("スパレイ（すぱれい）", "ja")).toEqual({
+      primary: "スパレイ（すぱれい）",
+      korean: null,
+    });
+  });
+});

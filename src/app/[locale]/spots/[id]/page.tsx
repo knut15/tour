@@ -5,6 +5,7 @@ import type { SpotDetailView } from "@/application/spot/dto";
 import { getSpotDetail } from "@/presentation/lib/container";
 import { SaveChip } from "@/presentation/components/SaveChip";
 import { ThemeToggle } from "@/presentation/components/ThemeToggle";
+import { LocaleSwitcher } from "@/presentation/components/LocaleSwitcher";
 import {
   TDS_BUTTON,
   TDS_BUTTON_PRIMARY,
@@ -172,7 +173,6 @@ function Actions({ spot, t }: { spot: SpotDetailView; t: Dictionary }) {
 }
 
 function Masthead({ locale, t }: { locale: Locale; t: Dictionary }) {
-  const other = locale === "en" ? "ko" : "en";
   return (
     <header className="mx-auto flex w-full max-w-[1200px] items-center justify-between px-6 py-5">
       <Link
@@ -189,13 +189,16 @@ function Masthead({ locale, t }: { locale: Locale; t: Dictionary }) {
       */}
       <div className="flex items-center gap-2">
         <ThemeToggle label={t.nav.theme} />
-        <Link
-          href={`/${other}/explore`}
-          title={t.detail.localeSwitchNote}
-          className="rounded-full border border-line px-4 py-2 text-[13px] text-muted hover:text-ink focus-visible:outline-2 focus-visible:outline-focus"
-        >
-          {t.nav.switchLocale}
-        </Link>
+        {/*
+          상세에서 언어를 바꾸면 목록으로 간다. contentid 공간이 언어마다 분리돼 있어
+          같은 장소로 이어갈 수 없다. title 로 그 사실을 알린다
+        */}
+        <LocaleSwitcher
+          current={locale}
+          hrefFor={(l) => `/${l}/explore`}
+          label={t.nav.switchLocale}
+          note={t.detail.localeSwitchNote}
+        />
       </div>
     </header>
   );
