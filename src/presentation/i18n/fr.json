@@ -33,6 +33,8 @@
   "frame": {
     "save": "Enregistrer",
     "saved": "Enregistré",
+    "like": "J’aime",
+    "liked": "Je n’aime plus",
     "noCrop": "Non recadrée",
     "noImage": "Aucune image disponible"
   },

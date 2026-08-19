@@ -1,47 +1,11 @@
 "use client";
 
-import { useCallback, useMemo, useSyncExternalStore } from "react";
+import { usePersonalSet } from "@/presentation/lib/personal-set";
 import {
   TDS_BUTTON,
   TDS_BUTTON_PRIMARY,
   TDS_BUTTON_WEAK,
 } from "@/presentation/components/tds";
-
-const KEY = "seoul-tour:saved";
-const EVENT = "seoul-tour:saved-changed";
-
-function subscribe(onChange: () => void) {
-  window.addEventListener(EVENT, onChange);
-  window.addEventListener("storage", onChange);
-  return () => {
-    window.removeEventListener(EVENT, onChange);
-    window.removeEventListener("storage", onChange);
-  };
-}
-
-/** 스냅샷은 원문 문자열이다. 매번 새 배열을 반환하면 무한 렌더가 된다. */
-function getSnapshot(): string {
-  try {
-    return window.localStorage.getItem(KEY) ?? "";
-  } catch {
-    return "";
-  }
-}
-
-/** 서버에는 저장소가 없다. 담기지 않은 상태로 렌더하고 hydration 후 실제 값으로 맞춘다. */
-function getServerSnapshot(): string {
-  return "";
-}
-
-function parse(raw: string): string[] {
-  if (!raw) return [];
-  try {
-    const v: unknown = JSON.parse(raw);
-    return Array.isArray(v) ? (v as string[]) : [];
-  } catch {
-    return [];
-  }
-}
 
 /**
  * 담기/빼기. **로그인 없이 동작한다** — 계정은 코스를 저장하는 시점에만 요구한다 (GOAL.md §3).
@@ -63,26 +27,14 @@ export function SaveChip({
   /** chip = 액자 모서리의 작은 표식 / inline = 상세 화면 액션 바의 라벨 버튼 */
   variant?: "chip" | "inline";
 }) {
-  const raw = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-  const saved = useMemo(() => parse(raw).includes(spotKey), [raw, spotKey]);
+  const { has: saved, toggle } = usePersonalSet("saved", spotKey);
 
-  const toggle = useCallback(
-    (e: React.MouseEvent) => {
-      // 상위 액자 링크로 전파되면 담기 대신 상세로 이동해 버린다
-      e.preventDefault();
-      e.stopPropagation();
-      const list = parse(getSnapshot()).filter((k) => k !== spotKey);
-      if (!saved) list.push(spotKey);
-      try {
-        window.localStorage.setItem(KEY, JSON.stringify(list));
-        window.dispatchEvent(new Event(EVENT));
-      } catch {
-        // 저장 실패를 조용히 삼키지 않는다. 상태가 되돌아가 사용자가 실패를 본다
-        window.dispatchEvent(new Event(EVENT));
-      }
-    },
-    [saved, spotKey],
-  );
+  const onClick = (e: React.MouseEvent) => {
+    // 상위 액자 링크로 전파되면 담기 대신 상세로 이동해 버린다
+    e.preventDefault();
+    e.stopPropagation();
+    toggle();
+  };
 
   const shape =
     variant === "chip"
@@ -95,7 +47,7 @@ export function SaveChip({
   return (
     <button
       type="button"
-      onClick={toggle}
+      onClick={onClick}
       aria-pressed={saved}
       // 아이콘 전용일 때만 라벨이 필요하다. inline 은 텍스트를 갖고 있어 중복 지정하지 않는다
       aria-label={variant === "chip" ? `${saved ? labelSaved : labelSave}: ${title}` : undefined}
