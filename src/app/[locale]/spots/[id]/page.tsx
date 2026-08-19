@@ -5,6 +5,7 @@ import type { SpotDetailView } from "@/application/spot/dto";
 import { getSpotDetail } from "@/presentation/lib/container";
 import { NoImage } from "@/presentation/components/NoImage";
 import { SaveChip } from "@/presentation/components/SaveChip";
+import { SpotStats } from "@/presentation/components/SpotStats";
 import { SpotImage } from "@/presentation/components/SpotImage";
 import { Masthead } from "@/presentation/components/Masthead";
 import {
@@ -84,6 +85,16 @@ export default async function SpotDetailPage({ params }: PageProps<"/[locale]/sp
                 {spot.titleKorean}
               </p>
             )}
+            {/* 목록 카드 바닥과 같은 줄이다. 같은 컴포넌트를 쓴다 */}
+            <div className="mt-5">
+              <SpotStats
+                spotKey={`${spot.locale}:${spot.contentId}`}
+                locale={spot.locale}
+                labelLike={t.frame.like}
+                labelViews={t.frame.views}
+                size="md"
+              />
+            </div>
           </header>
 
           <section className="md:col-span-5 md:col-start-8 md:row-start-2">
