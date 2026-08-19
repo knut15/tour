@@ -33,6 +33,8 @@
   "frame": {
     "save": "收藏",
     "saved": "已收藏",
+    "like": "喜歡",
+    "liked": "取消喜歡",
     "noCrop": "原圖",
     "noImage": "無圖片資訊"
   },

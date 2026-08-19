@@ -18,6 +18,8 @@ export function Wall({
   districtNameOf,
   labelSave,
   labelSaved,
+  labelLike,
+  labelLiked,
   labelNoImage,
   enterFrom,
 }: {
@@ -27,6 +29,8 @@ export function Wall({
   districtNameOf: (spot: SpotView) => string | undefined;
   labelSave: string;
   labelSaved: string;
+  labelLike: string;
+  labelLiked: string;
   labelNoImage: string;
   /**
    * 이 인덱스부터가 이번에 새로 붙은 카드다. 그 앞은 이미 화면에 있던 것이라
@@ -64,6 +68,8 @@ export function Wall({
             districtName={districtNameOf(spot)}
             labelSave={labelSave}
             labelSaved={labelSaved}
+            labelLike={labelLike}
+            labelLiked={labelLiked}
             labelNoImage={labelNoImage}
             priority={i < 3}
           />

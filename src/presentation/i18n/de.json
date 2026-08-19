@@ -33,6 +33,8 @@
   "frame": {
     "save": "Merken",
     "saved": "Gemerkt",
+    "like": "Gefällt mir",
+    "liked": "Gefällt mir nicht mehr",
     "noCrop": "Unbeschnitten",
     "noImage": "Kein Bild vorhanden"
   },

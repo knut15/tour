@@ -33,6 +33,8 @@
   "frame": {
     "save": "Save",
     "saved": "Saved",
+    "like": "Like",
+    "liked": "Liked",
     "noCrop": "Shown uncropped",
     "noImage": "No image available"
   },

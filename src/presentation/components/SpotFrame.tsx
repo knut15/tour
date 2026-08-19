@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { SpotView } from "@/application/spot/dto";
 import { NoImage } from "@/presentation/components/NoImage";
-import { SaveChip } from "@/presentation/components/SaveChip";
+import { CardActions } from "@/presentation/components/CardActions";
 import { SpotImage } from "@/presentation/components/SpotImage";
 
 export type FrameSize = "sm" | "md" | "lg";
@@ -35,6 +35,8 @@ export function SpotFrame({
   districtName,
   labelSave,
   labelSaved,
+  labelLike,
+  labelLiked,
   labelNoImage,
   priority = false,
 }: {
@@ -45,6 +47,8 @@ export function SpotFrame({
   districtName?: string;
   labelSave: string;
   labelSaved: string;
+  labelLike: string;
+  labelLiked: string;
   labelNoImage: string;
   priority?: boolean;
 }) {
@@ -78,11 +82,14 @@ export function SpotFrame({
           <NoImage label={labelNoImage} />
         )}
 
-        <SaveChip
+        {/* 평소엔 없다. 카드에 올리거나 포커스가 들어오면 사진 가운데 떠오른다 */}
+        <CardActions
           spotKey={`${spot.locale}:${spot.contentId}`}
+          title={spot.titlePrimary}
           labelSave={labelSave}
           labelSaved={labelSaved}
-          title={spot.titlePrimary}
+          labelLike={labelLike}
+          labelLiked={labelLiked}
         />
       </div>
 

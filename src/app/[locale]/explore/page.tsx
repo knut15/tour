@@ -327,6 +327,8 @@ async function Spots({
         districtNameOf={(s) => districts.find((r) => r.code === s.districtCode)?.name}
         labelSave={t.frame.save}
         labelSaved={t.frame.saved}
+        labelLike={t.frame.like}
+        labelLiked={t.frame.liked}
         labelNoImage={t.frame.noImage}
         enterFrom={enterFrom(more, wall.items.length)}
       />
