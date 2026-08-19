@@ -11,5 +11,17 @@
     "lint": "pnpm lint",
     "test": "pnpm test",
     "build": "pnpm build"
+  },
+  "git": {
+    "baseBranch": "release",
+    "releaseBranch": "main",
+    "mergeStrategy": "squash",
+    "protectedBranches": [
+      "main",
+      "release"
+    ],
+    "humanMergeTargets": [
+      "main"
+    ]
   }
 }
