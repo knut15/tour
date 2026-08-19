@@ -59,6 +59,81 @@
       "toList": "回到列表"
     }
   },
+  "weather": {
+    "panelLabel": "今天，你的天空",
+    "todayTitle": "此刻",
+    "sky": {
+      "clear": "晴",
+      "partly-cloudy": "多雲時晴",
+      "cloudy": "陰",
+      "rain": "雨",
+      "rain-snow": "雨夾雪",
+      "snow": "雪",
+      "shower": "陣雨"
+    },
+    "feelsLike": "體感",
+    "low": "最低",
+    "high": "最高",
+    "humidity": "濕度",
+    "wind": "風",
+    "unitCelsius": "°",
+    "unitPercent": "%",
+    "unitWind": "m/s",
+    "unitDust": "㎍/㎥",
+    "air": {
+      "title": "空氣",
+      "pm10": "PM10",
+      "pm25": "PM2.5",
+      "grade": {
+        "good": "良好",
+        "moderate": "普通",
+        "bad": "不良",
+        "very-bad": "非常不良"
+      },
+      "unavailable": "目前收不到空氣品質資料。",
+      "noValue": "無資料"
+    },
+    "outfit": {
+      "title": "今天穿什麼",
+      "layer": {
+        "sleeveless": "背心配短褲",
+        "short-sleeve": "短袖配薄襯衫",
+        "long-sleeve": "長袖上衣配長褲",
+        "light-knit": "薄針織或開襟衫",
+        "jacket": "外套配牛仔褲",
+        "trench": "風衣配針織衫",
+        "coat": "大衣或皮外套",
+        "padding": "羽絨外套加圍巾"
+      },
+      "extra": {
+        "umbrella": "雨傘",
+        "mask": "口罩",
+        "windbreaker": "防風外套",
+        "extra-layer": "多帶一件外套"
+      }
+    },
+    "observedNote": "{time} 更新",
+    "stationNote": "{station} 觀測",
+    "regions": {
+      "서울": "首爾",
+      "부산": "釜山",
+      "대구": "大邱",
+      "인천": "仁川",
+      "광주": "光州",
+      "대전": "大田",
+      "울산": "蔚山",
+      "세종": "世宗",
+      "경기": "京畿",
+      "강원": "江原",
+      "충북": "忠北",
+      "충남": "忠南",
+      "전북": "全北",
+      "전남": "全南",
+      "경북": "慶北",
+      "경남": "慶南",
+      "제주": "濟州"
+    }
+  },
   "a11y": {
     "placeList": "地點列表",
     "placeListIn": "{district}的地點"

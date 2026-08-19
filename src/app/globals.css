@@ -75,6 +75,23 @@
   --layer-bar: 20;
   /* 눌러서 여는 것. 항상 위다 — 사용자가 방금 연 것이 가려지면 고장으로 읽힌다 */
   --layer-popover: 30;
+
+  /*
+   * ── 미세먼지 등급 (환경부 4단계) ──
+   *
+   * 이 프로젝트에서 **새로 하드코딩하는 유일한 색이다.** 등급은 토스 팔레트의 역할
+   * (primary/weak/danger)로 표현할 수 없다 — 4단계가 필요하고 순서가 의미를 갖는다.
+   *
+   * 값은 타일 배경(`--paper-surface`) 대비 4.5:1 이상으로 고른다. 점과 라벨 글자가
+   * 같은 토큰을 쓰므로 글자 대비 기준을 통과해야 한다.
+   * 라이트: 4.9 / 4.8 / 4.5 / 5.5, 다크: 7.6 / 8.8 / 8.8 / 7.1 (계산값)
+   *
+   * **색만으로 등급을 구분하지 않는다.** 화면에는 항상 등급 이름이 함께 나온다.
+   */
+  --dust-good: #1b64da;
+  --dust-moderate: #157a52;
+  --dust-bad: #b45309;
+  --dust-very-bad: #c0212f;
 }
 
 /*
@@ -103,6 +120,10 @@
   --toss-weak-bg: #17263c;
   --toss-weak-fg: #8ab6f5;
   --focus-ring: #4a92f8;
+  --dust-good: #7fb4ff;
+  --dust-moderate: #63d3a3;
+  --dust-bad: #f2b457;
+  --dust-very-bad: #ff8a8a;
   }
 }
 
@@ -118,6 +139,10 @@
   --toss-weak-bg: #17263c;
   --toss-weak-fg: #8ab6f5;
   --focus-ring: #4a92f8;
+  --dust-good: #7fb4ff;
+  --dust-moderate: #63d3a3;
+  --dust-bad: #f2b457;
+  --dust-very-bad: #ff8a8a;
 }
 
 :root[data-theme="light"] {
@@ -132,6 +157,10 @@
   --toss-weak-bg: #e8f3ff;
   --toss-weak-fg: #1b64da;
   --focus-ring: #3182f6;
+  --dust-good: #1b64da;
+  --dust-moderate: #157a52;
+  --dust-bad: #b45309;
+  --dust-very-bad: #c0212f;
 }
 
 @theme inline {
@@ -148,6 +177,10 @@
   --color-weak-bg: var(--toss-weak-bg);
   --color-weak-fg: var(--toss-weak-fg);
   --color-danger: var(--toss-danger);
+  --color-dust-good: var(--dust-good);
+  --color-dust-moderate: var(--dust-moderate);
+  --color-dust-bad: var(--dust-bad);
+  --color-dust-very-bad: var(--dust-very-bad);
 
   /*
    * Toss Product Sans 는 **재배포 권리가 확인되지 않았다.**
@@ -204,6 +237,27 @@ body {
  * 그래서 TDS 기하·색은 컴포넌트에서 유틸리티 조합으로 표현한다.
  * 값의 정본은 `presentation/components/tds.ts` 다.
  */
+
+/*
+ * 날씨 위젯이 열릴 때.
+ *
+ * **칩 오른쪽 위 모서리에서 자란다** — 패널은 칩에서 나온 것이지 화면에 얹힌 것이 아니다.
+ * 180ms 를 넘기면 두 번째 클릭부터 느려 보인다. 위의 `prefers-reduced-motion` 전역 규칙이
+ * 이 애니메이션도 0.01ms 로 눌러 준다.
+ *
+ * 클래스가 아니라 keyframes 만 둔다. 색을 참조하는 컴포넌트 클래스는 이 파일 아래쪽
+ * 주석의 이유로 금지돼 있고, 사용은 컴포넌트의 `animate-[...]` 유틸리티가 한다.
+ */
+@keyframes weather-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
 
 /*
  * 스켈레톤.

@@ -59,6 +59,81 @@
       "toList": "Retour à la liste"
     }
   },
+  "weather": {
+    "panelLabel": "Votre ciel aujourd'hui",
+    "todayTitle": "En ce moment",
+    "sky": {
+      "clear": "Ciel dégagé",
+      "partly-cloudy": "Peu nuageux",
+      "cloudy": "Couvert",
+      "rain": "Pluie",
+      "rain-snow": "Neige fondue",
+      "snow": "Neige",
+      "shower": "Averses"
+    },
+    "feelsLike": "Ressenti",
+    "low": "Min.",
+    "high": "Max.",
+    "humidity": "Humidité",
+    "wind": "Vent",
+    "unitCelsius": "°",
+    "unitPercent": "%",
+    "unitWind": "m/s",
+    "unitDust": "µg/m³",
+    "air": {
+      "title": "Air",
+      "pm10": "PM10",
+      "pm25": "PM2,5",
+      "grade": {
+        "good": "Bon",
+        "moderate": "Moyen",
+        "bad": "Mauvais",
+        "very-bad": "Très mauvais"
+      },
+      "unavailable": "Aucune mesure de l'air pour le moment.",
+      "noValue": "Pas de données"
+    },
+    "outfit": {
+      "title": "À porter aujourd'hui",
+      "layer": {
+        "sleeveless": "Un débardeur et un short",
+        "short-sleeve": "Un T-shirt et une chemise légère",
+        "long-sleeve": "Manches longues et chino",
+        "light-knit": "Un pull fin ou un cardigan",
+        "jacket": "Une veste sur un jean",
+        "trench": "Un trench sur un pull",
+        "coat": "Un manteau ou une veste en cuir",
+        "padding": "Une doudoune et une écharpe"
+      },
+      "extra": {
+        "umbrella": "Parapluie",
+        "mask": "Masque",
+        "windbreaker": "Coupe-vent",
+        "extra-layer": "Une couche de plus"
+      }
+    },
+    "observedNote": "À {time}",
+    "stationNote": "Mesuré à {station}",
+    "regions": {
+      "서울": "Séoul",
+      "부산": "Busan",
+      "대구": "Daegu",
+      "인천": "Incheon",
+      "광주": "Gwangju",
+      "대전": "Daejeon",
+      "울산": "Ulsan",
+      "세종": "Sejong",
+      "경기": "Gyeonggi",
+      "강원": "Gangwon",
+      "충북": "Chungbuk",
+      "충남": "Chungnam",
+      "전북": "Jeonbuk",
+      "전남": "Jeonnam",
+      "경북": "Gyeongbuk",
+      "경남": "Gyeongnam",
+      "제주": "Jeju"
+    }
+  },
   "a11y": {
     "placeList": "Lieux",
     "placeListIn": "Lieux à {district}"
