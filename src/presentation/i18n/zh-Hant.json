@@ -31,7 +31,8 @@
   "frame": {
     "save": "收藏",
     "saved": "已收藏",
-    "noCrop": "原圖"
+    "noCrop": "原圖",
+    "noImage": "無圖片資訊"
   },
   "detail": {
     "back": "回到列表",

@@ -31,7 +31,8 @@
   "frame": {
     "save": "담기",
     "saved": "담김",
-    "noCrop": "원본 그대로"
+    "noCrop": "원본 그대로",
+    "noImage": "이미지 정보 없음"
   },
   "detail": {
     "back": "목록으로",

@@ -31,7 +31,8 @@
   "frame": {
     "save": "Enregistrer",
     "saved": "Enregistré",
-    "noCrop": "Non recadrée"
+    "noCrop": "Non recadrée",
+    "noImage": "Aucune image disponible"
   },
   "detail": {
     "back": "Retour à la liste",

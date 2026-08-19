@@ -18,6 +18,7 @@ export function Wall({
   districtNameOf,
   labelSave,
   labelSaved,
+  labelNoImage,
 }: {
   items: SpotView[];
   ariaLabel: string;
@@ -25,6 +26,7 @@ export function Wall({
   districtNameOf: (spot: SpotView) => string | undefined;
   labelSave: string;
   labelSaved: string;
+  labelNoImage: string;
 }) {
   return (
     <ul
@@ -49,6 +51,7 @@ export function Wall({
             districtName={districtNameOf(spot)}
             labelSave={labelSave}
             labelSaved={labelSaved}
+            labelNoImage={labelNoImage}
             priority={i < 3}
           />
         </li>

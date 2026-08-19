@@ -31,7 +31,8 @@
   "frame": {
     "save": "保存",
     "saved": "保存済み",
-    "noCrop": "原本のまま"
+    "noCrop": "原本のまま",
+    "noImage": "画像情報なし"
   },
   "detail": {
     "back": "一覧へ戻る",

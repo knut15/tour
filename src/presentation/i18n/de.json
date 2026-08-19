@@ -31,7 +31,8 @@
   "frame": {
     "save": "Merken",
     "saved": "Gemerkt",
-    "noCrop": "Unbeschnitten"
+    "noCrop": "Unbeschnitten",
+    "noImage": "Kein Bild vorhanden"
   },
   "detail": {
     "back": "Zurück zur Liste",

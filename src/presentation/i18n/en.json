@@ -31,7 +31,8 @@
   "frame": {
     "save": "Save",
     "saved": "Saved",
-    "noCrop": "Shown uncropped"
+    "noCrop": "Shown uncropped",
+    "noImage": "No image available"
   },
   "detail": {
     "back": "Back to places",

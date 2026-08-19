@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { SpotView } from "@/application/spot/dto";
+import { NoImage } from "@/presentation/components/NoImage";
 import { SaveChip } from "@/presentation/components/SaveChip";
+import { SpotImage } from "@/presentation/components/SpotImage";
 
 export type FrameSize = "sm" | "md" | "lg";
 export type FrameMatte = "photo" | "portrait";
@@ -33,6 +35,7 @@ export function SpotFrame({
   districtName,
   labelSave,
   labelSaved,
+  labelNoImage,
   priority = false,
 }: {
   spot: SpotView;
@@ -42,6 +45,7 @@ export function SpotFrame({
   districtName?: string;
   labelSave: string;
   labelSaved: string;
+  labelNoImage: string;
   priority?: boolean;
 }) {
   const titleSize =
@@ -50,24 +54,28 @@ export function SpotFrame({
 
   return (
     // 카드 높이를 채우고 메타를 바닥에 붙인다. 제목이 두 줄로 넘쳐도
-    // 한 행의 카드들이 같은 높이를 갖고 주소가 한 줄에 정렬된다
-    <article className="group relative flex h-full min-w-0 flex-col">
+    // 한 행의 카드들이 같은 높이를 갖고 주소가 한 줄에 정렬된다.
+    //
+    // `w-full` 이 빠지면 안 된다. 이 요소는 `<li className="flex">` 의 플렉스
+    // 아이템이라 기본 폭이 max-content 다. 지금까지는 `<img>` 의 고유 폭이 열을
+    // 채워 줘서 가려져 있었는데, 사진이 없는 카드는 채울 것이 글자뿐이라
+    // 그 카드만 열보다 좁아진다.
+    <article className="group relative flex h-full w-full min-w-0 flex-col">
       <div
         className={
           "relative overflow-hidden rounded-sm bg-surface " + WINDOW_ASPECT[matte]
         }
       >
         {spot.imageUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          // URL 이 있어도 안 뜰 수 있다. 실패 처리는 클라이언트에서만 되므로 갈라 둔다
+          <SpotImage
             src={spot.imageUrl}
             alt={spot.titlePrimary}
-            loading={priority ? "eager" : "lazy"}
-            decoding="async"
-            className="h-full w-full object-contain"
+            noImageLabel={labelNoImage}
+            priority={priority}
           />
         ) : (
-          <div className="h-full w-full bg-surface" aria-hidden="true" />
+          <NoImage label={labelNoImage} />
         )}
 
         <SaveChip

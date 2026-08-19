@@ -200,6 +200,7 @@ async function Spots({
         districtNameOf={(s) => districts.find((d) => d.code === s.districtCode)?.name}
         labelSave={t.frame.save}
         labelSaved={t.frame.saved}
+        labelNoImage={t.frame.noImage}
       />
       {wall.hasMore && (
         <div className="pt-24 text-center">
