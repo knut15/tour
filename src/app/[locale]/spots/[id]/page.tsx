@@ -6,8 +6,7 @@ import { getSpotDetail } from "@/presentation/lib/container";
 import { NoImage } from "@/presentation/components/NoImage";
 import { SaveChip } from "@/presentation/components/SaveChip";
 import { SpotImage } from "@/presentation/components/SpotImage";
-import { ThemeToggle } from "@/presentation/components/ThemeToggle";
-import { LocaleSwitcher } from "@/presentation/components/LocaleSwitcher";
+import { Masthead } from "@/presentation/components/Masthead";
 import {
   TDS_BUTTON,
   TDS_BUTTON_PRIMARY,
@@ -38,7 +37,7 @@ export default async function SpotDetailPage({ params }: PageProps<"/[locale]/sp
 
   return (
     <>
-      <Masthead locale={locale} t={t} koreanName={spot.titleKorean} />
+      <DetailMasthead locale={locale} t={t} koreanName={spot.titleKorean} />
 
       <main className="mx-auto w-full max-w-[1200px] flex-1 px-6 pb-32 md:pb-16">
         {/*
@@ -174,7 +173,13 @@ function Actions({ spot, t }: { spot: SpotDetailView; t: Dictionary }) {
   );
 }
 
-function Masthead({
+/**
+ * 상세 화면의 마스트헤드. 공유 `Masthead` 에 왼쪽만 갈아 끼운다.
+ *
+ * 자기 헤더를 따로 갖고 있던 동안 **날씨 칩이 이 화면에서만 빠져 있었다.**
+ * 화면마다 다른 것은 왼쪽에 무엇이 서는지(브랜드 / 뒤로)와 언어 전환이 갈 곳뿐이다.
+ */
+function DetailMasthead({
   locale,
   t,
   koreanName,
@@ -185,10 +190,22 @@ function Masthead({
   koreanName?: string | null;
 }) {
   return (
-    <>
-    {/* 탐색 화면과 같은 고정 헤더. 다만 여기엔 필터 바가 없어 줄어들지 않는다 */}
-    <header className="masthead-sticky fixed inset-x-0 top-0 z-[var(--layer-bar)] bg-canvas/85 backdrop-blur">
-      <div className="mx-auto flex h-full w-full max-w-[1200px] items-center justify-between px-6">
+    <Masthead
+      locale={locale}
+      t={t}
+      localeNote={t.detail.localeSwitchNote}
+      /*
+        언어를 바꿔도 **보던 장소를 유지한다.** contentid 공간이 언어마다 분리돼
+        있어 ID 를 그대로 쓸 수 없으므로, 두 카탈로그를 잇는 한글 원명을 들려
+        `resolve` 로 보내 그 언어의 카탈로그에서 다시 찾게 한다.
+        한글 원명이 없거나 상대 카탈로그에 없으면 목록으로 간다 — title 로 알린다.
+      */
+      localeHref={(l) =>
+        koreanName
+          ? `/${l}/spots/resolve?ko=${encodeURIComponent(koreanName)}`
+          : `/${l}/explore`
+      }
+      leading={
         <Link
           href={`/${locale}/explore`}
           className="inline-flex items-center gap-2 text-[13px] uppercase tracking-[0.14em] text-muted hover:text-ink focus-visible:outline-2 focus-visible:outline-focus"
@@ -196,36 +213,15 @@ function Masthead({
           <span aria-hidden="true">←</span>
           {t.detail.back}
         </Link>
-        <div className="flex items-center gap-2">
-          <ThemeToggle label={t.nav.theme} />
-        {/*
-          언어를 바꿔도 **보던 장소를 유지한다.** contentid 공간이 언어마다 분리돼
-          있어 ID 를 그대로 쓸 수 없으므로, 두 카탈로그를 잇는 한글 원명을 들려
-          `resolve` 로 보내 그 언어의 카탈로그에서 다시 찾게 한다.
-          한글 원명이 없거나 상대 카탈로그에 없으면 목록으로 간다 — title 로 알린다.
-        */}
-        <LocaleSwitcher
-          current={locale}
-          hrefFor={(l) =>
-            koreanName
-              ? `/${l}/spots/resolve?ko=${encodeURIComponent(koreanName)}`
-              : `/${l}/explore`
-          }
-          label={t.nav.switchLocale}
-          note={t.detail.localeSwitchNote}
-        />
-        </div>
-      </div>
-    </header>
-    <div aria-hidden="true" className="h-[var(--masthead-h-base)] shrink-0" />
-    </>
+      }
+    />
   );
 }
 
 function NotFound({ locale, t, failed }: { locale: Locale; t: Dictionary; failed: boolean }) {
   return (
     <>
-      <Masthead locale={locale} t={t} />
+      <DetailMasthead locale={locale} t={t} />
       <main className="mx-auto flex w-full max-w-[1200px] flex-1 flex-col items-center justify-center gap-6 px-6 py-24 text-center">
         <p lang={locale} className="max-w-[32ch] text-[16px] text-muted">
           {failed ? t.state.error : t.detail.notFound.title}
