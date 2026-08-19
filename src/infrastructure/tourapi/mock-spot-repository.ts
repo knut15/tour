@@ -106,6 +106,12 @@ export class MockSpotRepository implements SpotRepository {
     };
   }
 
+  async findByKoreanName(locale: Locale, koreanName: string): Promise<SpotId | null> {
+    const wanted = koreanName.trim();
+    const hit = this.spots(locale).find((s) => s.name.korean === wanted);
+    return hit ? hit.id : null;
+  }
+
   async listAreas(locale: Locale): Promise<Area[]> {
     const raw = locale === "ko" ? MOCK_AREAS_KO : MOCK_AREAS_EN;
     return raw.map((a) => ({ code: toNumber(a.code), name: a.name ?? "" }));

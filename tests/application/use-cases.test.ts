@@ -8,6 +8,7 @@ import type {
   NearbySpotsQuery,
   SpotRepository,
 } from "@/domain/spot/spot-repository";
+import { makeFindSpotInLocale } from "@/application/spot/find-spot-in-locale";
 import { makeGetSpotDetail } from "@/application/spot/get-spot-detail";
 import { makeListAreas, makeListDistricts } from "@/application/spot/list-regions";
 import {
@@ -61,6 +62,12 @@ class FakeRepo implements SpotRepository {
     };
   }
   lastDistrictsArea: number | null = null;
+  lastKoreanName: string | null = null;
+  async findByKoreanName(locale: Locale, koreanName: string) {
+    this.lastKoreanName = koreanName;
+    const hit = this.items.find((s) => s.name.korean === koreanName);
+    return hit ? { contentId: hit.id.contentId, locale } : null;
+  }
   async listAreas() {
     return [
       { code: 1, name: "Seoul" },
@@ -191,6 +198,25 @@ describe("getSpotDetail", () => {
   it("빈 contentId 는 조회하지 않는다", async () => {
     const repo = new FakeRepo([]);
     expect(await makeGetSpotDetail(repo)({ locale: "en", contentId: "  " })).toBeNull();
+  });
+});
+
+describe("findSpotInLocale", () => {
+  it("한글 원명이 같은 스팟의 ID 를 돌려준다", async () => {
+    // 로케일마다 contentid 공간이 분리돼 있어(실측) 두 카탈로그를 잇는 값은
+    // 제목에 병기된 한글 원명뿐이다
+    const repo = new FakeRepo([
+      spot({ id: { contentId: "a", locale: "en" }, name: { primary: "X", korean: "경복궁" } }),
+    ]);
+    expect(await makeFindSpotInLocale(repo)("en", "경복궁")).toBe("a");
+  });
+
+  it("없으면 null 이다 — 비슷한 것을 돌려주지 않는다", async () => {
+    // 다른 장소로 보내는 것은 목록으로 보내는 것보다 나쁘다
+    const repo = new FakeRepo([
+      spot({ id: { contentId: "a", locale: "en" }, name: { primary: "X", korean: "경복궁역점" } }),
+    ]);
+    expect(await makeFindSpotInLocale(repo)("en", "경복궁")).toBeNull();
   });
 });
 

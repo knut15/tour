@@ -68,7 +68,17 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
 
   return (
     <>
-      <Masthead locale={locale} t={t} localeHref={(l) => `/${l}/explore`} />
+      {/*
+        언어를 바꿔도 **보고 있던 조건을 유지한다.** 지역 코드는 로케일 간 동일하고
+        (실측 2026-08-19: 1/31/39 가 모든 서비스에서 같은 지역) 카테고리 슬러그도
+        로케일과 무관하므로 그대로 넘긴다. 사용자는 다른 목록이 아니라 같은 목록의
+        다른 언어를 보려는 것이다.
+      */}
+      <Masthead
+        locale={locale}
+        t={t}
+        localeHref={(l) => exploreHref(l, { category, areaCode, districtCode, more })}
+      />
 
       <main className="mx-auto w-full max-w-[1200px] flex-1 px-6 pb-32">
         <header className="pt-12 pb-14 md:pt-16">
