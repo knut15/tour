@@ -40,6 +40,7 @@ export function CardActions({
         <ActionButton
           pressed={saved.has}
           onToggle={saved.toggle}
+          tone="save"
           label={`${saved.has ? labelSaved : labelSave}: ${title}`}
         >
           {/* 책갈피. 담긴 상태에서는 안이 찬다 */}
@@ -57,6 +58,7 @@ export function CardActions({
         <ActionButton
           pressed={liked.has}
           onToggle={liked.toggle}
+          tone="like"
           label={`${liked.has ? labelLiked : labelLike}: ${title}`}
         >
           <svg viewBox="0 0 24 24" className="size-[18px]" aria-hidden="true">
@@ -74,14 +76,22 @@ export function CardActions({
   );
 }
 
+/** 눌린 상태의 색. 값은 `globals.css` 의 `--action-*` 이 정본이다 */
+const TONE: Record<"save" | "like", string> = {
+  save: "text-save",
+  like: "text-like",
+};
+
 function ActionButton({
   pressed,
   onToggle,
+  tone,
   label,
   children,
 }: {
   pressed: boolean;
   onToggle: () => void;
+  tone: "save" | "like";
   label: string;
   children: ReactNode;
 }) {
@@ -101,7 +111,9 @@ function ActionButton({
         "transition-[transform,background-color,color] duration-200 ease-[var(--ease-signature)] " +
         "hover:scale-[1.06] active:scale-[0.94] " +
         "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus " +
-        (pressed ? "bg-canvas text-ink" : "bg-canvas/85 text-body hover:text-ink")
+        // 눌리면 아이콘이 색으로 찬다. 배경은 그대로 둔다 — 색면이 커지면
+        // 사진 위에서 그것부터 보인다
+        (pressed ? "bg-canvas " + TONE[tone] : "bg-canvas/85 text-body hover:text-ink")
       }
     >
       {children}
