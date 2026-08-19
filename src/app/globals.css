@@ -75,6 +75,24 @@
   --layer-bar: 20;
   /* 눌러서 여는 것. 항상 위다 — 사용자가 방금 연 것이 가려지면 고장으로 읽힌다 */
   --layer-popover: 30;
+  /*
+   * 헤더 아래에 붙는 필터 바. **헤더보다 낮다** — 줄어드는 전환 중에 두 바의
+   * 경계가 1px 겹칠 수 있는데, 그때 필터가 위로 올라오면 헤더를 파고든 것처럼 보인다.
+   */
+  --layer-sticky-filter: 15;
+
+  /*
+   * ── 마스트헤드 높이 ──
+   *
+   * 필터 바가 이 값을 `top` 으로 쓴다. **두 곳에 숫자를 따로 쓰지 않는다** —
+   * 어긋나면 헤더와 필터 사이에 틈이 생기거나 서로 파고든다.
+   *
+   * 기본값은 컨트롤 36px + 상하 20px 이다. 줄어든 값은 같은 컨트롤에 상하 8px.
+   * 컨트롤보다 작아질 수는 없다.
+   */
+  --masthead-h-base: 76px;
+  --masthead-h-condensed: 52px;
+  --masthead-h: var(--masthead-h-base);
 
   /*
    * ── 미세먼지 등급 (환경부 4단계) ──
@@ -93,6 +111,12 @@
   --dust-bad: #b45309;
   --dust-very-bad: #c0212f;
 }
+
+/* 필터가 헤더 밑에 붙는 순간 헤더가 줄어든다 */
+:root[data-condensed="true"] {
+  --masthead-h: var(--masthead-h-condensed);
+}
+
 
 /*
  * 테마 선택은 **양성 매칭**으로만 한다.
@@ -354,5 +378,46 @@ body {
     100% {
       opacity: 0.6;
     }
+  }
+}
+
+/*
+ * 스크롤 고정 요소의 전환.
+ *
+ * `height` 와 `top` 은 합성 전용 속성이 아니라 레이아웃을 다시 계산시킨다.
+ * 다만 움직이는 것은 화면 최상단의 바 하나뿐이고, `transform` 으로 대신하면
+ * 아래에 붙는 필터의 `top` 기준이 따라오지 않아 둘이 어긋난다.
+ */
+.masthead-sticky {
+  height: var(--masthead-h);
+  transition: height 0.28s var(--ease-signature);
+}
+
+.filter-sticky {
+  top: var(--masthead-h);
+  transition: top 0.28s var(--ease-signature);
+}
+
+/* 줄어든 상태에서만 헤어라인이 생긴다. 맨 위에서는 선이 없다 */
+.masthead-sticky::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--line-subtle);
+  opacity: 0;
+  transition: opacity 0.28s var(--ease-signature);
+}
+
+:root[data-condensed="true"] .masthead-sticky::after {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .masthead-sticky,
+  .filter-sticky,
+  .masthead-sticky::after {
+    transition: none;
   }
 }

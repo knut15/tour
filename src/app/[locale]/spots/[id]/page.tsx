@@ -185,21 +185,19 @@ function Masthead({
   koreanName?: string | null;
 }) {
   return (
-    <header className="mx-auto flex w-full max-w-[1200px] items-center justify-between px-6 py-5">
-      <Link
-        href={`/${locale}/explore`}
-        className="inline-flex items-center gap-2 text-[13px] uppercase tracking-[0.14em] text-muted hover:text-ink focus-visible:outline-2 focus-visible:outline-focus"
-      >
-        <span aria-hidden="true">←</span>
-        {t.detail.back}
-      </Link>
-      {/*
-        상세 화면의 로케일 전환은 **목록으로 보낸다.** 국문과 영문의 contentid 공간이
-        분리돼 있어 대응하는 반대 로케일 URL 을 만들 수 없다. 조용히 실패하지 않고
-        그렇게 동작한다고 title 로 알린다 (GOAL.md §6).
-      */}
-      <div className="flex items-center gap-2">
-        <ThemeToggle label={t.nav.theme} />
+    <>
+    {/* 탐색 화면과 같은 고정 헤더. 다만 여기엔 필터 바가 없어 줄어들지 않는다 */}
+    <header className="masthead-sticky fixed inset-x-0 top-0 z-[var(--layer-bar)] bg-canvas/85 backdrop-blur">
+      <div className="mx-auto flex h-full w-full max-w-[1200px] items-center justify-between px-6">
+        <Link
+          href={`/${locale}/explore`}
+          className="inline-flex items-center gap-2 text-[13px] uppercase tracking-[0.14em] text-muted hover:text-ink focus-visible:outline-2 focus-visible:outline-focus"
+        >
+          <span aria-hidden="true">←</span>
+          {t.detail.back}
+        </Link>
+        <div className="flex items-center gap-2">
+          <ThemeToggle label={t.nav.theme} />
         {/*
           언어를 바꿔도 **보던 장소를 유지한다.** contentid 공간이 언어마다 분리돼
           있어 ID 를 그대로 쓸 수 없으므로, 두 카탈로그를 잇는 한글 원명을 들려
@@ -216,8 +214,11 @@ function Masthead({
           label={t.nav.switchLocale}
           note={t.detail.localeSwitchNote}
         />
+        </div>
       </div>
     </header>
+    <div aria-hidden="true" className="h-[var(--masthead-h-base)] shrink-0" />
+    </>
   );
 }
 

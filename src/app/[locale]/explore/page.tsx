@@ -17,6 +17,8 @@ import { MoreLabel } from "@/presentation/components/MoreLabel";
 import { Wall } from "@/presentation/components/Wall";
 import { ButtonLink } from "@/presentation/components/Button";
 import { Masthead } from "@/presentation/components/Masthead";
+import { StickyFilterSync } from "@/presentation/components/StickyFilterSync";
+import { STICKY_SENTINEL } from "@/presentation/lib/sticky";
 import { RegionPickerSkeleton, WallSkeleton } from "@/presentation/components/Skeleton";
 import { getDictionary, type Dictionary } from "@/presentation/i18n/dictionaries";
 
@@ -102,7 +104,24 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
           </p>
         </header>
 
-        <div className="flex flex-col gap-6 pb-14">
+        {/*
+          이 표식이 헤더 밑으로 사라지면 필터가 붙은 것이다. `StickyFilterSync` 가
+          그 순간에만 깨어나 헤더를 줄인다 — 스크롤 이벤트를 듣지 않는다.
+        */}
+        <div aria-hidden="true" className="h-px" {...{ [STICKY_SENTINEL]: "" }} />
+
+        {/*
+          필터 바. 헤더 바로 밑에 붙는다.
+
+          `-mx-6 px-6` 으로 바탕을 컨테이너 폭까지 넓힌다. 목록도 같은 컨테이너
+          안에 있으므로 그 바깥으로 카드가 비쳐 나올 자리는 없다.
+        */}
+        <div
+          className={
+            "filter-sticky sticky z-[var(--layer-sticky-filter)] " +
+            "-mx-6 mb-14 flex flex-col gap-4 bg-canvas/90 px-6 py-4 backdrop-blur"
+          }
+        >
           <CategoryPicker
             locale={locale}
             current={category}
@@ -154,6 +173,8 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
           />
         </Suspense>
       </main>
+
+      <StickyFilterSync />
 
       <footer className="border-t border-line px-6 py-8">
         <p lang={locale} className="mx-auto max-w-[1200px] text-[13px] text-muted">
