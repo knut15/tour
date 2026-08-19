@@ -39,7 +39,12 @@ export default async function SpotDetailPage({ params }: PageProps<"/[locale]/sp
     <>
       <DetailMasthead locale={locale} t={t} koreanName={spot.titleKorean} />
 
-      <main className="mx-auto w-full max-w-[1200px] flex-1 px-6 pb-32 md:pb-16">
+      {/*
+        헤더가 고정이라 위쪽 여백이 필요하다. 없으면 제목이 헤더 아래 변에 딱 붙어
+        시작하고, 조금만 스크롤해도 곧바로 반투명한 헤더 밑으로 들어간다.
+        실측: 헤더 하단 76px · h1 상단 76px — 사이가 0 이었다.
+      */}
+      <main className="mx-auto w-full max-w-[1200px] flex-1 px-6 pt-10 pb-32 md:pt-14 md:pb-16">
         {/*
           DOM 순서는 hero → identity → facts → description 이다.
           좁은 화면에서 단일 열로 무너질 때 **이름을 읽기 전에 설명을 읽는 일이 없어야** 한다.
