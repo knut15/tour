@@ -86,8 +86,9 @@ export function SaveChip({
 
   const shape =
     variant === "chip"
-      ? // 이미지 위에 얹는 글래스 필. z-10 이라야 카드 전체를 덮는 오버레이 링크보다 위에 온다
-        "absolute right-3 top-3 z-10 grid h-9 w-9 place-items-center rounded-full backdrop-blur-md"
+      ? // 이미지 위에 얹는 글래스 필. 카드 전체를 덮는 오버레이 링크보다 위에 와야 한다.
+        // 값은 globals.css 의 겹침 순서에서 고른다 — 직접 숫자를 쓰지 않는다
+        "absolute right-3 top-3 z-[var(--layer-card-overlay)] grid h-9 w-9 place-items-center rounded-full backdrop-blur-md"
       : // 상세 화면의 주 액션은 TDS xlarge 기하를 따른다
         TDS_BUTTON + " gap-2";
 
