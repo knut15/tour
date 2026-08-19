@@ -118,8 +118,10 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
         */}
         <div
           className={
+            // 바탕·블러·그림자는 `globals.css` 의 `.filter-sticky::before` 가 그린다.
+            // 화면 폭 전체를 덮어야 하는데 이 요소는 컨테이너 폭까지만이라서다.
             "filter-sticky sticky z-[var(--layer-sticky-filter)] " +
-            "-mx-6 mb-14 flex flex-col gap-4 bg-canvas/90 px-6 py-4 backdrop-blur"
+            "-mx-6 mb-14 flex flex-col gap-4 px-6 py-4"
           }
         >
           <CategoryPicker

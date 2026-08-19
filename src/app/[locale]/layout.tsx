@@ -56,7 +56,11 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
         />
       </head>
-      <body className="flex min-h-full flex-col bg-canvas text-ink">
+      <body
+        // overflow-x: clip 은 화면 폭을 덮는 필터 바가 만드는 가로 넘침을 자른다.
+        // hidden 을 쓰면 스크롤 컨테이너가 생겨 sticky 의 기준이 뷰포트에서 벗어난다
+        className="flex min-h-full flex-col overflow-x-clip bg-canvas text-ink"
+      >
         {children}
         {/* 열린 드롭다운을 바깥 클릭·Esc 로 닫는다. 라우트당 한 번만 얹는다 */}
         <DismissOnOutside />

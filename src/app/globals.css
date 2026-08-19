@@ -406,6 +406,7 @@ body {
 
 .filter-sticky {
   top: var(--masthead-h);
+  transition: top 0.28s var(--ease-signature);
 }
 
 /*
@@ -415,15 +416,32 @@ body {
  * 아래 변이 바의 아래 변과 정확히 겹쳐서, **위로는 한 픽셀도 새지 않고 아래로만 12px**
  * 퍼진다. 위로 새면 반투명한 헤더를 통해 얼룩으로 비친다.
  */
-.filter-sticky {
+/*
+ * 바의 **바탕·블러·그림자를 그리는 면.** 내용은 컨테이너 폭(1200px)에 맞춰 두고
+ * 이 면만 화면 폭 전체로 넓힌다 — 그림자가 컨테이너에서 끊기면 바가 화면 가운데
+ * 떠 있는 판때기처럼 보인다.
+ *
+ * `100vw` 는 세로 스크롤바 폭까지 포함하므로 가로 스크롤이 생긴다.
+ * `body` 의 `overflow-x: clip` 이 그것을 자른다 — `hidden` 이 아니라 `clip` 인 이유는
+ * `hidden` 이 스크롤 컨테이너를 만들어 `position: sticky` 의 기준을 뷰포트에서
+ * 그 컨테이너로 옮겨 버리기 때문이다. 그러면 헤더 밑에 붙는 동작 자체가 깨진다.
+ */
+.filter-sticky::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  left: 50%;
+  width: 100vw;
+  margin-left: -50vw;
+  z-index: -1;
+  background: color-mix(in srgb, var(--paper-canvas) 90%, transparent);
+  backdrop-filter: blur(8px);
   box-shadow: 0 0 0 rgb(0 0 0 / 0);
-  transition:
-    top 0.28s var(--ease-signature),
-    box-shadow 0.28s var(--ease-signature);
+  transition: box-shadow 0.28s var(--ease-signature);
 }
 
 /* 붙었을 때만 경계가 필요하다. 흐름에 있을 때는 가릴 것이 없다 */
-:root[data-condensed="true"] .filter-sticky {
+:root[data-condensed="true"] .filter-sticky::before {
   box-shadow: 0 12px 12px -12px rgb(0 0 0 / var(--filter-bar-shadow-alpha));
 }
 
@@ -446,6 +464,7 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .masthead-sticky,
   .filter-sticky,
+  .filter-sticky::before,
   .masthead-sticky::after {
     transition: none;
   }
