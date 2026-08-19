@@ -9,6 +9,9 @@ import { useEffect } from "react";
  * 닫히는데, 그건 이 컨트롤이 드롭다운처럼 생겼기 때문에 아무도 기대하지 않는
  * 동작이다. 열어 둔 채 다른 곳을 누르면 목록이 화면에 그대로 남아 뒤를 가린다.
  *
+ * 안에서 **항목을 고른 경우에도 닫는다.** 고르면 목록이 다시 조회되는데,
+ * 드롭다운이 덮고 있으면 바뀐 결과가 보이지 않는다.
+ *
  * **대상은 `data-dismissable` 이 붙은 `<details>` 뿐이다.** 문서의 모든
  * `<details>` 를 건드리면 나중에 누가 본문 접기용으로 쓴 것까지 멋대로 닫힌다.
  *
@@ -23,9 +26,21 @@ export function DismissOnOutside() {
 
     function onPointerDown(e: PointerEvent) {
       const target = e.target as Node | null;
+      const el = target instanceof Element ? target : target?.parentElement ?? null;
+      const link = el?.closest("a");
+
       for (const d of open()) {
-        // 자기 안을 누른 것은 닫지 않는다. 목록에서 항목을 고르는 중일 수 있다
-        if (target && d.contains(target)) continue;
+        if (target && d.contains(target)) {
+          /*
+            안쪽을 눌렀다. 링크를 눌렀으면 **고른 것**이므로 닫는다 —
+            고르면 목록이 다시 조회되는데 드롭다운이 덮고 있으면
+            바뀐 결과가 보이지 않는다.
+
+            링크가 아닌 안쪽 클릭(summary 토글, 여백)은 그대로 둔다.
+          */
+          if (link && d.contains(link)) d.open = false;
+          continue;
+        }
         d.open = false;
       }
     }
