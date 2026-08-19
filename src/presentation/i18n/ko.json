@@ -1,5 +1,5 @@
 {
-  "brand": "당신의 서울",
+  "brand": "당신의 한국",
   "nav": {
     "explore": "둘러보기",
     "switchLocale": "English",
@@ -7,10 +7,12 @@
   },
   "explore": {
     "eyebrow": "나열이 아니라 고른 것",
-    "title": "당신의 서울을, 액자에 담아",
+    "title": "당신의 한국을, 액자에 담아",
     "subtitle": "한 번에 몇 곳씩. 보고, 가세요.",
-    "allDistricts": "서울 전체",
-    "districtLabel": "동네",
+    "areaLabel": "지역",
+    "allAreas": "전국",
+    "districtLabel": "시·군·구",
+    "allDistricts": "이 지역 전체",
     "categoryLabel": "무엇을 찾으세요",
     "showAnother": "더 보기",
     "sourceNote": "장소 정보는 한국관광공사에서 제공합니다."
@@ -58,8 +60,6 @@
     }
   },
   "weather": {
-    "openLabel": "오늘 날씨 열기",
-    "closeLabel": "날씨 닫기",
     "panelLabel": "오늘, 당신의 하늘",
     "todayTitle": "지금",
     "sky": {

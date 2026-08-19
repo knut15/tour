@@ -62,7 +62,7 @@ export function WeatherChipSkeleton() {
 }
 
 /** 자치구 선택 컨트롤 자리 */
-export function DistrictPickerSkeleton() {
+export function RegionPickerSkeleton() {
   return (
     <div className="skeleton-root">
       <Block className="h-[42px] w-56 !rounded-[16px]" />

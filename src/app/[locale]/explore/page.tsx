@@ -2,38 +2,51 @@ import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { isLocale, type Locale } from "@/domain/shared/locale";
 import { isCategory, type Category } from "@/domain/spot/category";
-import { isSeoulDistrictCode } from "@/domain/spot/district";
-import { listDistricts, listSpots } from "@/presentation/lib/container";
+import { isAreaCode, isDistrictCode } from "@/domain/spot/region";
+import { listAreas, listDistricts, listSpots } from "@/presentation/lib/container";
+import { exploreHref } from "@/presentation/lib/explore-href";
 import { CategoryPicker } from "@/presentation/components/CategoryPicker";
-import { DistrictPicker } from "@/presentation/components/DistrictPicker";
+import { RegionPicker } from "@/presentation/components/RegionPicker";
 import { Wall } from "@/presentation/components/Wall";
 import { ButtonLink } from "@/presentation/components/Button";
 import { Masthead } from "@/presentation/components/Masthead";
-import { DistrictPickerSkeleton, WallSkeleton } from "@/presentation/components/Skeleton";
+import { RegionPickerSkeleton, WallSkeleton } from "@/presentation/components/Skeleton";
 import { getDictionary, type Dictionary } from "@/presentation/i18n/dictionaries";
 
-function parsePage(raw: string | string[] | undefined): number {
+function first(raw: string | string[] | undefined): string | undefined {
   const v = Array.isArray(raw) ? raw[0] : raw;
-  const n = Number((v ?? "").trim());
+  return v?.trim() || undefined;
+}
+
+function parsePage(raw: string | string[] | undefined): number {
+  const n = Number(first(raw) ?? "");
   return Number.isInteger(n) && n >= 1 && n <= 20 ? n : 1;
 }
 
 function parseCategory(raw: string | string[] | undefined): Category {
-  const v = Array.isArray(raw) ? raw[0] : raw;
+  const v = first(raw);
   return v && isCategory(v) ? v : "attraction";
 }
 
-function parseDistrict(raw: string | string[] | undefined): number | undefined {
-  const v = Array.isArray(raw) ? raw[0] : raw;
-  if (!v) return undefined;
-  const n = Number(v.trim());
-  return isSeoulDistrictCode(n) ? n : undefined;
+/**
+ * 지역 코드는 **형태만** 검사한다. 존재하지 않는 코드는 빈 결과가 되고
+ * 빈 상태 화면이 받는다. 유효한 코드 집합을 화면이 들고 있으면 공급자가
+ * 지역을 늘렸을 때 새 지역이 조용히 사라진다 (`domain/spot/region.ts`).
+ */
+function parseAreaCode(raw: string | string[] | undefined): number | undefined {
+  const n = Number(first(raw) ?? "");
+  return isAreaCode(n) ? n : undefined;
+}
+
+function parseDistrictCode(raw: string | string[] | undefined): number | undefined {
+  const n = Number(first(raw) ?? "");
+  return isDistrictCode(n) ? n : undefined;
 }
 
 /**
  * 탐색 화면.
  *
- * **머리말과 카테고리 선택은 데이터를 기다리지 않는다.** 목록과 자치구 목록만
+ * **머리말과 카테고리 선택은 데이터를 기다리지 않는다.** 목록과 지역 목록만
  * Suspense 안에 두어 각자 준비되는 대로 스트리밍한다. 사양이 요구하는
  * "필터는 조작 가능한 상태로 유지" 를 이 구조가 만족한다.
  */
@@ -43,7 +56,9 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
   const sp = await searchParams;
 
   const category = parseCategory(sp.category);
-  const districtCode = parseDistrict(sp.district);
+  const areaCode = parseAreaCode(sp.area);
+  // 시도 없는 시군구는 어느 지역인지 정해지지 않는다. 통째로 버린다
+  const districtCode = areaCode ? parseDistrictCode(sp.district) : undefined;
   const page = parsePage(sp.page);
   const t = await getDictionary(locale);
 
@@ -77,13 +92,31 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
           <CategoryPicker
             locale={locale}
             current={category}
+            areaCode={areaCode}
             districtCode={districtCode}
             labels={t.category}
             groupLabel={t.explore.categoryLabel}
           />
-          <Suspense fallback={<DistrictPickerSkeleton />}>
-            <Districts locale={locale} category={category} current={districtCode} t={t} />
-          </Suspense>
+          {/*
+            지역은 2단이다. 시도를 고르기 전에는 시군구 선택 자체가 없다 —
+            시군구 코드는 시도 안에서만 고유해서 시도 없이는 고를 수가 없다.
+          */}
+          <div className="flex flex-wrap items-start gap-3">
+            <Suspense fallback={<RegionPickerSkeleton />}>
+              <Areas locale={locale} category={category} current={areaCode} t={t} />
+            </Suspense>
+            {areaCode && (
+              <Suspense key={areaCode} fallback={<RegionPickerSkeleton />}>
+                <Districts
+                  locale={locale}
+                  category={category}
+                  areaCode={areaCode}
+                  current={districtCode}
+                  t={t}
+                />
+              </Suspense>
+            )}
+          </div>
         </div>
 
         {/*
@@ -91,12 +124,13 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
           없으면 이전 목록이 남은 채 멈춰 있어 반응이 없는 것처럼 보인다.
         */}
         <Suspense
-          key={`${locale}:${category}:${districtCode ?? "all"}:${page}`}
+          key={`${locale}:${category}:${areaCode ?? "all"}:${districtCode ?? "all"}:${page}`}
           fallback={<WallSkeleton label={t.state.loading} />}
         >
           <Spots
             locale={locale}
             category={category}
+            areaCode={areaCode}
             districtCode={districtCode}
             page={page}
             t={t}
@@ -113,7 +147,7 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
   );
 }
 
-async function Districts({
+async function Areas({
   locale,
   category,
   current,
@@ -124,21 +158,52 @@ async function Districts({
   current?: number;
   t: Dictionary;
 }) {
-  let districts;
+  let areas;
   try {
-    districts = await listDistricts(locale);
+    areas = await listAreas(locale);
   } catch {
-    // 자치구 목록이 실패해도 화면 전체를 죽이지 않는다. 필터만 빠진다
+    // 지역 목록이 실패해도 화면 전체를 죽이지 않는다. 필터만 빠진다
     return null;
   }
   return (
-    <DistrictPicker
-      locale={locale}
-      category={category}
-      districts={districts}
+    <RegionPicker
+      items={areas}
+      current={current}
+      label={t.explore.areaLabel}
+      allLabel={t.explore.allAreas}
+      // 시도를 바꾸면 시군구는 버린다. 다른 시도에서 같은 번호는 다른 곳이다
+      hrefFor={(code) => exploreHref(locale, { category, areaCode: code })}
+    />
+  );
+}
+
+async function Districts({
+  locale,
+  category,
+  areaCode,
+  current,
+  t,
+}: {
+  locale: Locale;
+  category: Category;
+  areaCode: number;
+  current?: number;
+  t: Dictionary;
+}) {
+  let districts;
+  try {
+    districts = await listDistricts(locale, areaCode);
+  } catch {
+    return null;
+  }
+  if (districts.length === 0) return null;
+  return (
+    <RegionPicker
+      items={districts}
       current={current}
       label={t.explore.districtLabel}
       allLabel={t.explore.allDistricts}
+      hrefFor={(code) => exploreHref(locale, { category, areaCode, districtCode: code })}
     />
   );
 }
@@ -146,12 +211,14 @@ async function Districts({
 async function Spots({
   locale,
   category,
+  areaCode,
   districtCode,
   page,
   t,
 }: {
   locale: Locale;
   category: Category;
+  areaCode?: number;
   districtCode?: number;
   page: number;
   t: Dictionary;
@@ -160,13 +227,26 @@ async function Spots({
   let districts;
   try {
     [wall, districts] = await Promise.all([
-      listSpots({ locale, category, districtCode, page }),
-      listDistricts(locale).catch(() => []),
+      listSpots({ locale, category, areaCode, districtCode, page }),
+      /*
+        카드에 붙일 시군구 이름의 출처. **시도를 골랐을 때만 받는다.**
+
+        전국 목록에는 붙일 이름이 없다. `areaBasedList2` 의 `areacode` ·
+        `sigungucode` 는 항목 고유 데이터가 아니라 **질의 파라미터를 되돌려주는
+        값**이라, 지역을 지정하지 않으면 빈 문자열로 온다 (실측 2026-08-19).
+        항상 채워지는 것은 법정동 코드(`lDongRegnCd`)뿐인데 그건 TourAPI 의
+        지역 코드와 체계가 달라 따로 매핑이 필요하고, 실제로 여수(전남, 46)가
+        `12` 로 오는 등 값이 어긋난 항목이 있다.
+
+        전국에서는 주소 줄이 이미 시도를 담고 있으므로("…, Nonsan-si,
+        Chungcheongnam-do") 칩 없이 두는 편이 중복도 없고 틀리지도 않는다.
+      */
+      areaCode ? listDistricts(locale, areaCode).catch(() => []) : Promise.resolve([]),
     ]);
   } catch {
     return (
       <Panel lang={locale} message={t.state.error}>
-        <ButtonLink href={`/${locale}/explore?category=${category}`} variant="weak">
+        <ButtonLink href={exploreHref(locale, { category })} variant="weak">
           {t.state.errorAction}
         </ButtonLink>
       </Panel>
@@ -176,18 +256,16 @@ async function Spots({
   if (wall.items.length === 0) {
     return (
       <Panel lang={locale} message={t.state.emptyFilter}>
-        <ButtonLink href={`/${locale}/explore?category=${category}`} variant="weak">
+        <ButtonLink href={exploreHref(locale, { category })} variant="weak">
           {t.state.emptyFilterAction}
         </ButtonLink>
       </Panel>
     );
   }
 
-  const districtName = districts.find((d) => d.code === districtCode)?.name;
+  const districtName = districts.find((r) => r.code === districtCode)?.name;
   // 스크린 리더에도 내부 은유를 흘리지 않는다. 사용자는 장소를 찾는다
-  const listLabel = districtName
-    ? `${t.category[category]} — ${districtName}`
-    : `${t.category[category]} — ${t.explore.allDistricts}`;
+  const listLabel = `${t.category[category]} — ${districtName ?? t.explore.allAreas}`;
 
   return (
     <>
@@ -195,7 +273,7 @@ async function Spots({
         items={wall.items}
         ariaLabel={listLabel}
         hrefOf={(s) => `/${locale}/spots/${s.contentId}`}
-        districtNameOf={(s) => districts.find((d) => d.code === s.districtCode)?.name}
+        districtNameOf={(s) => districts.find((r) => r.code === s.districtCode)?.name}
         labelSave={t.frame.save}
         labelSaved={t.frame.saved}
         labelNoImage={t.frame.noImage}
@@ -206,24 +284,16 @@ async function Spots({
             다음 묶음을 부른다. **페이지 번호와 총 건수를 화면에 쓰지 않는다** —
             "3,412건 중 1–20" 이라는 문구 하나가 기관 느낌의 핵심이다 (GOAL.md §0.5-3).
           */}
-          <ButtonLink href={nextWallHref(locale, category, districtCode, page)} variant="weak">
+          <ButtonLink
+            href={exploreHref(locale, { category, areaCode, districtCode, page: page + 1 })}
+            variant="weak"
+          >
             {t.explore.showAnother}
           </ButtonLink>
         </div>
       )}
     </>
   );
-}
-
-function nextWallHref(
-  locale: Locale,
-  category: Category,
-  districtCode: number | undefined,
-  page: number,
-): string {
-  const p = new URLSearchParams({ category, page: String(page + 1) });
-  if (districtCode) p.set("district", String(districtCode));
-  return `/${locale}/explore?${p.toString()}`;
 }
 
 function Panel({

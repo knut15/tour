@@ -4,7 +4,7 @@ import type {
   WeatherRepository,
 } from "@/domain/weather/weather-repository";
 import { makeGetSpotDetail } from "@/application/spot/get-spot-detail";
-import { makeListDistricts } from "@/application/spot/list-districts";
+import { makeListAreas, makeListDistricts } from "@/application/spot/list-regions";
 import { makeListNearbySpots } from "@/application/spot/list-nearby-spots";
 import { makeListSpots } from "@/application/spot/list-spots";
 import { makeGetTodayWeather } from "@/application/weather/get-today-weather";
@@ -43,6 +43,7 @@ const spotRepository = createSpotRepository();
 export const listSpots = makeListSpots(spotRepository);
 export const listNearbySpots = makeListNearbySpots(spotRepository);
 export const getSpotDetail = makeGetSpotDetail(spotRepository);
+export const listAreas = makeListAreas(spotRepository);
 export const listDistricts = makeListDistricts(spotRepository);
 
 /**

@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { LOCALES, LOCALE_HTML_LANG, isLocale } from "@/domain/shared/locale";
 import { THEME_COOKIE, isTheme, type Theme } from "@/presentation/lib/theme";
+import { DismissOnOutside } from "@/presentation/components/DismissOnOutside";
 import "../globals.css";
 
 /**
@@ -20,8 +21,8 @@ const newsreader = Newsreader({
 });
 
 export const metadata: Metadata = {
-  title: "Your Seoul",
-  description: "A small, edited selection of Seoul. Not a directory.",
+  title: "Your Korea",
+  description: "A small, edited selection of Korea. Not a directory.",
 };
 
 export function generateStaticParams() {
@@ -55,7 +56,11 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
         />
       </head>
-      <body className="flex min-h-full flex-col bg-canvas text-ink">{children}</body>
+      <body className="flex min-h-full flex-col bg-canvas text-ink">
+        {children}
+        {/* 열린 드롭다운을 바깥 클릭·Esc 로 닫는다. 라우트당 한 번만 얹는다 */}
+        <DismissOnOutside />
+      </body>
     </html>
   );
 }

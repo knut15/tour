@@ -1,5 +1,5 @@
 {
-  "brand": "你的首爾",
+  "brand": "你的韓國",
   "nav": {
     "explore": "探索",
     "switchLocale": "語言",
@@ -7,10 +7,12 @@
   },
   "explore": {
     "eyebrow": "精選，而非清單",
-    "title": "你的首爾，裱入畫框。",
+    "title": "你的韓國，裱入畫框。",
     "subtitle": "一次幾個地方。看過，就出發。",
-    "allDistricts": "首爾全區",
-    "districtLabel": "區域",
+    "areaLabel": "地區",
+    "allAreas": "全國",
+    "districtLabel": "市郡區",
+    "allDistricts": "此地區全部",
     "categoryLabel": "想找什麼",
     "showAnother": "看更多",
     "sourceNote": "地點資料由韓國觀光公社提供。"
@@ -58,8 +60,6 @@
     }
   },
   "weather": {
-    "openLabel": "查看今天的天氣",
-    "closeLabel": "關閉天氣",
     "panelLabel": "今天，你的天空",
     "todayTitle": "此刻",
     "sky": {

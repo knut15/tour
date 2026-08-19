@@ -1,5 +1,5 @@
 {
-  "brand": "Your Seoul",
+  "brand": "Your Korea",
   "nav": {
     "explore": "Explore",
     "switchLocale": "한국어",
@@ -7,10 +7,12 @@
   },
   "explore": {
     "eyebrow": "Chosen, not listed",
-    "title": "Your Seoul, framed.",
+    "title": "Your Korea, framed.",
     "subtitle": "A few places at a time. Look, then go.",
-    "allDistricts": "Anywhere in Seoul",
-    "districtLabel": "Neighbourhood",
+    "areaLabel": "Region",
+    "allAreas": "Anywhere in Korea",
+    "districtLabel": "District",
+    "allDistricts": "All districts",
     "categoryLabel": "What are you after",
     "showAnother": "More places",
     "sourceNote": "Place data from the Korea Tourism Organization."
@@ -58,8 +60,6 @@
     }
   },
   "weather": {
-    "openLabel": "Show today's weather",
-    "closeLabel": "Hide today's weather",
     "panelLabel": "Your sky today",
     "todayTitle": "Right now",
     "sky": {

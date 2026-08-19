@@ -2,7 +2,7 @@ import type { Locale } from "@/domain/shared/locale";
 import { DEFAULT_PAGE, type Page } from "@/domain/shared/paging";
 import { contentTypeIdOf } from "@/domain/spot/category";
 import { distanceMeters } from "@/domain/spot/coordinate";
-import type { District } from "@/domain/spot/district";
+import type { Area, AreaCode, District } from "@/domain/spot/region";
 import type { Spot, SpotId } from "@/domain/spot/spot";
 import { EMPTY_FACTS, type SpotDetail } from "@/domain/spot/spot-detail";
 import type {
@@ -12,6 +12,8 @@ import type {
 } from "@/domain/spot/spot-repository";
 import { toSpot } from "@/infrastructure/tourapi/tourapi-mapper";
 import {
+  MOCK_AREAS_EN,
+  MOCK_AREAS_KO,
   MOCK_DISTRICTS_EN,
   MOCK_DISTRICTS_KO,
   MOCK_EN,
@@ -52,7 +54,11 @@ export class MockSpotRepository implements SpotRepository {
     const filtered = this.spots(query.locale).filter((s) => {
       const raw = this.raw(query.locale).find((r) => r.contentid === s.id.contentId);
       if (toNumber(raw?.contenttypeid) !== wanted) return false;
-      if (query.districtCode && s.districtCode !== query.districtCode) return false;
+      if (query.areaCode && s.areaCode !== query.areaCode) return false;
+      // 시도 없이 온 시군구 코드는 실제 구현과 마찬가지로 무시한다
+      if (query.areaCode && query.districtCode && s.districtCode !== query.districtCode) {
+        return false;
+      }
       return true;
     });
     // 실제 API 의 arrange=Q 를 흉내낸다 — 이미지 있는 것이 앞으로 온다
@@ -100,7 +106,14 @@ export class MockSpotRepository implements SpotRepository {
     };
   }
 
-  async listDistricts(locale: Locale): Promise<District[]> {
+  async listAreas(locale: Locale): Promise<Area[]> {
+    const raw = locale === "ko" ? MOCK_AREAS_KO : MOCK_AREAS_EN;
+    return raw.map((a) => ({ code: toNumber(a.code), name: a.name ?? "" }));
+  }
+
+  async listDistricts(locale: Locale, areaCode: AreaCode): Promise<District[]> {
+    // 목이 시군구를 가진 시도는 서울뿐이다
+    if (areaCode !== 1) return [];
     const raw = locale === "ko" ? MOCK_DISTRICTS_KO : MOCK_DISTRICTS_EN;
     return raw.map((d) => ({ code: toNumber(d.code), name: d.name ?? "" }));
   }

@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import type { Locale } from "@/domain/shared/locale";
 import type { Page } from "@/domain/shared/paging";
 import type { Spot, SpotId } from "@/domain/spot/spot";
 import { EMPTY_FACTS } from "@/domain/spot/spot-detail";
@@ -8,7 +9,7 @@ import type {
   SpotRepository,
 } from "@/domain/spot/spot-repository";
 import { makeGetSpotDetail } from "@/application/spot/get-spot-detail";
-import { makeListDistricts } from "@/application/spot/list-districts";
+import { makeListAreas, makeListDistricts } from "@/application/spot/list-regions";
 import {
   InvalidCoordinateError,
   makeListNearbySpots,
@@ -20,6 +21,7 @@ function spot(over: Partial<Spot> & { id: SpotId }): Spot {
     name: { primary: "A", korean: "가" },
     category: "attraction",
     address: null,
+    areaCode: 1,
     districtCode: 23,
     coordinate: { lng: 127, lat: 37.5 },
     image: { url: "https://a/1.jpg", thumbnailUrl: null, copyright: "Type3" },
@@ -58,7 +60,15 @@ class FakeRepo implements SpotRepository {
       facts: { ...EMPTY_FACTS, openingHours: "09:00-18:00" },
     };
   }
-  async listDistricts() {
+  lastDistrictsArea: number | null = null;
+  async listAreas() {
+    return [
+      { code: 1, name: "Seoul" },
+      { code: 31, name: "Gyeonggi-do" },
+    ];
+  }
+  async listDistricts(_locale: Locale, areaCode: number) {
+    this.lastDistrictsArea = areaCode;
     return [{ code: 23, name: "Jongno-gu" }];
   }
 }
@@ -184,9 +194,48 @@ describe("getSpotDetail", () => {
   });
 });
 
+describe("listAreas", () => {
+  it("코드와 이름을 그대로 넘긴다", async () => {
+    const out = await makeListAreas(new FakeRepo([]))("en");
+    expect(out).toEqual([
+      { code: 1, name: "Seoul" },
+      { code: 31, name: "Gyeonggi-do" },
+    ]);
+  });
+});
+
 describe("listDistricts", () => {
   it("코드와 이름을 그대로 넘긴다", async () => {
-    const out = await makeListDistricts(new FakeRepo([]))("en");
+    const out = await makeListDistricts(new FakeRepo([]))("en", 1);
     expect(out).toEqual([{ code: 23, name: "Jongno-gu" }]);
+  });
+
+  it("시도를 저장소까지 그대로 전달한다", async () => {
+    // 시군구 코드는 시도 안에서만 고유하다. 시도가 유실되면 다른 지역의
+    // 같은 번호를 조회하게 되는데, 그 오류는 이름이 그럴듯해서 눈에 안 띈다
+    const repo = new FakeRepo([]);
+    await makeListDistricts(repo)("en", 31);
+    expect(repo.lastDistrictsArea).toBe(31);
+  });
+});
+
+describe("listSpots — 지역 전달", () => {
+  it("시도와 시군구를 저장소 질의로 그대로 넘긴다", async () => {
+    const repo = new FakeRepo([]);
+    await makeListSpots(repo)({
+      locale: "en",
+      category: "attraction",
+      areaCode: 31,
+      districtCode: 5,
+    });
+    expect(repo.lastList?.areaCode).toBe(31);
+    expect(repo.lastList?.districtCode).toBe(5);
+  });
+
+  it("지역을 주지 않으면 질의에도 없다 — 그것이 전국이다", async () => {
+    const repo = new FakeRepo([]);
+    await makeListSpots(repo)({ locale: "en", category: "attraction" });
+    expect(repo.lastList?.areaCode).toBeUndefined();
+    expect(repo.lastList?.districtCode).toBeUndefined();
   });
 });

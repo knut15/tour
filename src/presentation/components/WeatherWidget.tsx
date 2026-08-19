@@ -74,11 +74,18 @@ export function WeatherWidget({
   return (
     <div
       id={panelId}
-      role="dialog"
+      /*
+        `role="dialog"` 를 쓰지 않는다. 이 패널은 `<details>` 안에 있어 열림 상태를
+        브라우저가 이미 전하고, dialog 는 모달이라는 뜻이라 초점을 가두는 동작을
+        기대하게 만든다. 여기서는 묶음이라는 것만 말하면 된다.
+      */
+      role="group"
       aria-labelledby={labelId}
       lang={lang}
       className={
-        "absolute right-0 top-[calc(100%+8px)] z-30 w-[min(21.25rem,calc(100vw-2rem))] " +
+        // 겹침은 역할로 고른다. 숫자를 여기서 정하지 않는다 (globals.css 의 --layer-*)
+        "absolute right-0 top-[calc(100%+8px)] z-[var(--layer-popover)] " +
+        "w-[min(21.25rem,calc(100vw-2rem))] " +
         "rounded-[22px] border border-line bg-canvas/85 p-2 backdrop-blur-xl " +
         "shadow-[0_18px_48px_-16px_rgba(0,0,0,0.28)] " +
         "animate-[weather-panel-in_0.18s_var(--ease-signature)_both] " +
