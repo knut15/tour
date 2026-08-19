@@ -148,7 +148,7 @@ function Actions({ spot, t }: { spot: SpotDetailView; t: Dictionary }) {
       : null;
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-canvas/95 px-6 py-4 backdrop-blur md:static md:border-0 md:bg-transparent md:px-6 md:pb-10 md:backdrop-blur-none">
+    <div className="fixed inset-x-0 bottom-0 z-[var(--layer-bar)] border-t border-line bg-canvas/95 px-6 py-4 backdrop-blur md:static md:border-0 md:bg-transparent md:px-6 md:pb-10 md:backdrop-blur-none">
       <div className="mx-auto flex max-w-[1200px] items-center gap-3">
         <div className="relative">
           <SaveChip

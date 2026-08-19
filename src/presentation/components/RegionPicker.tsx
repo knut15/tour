@@ -28,7 +28,7 @@ export function RegionPicker({
   const currentName = items.find((r) => r.code === current)?.name ?? allLabel;
 
   return (
-    <details className="group relative">
+    <details className="group relative" data-dismissable>
       <summary
         className={
           "flex cursor-pointer list-none items-center gap-2 rounded-btn border border-line " +
@@ -47,7 +47,7 @@ export function RegionPicker({
       </summary>
       <div
         className={
-          "absolute z-10 mt-2 grid max-h-[60vh] w-[min(28rem,90vw)] grid-cols-2 gap-1 " +
+          "absolute z-[var(--layer-popover)] mt-2 grid max-h-[60vh] w-[min(28rem,90vw)] grid-cols-2 gap-1 " +
           "overflow-y-auto rounded-btn border border-line bg-canvas p-2 " +
           "shadow-[0_12px_32px_-12px_rgba(26,28,30,0.18)] sm:grid-cols-3"
         }

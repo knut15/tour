@@ -6,6 +6,7 @@ import {
   THEME_COOKIE_MAX_AGE,
   type Theme,
 } from "@/presentation/lib/theme";
+import { CONTROL_SM } from "@/presentation/components/tds";
 
 const EVENT = "seoul-tour:theme-changed";
 
@@ -60,7 +61,8 @@ export function ThemeToggle({ label }: { label: string }) {
       type="button"
       onClick={toggle}
       aria-label={label}
-      className="grid size-9 place-items-center rounded-md border border-line text-muted transition-colors duration-200 ease-[var(--ease-signature)] hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+      // 높이는 CONTROL_SM 이 정한다. 옆의 언어 선택과 같은 높이여야 한다
+      className={`${CONTROL_SM} w-9`}
     >
       <svg viewBox="0 0 24 24" className="size-4" aria-hidden="true">
         {/* 반달 — 어느 쪽으로 가는지가 아니라 "빛을 바꾼다" 는 뜻만 전한다 */}
