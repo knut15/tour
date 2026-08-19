@@ -26,22 +26,30 @@ export function DismissOnOutside() {
 
     function onPointerDown(e: PointerEvent) {
       const target = e.target as Node | null;
+      for (const d of open()) {
+        // 자기 안을 누른 것은 여기서 닫지 않는다. 항목 선택은 click 이 맡는다
+        if (target && d.contains(target)) continue;
+        d.open = false;
+      }
+    }
+
+    /**
+     * 항목을 고르면 닫는다. **`pointerdown` 이 아니라 `click` 이다.**
+     *
+     * `pointerdown` 에서 닫으면 `<details>` 의 내용이 그 자리에서 숨겨져 링크가
+     * 사라진다. 그러면 `click` 은 링크가 아니라 pointerdown/pointerup 두 대상의
+     * **공통 조상**으로 가고, 링크의 기본 동작인 이동이 아예 일어나지 않는다 —
+     * 눌러도 아무 일이 없다.
+     *
+     * `click` 시점에는 대상이 이미 링크로 확정돼 있어, 여기서 숨겨도 이동은 그대로 간다.
+     */
+    function onClick(e: MouseEvent) {
+      const target = e.target as Node | null;
       const el = target instanceof Element ? target : target?.parentElement ?? null;
       const link = el?.closest("a");
-
+      if (!link) return;
       for (const d of open()) {
-        if (target && d.contains(target)) {
-          /*
-            안쪽을 눌렀다. 링크를 눌렀으면 **고른 것**이므로 닫는다 —
-            고르면 목록이 다시 조회되는데 드롭다운이 덮고 있으면
-            바뀐 결과가 보이지 않는다.
-
-            링크가 아닌 안쪽 클릭(summary 토글, 여백)은 그대로 둔다.
-          */
-          if (link && d.contains(link)) d.open = false;
-          continue;
-        }
-        d.open = false;
+        if (d.contains(link)) d.open = false;
       }
     }
 
@@ -57,9 +65,11 @@ export function DismissOnOutside() {
 
     // capture 로 받는다. 안쪽에서 stopPropagation 하는 요소가 생겨도 닫힘이 죽지 않는다
     document.addEventListener("pointerdown", onPointerDown, true);
+    document.addEventListener("click", onClick);
     document.addEventListener("keydown", onKeyDown);
     return () => {
       document.removeEventListener("pointerdown", onPointerDown, true);
+      document.removeEventListener("click", onClick);
       document.removeEventListener("keydown", onKeyDown);
     };
   }, []);
