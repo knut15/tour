@@ -564,6 +564,16 @@ details[open] > .dropdown-panel {
   transition:
     opacity 0.2s var(--ease-signature),
     transform 0.2s var(--ease-signature);
+  /*
+   * **이 면은 클릭을 받지 않는다.** 사진 전체를 덮고 있어서, 받으면 사진 아무 데나
+   * 눌러도 상세로 가지 않는다 — 카드 전체를 덮는 링크가 이 아래에 깔려 있다.
+   * 버튼만 각자 `pointer-events: auto` 로 되살린다.
+   */
+  pointer-events: none;
+}
+
+.card-actions button {
+  pointer-events: auto;
 }
 
 .card-thumb:hover .card-actions,

@@ -102,7 +102,24 @@ export function SpotFrame({
           <NoImage label={labelNoImage} />
         )}
 
-        {/* 평소엔 없다. 카드에 올리거나 포커스가 들어오면 사진 가운데 떠오른다 */}
+        {/*
+          사진을 덮는 링크. **사진 안에 있어야 한다** —
+          카드 전체를 덮는 제목 링크(`::after`)를 쓰면 커서가 사진 위에 있어도
+          실제로 hover 되는 요소는 `.card-thumb` 바깥이라 액션이 떠오르지 않는다.
+
+          제목 링크가 이미 접근 가능한 이름을 주므로 이 링크는 보조기술과 탭 순서에서
+          뺀다. 같은 곳으로 가는 링크가 둘로 읽히면 목록을 두 배로 훑게 된다.
+
+          겹침 값은 액션과 같다. DOM 에서 먼저 오므로 버튼이 위에 온다.
+        */}
+        <Link
+          href={href}
+          aria-hidden="true"
+          tabIndex={-1}
+          className="absolute inset-0 z-[var(--layer-card-overlay)]"
+        />
+
+        {/* 평소엔 없다. 사진에 올리거나 포커스가 들어오면 가운데 떠오른다 */}
         <CardActions
           spotKey={`${spot.locale}:${spot.contentId}`}
           title={spot.titlePrimary}
