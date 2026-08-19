@@ -35,7 +35,7 @@ export function LocaleSwitcher({
           <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" strokeWidth="1.8" />
         </svg>
       </summary>
-      <div className="absolute right-0 z-[var(--layer-popover)] mt-2 w-44 rounded-md border border-line bg-canvas p-1.5 shadow-[0_12px_32px_-12px_rgba(0,0,0,0.18)]">
+      <div className="dropdown-panel absolute right-0 z-[var(--layer-popover)] mt-2 w-44 rounded-md border border-line bg-canvas p-1.5 shadow-[0_12px_32px_-12px_rgba(0,0,0,0.18)]">
         {LOCALES.map((l) => (
           <Link
             key={l}

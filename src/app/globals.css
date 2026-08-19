@@ -469,3 +469,84 @@ body {
     transition: none;
   }
 }
+
+/*
+ * ── 탭 밑줄 ──
+ *
+ * 줄은 하나뿐이고 위치와 폭이 옮겨 다닌다. 탭마다 밑줄을 두면 이동이 아니라
+ * 교체가 되어 깜빡인다.
+ *
+ * `CategoryTabs` 가 실제 위치를 재고 나서야 `data-slider="on"` 을 켠다.
+ * 그전까지는 서버가 그린 정적 밑줄이 자리를 지킨다 — JS 가 없는 환경에서도
+ * 현재 탭이 보여야 한다.
+ */
+.tab-indicator {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  height: 1px;
+  width: 0;
+  background: var(--ink-primary);
+  opacity: 0;
+  transition:
+    transform 0.32s var(--ease-signature),
+    width 0.32s var(--ease-signature);
+}
+
+.tab-list[data-slider="on"] .tab-indicator {
+  opacity: 1;
+}
+
+/* 미끄러지는 줄이 켜지면 정적 밑줄은 물러난다. 둘이 겹치면 두 줄로 보인다 */
+.tab-list[data-slider="on"] .tab-link {
+  border-bottom-color: transparent;
+}
+
+/*
+ * ── 드롭다운 여닫기 ──
+ *
+ * `<details>` 는 즉시 나타나고 즉시 사라진다. 닫힐 때가 특히 거칠다 —
+ * 방금까지 목록이 있던 자리가 한 프레임에 비어 버린다.
+ *
+ * 닫는 애니메이션이 재생되려면 브라우저가 내용을 **바로 감추지 않고 기다려야** 한다.
+ * `::details-content` 의 `content-visibility` 에 `allow-discrete` 를 걸어 그 전환을
+ * 미룬다. 이것이 없으면 열 때만 움직이고 닫을 때는 그대로 사라진다.
+ */
+details[data-dismissable]::details-content {
+  transition: content-visibility 0.18s allow-discrete;
+}
+
+.dropdown-panel {
+  opacity: 0;
+  transform: translateY(-6px) scale(0.985);
+  transform-origin: top center;
+  transition:
+    opacity 0.18s var(--ease-signature),
+    transform 0.18s var(--ease-signature);
+}
+
+details[open] > .dropdown-panel {
+  opacity: 1;
+  transform: none;
+}
+
+/*
+ * 열릴 때의 **시작 값**. `content-visibility: hidden` 이던 요소가 드러나는 순간에는
+ * 전환의 시작점이 없어서 그냥 최종 상태로 나타난다. 시작점을 명시해야 움직인다.
+ */
+@starting-style {
+  details[open] > .dropdown-panel {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.985);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab-indicator,
+  .dropdown-panel {
+    transition: none;
+  }
+  details[data-dismissable]::details-content {
+    transition: none;
+  }
+}
