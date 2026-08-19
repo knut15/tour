@@ -46,6 +46,21 @@ export function WallSkeleton({ count = 9, label }: { count?: number; label: stri
   );
 }
 
+/**
+ * 마스트헤드의 날씨 칩 자리.
+ *
+ * **실제 칩과 같은 36px 높이·같은 폭이다.** 여기가 어긋나면 날씨가 도착하는 순간
+ * 테마 버튼과 언어 선택이 옆으로 밀린다 — 헤더에서 가장 눈에 띄는 점프다.
+ * 날씨 조회가 실패하면 칩이 아예 사라지므로 이 자리도 비워진다.
+ */
+export function WeatherChipSkeleton() {
+  return (
+    <div className="skeleton-root">
+      <Block className="h-9 w-[68px] !rounded-[6px]" />
+    </div>
+  );
+}
+
 /** 자치구 선택 컨트롤 자리 */
 export function DistrictPickerSkeleton() {
   return (

@@ -57,6 +57,83 @@
       "toList": "一覧へ戻る"
     }
   },
+  "weather": {
+    "openLabel": "今日の天気を開く",
+    "closeLabel": "天気を閉じる",
+    "panelLabel": "今日の、あなたの空",
+    "todayTitle": "いま",
+    "sky": {
+      "clear": "晴れ",
+      "partly-cloudy": "晴れ時々くもり",
+      "cloudy": "くもり",
+      "rain": "雨",
+      "rain-snow": "みぞれ",
+      "snow": "雪",
+      "shower": "にわか雨"
+    },
+    "feelsLike": "体感",
+    "low": "最低",
+    "high": "最高",
+    "humidity": "湿度",
+    "wind": "風",
+    "unitCelsius": "°",
+    "unitPercent": "%",
+    "unitWind": "m/s",
+    "unitDust": "㎍/㎥",
+    "air": {
+      "title": "空気",
+      "pm10": "PM10",
+      "pm25": "PM2.5",
+      "grade": {
+        "good": "良い",
+        "moderate": "ふつう",
+        "bad": "悪い",
+        "very-bad": "非常に悪い"
+      },
+      "unavailable": "いまは空気の情報を取得できませんでした。",
+      "noValue": "データなし"
+    },
+    "outfit": {
+      "title": "今日着るもの",
+      "layer": {
+        "sleeveless": "ノースリーブに短パン",
+        "short-sleeve": "半袖に薄手のシャツ",
+        "long-sleeve": "長袖Tシャツにチノパン",
+        "light-knit": "薄手のニットやカーディガン",
+        "jacket": "ジャケットにジーンズ",
+        "trench": "トレンチコートにニット",
+        "coat": "コートか革ジャケット",
+        "padding": "ダウンにマフラー"
+      },
+      "extra": {
+        "umbrella": "傘",
+        "mask": "マスク",
+        "windbreaker": "ウインドブレーカー",
+        "extra-layer": "羽織るものをもう一枚"
+      }
+    },
+    "observedNote": "{time} 現在",
+    "stationNote": "{station}で観測",
+    "regions": {
+      "서울": "ソウル",
+      "부산": "釜山",
+      "대구": "大邱",
+      "인천": "仁川",
+      "광주": "光州",
+      "대전": "大田",
+      "울산": "蔚山",
+      "세종": "世宗",
+      "경기": "京畿",
+      "강원": "江原",
+      "충북": "忠北",
+      "충남": "忠南",
+      "전북": "全北",
+      "전남": "全南",
+      "경북": "慶北",
+      "경남": "慶南",
+      "제주": "済州"
+    }
+  },
   "a11y": {
     "placeList": "場所の一覧",
     "placeListIn": "{district}の場所"

@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { isLocale, type Locale } from "@/domain/shared/locale";
@@ -9,8 +8,7 @@ import { CategoryPicker } from "@/presentation/components/CategoryPicker";
 import { DistrictPicker } from "@/presentation/components/DistrictPicker";
 import { Wall } from "@/presentation/components/Wall";
 import { ButtonLink } from "@/presentation/components/Button";
-import { ThemeToggle } from "@/presentation/components/ThemeToggle";
-import { LocaleSwitcher } from "@/presentation/components/LocaleSwitcher";
+import { Masthead } from "@/presentation/components/Masthead";
 import { DistrictPickerSkeleton, WallSkeleton } from "@/presentation/components/Skeleton";
 import { getDictionary, type Dictionary } from "@/presentation/i18n/dictionaries";
 
@@ -51,7 +49,7 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
 
   return (
     <>
-      <Masthead locale={locale} t={t} />
+      <Masthead locale={locale} t={t} localeHref={(l) => `/${l}/explore`} />
 
       <main className="mx-auto w-full max-w-[1200px] flex-1 px-6 pb-32">
         <header className="pt-12 pb-14 md:pt-16">
@@ -226,27 +224,6 @@ function nextWallHref(
   const p = new URLSearchParams({ category, page: String(page + 1) });
   if (districtCode) p.set("district", String(districtCode));
   return `/${locale}/explore?${p.toString()}`;
-}
-
-function Masthead({ locale, t }: { locale: Locale; t: Dictionary }) {
-  return (
-    <header className="mx-auto flex w-full max-w-[1200px] items-center justify-between px-6 py-5">
-      <Link
-        href={`/${locale}`}
-        className="text-[13px] uppercase tracking-[0.16em] focus-visible:outline-2 focus-visible:outline-focus"
-      >
-        {t.brand}
-      </Link>
-      <div className="flex items-center gap-2">
-        <ThemeToggle label={t.nav.theme} />
-        <LocaleSwitcher
-          current={locale}
-          hrefFor={(l) => `/${l}/explore`}
-          label={t.nav.switchLocale}
-        />
-      </div>
-    </header>
-  );
 }
 
 function Panel({

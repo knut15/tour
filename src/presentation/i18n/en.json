@@ -57,6 +57,83 @@
       "toList": "Back to places"
     }
   },
+  "weather": {
+    "openLabel": "Show today's weather",
+    "closeLabel": "Hide today's weather",
+    "panelLabel": "Your sky today",
+    "todayTitle": "Right now",
+    "sky": {
+      "clear": "Clear",
+      "partly-cloudy": "Partly cloudy",
+      "cloudy": "Overcast",
+      "rain": "Rain",
+      "rain-snow": "Sleet",
+      "snow": "Snow",
+      "shower": "Showers"
+    },
+    "feelsLike": "Feels like",
+    "low": "Low",
+    "high": "High",
+    "humidity": "Humidity",
+    "wind": "Wind",
+    "unitCelsius": "°",
+    "unitPercent": "%",
+    "unitWind": "m/s",
+    "unitDust": "µg/m³",
+    "air": {
+      "title": "Air",
+      "pm10": "PM10",
+      "pm25": "PM2.5",
+      "grade": {
+        "good": "Good",
+        "moderate": "Moderate",
+        "bad": "Unhealthy",
+        "very-bad": "Very unhealthy"
+      },
+      "unavailable": "No air reading right now.",
+      "noValue": "No data"
+    },
+    "outfit": {
+      "title": "Wear today",
+      "layer": {
+        "sleeveless": "A sleeveless top and shorts",
+        "short-sleeve": "A T-shirt and a light shirt",
+        "long-sleeve": "Long sleeves and chinos",
+        "light-knit": "A thin knit or a cardigan",
+        "jacket": "A jacket over jeans",
+        "trench": "A trench coat over a knit",
+        "coat": "A wool coat or a leather jacket",
+        "padding": "A padded coat and a scarf"
+      },
+      "extra": {
+        "umbrella": "Umbrella",
+        "mask": "Mask",
+        "windbreaker": "Windbreaker",
+        "extra-layer": "One more layer"
+      }
+    },
+    "observedNote": "As of {time}",
+    "stationNote": "Measured in {station}",
+    "regions": {
+      "서울": "Seoul",
+      "부산": "Busan",
+      "대구": "Daegu",
+      "인천": "Incheon",
+      "광주": "Gwangju",
+      "대전": "Daejeon",
+      "울산": "Ulsan",
+      "세종": "Sejong",
+      "경기": "Gyeonggi",
+      "강원": "Gangwon",
+      "충북": "Chungbuk",
+      "충남": "Chungnam",
+      "전북": "Jeonbuk",
+      "전남": "Jeonnam",
+      "경북": "Gyeongbuk",
+      "경남": "Gyeongnam",
+      "제주": "Jeju"
+    }
+  },
   "a11y": {
     "placeList": "Places",
     "placeListIn": "Places in {district}"

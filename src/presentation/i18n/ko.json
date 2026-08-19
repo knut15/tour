@@ -57,6 +57,83 @@
       "toList": "목록으로"
     }
   },
+  "weather": {
+    "openLabel": "오늘 날씨 열기",
+    "closeLabel": "날씨 닫기",
+    "panelLabel": "오늘, 당신의 하늘",
+    "todayTitle": "지금",
+    "sky": {
+      "clear": "맑음",
+      "partly-cloudy": "구름 조금",
+      "cloudy": "흐림",
+      "rain": "비",
+      "rain-snow": "진눈깨비",
+      "snow": "눈",
+      "shower": "소나기"
+    },
+    "feelsLike": "체감",
+    "low": "최저",
+    "high": "최고",
+    "humidity": "습도",
+    "wind": "바람",
+    "unitCelsius": "°",
+    "unitPercent": "%",
+    "unitWind": "m/s",
+    "unitDust": "㎍/㎥",
+    "air": {
+      "title": "공기",
+      "pm10": "미세먼지",
+      "pm25": "초미세먼지",
+      "grade": {
+        "good": "좋음",
+        "moderate": "보통",
+        "bad": "나쁨",
+        "very-bad": "매우 나쁨"
+      },
+      "unavailable": "지금은 공기 정보를 받지 못했습니다.",
+      "noValue": "값 없음"
+    },
+    "outfit": {
+      "title": "오늘 입을 것",
+      "layer": {
+        "sleeveless": "민소매에 반바지",
+        "short-sleeve": "반팔에 얇은 셔츠",
+        "long-sleeve": "긴팔 티셔츠에 면바지",
+        "light-knit": "얇은 니트나 가디건",
+        "jacket": "자켓에 청바지",
+        "trench": "트렌치코트에 니트",
+        "coat": "코트나 가죽 자켓",
+        "padding": "패딩에 목도리"
+      },
+      "extra": {
+        "umbrella": "우산",
+        "mask": "마스크",
+        "windbreaker": "바람막이",
+        "extra-layer": "겉옷 하나 더"
+      }
+    },
+    "observedNote": "{time} 기준",
+    "stationNote": "{station} 측정",
+    "regions": {
+      "서울": "서울",
+      "부산": "부산",
+      "대구": "대구",
+      "인천": "인천",
+      "광주": "광주",
+      "대전": "대전",
+      "울산": "울산",
+      "세종": "세종",
+      "경기": "경기",
+      "강원": "강원",
+      "충북": "충북",
+      "충남": "충남",
+      "전북": "전북",
+      "전남": "전남",
+      "경북": "경북",
+      "경남": "경남",
+      "제주": "제주"
+    }
+  },
   "a11y": {
     "placeList": "장소 목록",
     "placeListIn": "{district}의 장소"
