@@ -5,8 +5,15 @@ import { isCategory, type Category } from "@/domain/spot/category";
 import { isAreaCode, isDistrictCode } from "@/domain/spot/region";
 import { listAreas, listDistricts, listSpots } from "@/presentation/lib/container";
 import { exploreHref } from "@/presentation/lib/explore-href";
+import {
+  MORE_MAX,
+  enterFrom,
+  parseMore,
+  requestSize,
+} from "@/presentation/lib/explore-paging";
 import { CategoryPicker } from "@/presentation/components/CategoryPicker";
 import { RegionPicker } from "@/presentation/components/RegionPicker";
+import { MoreLabel } from "@/presentation/components/MoreLabel";
 import { Wall } from "@/presentation/components/Wall";
 import { ButtonLink } from "@/presentation/components/Button";
 import { Masthead } from "@/presentation/components/Masthead";
@@ -18,10 +25,7 @@ function first(raw: string | string[] | undefined): string | undefined {
   return v?.trim() || undefined;
 }
 
-function parsePage(raw: string | string[] | undefined): number {
-  const n = Number(first(raw) ?? "");
-  return Number.isInteger(n) && n >= 1 && n <= 20 ? n : 1;
-}
+
 
 function parseCategory(raw: string | string[] | undefined): Category {
   const v = first(raw);
@@ -59,7 +63,7 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
   const areaCode = parseAreaCode(sp.area);
   // 시도 없는 시군구는 어느 지역인지 정해지지 않는다. 통째로 버린다
   const districtCode = areaCode ? parseDistrictCode(sp.district) : undefined;
-  const page = parsePage(sp.page);
+  const more = parseMore(first(sp.more));
   const t = await getDictionary(locale);
 
   return (
@@ -120,11 +124,14 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
         </div>
 
         {/*
-          key 에 필터를 넣어 조건이 바뀌면 스켈레톤이 다시 보이게 한다.
-          없으면 이전 목록이 남은 채 멈춰 있어 반응이 없는 것처럼 보인다.
+          key 에 **필터만** 넣는다. 조건이 바뀌면 다른 목록이므로 스켈레톤을 다시 띄운다.
+
+          `more` 는 일부러 뺐다. 넣으면 더보기를 누를 때마다 경계가 새로 만들어져
+          보고 있던 카드가 스켈레톤으로 바뀌고 다시 그려진다 — 그건 "추가" 가 아니라
+          "교체" 다. 빼면 React 가 key 로 기존 카드를 알아보고 새 카드만 끼워 넣는다.
         */}
         <Suspense
-          key={`${locale}:${category}:${areaCode ?? "all"}:${districtCode ?? "all"}:${page}`}
+          key={`${locale}:${category}:${areaCode ?? "all"}:${districtCode ?? "all"}`}
           fallback={<WallSkeleton label={t.state.loading} />}
         >
           <Spots
@@ -132,7 +139,7 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
             category={category}
             areaCode={areaCode}
             districtCode={districtCode}
-            page={page}
+            more={more}
             t={t}
           />
         </Suspense>
@@ -213,21 +220,31 @@ async function Spots({
   category,
   areaCode,
   districtCode,
-  page,
+  more,
   t,
 }: {
   locale: Locale;
   category: Category;
   areaCode?: number;
   districtCode?: number;
-  page: number;
+  /** 더보기를 누른 횟수. 0 이면 첫 묶음만 */
+  more: number;
   t: Dictionary;
 }) {
+  /*
+    누적분을 **한 번의 요청**으로 받는다.
+
+    페이지를 1..N 까지 나눠 부르면 더보기 N 번에 요청이 N 번 든다. TourAPI 는
+    `numOfRows` 를 200 까지 받아 주므로(실측 2026-08-19) 한 번에 다 받는 편이
+    요청 수도 적고 항목 순서도 흔들리지 않는다 — 나눠 부르면 그사이 공급자
+    정렬이 바뀌어 같은 스팟이 두 묶음에 겹쳐 들어올 수 있다.
+  */
+  const size = requestSize(more);
   let wall;
   let districts;
   try {
     [wall, districts] = await Promise.all([
-      listSpots({ locale, category, areaCode, districtCode, page }),
+      listSpots({ locale, category, areaCode, districtCode, page: 1, size }),
       /*
         카드에 붙일 시군구 이름의 출처. **시도를 골랐을 때만 받는다.**
 
@@ -264,6 +281,7 @@ async function Spots({
   }
 
   const districtName = districts.find((r) => r.code === districtCode)?.name;
+
   // 스크린 리더에도 내부 은유를 흘리지 않는다. 사용자는 장소를 찾는다
   const listLabel = `${t.category[category]} — ${districtName ?? t.explore.allAreas}`;
 
@@ -277,18 +295,22 @@ async function Spots({
         labelSave={t.frame.save}
         labelSaved={t.frame.saved}
         labelNoImage={t.frame.noImage}
+        enterFrom={enterFrom(more, wall.items.length)}
       />
-      {wall.hasMore && (
+      {wall.hasMore && more < MORE_MAX && (
         <div className="pt-24 text-center">
           {/*
             다음 묶음을 부른다. **페이지 번호와 총 건수를 화면에 쓰지 않는다** —
             "3,412건 중 1–20" 이라는 문구 하나가 기관 느낌의 핵심이다 (GOAL.md §0.5-3).
           */}
           <ButtonLink
-            href={exploreHref(locale, { category, areaCode, districtCode, page: page + 1 })}
+            href={exploreHref(locale, { category, areaCode, districtCode, more: more + 1 })}
             variant="weak"
+            // 스크롤 위치를 지킨다. 목록이 아래로 늘어나는데 맨 위로 올라가면
+            // 방금 보던 카드를 다시 찾아 내려와야 한다
+            scroll={false}
           >
-            {t.explore.showAnother}
+            <MoreLabel idle={t.explore.showAnother} busy={t.state.loading} />
           </ButtonLink>
         </div>
       )}

@@ -19,6 +19,7 @@ export function Wall({
   labelSave,
   labelSaved,
   labelNoImage,
+  enterFrom,
 }: {
   items: SpotView[];
   ariaLabel: string;
@@ -27,6 +28,11 @@ export function Wall({
   labelSave: string;
   labelSaved: string;
   labelNoImage: string;
+  /**
+   * 이 인덱스부터가 이번에 새로 붙은 카드다. 그 앞은 이미 화면에 있던 것이라
+   * 다시 등장시키지 않는다. 생략하면 아무것도 애니메이션하지 않는다.
+   */
+  enterFrom?: number;
 }) {
   return (
     <ul
@@ -35,13 +41,20 @@ export function Wall({
       // 카드에 컨테이너가 없으므로 간격이 곧 구분선이다. 좁으면 카드끼리 붙어 읽힌다
       className="grid grid-cols-1 gap-x-[34px] gap-y-16 sm:grid-cols-2 lg:grid-cols-3"
     >
-      {items.map((spot, i) => (
+      {items.map((spot, i) => {
+        const isNew = enterFrom !== undefined && i >= enterFrom;
+        return (
         <li
           key={`${spot.locale}:${spot.contentId}`}
           // min-w-0 이 없으면 flex 아이템이 min-content 아래로 줄지 못한다.
           // truncate 는 white-space: nowrap 이라 긴 주소 한 줄이 곧 min-content 폭이 되고,
           // 그 카드가 자기 열을 밀어내 옆 칸을 덮는다
-          className="flex min-w-0"
+          className={"flex min-w-0" + (isNew ? " spot-enter" : "")}
+          style={
+            isNew
+              ? ({ "--enter-index": i - enterFrom } as React.CSSProperties)
+              : undefined
+          }
         >
           <SpotFrame
             spot={spot}
@@ -55,7 +68,8 @@ export function Wall({
             priority={i < 3}
           />
         </li>
-      ))}
+        );
+      })}
     </ul>
   );
 }

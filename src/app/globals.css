@@ -303,3 +303,56 @@ body {
     animation: skeleton-appear 0.01ms 0.2s both;
   }
 }
+
+/*
+ * 더보기로 **새로 붙은 카드만** 들어온다.
+ *
+ * 이미 있던 카드는 그대로 있어야 한다 — 목록 전체가 다시 나타나면 "추가" 가 아니라
+ * "교체" 로 읽히고, 방금 보던 카드를 다시 찾아야 한다. 그래서 애니메이션 클래스를
+ * 새 항목에만 붙인다.
+ *
+ * `both` 로 시작 상태를 미리 적용한다. 없으면 첫 프레임에 제자리에 그려졌다가
+ * 튀어 오른다.
+ */
+@keyframes spot-enter {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.spot-enter {
+  animation: spot-enter 0.42s var(--ease-signature) both;
+  /* 한 줄이 통째로 뜨지 않고 왼쪽부터 차례로 들어온다 */
+  animation-delay: calc(var(--enter-index, 0) * 55ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spot-enter {
+    animation: spot-enter 0.01ms both;
+  }
+}
+
+/* 더보기 대기 표시. 세 점이 차례로 밝아진다 */
+@keyframes spot-dot {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @keyframes spot-dot {
+    0%,
+    100% {
+      opacity: 0.6;
+    }
+  }
+}
