@@ -3,7 +3,9 @@ import { notFound } from "next/navigation";
 import { isLocale, type Locale } from "@/domain/shared/locale";
 import type { SpotDetailView } from "@/application/spot/dto";
 import { getSpotDetail } from "@/presentation/lib/container";
+import { NoImage } from "@/presentation/components/NoImage";
 import { SaveChip } from "@/presentation/components/SaveChip";
+import { SpotImage } from "@/presentation/components/SpotImage";
 import { ThemeToggle } from "@/presentation/components/ThemeToggle";
 import { LocaleSwitcher } from "@/presentation/components/LocaleSwitcher";
 import {
@@ -51,16 +53,16 @@ export default async function SpotDetailPage({ params }: PageProps<"/[locale]/sp
               <div className="overflow-hidden md:rounded-md">
                 <div className="aspect-[3/2] w-full overflow-hidden bg-surface md:rounded-md">
                   {spot.imageUrl ? (
-                    // 크롭하지 않는다. 이미지의 82% 가 변경금지(Type3)다
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
+                    <SpotImage
                       src={spot.imageUrl}
                       alt={spot.titlePrimary}
-                      className="h-full w-full object-contain"
+                      noImageLabel={t.frame.noImage}
+                      size="lg"
+                      priority
                     />
                   ) : (
-                    // 사진이 없으면 회색 플레이스홀더가 아니라 카테고리 색면이다
-                    <div className="h-full w-full bg-surface" aria-hidden="true" />
+                    // 빈 색면은 "아직 안 떴다" 로 읽힌다. 없다는 것을 글자로 말한다
+                    <NoImage label={t.frame.noImage} size="lg" />
                   )}
                 </div>
               </div>
