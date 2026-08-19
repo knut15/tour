@@ -94,9 +94,17 @@ supanova 금지 목록(Inter, Noto Sans KR, Roboto 등)에 없다. 위계는 굵
 | --elevation-raised | 0 1px 0 #DCD9CD | 0 1px 0 #2E3236 | 액자 바닥선만 |
 | --elevation-overlay | 0 12px 32px -12px rgba(26,28,30,0.18) | 0 12px 32px -12px rgba(0,0,0,0.5) | 바텀시트·모달 |
 
-**스크롤에 고정된 바의 아래 경계는 그림자가 아니라 색면이다.** 바탕색에서 투명으로 빠지는
-28px 그러데이션을 쓴다. 어두운 그림자는 다크 모드에서 어두운 사진 위에 놓이면 보이지 않는데,
-색면은 두 테마에서 똑같이 동작한다. 구현은 `globals.css` 의 `.filter-sticky::after` 다.
+**스크롤에 고정된 바의 아래 경계는 드랍쉐도우다.** `elevation-overlay` 와 별도로 둔다 —
+그쪽은 바텀시트·모달용이고 이건 바 하나의 경계다.
+
+| 토큰 | 라이트 | 다크 | 용도 |
+|---|---|---|---|
+| --filter-bar-shadow-alpha | 0.2 | 0.4 | 붙어 있는 필터 바 아래 |
+
+`box-shadow: 0 12px 12px -12px rgb(0 0 0 / var(--filter-bar-shadow-alpha))`.
+spread 를 -12 로 두면 그림자 사각형의 아래 변이 바의 아래 변과 겹쳐 **위로는 새지 않고
+아래로만 12px** 퍼진다. 다크에서 알파가 두 배인 이유는 어두운 바탕 위의 검은 그림자가
+같은 값으로는 보이지 않기 때문이다. 구현은 `globals.css` 의 `.filter-sticky` 다.
 
 ## motion
 
