@@ -1,6 +1,6 @@
 import type { SpotRepository } from "@/domain/spot/spot-repository";
 import { makeGetSpotDetail } from "@/application/spot/get-spot-detail";
-import { makeListDistricts } from "@/application/spot/list-districts";
+import { makeListAreas, makeListDistricts } from "@/application/spot/list-regions";
 import { makeListNearbySpots } from "@/application/spot/list-nearby-spots";
 import { makeListSpots } from "@/application/spot/list-spots";
 import { readTourApiConfig, isMockEnabled } from "@/infrastructure/config/env";
@@ -28,4 +28,5 @@ const spotRepository = createSpotRepository();
 export const listSpots = makeListSpots(spotRepository);
 export const listNearbySpots = makeListNearbySpots(spotRepository);
 export const getSpotDetail = makeGetSpotDetail(spotRepository);
+export const listAreas = makeListAreas(spotRepository);
 export const listDistricts = makeListDistricts(spotRepository);

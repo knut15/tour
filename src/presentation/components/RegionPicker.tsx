@@ -1,33 +1,31 @@
 import Link from "next/link";
-import type { Category } from "@/domain/spot/category";
-import type { DistrictView } from "@/application/spot/dto";
+import type { RegionView } from "@/application/spot/dto";
 
 /**
- * 서울 자치구. **25개를 상시 나열하지 않는다** — 화면을 가득 채운 chip 나열은
- * 공공 포털의 시각 언어다 (GOAL.md §0.5-6). 접힌 컨트롤 하나로 두고 펼칠 때만 보인다.
+ * 지역 선택 하나. 시도에도 시군구에도 같은 것을 쓴다.
+ *
+ * **후보를 상시 나열하지 않는다** — 화면을 가득 채운 chip 나열은 공공 포털의
+ * 시각 언어다 (GOAL.md §0.5-6). 접힌 컨트롤 하나로 두고 펼칠 때만 보인다.
  * `<details>` 라 JS 없이 동작한다.
+ *
+ * 링크 만들기는 부르는 쪽이 한다. 시도를 고르면 시군구가 떨어져야 하고
+ * 시군구를 고르면 시도가 유지돼야 하는데, 그 규칙은 화면이 알지 이 컴포넌트가
+ * 알 일이 아니다.
  */
-export function DistrictPicker({
-  locale,
-  category,
-  districts,
+export function RegionPicker({
+  items,
   current,
   label,
   allLabel,
+  hrefFor,
 }: {
-  locale: string;
-  category: Category;
-  districts: DistrictView[];
+  items: RegionView[];
   current?: number;
   label: string;
   allLabel: string;
+  hrefFor: (code?: number) => string;
 }) {
-  const currentName = districts.find((d) => d.code === current)?.name ?? allLabel;
-  const hrefFor = (code?: number) => {
-    const p = new URLSearchParams({ category });
-    if (code) p.set("district", String(code));
-    return `/${locale}/explore?${p.toString()}`;
-  };
+  const currentName = items.find((r) => r.code === current)?.name ?? allLabel;
 
   return (
     <details className="group relative">
@@ -60,18 +58,18 @@ export function DistrictPicker({
         >
           {allLabel}
         </Link>
-        {districts.map((d) => (
+        {items.map((r) => (
           <Link
-            key={d.code}
-            href={hrefFor(d.code)}
-            aria-current={d.code === current ? "true" : undefined}
+            key={r.code}
+            href={hrefFor(r.code)}
+            aria-current={r.code === current ? "true" : undefined}
             className={
               "rounded-md px-3 py-2 text-[14px] hover:bg-surface " +
               "focus-visible:outline-2 focus-visible:outline-focus " +
-              (d.code === current ? "bg-weak-bg text-weak-fg" : "text-muted")
+              (r.code === current ? "bg-weak-bg text-weak-fg" : "text-muted")
             }
           >
-            {d.name}
+            {r.name}
           </Link>
         ))}
       </div>

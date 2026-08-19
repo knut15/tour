@@ -1,7 +1,7 @@
 import type { Locale } from "@/domain/shared/locale";
 import { DEFAULT_PAGE, type Page } from "@/domain/shared/paging";
 import { contentTypeIdOf } from "@/domain/spot/category";
-import { SEOUL_AREA_CODE, type District } from "@/domain/spot/district";
+import type { Area, AreaCode, District } from "@/domain/spot/region";
 import type { Spot, SpotId } from "@/domain/spot/spot";
 import { EMPTY_FACTS, type SpotDetail } from "@/domain/spot/spot-detail";
 import type {
@@ -33,10 +33,14 @@ export class TourApiSpotRepository implements SpotRepository {
       arrange: ARRANGE_IMAGE_FIRST,
       contentTypeId: contentTypeIdOf(query.category, query.locale),
       // areaCode 는 매뉴얼 v4.4 에 문서화돼 있지 않지만 실측상 동작한다.
-      // 폐기되면 lDongRegnCd(서울=11)로 갈아탄다. 그 변경은 이 파일 안에서 끝난다.
+      // 폐기되면 lDongRegnCd 로 갈아탄다. 그 변경은 이 파일 안에서 끝난다.
       // 근거: .curvez/research/tourapi-manual-v44.md 사실 14
-      areaCode: SEOUL_AREA_CODE,
-      sigunguCode: query.districtCode,
+      //
+      // **둘 다 생략하면 전국이다.** 실측 2026-08-19: 관광지(76) 전국 2,599건,
+      // areaCode=1 로 좁히면 405건.
+      areaCode: query.areaCode,
+      // 시도 없는 시군구 코드는 어느 지역인지 정해지지 않는다. 함께 없을 때만 보낸다
+      sigunguCode: query.areaCode ? query.districtCode : undefined,
     });
 
     const items = result.items
@@ -121,14 +125,28 @@ export class TourApiSpotRepository implements SpotRepository {
     };
   }
 
-  async listDistricts(locale: Locale): Promise<District[]> {
+  /** `areaCode` 를 빼면 시도 목록이 온다. 실측 17건 */
+  async listAreas(locale: Locale): Promise<Area[]> {
+    return this.regions(locale, undefined, 30);
+  }
+
+  /** 시군구 최대 개수는 경기도의 31개다. 상한을 넉넉히 잡는다 */
+  async listDistricts(locale: Locale, areaCode: AreaCode): Promise<District[]> {
+    return this.regions(locale, areaCode, 60);
+  }
+
+  private async regions(
+    locale: Locale,
+    areaCode: AreaCode | undefined,
+    numOfRows: number,
+  ): Promise<Area[]> {
     const result = await this.client.call(locale, "areaCode2", {
-      numOfRows: 30,
+      numOfRows,
       pageNo: 1,
-      areaCode: SEOUL_AREA_CODE,
+      areaCode,
     });
     return result.items
       .map((i) => ({ code: toNumber(i.code), name: i.name?.trim() ?? "" }))
-      .filter((d) => Number.isInteger(d.code) && d.name.length > 0);
+      .filter((r) => Number.isInteger(r.code) && r.name.length > 0);
   }
 }

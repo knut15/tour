@@ -2,13 +2,16 @@ import type { Locale } from "@/domain/shared/locale";
 import type { Page, PageRequest } from "@/domain/shared/paging";
 import type { Category } from "@/domain/spot/category";
 import type { Coordinate } from "@/domain/spot/coordinate";
-import type { District, DistrictCode } from "@/domain/spot/district";
+import type { Area, AreaCode, District, DistrictCode } from "@/domain/spot/region";
 import type { Spot, SpotId } from "@/domain/spot/spot";
 import type { SpotDetail } from "@/domain/spot/spot-detail";
 
 export type ListSpotsQuery = {
   locale: Locale;
   category: Category;
+  /** 시도. 없으면 전국이다 */
+  areaCode?: AreaCode;
+  /** 시군구. `areaCode` 가 없으면 지역을 식별하지 못하므로 구현이 무시한다 */
   districtCode?: DistrictCode;
   page?: PageRequest;
 };
@@ -36,6 +39,8 @@ export interface SpotRepository {
    * 벽 판정(이미지 필수·의료관광 배제)을 적용하지 않는다 — 직접 링크로 들어온 스팟은 보여준다.
    */
   findDetail(id: SpotId): Promise<SpotDetail | null>;
-  /** 서울 자치구 목록. 이름은 로케일에 따라 다르다 */
-  listDistricts(locale: Locale): Promise<District[]>;
+  /** 시도 목록(17개). 이름은 로케일에 따라 다르다 */
+  listAreas(locale: Locale): Promise<Area[]>;
+  /** 한 시도의 시군구 목록. **시도 없이는 부를 수 없다** (region.ts) */
+  listDistricts(locale: Locale, areaCode: AreaCode): Promise<District[]>;
 }

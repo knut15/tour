@@ -11,6 +11,7 @@ export function toSpotView(spot: Spot): SpotView {
     titleKorean: spot.name.korean,
     category: spot.category,
     address: spot.address,
+    areaCode: spot.areaCode,
     districtCode: spot.districtCode,
     lng: spot.coordinate?.lng ?? null,
     lat: spot.coordinate?.lat ?? null,

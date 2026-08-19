@@ -5,6 +5,9 @@ import type { Category } from "@/domain/spot/category";
 export type ListSpotsInput = {
   locale: Locale;
   category: Category;
+  /** 시도. 없으면 전국 */
+  areaCode?: number;
+  /** 시군구. `areaCode` 와 짝이어야 의미가 있다 */
   districtCode?: number;
   page?: number;
   size?: number;
@@ -34,6 +37,7 @@ export type SpotView = {
   titleKorean: string | null;
   category: Category;
   address: string | null;
+  areaCode: number | null;
   districtCode: number | null;
   lng: number | null;
   lat: number | null;
@@ -63,7 +67,8 @@ export type SpotListView = {
   hasMore: boolean;
 };
 
-export type DistrictView = {
+/** 시도·시군구 공통. 코드와 이름 한 쌍이면 화면에 그리기 충분하다 */
+export type RegionView = {
   code: number;
   name: string;
 };

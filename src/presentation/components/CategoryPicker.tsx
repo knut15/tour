@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { CATEGORIES, type Category } from "@/domain/spot/category";
+import { exploreHref } from "@/presentation/lib/explore-href";
 
 /**
  * 카테고리 선택.
@@ -16,12 +17,14 @@ import { CATEGORIES, type Category } from "@/domain/spot/category";
 export function CategoryPicker({
   locale,
   current,
+  areaCode,
   districtCode,
   labels,
   groupLabel,
 }: {
   locale: string;
   current: Category;
+  areaCode?: number;
   districtCode?: number;
   labels: Record<Category, string>;
   groupLabel: string;
@@ -31,12 +34,11 @@ export function CategoryPicker({
       <ul className="flex flex-wrap items-center gap-x-8 border-b border-line sm:gap-x-9">
         {CATEGORIES.map((c) => {
           const active = c === current;
-          const params = new URLSearchParams({ category: c });
-          if (districtCode) params.set("district", String(districtCode));
+          // 카테고리를 바꿔도 지역은 유지한다. 페이지는 1로 돌아간다
           return (
             <li key={c}>
               <Link
-                href={`/${locale}/explore?${params.toString()}`}
+                href={exploreHref(locale, { category: c, areaCode, districtCode })}
                 aria-current={active ? "page" : undefined}
                 className={
                   "inline-block pb-3.5 -mb-px border-b text-[15px] " +

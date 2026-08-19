@@ -1,7 +1,7 @@
 import type { Locale } from "@/domain/shared/locale";
 import { categoryOfContentTypeId, type Category } from "@/domain/spot/category";
 import { createCoordinate } from "@/domain/spot/coordinate";
-import { isSeoulDistrictCode } from "@/domain/spot/district";
+import { isAreaCode, isDistrictCode } from "@/domain/spot/region";
 import { createSpotImage } from "@/domain/spot/image";
 import { parseSpotName, type Spot } from "@/domain/spot/spot";
 import { toNumber, type TourApiItem } from "@/infrastructure/tourapi/tourapi-types";
@@ -21,6 +21,7 @@ export function toSpot(item: TourApiItem, locale: Locale, fallback?: Category): 
 
   const lng = toNumber(item.mapx);
   const lat = toNumber(item.mapy);
+  const areaCode = toNumber(item.areacode);
   const districtCode = toNumber(item.sigungucode);
 
   return {
@@ -28,7 +29,10 @@ export function toSpot(item: TourApiItem, locale: Locale, fallback?: Category): 
     name: parseSpotName(title, locale),
     category,
     address: [item.addr1?.trim(), item.addr2?.trim()].filter(Boolean).join(" ") || null,
-    districtCode: isSeoulDistrictCode(districtCode) ? districtCode : null,
+    areaCode: isAreaCode(areaCode) ? areaCode : null,
+    // 시도를 모르면 시군구 코드는 의미가 없다. 함께 버린다 (region.ts)
+    districtCode:
+      isAreaCode(areaCode) && isDistrictCode(districtCode) ? districtCode : null,
     coordinate: createCoordinate(lng, lat),
     image: createSpotImage(item.firstimage, item.firstimage2, item.cpyrhtDivCd),
     tel: item.tel?.trim() || null,

@@ -20,8 +20,8 @@ const newsreader = Newsreader({
 });
 
 export const metadata: Metadata = {
-  title: "Your Seoul",
-  description: "A small, edited selection of Seoul. Not a directory.",
+  title: "Your Korea",
+  description: "A small, edited selection of Korea. Not a directory.",
 };
 
 export function generateStaticParams() {

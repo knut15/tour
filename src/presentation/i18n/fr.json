@@ -1,5 +1,5 @@
 {
-  "brand": "Votre Séoul",
+  "brand": "Votre Corée",
   "nav": {
     "explore": "Explorer",
     "switchLocale": "Langue",
@@ -7,10 +7,12 @@
   },
   "explore": {
     "eyebrow": "Choisis, pas listés",
-    "title": "Votre Séoul, encadré.",
+    "title": "Votre Corée, encadrée.",
     "subtitle": "Quelques lieux à la fois. Regardez, puis partez.",
-    "allDistricts": "Tout Séoul",
-    "districtLabel": "Quartier",
+    "areaLabel": "Région",
+    "allAreas": "Toute la Corée",
+    "districtLabel": "District",
+    "allDistricts": "Tous les districts",
     "categoryLabel": "Que cherchez-vous",
     "showAnother": "Plus de lieux",
     "sourceNote": "Données des lieux fournies par la Korea Tourism Organization."

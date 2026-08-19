@@ -112,7 +112,26 @@ export const MOCK_KO: TourApiItem[] = [
   },
 ];
 
-/** areaCode2 응답 형태. 이름이 로케일마다 다르다. */
+/**
+ * areaCode2 를 `areaCode` 없이 부르면 오는 시도 목록.
+ *
+ * **목 스팟은 전부 서울(areacode=1)이다.** 다른 시도를 골라도 결과가 비는데,
+ * 그건 목의 한계이고 빈 상태 화면이 받는다. 시도를 하나만 두면 2단 필터가
+ * 화면에서 사라져 목 모드로는 그 UI 를 볼 수 없게 되므로 셋을 둔다.
+ */
+export const MOCK_AREAS_EN: TourApiItem[] = [
+  { code: "1", name: "Seoul" },
+  { code: "31", name: "Gyeonggi-do" },
+  { code: "39", name: "Jeju-do" },
+];
+
+export const MOCK_AREAS_KO: TourApiItem[] = [
+  { code: "1", name: "서울" },
+  { code: "31", name: "경기도" },
+  { code: "39", name: "제주도" },
+];
+
+/** 서울(areaCode=1)의 시군구. 이름이 로케일마다 다르다. */
 export const MOCK_DISTRICTS_EN: TourApiItem[] = [
   { code: "1", name: "Gangnam-gu" }, { code: "6", name: "Gwangjin-gu" },
   { code: "13", name: "Mapo-gu" }, { code: "15", name: "Seocho-gu" },
