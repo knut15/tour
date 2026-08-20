@@ -15,7 +15,11 @@
     "allDistricts": "Tous les districts",
     "categoryLabel": "Que cherchez-vous",
     "showAnother": "Plus de lieux",
-    "sourceNote": "Données des lieux fournies par la Korea Tourism Organization."
+    "sourceNote": "Données des lieux fournies par la Korea Tourism Organization.",
+    "nearMeOn": "Distance affichée",
+    "nearMeOff": "Afficher la distance",
+    "nearMeAsking": "Localisation…",
+    "nearMeDenied": "Accès à la position bloqué"
   },
   "category": {
     "attraction": "Lieux",
@@ -37,7 +41,8 @@
     "liked": "Je n’aime plus",
     "views": "Vues",
     "noCrop": "Non recadrée",
-    "noImage": "Aucune image disponible"
+    "noImage": "Aucune image disponible",
+    "distance": "Depuis votre position"
   },
   "detail": {
     "back": "Retour à la liste",

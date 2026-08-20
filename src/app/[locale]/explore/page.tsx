@@ -15,6 +15,7 @@ import { CategoryPicker } from "@/presentation/components/CategoryPicker";
 import { Lede } from "@/presentation/components/Lede";
 import { RegionPicker } from "@/presentation/components/RegionPicker";
 import { MoreLabel } from "@/presentation/components/MoreLabel";
+import { NearMeToggle } from "@/presentation/components/NearMeToggle";
 import { Wall } from "@/presentation/components/Wall";
 import { ButtonLink } from "@/presentation/components/Button";
 import { Masthead } from "@/presentation/components/Masthead";
@@ -134,6 +135,17 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
                 시군구 코드는 시도 안에서만 고유해서 시도 없이는 고를 수가 없다.
               */}
               <div className="flex flex-wrap items-start gap-3">
+                {/*
+                  거리를 켜는 스위치. 목록을 다시 부르지 않는다 — 위치는 브라우저에만
+                  있고 거리 계산도 카드가 직접 한다. 그래서 필터와 나란히 서 있어도
+                  URL 을 바꾸지 않는 유일한 컨트롤이다.
+                */}
+                <NearMeToggle
+                  labelOn={t.explore.nearMeOn}
+                  labelOff={t.explore.nearMeOff}
+                  labelAsking={t.explore.nearMeAsking}
+                  labelDenied={t.explore.nearMeDenied}
+                />
                 <Suspense fallback={<RegionPickerSkeleton />}>
                   <Areas locale={locale} category={category} current={areaCode} t={t} />
                 </Suspense>
@@ -329,6 +341,7 @@ async function Spots({
         labelLike={t.frame.like}
         labelLiked={t.frame.liked}
         labelViews={t.frame.views}
+        labelDistance={t.frame.distance}
         labelNoImage={t.frame.noImage}
         enterFrom={enterFrom(more, wall.items.length)}
       />

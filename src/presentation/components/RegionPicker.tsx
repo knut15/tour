@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { RegionView } from "@/application/spot/dto";
+import { FILTER_CONTROL } from "@/presentation/components/tds";
 
 /**
  * 지역 선택 하나. 시도에도 시군구에도 같은 것을 쓴다.
@@ -29,16 +30,8 @@ export function RegionPicker({
 
   return (
     <details className="group relative" data-dismissable>
-      <summary
-        className={
-          // 호버에 확대를 넣지 않는다. 필터는 자주 지나가는 자리라 커서가 스칠 때마다
-          // 크기가 흔들리고, 스티키 바에 붙은 뒤에는 그 흔들림이 목록 위에서 일어난다
-          "flex cursor-pointer list-none items-center gap-2 rounded-btn border border-line " +
-          "bg-canvas px-4 py-2.5 text-[15px] text-ink " +
-          "transition-colors duration-200 ease-[var(--ease-signature)] hover:border-ink/25 " +
-          "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
-        }
-      >
+      {/* 기하는 `FILTER_CONTROL` 이 정본이다. 옆에 서는 컨트롤과 높이를 나눠 쓴다 */}
+      <summary className={FILTER_CONTROL}>
         <span className="text-[11px] uppercase tracking-[0.14em] text-muted">
           {label}
         </span>
