@@ -41,3 +41,22 @@ export const CONTROL_SM =
   "text-[13px] leading-none text-muted " +
   "transition-colors duration-200 ease-[var(--ease-signature)] hover:text-ink " +
   "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus";
+
+/**
+ * 필터 바에 나란히 서는 컨트롤 — 지역 선택, 내 위치 토글.
+ *
+ * **헤더의 `CONTROL_SM` 과 다른 값이다.** 헤더는 36px 의 조용한 도구 줄이고,
+ * 필터 바는 사용자가 목록을 바꾸려고 직접 겨누는 자리라 더 크다. 둘을 합치면
+ * 한쪽이 반드시 어색해진다.
+ *
+ * **높이를 이 상수 밖에서 정하지 않는다.** 지역 선택이 `px-4 py-2.5 text-[15px]` 를
+ * 인라인으로 들고 있던 동안, 옆에 무엇을 세우든 그 값을 눈으로 베껴야 했다.
+ * 나란히 선 것의 높이 차이는 잰 사람만 알아보지만 어긋나 보인다는 인상은 남는다.
+ */
+export const FILTER_CONTROL =
+  // 호버에 확대를 넣지 않는다. 필터는 자주 지나가는 자리라 커서가 스칠 때마다
+  // 크기가 흔들리고, 스티키 바에 붙은 뒤에는 그 흔들림이 목록 위에서 일어난다
+  "flex cursor-pointer list-none items-center gap-2 rounded-btn border border-line " +
+  "bg-canvas px-4 py-2.5 text-[15px] text-ink " +
+  "transition-colors duration-200 ease-[var(--ease-signature)] hover:border-ink/25 " +
+  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus";

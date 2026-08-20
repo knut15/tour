@@ -15,7 +15,11 @@
     "allDistricts": "All districts",
     "categoryLabel": "What are you after",
     "showAnother": "More places",
-    "sourceNote": "Place data from the Korea Tourism Organization."
+    "sourceNote": "Place data from the Korea Tourism Organization.",
+    "nearMeOn": "Showing distance",
+    "nearMeOff": "Show distance from me",
+    "nearMeAsking": "Locating…",
+    "nearMeDenied": "Location access is blocked"
   },
   "category": {
     "attraction": "Places",
@@ -37,7 +41,8 @@
     "liked": "Liked",
     "views": "Views",
     "noCrop": "Shown uncropped",
-    "noImage": "No image available"
+    "noImage": "No image available",
+    "distance": "From your location"
   },
   "detail": {
     "back": "Back to places",
