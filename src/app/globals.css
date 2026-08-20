@@ -121,6 +121,12 @@
    * 경계가 1px 겹칠 수 있는데, 그때 필터가 위로 올라오면 헤더를 파고든 것처럼 보인다.
    */
   --layer-sticky-filter: 15;
+  /*
+   * 화면 전환 중 마스트헤드 스냅샷. **전환 레이어 안에서만 쓰는 값이다** —
+   * 그 레이어는 문서와 별도의 최상위 스택이라 위의 값들과 겨루지 않는다.
+   * 그래도 여기 적는다. 숫자를 컴포넌트나 규칙에 흩뿌리지 않는다는 규칙은 같다.
+   */
+  --layer-vt-anchor: 100;
 
   /*
    * ── 마스트헤드 높이 ──
@@ -307,6 +313,14 @@
   --radius-marketing: var(--round-marketing);
 
   --ease-signature: cubic-bezier(0.16, 1, 0.3, 1);
+  /*
+   * 화면 사이 전환 전용.
+   *
+   * `--ease-signature` 는 시작에서 거의 튀어나가듯 빠르다(0.16, 1). 작은 컨트롤에는
+   * 경쾌하지만 화면 절반을 차지하는 제목이 그 곡선으로 움직이면 튕긴 것처럼 보인다.
+   * 이 곡선은 시작을 눌러 두고 끝을 길게 끌어 **무게가 있는 물체가 멎는** 모양이 된다.
+   */
+  --ease-apple: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 html {
@@ -682,5 +696,177 @@ details[open] > .dropdown-panel {
 @media (prefers-reduced-motion: reduce) {
   .card-actions {
     transition: none;
+  }
+}
+
+/*
+ * ─────────────────────────────────────────────────────────────
+ * ── 화면 사이 전환 ──
+ *
+ * 홈과 탐색은 **같은 머리말을 공유한다.** 그래서 오갈 때 한 화면이 사라지고 다른
+ * 화면이 나타나는 것이 아니라, 머리말이 크기와 자리를 옮기고 그 아래로 목록이
+ * 들어오거나 빠진다.
+ *
+ * 이름과 클래스의 출처는 JSX 다:
+ *   `lede-eyebrow`/`lede-title`/`lede-subtitle` + `morph-down`/`morph-up`
+ *                        — `components/Lede.tsx` 의 `<ViewTransition name share>`
+ *   `to-explore`/`to-home` (방향)
+ *                        — `components/Button.tsx` · `Masthead.tsx` 의 `transitionTypes`
+ *   `body-enter`/`body-exit`
+ *                        — `explore/page.tsx` 의 필터·목록 묶음
+ *   `site-header`        — `components/Masthead.tsx` 의 인라인 스타일
+ * 여기서 이름을 새로 지어내지 않는다. 한쪽만 고치면 규칙이 조용히 죽는다.
+ * ─────────────────────────────────────────────────────────────
+ */
+
+/*
+ * 전환 중에도 아래 화면이 클릭을 받는다.
+ *
+ * `::view-transition` 오버레이는 기본적으로 포인터 이벤트를 삼킨다. 400ms 는 짧지만
+ * 그사이 누른 것이 통째로 사라지면 "먹통" 으로 읽힌다.
+ */
+::view-transition {
+  pointer-events: none;
+}
+
+/*
+ * 바탕. 머리말·목록·헤더처럼 이름이 붙은 것은 각자 스냅샷을 가지므로 여기서 빠진다.
+ * 남는 것은 홈의 CTA 와 탐색의 각주 정도다 — 자리를 옮기지 않으니 페이드면 족하다.
+ */
+::view-transition-old(root) {
+  animation: 200ms var(--ease-apple) both vt-fade reverse;
+}
+::view-transition-new(root) {
+  animation: 320ms var(--ease-apple) 120ms both vt-fade;
+}
+
+/*
+ * 머리말. **하나의 물체가 커지고 작아진다.**
+ *
+ * 기본 morph 는 옛 스냅샷과 새 스냅샷을 겹쳐 크로스페이드한다. 두 스냅샷의 글자
+ * 크기가 다르므로 그동안 같은 문장이 두 겹으로 어긋나 보인다 — 하나가 스케일되는
+ * 것이 아니라 둘이 섞이는 것으로 읽힌다. 흐림을 얹어 감춰 봐도 "흐려졌다 선명해지는
+ * 두 개" 일 뿐이다.
+ *
+ * 그래서 **스냅샷 하나만 남긴다.** 남은 하나는 group 의 크기 보간을 따라 실제로
+ * 늘어나고 줄어든다. 겹치는 것이 없으니 흐림도 필요 없다.
+ *
+ * 어느 쪽을 남기느냐가 선명도를 정한다. 스냅샷은 비트맵이라 **원래보다 키우면
+ * 뭉개지고 줄이면 멀쩡하다.** 그래서 항상 **큰 쪽**을 남긴다:
+ *   `.morph-down` (홈 → 탐색) — 큰 쪽은 옛 스냅샷. 그것이 줄어든다
+ *   `.morph-up`   (탐색 → 홈) — 큰 쪽은 새 스냅샷. 그것이 늘어난다
+ * 두 경우 모두 홈 크기의 이미지에서 시작하거나 끝나므로 확대 보간이 일어나지 않는다.
+ *
+ * 방향을 아는 곳은 링크다 — `Button.tsx` 와 `Masthead.tsx` 의 `transitionTypes`,
+ * 그리고 그것을 클래스로 바꾸는 `Lede.tsx` 의 `share`. 셋 중 하나만 고치면 죽는다.
+ */
+::view-transition-group(.morph-down),
+::view-transition-group(.morph-up) {
+  animation-duration: 520ms;
+  animation-timing-function: var(--ease-apple);
+}
+
+/* 홈 → 탐색: 옛 스냅샷(큰 것)만 남아 줄어든다 */
+::view-transition-old(.morph-down) {
+  animation: none;
+  opacity: 1;
+}
+::view-transition-new(.morph-down) {
+  animation: none;
+  opacity: 0;
+}
+
+/* 탐색 → 홈: 새 스냅샷(큰 것)만 남아 늘어난다 */
+::view-transition-old(.morph-up) {
+  animation: none;
+  opacity: 0;
+}
+::view-transition-new(.morph-up) {
+  animation: none;
+  opacity: 1;
+}
+
+/*
+ * 탐색 화면에만 있는 것 — 필터 탭과 목록.
+ *
+ * 머리말이 줄어드는 것과 **같은 언어로** 움직인다. 미끄러져 들어오는 대신 살짝
+ * 작은 상태에서 제 크기로 열린다 — 머리말이 스케일로 말하는데 목록만 위아래로
+ * 움직이면 두 동작이 서로 다른 규칙을 따르는 것으로 보인다.
+ *
+ * 기준점은 위쪽이다. 머리말 바로 아래에서 자라야 머리말이 비운 자리를 이어받는
+ * 것으로 읽힌다. 가운데를 기준으로 두면 목록이 화면 밖에서 밀려든다.
+ *
+ * 비대칭이다. **나갈 때는 빠르고(200ms) 들어올 때는 느리다(520ms).** 떠나는 것이
+ * 오래 남아 있으면 새로 오는 것과 주의를 다투고, 새로 오는 것이 급히 튀어나오면
+ * 읽을 새가 없다. 들어오는 페이드에 120ms 지연을 두어 옛것이 빠진 뒤 밝아진다.
+ */
+::view-transition-new(.body-enter) {
+  transform-origin: top center;
+  animation:
+    320ms var(--ease-apple) 120ms both vt-fade,
+    520ms var(--ease-apple) both vt-open;
+}
+::view-transition-old(.body-exit) {
+  transform-origin: top center;
+  animation:
+    200ms var(--ease-apple) both vt-fade reverse,
+    420ms var(--ease-apple) both vt-open reverse;
+}
+
+/*
+ * 마스트헤드는 멈춘다.
+ *
+ * `display: none` 은 옛 스냅샷용이다. 없으면 옛 헤더와 새 헤더가 한 프레임 겹쳐
+ * 반투명한 바탕끼리 포개져 색이 진해진다 — 헤더만 깜빡인 것처럼 보인다.
+ */
+::view-transition-group(site-header) {
+  animation: none;
+  z-index: var(--layer-vt-anchor);
+}
+::view-transition-old(site-header) {
+  display: none;
+}
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+@keyframes vt-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/*
+ * 목록이 열리고 닫히는 폭. **0.96 이다.**
+ *
+ * 이보다 작게 두면 목록이 멀리서 날아오는 것처럼 보여 머리말의 조용한 스케일과
+ * 어긋나고, 1 에 가까우면 페이드만 남아 움직임이 사라진다.
+ */
+@keyframes vt-open {
+  from {
+    transform: scale(0.96);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+/*
+ * 이 파일 위쪽의 전역 `prefers-reduced-motion` 규칙은 `*` 선택자를 쓴다.
+ * `::view-transition-*` 는 의사 요소라 거기 걸리지 않는다 — 따로 눌러야 한다.
+ *
+ * 지우는 것은 시간뿐이다. 전환 자체를 끄면 브라우저 기본 동작(즉시 교체)으로
+ * 돌아가는데, 그것이 여기서 원하는 결과와 같다.
+ */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-image-pair(*) {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
   }
 }

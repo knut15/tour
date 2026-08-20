@@ -15,7 +15,11 @@
     "allDistricts": "この地域すべて",
     "categoryLabel": "何をお探しですか",
     "showAnother": "もっと見る",
-    "sourceNote": "場所の情報は韓国観光公社が提供しています。"
+    "sourceNote": "場所の情報は韓国観光公社が提供しています。",
+    "nearMeOn": "距離を表示中",
+    "nearMeOff": "現在地からの距離を表示",
+    "nearMeAsking": "現在地を取得中…",
+    "nearMeDenied": "位置情報が許可されていません"
   },
   "category": {
     "attraction": "見どころ",
@@ -37,7 +41,8 @@
     "liked": "いいね解除",
     "views": "閲覧",
     "noCrop": "原本のまま",
-    "noImage": "画像情報なし"
+    "noImage": "画像情報なし",
+    "distance": "現在地から"
   },
   "detail": {
     "back": "一覧へ戻る",

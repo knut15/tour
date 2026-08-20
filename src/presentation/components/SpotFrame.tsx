@@ -3,6 +3,7 @@ import type { SpotView } from "@/application/spot/dto";
 import { NoImage } from "@/presentation/components/NoImage";
 import { CardActions } from "@/presentation/components/CardActions";
 import { SpotImage } from "@/presentation/components/SpotImage";
+import { SpotDistance } from "@/presentation/components/SpotDistance";
 import { SpotStats } from "@/presentation/components/SpotStats";
 
 export type FrameSize = "sm" | "md" | "lg";
@@ -49,6 +50,7 @@ export function SpotFrame({
   labelLike,
   labelLiked,
   labelViews,
+  labelDistance,
   labelNoImage,
   priority = false,
 }: {
@@ -62,6 +64,8 @@ export function SpotFrame({
   labelLike: string;
   labelLiked: string;
   labelViews: string;
+  /** 거리의 스크린 리더 설명. "내 위치에서" */
+  labelDistance: string;
   labelNoImage: string;
   priority?: boolean;
 }) {
@@ -167,6 +171,17 @@ export function SpotFrame({
       {/* mt-auto 로 바닥에 붙인다 — 제목 줄 수가 달라도 주소가 한 줄에 정렬된다 */}
       {/* 바닥 줄 — 왼쪽에 주소, 오른쪽에 좋아요·조회 */}
       <div className="mt-auto flex items-center gap-3 border-t border-line pt-3">
+        {/*
+          거리가 주소보다 앞에 선다. 어디인지보다 **얼마나 먼지**가 먼저 걸러 내는
+          조건이라서다. 위치를 켜지 않았으면 아무것도 그리지 않고, 그때는 주소가
+          `flex-1` 로 남은 폭을 그대로 쓴다.
+        */}
+        <SpotDistance
+          lng={spot.lng}
+          lat={spot.lat}
+          locale={spot.locale}
+          label={labelDistance}
+        />
         <p className="min-w-0 flex-1 truncate text-[12px] text-muted">
           {spot.address ?? <span aria-hidden="true">&nbsp;</span>}
         </p>

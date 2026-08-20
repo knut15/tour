@@ -15,7 +15,11 @@
     "allDistricts": "Alle Bezirke",
     "categoryLabel": "Wonach suchst du",
     "showAnother": "Mehr Orte",
-    "sourceNote": "Ortsdaten von der Korea Tourism Organization."
+    "sourceNote": "Ortsdaten von der Korea Tourism Organization.",
+    "nearMeOn": "Entfernung wird angezeigt",
+    "nearMeOff": "Entfernung von mir anzeigen",
+    "nearMeAsking": "Standort wird ermittelt…",
+    "nearMeDenied": "Standortzugriff ist blockiert"
   },
   "category": {
     "attraction": "Orte",
@@ -37,7 +41,8 @@
     "liked": "Gefällt mir nicht mehr",
     "views": "Aufrufe",
     "noCrop": "Unbeschnitten",
-    "noImage": "Kein Bild vorhanden"
+    "noImage": "Kein Bild vorhanden",
+    "distance": "Von Ihrem Standort"
   },
   "detail": {
     "back": "Zurück zur Liste",

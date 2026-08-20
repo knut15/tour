@@ -39,6 +39,7 @@ export function Wall({
   labelLike,
   labelLiked,
   labelViews,
+  labelDistance,
   labelNoImage,
   enterFrom,
 }: {
@@ -51,6 +52,7 @@ export function Wall({
   labelLike: string;
   labelLiked: string;
   labelViews: string;
+  labelDistance: string;
   labelNoImage: string;
   /**
    * 이 인덱스부터가 이번에 새로 붙은 카드다. 그 앞은 이미 화면에 있던 것이라
@@ -95,6 +97,7 @@ export function Wall({
             labelLike={labelLike}
             labelLiked={labelLiked}
             labelViews={labelViews}
+            labelDistance={labelDistance}
             labelNoImage={labelNoImage}
             priority={i < 3}
           />
