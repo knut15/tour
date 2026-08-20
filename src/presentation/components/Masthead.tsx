@@ -47,11 +47,22 @@ export function Masthead({
         아래 내용이 24px 위로 튄다 — 스크롤 위치는 그대로인데 화면이 움직인다.
         흐름 자리는 아래 스페이서가 대신 잡고, 그 높이는 줄어들지 않는다.
       */}
-      <header className="masthead-sticky fixed inset-x-0 top-0 z-[var(--layer-bar)] bg-canvas/85 backdrop-blur">
+      {/*
+        화면이 바뀌는 동안 **이것만 움직이지 않는다.** 모든 화면이 같은 헤더를 쓰는데
+        전환 때마다 함께 페이드하면 사용자가 눈을 붙일 고정점이 사라진다 — 내용이
+        옮겨간 것이 아니라 화면 전체가 갈린 것으로 읽힌다.
+        멈추는 규칙은 `globals.css` 의 `::view-transition-*(site-header)` 가 갖는다.
+      */}
+      <header
+        style={{ viewTransitionName: "site-header" }}
+        className="masthead-sticky fixed inset-x-0 top-0 z-[var(--layer-bar)] bg-canvas/85 backdrop-blur"
+      >
         <div className="mx-auto flex h-full w-full max-w-[1200px] items-center justify-between px-6">
           {leading ?? (
             <Link
               href={`/${locale}`}
+              // 올라오는 방향. 탐색에서 누르면 머리말이 홈 크기로 다시 커진다
+              transitionTypes={["to-home"]}
               className="text-[13px] uppercase tracking-[0.16em] focus-visible:outline-2 focus-visible:outline-focus"
             >
               {t.brand}

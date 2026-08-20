@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, ViewTransition } from "react";
 import { notFound } from "next/navigation";
 import { isLocale, type Locale } from "@/domain/shared/locale";
 import { isCategory, type Category } from "@/domain/spot/category";
@@ -12,6 +12,7 @@ import {
   requestSize,
 } from "@/presentation/lib/explore-paging";
 import { CategoryPicker } from "@/presentation/components/CategoryPicker";
+import { Lede } from "@/presentation/components/Lede";
 import { RegionPicker } from "@/presentation/components/RegionPicker";
 import { MoreLabel } from "@/presentation/components/MoreLabel";
 import { Wall } from "@/presentation/components/Wall";
@@ -83,97 +84,95 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
       />
 
       <main className="mx-auto w-full max-w-[1200px] flex-1 px-6 pb-32">
-        <header className="pt-12 pb-14 md:pt-16">
-          <p className="text-[11px] uppercase tracking-[0.18em] text-muted">
-            {t.explore.eyebrow}
-          </p>
-          <h1
-            lang={locale}
-            className={
-              // Direction A: 세리프 헤드라인. 가볍게, 크게, 자간은 건드리지 않는다
-              "mt-5 font-display font-light " +
-              "text-[clamp(2.75rem,7vw,4.25rem)] leading-[1.02] " +
-              // 한글은 글자당 폭이 라틴의 약 2배라 같은 ch 값을 쓰면 줄이 일찍 끊긴다
-              (locale === "ko" ? "max-w-[11ch]" : "max-w-[13ch]")
-            }
-          >
-            {t.explore.title}
-          </h1>
-          <p lang={locale} className="mt-5 max-w-[42ch] text-[16px] leading-[24px] text-body">
-            {t.explore.subtitle}
-          </p>
-        </header>
+        {/* 홈과 같은 물체다. 이름(`lede`)이 같아서 오갈 때 크기와 자리만 옮긴다 */}
+        <Lede locale={locale} t={t} size="compact" />
 
         {/*
-          이 표식이 헤더 밑으로 사라지면 필터가 붙은 것이다. `StickyFilterSync` 가
-          그 순간에만 깨어나 헤더를 줄인다 — 스크롤 이벤트를 듣지 않는다.
-        */}
-        <div aria-hidden="true" className="h-px" {...{ [STICKY_SENTINEL]: "" }} />
+          **이 화면에만 있는 것 전부.** 홈에는 대응하는 짝이 없으므로 들어올 때
+          enter, 나갈 때 exit 이 재생된다 — 머리말이 줄어들며 자리를 비우는 동안
+          그 아래로 필터와 목록이 올라온다.
 
-        {/*
-          필터 바. 헤더 바로 밑에 붙는다.
+          `default="none"` 이 필요하다. 이 화면 안에서 필터를 누르는 것도 라우트
+          전환이라, 없으면 목록이 갱신될 때마다 이 블록 전체가 크로스페이드한다.
+          그건 "조건이 바뀌었다" 가 아니라 "다른 화면으로 갔다" 로 읽힌다.
 
-          `-mx-6 px-6` 으로 바탕을 컨테이너 폭까지 넓힌다. 목록도 같은 컨테이너
-          안에 있으므로 그 바깥으로 카드가 비쳐 나올 자리는 없다.
+          감싸는 `<div>` 를 없애지 마라. `ViewTransition` 은 자식 하나에 이름을
+          붙이는데, 여기 세 형제(표식·필터·목록)를 그대로 두면 셋이 각자 전환한다.
         */}
-        <div
-          className={
-            // 바탕·블러·그림자는 `globals.css` 의 `.filter-sticky::before` 가 그린다.
-            // 화면 폭 전체를 덮어야 하는데 이 요소는 컨테이너 폭까지만이라서다.
-            "filter-sticky sticky z-[var(--layer-sticky-filter)] " +
-            "-mx-6 mb-14 flex flex-col gap-4 px-6 py-4"
-          }
-        >
-          <CategoryPicker
-            locale={locale}
-            current={category}
-            areaCode={areaCode}
-            districtCode={districtCode}
-            labels={t.category}
-            groupLabel={t.explore.categoryLabel}
-          />
-          {/*
-            지역은 2단이다. 시도를 고르기 전에는 시군구 선택 자체가 없다 —
-            시군구 코드는 시도 안에서만 고유해서 시도 없이는 고를 수가 없다.
-          */}
-          <div className="flex flex-wrap items-start gap-3">
-            <Suspense fallback={<RegionPickerSkeleton />}>
-              <Areas locale={locale} category={category} current={areaCode} t={t} />
+        <ViewTransition enter="body-enter" exit="body-exit" default="none">
+          <div>
+            {/*
+              이 표식이 헤더 밑으로 사라지면 필터가 붙은 것이다. `StickyFilterSync` 가
+              그 순간에만 깨어나 헤더를 줄인다 — 스크롤 이벤트를 듣지 않는다.
+            */}
+            <div aria-hidden="true" className="h-px" {...{ [STICKY_SENTINEL]: "" }} />
+
+            {/*
+              필터 바. 헤더 바로 밑에 붙는다.
+
+              `-mx-6 px-6` 으로 바탕을 컨테이너 폭까지 넓힌다. 목록도 같은 컨테이너
+              안에 있으므로 그 바깥으로 카드가 비쳐 나올 자리는 없다.
+            */}
+            <div
+              className={
+                // 바탕·블러·그림자는 `globals.css` 의 `.filter-sticky::before` 가 그린다.
+                // 화면 폭 전체를 덮어야 하는데 이 요소는 컨테이너 폭까지만이라서다.
+                "filter-sticky sticky z-[var(--layer-sticky-filter)] " +
+                "-mx-6 mb-14 flex flex-col gap-4 px-6 py-4"
+              }
+            >
+              <CategoryPicker
+                locale={locale}
+                current={category}
+                areaCode={areaCode}
+                districtCode={districtCode}
+                labels={t.category}
+                groupLabel={t.explore.categoryLabel}
+              />
+              {/*
+                지역은 2단이다. 시도를 고르기 전에는 시군구 선택 자체가 없다 —
+                시군구 코드는 시도 안에서만 고유해서 시도 없이는 고를 수가 없다.
+              */}
+              <div className="flex flex-wrap items-start gap-3">
+                <Suspense fallback={<RegionPickerSkeleton />}>
+                  <Areas locale={locale} category={category} current={areaCode} t={t} />
+                </Suspense>
+                {areaCode && (
+                  <Suspense key={areaCode} fallback={<RegionPickerSkeleton />}>
+                    <Districts
+                      locale={locale}
+                      category={category}
+                      areaCode={areaCode}
+                      current={districtCode}
+                      t={t}
+                    />
+                  </Suspense>
+                )}
+              </div>
+            </div>
+
+            {/*
+              key 에 **필터만** 넣는다. 조건이 바뀌면 다른 목록이므로 스켈레톤을 다시 띄운다.
+
+              `more` 는 일부러 뺐다. 넣으면 더보기를 누를 때마다 경계가 새로 만들어져
+              보고 있던 카드가 스켈레톤으로 바뀌고 다시 그려진다 — 그건 "추가" 가 아니라
+              "교체" 다. 빼면 React 가 key 로 기존 카드를 알아보고 새 카드만 끼워 넣는다.
+            */}
+            <Suspense
+              key={`${locale}:${category}:${areaCode ?? "all"}:${districtCode ?? "all"}`}
+              fallback={<WallSkeleton label={t.state.loading} />}
+            >
+              <Spots
+                locale={locale}
+                category={category}
+                areaCode={areaCode}
+                districtCode={districtCode}
+                more={more}
+                t={t}
+              />
             </Suspense>
-            {areaCode && (
-              <Suspense key={areaCode} fallback={<RegionPickerSkeleton />}>
-                <Districts
-                  locale={locale}
-                  category={category}
-                  areaCode={areaCode}
-                  current={districtCode}
-                  t={t}
-                />
-              </Suspense>
-            )}
           </div>
-        </div>
-
-        {/*
-          key 에 **필터만** 넣는다. 조건이 바뀌면 다른 목록이므로 스켈레톤을 다시 띄운다.
-
-          `more` 는 일부러 뺐다. 넣으면 더보기를 누를 때마다 경계가 새로 만들어져
-          보고 있던 카드가 스켈레톤으로 바뀌고 다시 그려진다 — 그건 "추가" 가 아니라
-          "교체" 다. 빼면 React 가 key 로 기존 카드를 알아보고 새 카드만 끼워 넣는다.
-        */}
-        <Suspense
-          key={`${locale}:${category}:${areaCode ?? "all"}:${districtCode ?? "all"}`}
-          fallback={<WallSkeleton label={t.state.loading} />}
-        >
-          <Spots
-            locale={locale}
-            category={category}
-            areaCode={areaCode}
-            districtCode={districtCode}
-            more={more}
-            t={t}
-          />
-        </Suspense>
+        </ViewTransition>
       </main>
 
       <StickyFilterSync />
