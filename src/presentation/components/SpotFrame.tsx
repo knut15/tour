@@ -7,7 +7,7 @@ import { SpotDistance } from "@/presentation/components/SpotDistance";
 import { SpotStats } from "@/presentation/components/SpotStats";
 
 export type FrameSize = "sm" | "md" | "lg";
-export type FrameMatte = "photo" | "portrait";
+export type FrameMatte = "photo" | "portrait" | "natural";
 
 /**
  * 창의 비율.
@@ -20,6 +20,16 @@ export type FrameMatte = "photo" | "portrait";
 const WINDOW_ASPECT: Record<FrameMatte, string> = {
   photo: "aspect-[3/2]",
   portrait: "aspect-[4/5]",
+  /*
+    비율을 강제하지 않는다. **원본이 그대로 높이를 정한다.**
+
+    실측(2026-08-20) TourAPI 이미지는 폭이 940px 로 고정이고 높이만 다르다 —
+    표본 5개에서 626~939, 비율 1.001~1.502 였고 3:2 는 셋뿐이었다. 그것을 3:2 틀에
+    `object-contain` 으로 넣으면 정사각 사진은 좌우에 빈 띠가 생긴다. 크롭이
+    금지된 상태에서 비율을 통일하려면 그 여백을 감수하는 수밖에 없는데,
+    비율을 놓아 주면 여백도 크롭도 없다.
+  */
+  natural: "",
 };
 
 /**
@@ -79,7 +89,10 @@ export function SpotFrame({
       */}
       <div
         className={
-          "card-thumb relative overflow-hidden rounded-sm bg-surface " + WINDOW_ASPECT[matte]
+          "card-thumb relative overflow-hidden rounded-sm bg-surface " +
+          WINDOW_ASPECT[matte] +
+          // 비율이 없으면 로드 전 높이가 0 이라 카드가 한 줄로 납작해진다
+          (matte === "natural" ? " min-h-[120px]" : "")
         }
       >
         {spot.imageUrl ? (
@@ -88,6 +101,7 @@ export function SpotFrame({
             src={spot.imageUrl}
             alt={spot.titlePrimary}
             noImageLabel={labelNoImage}
+            fit={matte === "natural" ? "natural" : "contain"}
             priority={priority}
           />
         ) : (

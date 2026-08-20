@@ -15,12 +15,18 @@ export function SpotImage({
   alt,
   noImageLabel,
   size = "sm",
+  fit = "contain",
   priority = false,
 }: {
   src: string;
   alt: string;
   noImageLabel: string;
   size?: NoImageSize;
+  /**
+   * `contain` — 정해진 틀 안에 넣는다. 남는 자리는 매트가 된다.
+   * `natural` — 원본 비율이 높이를 정한다. 틀이 없으므로 여백도 없다.
+   */
+  fit?: "contain" | "natural";
   priority?: boolean;
 }) {
   const [failed, setFailed] = useState(false);
@@ -49,7 +55,9 @@ export function SpotImage({
       loading={priority ? "eager" : "lazy"}
       decoding="async"
       onError={() => setFailed(true)}
-      className="h-full w-full object-contain"
+      className={
+        fit === "natural" ? "block h-auto w-full" : "h-full w-full object-contain"
+      }
     />
   );
 }

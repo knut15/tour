@@ -47,14 +47,55 @@
   /* toss.im 마케팅 CTA 는 별도 값이다. TDS 와 합치지 않는다 */
   --round-marketing: 7px;
 
+  /*
+   * ── GOAL 팔레트 (§2.3) ──
+   *
+   * 크림 바탕 위에 비비드 색면. **회색조 UI 를 만들고 색을 뿌리는 것이 아니다.**
+   * 값은 GOAL.md §2.3 의 표 그대로다 — 눈으로 조정하지 않는다.
+   *
+   * `--ink-body` 만 표에 없어서 정했다. `--goal-ink`(#1C1A17)와
+   * `--goal-ink-muted`(#6B6459) 사이에서, 크림 바탕 대비 7:1 이 나오는 값이다.
+   */
+  --goal-paper: #faf6ef;
+  --goal-paper-deep: #f2ebe0;
+  --goal-ink: #1c1a17;
+  --goal-ink-body: #3a342c;
+  --goal-ink-muted: #6b6459;
+  --goal-line: #e0d8ca;
+
+  --goal-cobalt: #1b4fd8;
+  --goal-cobalt-deep: #163fad;
+  --goal-cobalt-wash: #e4eafb;
+  --goal-cyan: #12b5c9;
+  --goal-mint: #4fd1b0;
+  --goal-coral: #ff5a46;
+  --goal-pink: #f5a7c0;
+  --goal-mustard: #e8b33c;
+
+  /*
+   * 카테고리마다 색을 배정한다 (GOAL.md §2.3 규칙 3).
+   * 사용자가 색으로 종류를 기억하게 하는 것이 목적이라 **한 번 정하면 바꾸지 않는다.**
+   */
+  --cat-attraction: var(--goal-cobalt);
+  --cat-culture: var(--goal-mint);
+  --cat-food: var(--goal-coral);
+  --cat-festival: var(--goal-mustard);
+
   /* ── 앱 역할 매핑 ── */
-  --paper-canvas: var(--toss-canvas);
-  --paper-surface: var(--toss-surface);
-  --ink-primary: var(--toss-foreground);
-  --ink-body: var(--toss-body);
-  --ink-muted: var(--toss-muted);
-  --line-subtle: var(--toss-border);
-  --focus-ring: var(--toss-primary);
+  --paper-canvas: var(--goal-paper);
+  --paper-surface: var(--goal-paper-deep);
+  --ink-primary: var(--goal-ink);
+  --ink-body: var(--goal-ink-body);
+  --ink-muted: var(--goal-ink-muted);
+  --line-subtle: var(--goal-line);
+  --focus-ring: var(--goal-cobalt);
+
+  /* 컨트롤도 크림 위에 선다. 토스 파랑 대신 코발트가 1차 액션을 진다 */
+  --toss-primary: var(--goal-cobalt);
+  --toss-primary-hover: var(--goal-cobalt-deep);
+  --toss-weak-bg: var(--goal-cobalt-wash);
+  --toss-weak-fg: var(--goal-cobalt);
+  --toss-danger: var(--goal-coral);
 
   /*
    * ── 겹침 순서 ──
@@ -119,8 +160,8 @@
    *
    * 다크는 더 밝은 값이다. 같은 값을 어두운 바탕에 두면 탁해진다.
    */
-  --action-like: #e8384f;
-  --action-save: #e79c0d;
+  --action-like: var(--goal-coral);
+  --action-save: var(--goal-mustard);
 
   /*
    * ── 미세먼지 등급 (환경부 4단계) ──
@@ -130,14 +171,18 @@
    *
    * 값은 타일 배경(`--paper-surface`) 대비 4.5:1 이상으로 고른다. 점과 라벨 글자가
    * 같은 토큰을 쓰므로 글자 대비 기준을 통과해야 한다.
-   * 라이트: 4.9 / 4.8 / 4.5 / 5.5, 다크: 7.6 / 8.8 / 8.8 / 7.1 (계산값)
+   *
+   * GOAL 팔레트 계열이지만 **표의 값을 그대로 쓰지 못한다.** 민트(#4FD1B0)와
+   * 머스터드(#E8B33C)는 크림 위에서 3.6 / 3.4 라 기준에 못 미친다. 같은 색상을
+   * 어둡게 낮춰 맞췄다.
+   * 라이트: 5.6 / 5.1 / 4.8 / 4.6, 다크: 7.6 / 8.9 / 8.5 / 7.1 (계산값)
    *
    * **색만으로 등급을 구분하지 않는다.** 화면에는 항상 등급 이름이 함께 나온다.
    */
-  --dust-good: #1b64da;
-  --dust-moderate: #157a52;
-  --dust-bad: #b45309;
-  --dust-very-bad: #c0212f;
+  --dust-good: var(--goal-cobalt);
+  --dust-moderate: #14705a;
+  --dust-bad: #8a5e12;
+  --dust-very-bad: #c6301e;
 }
 
 /* 필터가 헤더 밑에 붙는 순간 헤더가 줄어든다 */
@@ -159,69 +204,76 @@
  *   2. data-theme="dark"   → 다크
  *   3. data-theme="light"  → 라이트 (값을 다시 선언한다)
  */
+/*
+ * 다크는 GOAL 표에 없다. 크림을 그대로 어둡게 만들 수는 없으므로 **같은 온도의
+ * 야간 대응**으로 정했다 — 중성 회색이 아니라 붉은 기가 도는 검정(#1A1714)이고,
+ * 글자도 순백이 아닌 크림빛(#F2EDE4)이다. 중성 회색을 쓰면 라이트에서 크림이던
+ * 화면이 다크에서만 차가워져 같은 앱으로 보이지 않는다.
+ * 비비드는 어두운 바탕에서 탁해지므로 코발트·코랄·머스터드를 한 단계씩 밝혔다.
+ */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
-  --paper-canvas: #17171a;
-  --paper-surface: #1f2024;
-  --ink-primary: #eef0f3;
-  --ink-body: #b6bdc7;
-  --ink-muted: #868e99;
-  --line-subtle: #2c2e33;
-  --toss-primary: #4a92f8;
-  --toss-primary-hover: #6aa6fa;
-  --toss-weak-bg: #17263c;
-  --toss-weak-fg: #8ab6f5;
-  --focus-ring: #4a92f8;
-  --dust-good: #7fb4ff;
+  --paper-canvas: #1a1714;
+  --paper-surface: #241f1a;
+  --ink-primary: #f2ede4;
+  --ink-body: #c4baa9;
+  --ink-muted: #8f8779;
+  --line-subtle: #332d26;
+  --toss-primary: #6b8fff;
+  --toss-primary-hover: #8aa6ff;
+  --toss-weak-bg: #1e2740;
+  --toss-weak-fg: #a9c0ff;
+  --focus-ring: #6b8fff;
+  --dust-good: #8fb0ff;
   --dust-moderate: #63d3a3;
-  --dust-bad: #f2b457;
-  --dust-very-bad: #ff8a8a;
+  --dust-bad: #e8b33c;
+  --dust-very-bad: #ff8a7a;
   --filter-bar-shadow-alpha: 0.4;
-  --action-like: #ff6b7d;
-  --action-save: #f5b73d;
+  --action-like: #ff7a68;
+  --action-save: #f0c05a;
   }
 }
 
 :root[data-theme="dark"] {
-  --paper-canvas: #17171a;
-  --paper-surface: #1f2024;
-  --ink-primary: #eef0f3;
-  --ink-body: #b6bdc7;
-  --ink-muted: #868e99;
-  --line-subtle: #2c2e33;
-  --toss-primary: #4a92f8;
-  --toss-primary-hover: #6aa6fa;
-  --toss-weak-bg: #17263c;
-  --toss-weak-fg: #8ab6f5;
-  --focus-ring: #4a92f8;
-  --dust-good: #7fb4ff;
+  --paper-canvas: #1a1714;
+  --paper-surface: #241f1a;
+  --ink-primary: #f2ede4;
+  --ink-body: #c4baa9;
+  --ink-muted: #8f8779;
+  --line-subtle: #332d26;
+  --toss-primary: #6b8fff;
+  --toss-primary-hover: #8aa6ff;
+  --toss-weak-bg: #1e2740;
+  --toss-weak-fg: #a9c0ff;
+  --focus-ring: #6b8fff;
+  --dust-good: #8fb0ff;
   --dust-moderate: #63d3a3;
-  --dust-bad: #f2b457;
-  --dust-very-bad: #ff8a8a;
+  --dust-bad: #e8b33c;
+  --dust-very-bad: #ff8a7a;
   --filter-bar-shadow-alpha: 0.4;
-  --action-like: #ff6b7d;
-  --action-save: #f5b73d;
+  --action-like: #ff7a68;
+  --action-save: #f0c05a;
 }
 
 :root[data-theme="light"] {
-  --paper-canvas: var(--toss-canvas);
-  --paper-surface: var(--toss-surface);
-  --ink-primary: var(--toss-foreground);
-  --ink-body: var(--toss-body);
-  --ink-muted: var(--toss-muted);
-  --line-subtle: var(--toss-border);
-  --toss-primary: #3182f6;
-  --toss-primary-hover: #2272eb;
-  --toss-weak-bg: #e8f3ff;
-  --toss-weak-fg: #1b64da;
-  --focus-ring: #3182f6;
-  --dust-good: #1b64da;
-  --dust-moderate: #157a52;
-  --dust-bad: #b45309;
-  --dust-very-bad: #c0212f;
+  --paper-canvas: var(--goal-paper);
+  --paper-surface: var(--goal-paper-deep);
+  --ink-primary: var(--goal-ink);
+  --ink-body: var(--goal-ink-body);
+  --ink-muted: var(--goal-ink-muted);
+  --line-subtle: var(--goal-line);
+  --toss-primary: var(--goal-cobalt);
+  --toss-primary-hover: var(--goal-cobalt-deep);
+  --toss-weak-bg: var(--goal-cobalt-wash);
+  --toss-weak-fg: var(--goal-cobalt);
+  --focus-ring: var(--goal-cobalt);
+  --dust-good: var(--goal-cobalt);
+  --dust-moderate: #14705a;
+  --dust-bad: #8a5e12;
+  --dust-very-bad: #c6301e;
   --filter-bar-shadow-alpha: 0.2;
-  --action-like: #e8384f;
-  --action-save: #e79c0d;
+  --action-like: var(--goal-coral);
+  --action-save: var(--goal-mustard);
 }
 
 @theme inline {
@@ -520,9 +572,13 @@ body {
   position: absolute;
   bottom: -1px;
   left: 0;
-  height: 1px;
+  /*
+   * 3px 다. 1px 헤어라인에 색을 넣는 것은 GOAL §2.3 규칙 2 가 금지한 쓰임이다 —
+   * "색은 면으로 쓴다. 1px 테두리에만 쓰는 건 이 디자인이 아니다."
+   */
+  height: 3px;
   width: 0;
-  background: var(--ink-primary);
+  background: var(--tab-accent, var(--ink-primary));
   opacity: 0;
   transition:
     transform 0.32s var(--ease-signature),
