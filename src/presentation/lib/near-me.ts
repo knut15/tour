@@ -9,10 +9,16 @@ import type { Coordinate } from "@/domain/spot/coordinate";
  * **한 번만 받아 모든 카드가 나눠 쓴다.** 카드마다 `getCurrentPosition` 을 부르면
  * 화면에 보이는 수만큼 위치 요청이 나가고, 그 각각이 GPS 를 깨운다.
  *
- * **먼저 묻지 않는다.** 페이지를 열자마자 권한 창을 띄우면 아직 이 앱이 뭘 하는지도
- * 모르는 사람에게 위치부터 요구하는 꼴이다. 사용자가 켠 적이 있고(`선호도`)
- * 브라우저가 이미 허가한 상태(`granted`)일 때만 조용히 다시 받는다.
- * 그 외에는 사용자가 직접 켤 때까지 아무 일도 하지 않는다.
+ * **탐색 화면에 들어오면 한 번 묻는다.** 처음에는 사용자가 토글을 누를 때까지
+ * 기다렸는데, 그러면 거리가 기본으로 보이지 않아 기능이 있다는 것 자체가 전달되지
+ * 않았다 — 실제로 "붙였다는데 왜 안 보이냐" 는 말을 들었다. 마찰이 기능을 숨긴 셈이다.
+ *
+ * 대신 **직접 끈 사람에게는 다시 묻지 않는다.** 그래서 선호도가 세 값이다.
+ * 없음(아직 정하지 않음) / 켬 / 끔. "없음" 과 "끔" 을 같게 취급하면 껐는데도
+ * 방문할 때마다 권한 창이 뜬다.
+ *
+ * 홈 화면에서는 묻지 않는다. 이 store 는 `useNearMe` 를 부르는 컴포넌트가 붙을 때만
+ * 깨어나고, 그것을 쓰는 것은 탐색 화면의 카드와 토글뿐이다.
  */
 export type NearMeStatus =
   /** 꺼져 있다. 사용자가 켠 적이 없거나 껐다 */
@@ -56,11 +62,17 @@ function setStatus(next: NearMeStatus, coord: Coordinate | null = null) {
   publish();
 }
 
-function readPreference(): boolean {
+/** 아직 정하지 않음 / 켬 / 끔. 셋을 구분해야 "껐다" 를 존중할 수 있다 */
+type Preference = "unset" | "on" | "off";
+
+function readPreference(): Preference {
   try {
-    return window.localStorage.getItem(PREFERENCE_KEY) === "1";
+    const v = window.localStorage.getItem(PREFERENCE_KEY);
+    return v === "1" ? "on" : v === "0" ? "off" : "unset";
   } catch {
-    return false;
+    // 저장소를 못 읽는 환경(사생활 모드 등)에서는 물어보지 않는다.
+    // 껐다는 기록도 못 읽으므로, 물으면 방문할 때마다 창이 뜬다
+    return "off";
   }
 }
 
@@ -99,29 +111,31 @@ function acquire() {
 }
 
 /**
- * 이전 방문에 켜 뒀고 브라우저 권한이 아직 살아 있으면 조용히 다시 받는다.
+ * 탐색 화면이 뜨면 위치를 받는다. 권한이 아직 없으면 **브라우저 창이 뜬다.**
  *
- * `permissions` 조회를 먼저 하는 것이 핵심이다. 바로 `getCurrentPosition` 을 부르면
- * 권한이 `prompt` 상태일 때 **창이 뜬다** — 사용자가 켠 적 없는데 묻는 셈이 된다.
+ * `permissions` 조회를 먼저 하는 이유는 이제 창을 피하기 위해서가 아니라,
+ * 이미 거부된 상태를 **창 없이** 알아내기 위해서다. 거부된 뒤 `getCurrentPosition`
+ * 을 부르면 콜백이 올 때까지 토글이 "위치 확인 중…" 에 머문다 — 사용자가 이미
+ * 답을 준 질문에 로딩을 보여 주는 셈이다.
  */
 function autoStart() {
   if (autoStarted) return;
   autoStarted = true;
-  if (!readPreference()) return;
+  // 직접 끈 사람에게는 다시 묻지 않는다. 그것만이 자동 요청을 막는 조건이다
+  if (readPreference() === "off") return;
   if (!("geolocation" in navigator)) {
     setStatus("unsupported");
     return;
   }
   if (!navigator.permissions?.query) {
-    // 조회할 방법이 없는 브라우저. 켠 적이 있다는 기록을 믿는다
     acquire();
     return;
   }
   navigator.permissions
     .query({ name: "geolocation" })
     .then((p) => {
-      if (p.state === "granted") acquire();
-      else if (p.state === "denied") setStatus("denied");
+      if (p.state === "denied") setStatus("denied");
+      else acquire();
     })
     .catch(() => acquire());
 }
