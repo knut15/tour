@@ -26,10 +26,13 @@ export function CategoryTabs({
   tabs,
   current,
   groupLabel,
+  accent,
 }: {
   tabs: Tab[];
   current: string;
   groupLabel: string;
+  /** 현재 항목의 강조색. 밑줄과 활성 글자가 함께 쓴다 */
+  accent?: string;
 }) {
   const listRef = useRef<HTMLUListElement>(null);
   const barRef = useRef<HTMLSpanElement>(null);
@@ -85,6 +88,7 @@ export function CategoryTabs({
     <nav aria-label={groupLabel}>
       <ul
         ref={listRef}
+        style={accent ? ({ "--tab-accent": accent } as React.CSSProperties) : undefined}
         className="tab-list relative flex flex-wrap items-center gap-x-8 border-b border-line sm:gap-x-9"
       >
         {tabs.map((tab) => {
@@ -99,7 +103,8 @@ export function CategoryTabs({
                   "transition-colors duration-200 ease-[var(--ease-signature)] " +
                   "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-focus " +
                   (active
-                    ? "border-ink font-semibold text-ink"
+                    ? "border-[var(--tab-accent,var(--ink-primary))] font-semibold " +
+                      "text-[var(--tab-accent,var(--ink-primary))]"
                     : "border-transparent text-muted hover:text-ink")
                 }
               >
