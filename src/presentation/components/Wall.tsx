@@ -12,28 +12,23 @@ import { SpotFrame } from "@/presentation/components/SpotFrame";
  *
  * ## 크기를 어떻게 다르게 하는가
  *
- * **폭만 다르게 한다. 비율은 건드리지 않는다.** TourAPI 이미지의 82% 가
- * `cpyrhtDivCd=Type3`(변경금지)라 크롭할 수 없어서, 3:2 를 유지한 채 폭을 키우면
- * 높이도 따라 커진다. 그것이 곧 "크기가 다른 액자" 다.
+ * **원본이 정한다.** 실측(2026-08-20) TourAPI 이미지는 폭이 940px 로 고정이고
+ * 높이만 다르다 — 표본 5개에서 626~939, 비율 1.001~1.502 였고 3:2 는 셋뿐이었다.
+ * 지금까지는 그것을 3:2 틀에 넣고 `object-contain` 으로 맞췄는데, 그러면 정사각
+ * 사진 좌우에 빈 띠가 생긴다. 비율을 놓아 주면 여백도 크롭도 없다.
  *
- * `grid-auto-flow: dense` 가 필요하다. 넓은 타일이 남은 한 칸에 들어가지 못하면
- * 그 칸이 빈 채로 남는데, `dense` 는 뒤의 좁은 타일을 끌어와 메운다. 없으면
- * 벽에 구멍이 뚫린 것처럼 보인다.
+ * 그래서 grid 가 아니라 **multi-column** 이다. grid 는 행 단위로 높이를 맞추므로
+ * 높이가 제각각이면 행마다 빈 칸이 남는다 — 넓은 타일을 섞는 방식으로 시도해 봤고
+ * 실제로 오른쪽 아래가 규칙적으로 비었다. column 은 행이 없어서 각 열에 차곡차곡
+ * 쌓인다. 핀터레스트가 같은 구조다.
+ *
+ * **대가: 읽는 순서가 가로가 아니라 세로다.** 1·2·3 이 첫 줄이 아니라 첫 열에
+ * 쌓인다. 목록에 순위가 없으므로(편집된 선택이지 정렬 결과가 아니다) 감수한다.
+ *
+ * **대가 둘: 이미지가 로드되며 열이 다시 쌓인다.** 높이를 미리 모르기 때문이다.
+ * TourAPI 가 이미지 크기를 주지 않아서, 없애려면 서버가 이미지 헤더를 읽어
+ * 비율을 알아내 캐시해야 한다.
  */
-/**
- * 넓게 걸 자리. **다섯 개마다 하나다.**
- *
- * 규칙적인 간격이지만 열 수(2열·3열)와 서로소라 실제 배치는 줄마다 달라진다 —
- * 3열에서는 넓은 타일이 왼쪽·가운데·오른쪽을 돌아가며 차지한다. 무작위로 고르면
- * 같은 목록을 다시 열 때마다 배치가 바뀌어 "내가 건 벽" 이 아니라 화면이 흔들리는
- * 것으로 읽힌다.
- *
- * 첫 타일을 넓게 두는 것은 의도다. 화면 맨 위가 가장 큰 액자다.
- */
-function isWide(index: number): boolean {
-  return index % 5 === 0;
-}
-
 export function Wall({
   items,
   ariaLabel,
@@ -68,14 +63,11 @@ export function Wall({
       aria-label={ariaLabel}
       // 간격은 좁다. 피드는 타일이 이어져 보여야 한다
       // 카드에 컨테이너가 없으므로 간격이 곧 구분선이다. 좁으면 카드끼리 붙어 읽힌다
-      className={
-        "grid grid-cols-1 gap-x-[34px] gap-y-16 sm:grid-cols-2 lg:grid-cols-3 " +
-        "[grid-auto-flow:dense] items-start"
-      }
+      // `gap-x` 가 곧 `column-gap` 이다. 세로 간격은 아래 항목의 `mb` 가 진다
+      className="columns-1 gap-x-[34px] sm:columns-2 lg:columns-3"
     >
       {items.map((spot, i) => {
         const isNew = enterFrom !== undefined && i >= enterFrom;
-        const wide = isWide(i);
         return (
         <li
           key={`${spot.locale}:${spot.contentId}`}
@@ -83,10 +75,8 @@ export function Wall({
           // truncate 는 white-space: nowrap 이라 긴 주소 한 줄이 곧 min-content 폭이 되고,
           // 그 카드가 자기 열을 밀어내 옆 칸을 덮는다
           className={
-            "flex min-w-0" +
-            // 열이 하나뿐인 폭에서는 넓힐 자리가 없다. 2열부터 켠다
-            (wide ? " sm:col-span-2" : "") +
-            (isNew ? " spot-enter" : "")
+            // 카드가 열 경계에서 잘리지 않게 한다. 없으면 사진과 제목이 다른 열에 나뉜다
+            "mb-16 break-inside-avoid" + (isNew ? " spot-enter" : "")
           }
           style={
             isNew
@@ -98,7 +88,7 @@ export function Wall({
             spot={spot}
             href={hrefOf(spot)}
             size="md"
-            matte="photo"
+            matte="natural"
             districtName={districtNameOf(spot)}
             labelSave={labelSave}
             labelSaved={labelSaved}
