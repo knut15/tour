@@ -60,3 +60,23 @@ export const FILTER_CONTROL =
   "bg-canvas px-4 py-2.5 text-[15px] text-ink " +
   "transition-colors duration-200 ease-[var(--ease-signature)] hover:border-ink/25 " +
   "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus";
+
+/**
+ * 상세 화면 바닥에 나란히 서는 액션 — 담기, 지도, 공식 사이트.
+ *
+ * **TDS xlarge(56px / 16px 반경 / 17px)를 쓰지 않는다.** 그 기하는 화면에 하나뿐인
+ * 주 액션을 위한 것이고, 여기서는 셋이 한 줄에 선다. 56px 짜리 셋이 나란히 서면
+ * 조용한 지면 바닥에 버튼 띠가 생겨 그것부터 눈에 든다.
+ *
+ * **높이를 이 상수 밖에서 정하지 않는다.** 각자 정하면 어긋난다 — 담기는 `TDS_BUTTON`,
+ * 지도는 같은 것에 `flex-1`, 공식 사이트는 `TOSS_MARKETING_CTA`(40px / 7px 반경)를
+ * 쓰고 있어서 셋의 높이와 모서리가 전부 달랐다.
+ *
+ * 반경은 `--round-sm`(4px) 토큰이다. 숫자를 직접 쓰지 않는다.
+ * `leading-none` 이 있어야 글자가 높이를 밀어 올리지 않는다.
+ */
+export const DETAIL_ACTION =
+  "inline-flex h-9 shrink-0 items-center justify-center gap-2 rounded-sm px-4 " +
+  "text-[14px] font-semibold leading-none " +
+  "transition-colors duration-200 ease-[var(--ease-signature)] " +
+  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus";
