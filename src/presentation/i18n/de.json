@@ -6,9 +6,9 @@
     "theme": "Hell oder dunkel"
   },
   "explore": {
-    "eyebrow": "Ausgewählt, nicht aufgelistet",
+    "eyebrow": "Nicht alles — nur ausgewählte Orte",
     "title": "Dein Korea, gerahmt.",
-    "subtitle": "Ein paar Orte auf einmal. Ansehen, dann hingehen.",
+    "subtitle": "Sieh dir ein paar Orte an und entscheide, wohin es heute geht.",
     "areaLabel": "Region",
     "allAreas": "Ganz Korea",
     "districtLabel": "Bezirk",
@@ -42,7 +42,7 @@
     "views": "Aufrufe",
     "noCrop": "Unbeschnitten",
     "noImage": "Kein Bild vorhanden",
-    "distance": "Von Ihrem Standort"
+    "distance": "Von deinem Standort"
   },
   "detail": {
     "back": "Zurück zur Liste",
