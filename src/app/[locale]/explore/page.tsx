@@ -101,8 +101,17 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
         */}
         <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.55fr)]">
           <Lede locale={locale} t={t} size="compact" />
+          {/*
+            **레이아웃이 아니라 transform 으로 키운다.** 열 폭을 늘리면 연결망이
+            머리말(416px)보다 높아지고, 그만큼 탭과 목록이 아래로 밀려 첫 화면에
+            보이는 카드가 줄어든다. `scale` 은 자리를 차지하지 않으므로 그림만
+            커지고 그 아래는 그대로 있다.
+
+            위아래로 넘치는 부분은 마스크가 이미 흐려 놓은 자리라 잘린 티가 나지
+            않는다. 배율은 uniform 이므로 홈과의 전환에서도 찌그러지지 않는다.
+          */}
           <ViewTransition name="lede-art" share={SHARE} default="none">
-            <NetworkArt className="hidden min-h-0 aspect-square w-full lg:block" />
+            <NetworkArt className="hidden min-h-0 aspect-square w-full lg:block lg:scale-[1.45]" />
           </ViewTransition>
         </div>
 

@@ -48,13 +48,30 @@ const DROP = 0.16;
 const LINK = (VIEW / COLS) * 1.8;
 
 /**
- * 점의 속도(초당 좌표 단위). **아주 느리다** — 이 값이면 한 점이 화면을 가로지르는 데
- * 4분 남짓 걸린다. 눈이 움직임을 좇지 못하고 "아까와 조금 다르다" 로만 느낀다.
+ * 점의 속도(초당 좌표 단위). 한 점이 화면을 가로지르는 데 1분 반쯤 걸린다 —
+ * 움직임을 알아볼 수는 있지만 눈이 좇아가지는 않는 정도다.
  */
-const SPEED = 2.6;
+const SPEED = 7;
 
-/** 점이 밖으로 나가도 되는 여유. 경계에서 되튀면 벽이 있는 것으로 읽힌다 */
-const MARGIN = 90;
+/**
+ * 방향이 도는 속도(초당 라디안). **직선으로 가면 기계가 된다** — 등속 직선 운동은
+ * 궤적이 자로 그은 선이라, 점이 흐르는 것이 아니라 쏘아진 것으로 보인다. 방향을
+ * 조금씩 틀면 완만한 곡선을 그리며 표류해, 무리가 살아 움직이는 것으로 읽힌다.
+ */
+const TURN = 0.16;
+
+/** 점이 밖으로 나가도 되는 여유. 넓을수록 무리가 크게 돈다 */
+const MARGIN = 150;
+
+/**
+ * 거리와 무관하게 **항상 이어 두는 이웃 수.**
+ *
+ * 거리 임계값만 쓰면 멀어진 점이 통째로 떨어져 나가 홀로 떠다닌다. 그러면
+ * "이어져 있다" 가 아니라 "흩어진다" 로 읽힌다. 가장 가까운 둘과는 아무리 멀어도
+ * 실을 남겨 두면, 하나가 끊길 때 다른 쪽으로 옮겨 붙는 것처럼 보인다 —
+ * 망이 끊어지는 것이 아니라 **엮이는 상대가 바뀐다.**
+ */
+const KEEP_NEAREST = 2;
 
 /** 결정적 의사난수. 시드를 바꾸면 다른 배치가 나온다 */
 function makeRandom(seed: number): () => number {
@@ -69,7 +86,7 @@ function makeRandom(seed: number): () => number {
   };
 }
 
-type Node = { x: number; y: number; vx: number; vy: number; r: number };
+type Node = { x: number; y: number; vx: number; vy: number; r: number; turn: number };
 
 function makeNodes(): Node[] {
   const rand = makeRandom(SEED);
@@ -86,6 +103,8 @@ function makeNodes(): Node[] {
       const angle = rand() * Math.PI * 2;
       // 속도도 흩는다. 전부 같은 속도면 무리가 한 덩어리로 흘러가 배치가 굳어 보인다
       const speed = SPEED * (0.35 + rand() * 0.9);
+      // 도는 방향과 세기도 각자. 전부 같은 쪽으로 돌면 무리가 소용돌이가 된다
+      const turn = (rand() - 0.5) * 2 * TURN;
       if (keep < DROP) continue;
       out.push({
         x: (col + 0.5) * cellW + jx,
@@ -93,6 +112,7 @@ function makeNodes(): Node[] {
         vx: Math.cos(angle) * speed,
         vy: Math.sin(angle) * speed,
         r,
+        turn,
       });
     }
   }
@@ -174,11 +194,56 @@ export function NetworkArt({ className = "" }: { className?: string }) {
     const px = (x: number) => offsetX + x * scale;
     const py = (y: number) => offsetY + y * scale;
 
+    /*
+      가장 가까운 이웃들. **매 프레임 다시 뽑는다** — 점이 움직이므로 누가 가장
+      가까운지가 계속 바뀌고, 그 바뀜이 곧 "다른 쪽으로 옮겨 붙는" 움직임이다.
+      크기가 고정된 배열을 미리 잡아 두고 덮어쓴다. 프레임마다 새로 만들면
+      쓰레기가 쌓인다.
+    */
+    const nearIdx = new Int32Array(nodes.length * KEEP_NEAREST);
+    const nearDist = new Float64Array(nodes.length * KEEP_NEAREST);
+
+    function findNearest() {
+      nearIdx.fill(-1);
+      nearDist.fill(Number.POSITIVE_INFINITY);
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = 0; j < nodes.length; j++) {
+          if (i === j) continue;
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const d2 = dx * dx + dy * dy;
+          // 삽입 정렬. KEEP_NEAREST 가 2~3 이라 정렬 비용이 비교 비용보다 싸다
+          for (let k = 0; k < KEEP_NEAREST; k++) {
+            const slot = i * KEEP_NEAREST + k;
+            if (d2 >= nearDist[slot]) continue;
+            for (let m = KEEP_NEAREST - 1; m > k; m--) {
+              nearDist[i * KEEP_NEAREST + m] = nearDist[i * KEEP_NEAREST + m - 1];
+              nearIdx[i * KEEP_NEAREST + m] = nearIdx[i * KEEP_NEAREST + m - 1];
+            }
+            nearDist[slot] = d2;
+            nearIdx[slot] = j;
+            break;
+          }
+        }
+      }
+    }
+
+    function strokeLine(a: Node, b: Node, alpha: number) {
+      if (!ctx || alpha <= 0.004) return;
+      ctx.globalAlpha = alpha;
+      ctx.beginPath();
+      ctx.moveTo(px(a.x), py(a.y));
+      ctx.lineTo(px(b.x), py(b.y));
+      ctx.stroke();
+    }
+
     function draw() {
       if (!ctx) return;
       ctx.clearRect(0, 0, width, height);
       ctx.strokeStyle = ink;
       ctx.fillStyle = ink;
+
+      findNearest();
 
       // 선이 먼저. 점이 그 위에 놓여야 교차점이 매듭으로 읽힌다
       ctx.lineWidth = Math.max(0.5, 0.6 * scale);
@@ -196,11 +261,25 @@ export function NetworkArt({ className = "" }: { className?: string }) {
             사라지면 선이 깜빡이는 것으로 읽힌다. 거리에 따라 0 까지 내려가면
             이어지고 끊기는 것이 저절로 부드러워진다.
           */
-          ctx.globalAlpha = 0.17 * (1 - far);
-          ctx.beginPath();
-          ctx.moveTo(px(a.x), py(a.y));
-          ctx.lineTo(px(b.x), py(b.y));
-          ctx.stroke();
+          strokeLine(a, b, 0.17 * (1 - far));
+        }
+      }
+
+      /*
+        임계 밖으로 나간 이웃에게 남기는 실. 위 루프가 이미 그린 것(임계 안)은
+        건너뛰므로 겹쳐 그려 진해지는 일이 없다.
+
+        멀수록 옅어지되 **0 이 되지는 않는다.** 이 실이 있어야 무리에서 떨어져
+        나간 점이 여전히 어딘가에 매여 있는 것으로 보인다.
+      */
+      for (let i = 0; i < nodes.length; i++) {
+        for (let k = 0; k < KEEP_NEAREST; k++) {
+          const j = nearIdx[i * KEEP_NEAREST + k];
+          if (j < 0) continue;
+          const d2 = nearDist[i * KEEP_NEAREST + k];
+          if (d2 <= LINK * LINK) continue;
+          const stretch = Math.sqrt(d2) / LINK;
+          strokeLine(nodes[i], nodes[j], 0.09 / stretch);
         }
       }
 
@@ -223,15 +302,42 @@ export function NetworkArt({ className = "" }: { className?: string }) {
       last = now;
 
       for (const n of nodes) {
+        /*
+          방향을 조금씩 튼다. 속도의 크기는 그대로 두고 각도만 돌리므로 점이
+          빨라지거나 느려지지 않고 **완만한 호를 그리며** 흐른다.
+        */
+        const a = n.turn * dt;
+        const cos = Math.cos(a);
+        const sin = Math.sin(a);
+        const vx = n.vx * cos - n.vy * sin;
+        n.vy = n.vx * sin + n.vy * cos;
+        n.vx = vx;
+
         n.x += n.vx * dt;
         n.y += n.vy * dt;
+
         /*
           경계에서 되튄다. **밖으로 여유를 준다** — 화면 가장자리에서 정확히 튕기면
           점들이 테두리를 따라 미끄러져 사각형이 드러난다. 양 끝은 어차피 마스크로
           흐려지므로 그 바깥에서 도는 것은 보이지 않는다.
+
+          되튈 때 좌표도 안으로 되민다. 방향만 뒤집으면 도는 각도에 따라 경계 밖에
+          머문 채 부호가 계속 뒤집혀 점이 벽에 붙어 떠는 수가 있다.
         */
-        if (n.x < -MARGIN || n.x > VIEW + MARGIN) n.vx = -n.vx;
-        if (n.y < -MARGIN || n.y > VIEW + MARGIN) n.vy = -n.vy;
+        if (n.x < -MARGIN) {
+          n.x = -MARGIN;
+          n.vx = Math.abs(n.vx);
+        } else if (n.x > VIEW + MARGIN) {
+          n.x = VIEW + MARGIN;
+          n.vx = -Math.abs(n.vx);
+        }
+        if (n.y < -MARGIN) {
+          n.y = -MARGIN;
+          n.vy = Math.abs(n.vy);
+        } else if (n.y > VIEW + MARGIN) {
+          n.y = VIEW + MARGIN;
+          n.vy = -Math.abs(n.vy);
+        }
       }
 
       draw();
