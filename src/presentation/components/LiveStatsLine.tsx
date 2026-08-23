@@ -39,14 +39,19 @@ export function LiveStatsLine({
   const live = useLiveStats(statsKey);
 
   // 덧씌운 값이 없으면 서버 문자열을 그대로 쓴다. 다시 계산하지 않는다
-  const likeShown =
-    live?.likes !== undefined && live.likes !== likes
-      ? formatLikes(live.likes, locale)
-      : likesText;
-  const viewShown =
-    live?.views !== undefined && live.views !== views
-      ? formatViews(live.views, locale)
-      : viewsText;
+  const likeChanged = live?.likes !== undefined && live.likes !== likes;
+  const viewChanged = live?.views !== undefined && live.views !== views;
+  const likeShown = likeChanged ? formatLikes(live.likes as number, locale) : likesText;
+  const viewShown = viewChanged ? formatViews(live.views as number, locale) : viewsText;
+
+  /*
+    바뀐 수는 아래에서 올라오며 든다. 자리에서 숫자만 갈리면 언제 바뀌었는지 알 수
+    없고, 하트의 뜀과 이어지지도 않는다.
+
+    `key` 에 값을 넣어 **수가 바뀔 때마다** 새 요소가 되게 한다. 같은 요소에 클래스만
+    다시 붙이면 브라우저가 이미 끝난 애니메이션으로 보고 다시 재생하지 않는다.
+  */
+  const rise = "inline-block count-rise";
 
   const text = size === "md" ? "text-[14px]" : "text-[12px]";
   const icon = size === "md" ? "size-4" : "size-3.5";
@@ -63,7 +68,13 @@ export function LiveStatsLine({
             strokeLinejoin="round"
           />
         </svg>
-        {likeShown}
+        {likeChanged ? (
+          <span key={likeShown} className={rise}>
+            {likeShown}
+          </span>
+        ) : (
+          likeShown
+        )}
       </span>
       <span className="inline-flex items-center gap-1" aria-label={`${labelViews} ${viewShown}`}>
         <svg viewBox="0 0 24 24" className={icon} aria-hidden="true">
@@ -76,7 +87,13 @@ export function LiveStatsLine({
           />
           <circle cx="12" cy="12" r="2.6" fill="none" stroke="currentColor" strokeWidth="1.6" />
         </svg>
-        {viewShown}
+        {viewChanged ? (
+          <span key={viewShown} className={rise}>
+            {viewShown}
+          </span>
+        ) : (
+          viewShown
+        )}
       </span>
     </p>
   );

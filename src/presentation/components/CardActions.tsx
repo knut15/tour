@@ -1,8 +1,8 @@
 "use client";
 
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { usePersonalSet } from "@/presentation/lib/personal-set";
-import { useSpotLike } from "@/presentation/lib/use-spot-like";
+import { LIKE_POP_MS, useSpotLike } from "@/presentation/lib/use-spot-like";
 
 /**
  * 사진 위에 얹히는 액션 둘 — 담기와 좋아요.
@@ -65,7 +65,22 @@ export function CardActions({
           tone="like"
           label={`${liked.liked ? labelLiked : labelLike}: ${title}`}
         >
-          <svg viewBox="0 0 24 24" className="size-[18px]" aria-hidden="true">
+          {/*
+            **하트만 뛴다.** 버튼째 키우면 옆의 담기 버튼과 간격이 흔들려, 누른 것이
+            아니라 줄 전체가 움직인 것으로 보인다.
+
+            `key` 가 재생을 다시 건다. 같은 클래스를 그대로 두면 브라우저가 이미
+            끝난 애니메이션으로 보고 두 번째 클릭에 아무 일도 하지 않는다.
+            `pop` 이 0 일 때(아직 누른 적 없다)는 붙이지 않는다 — 화면에 처음
+            나타날 때 모든 카드의 하트가 한 번씩 뛰면 목록이 들썩인다.
+          */}
+          <svg
+            key={liked.pop}
+            viewBox="0 0 24 24"
+            className={"size-[18px] " + (liked.pop > 0 ? "like-pop" : "")}
+            style={{ "--like-pop-ms": `${LIKE_POP_MS}ms` } as CSSProperties}
+            aria-hidden="true"
+          >
             <path
               d="M12 20.3 4.6 13a4.6 4.6 0 0 1 6.5-6.5l.9.9.9-.9A4.6 4.6 0 0 1 19.4 13Z"
               fill={liked.liked ? "currentColor" : "none"}
