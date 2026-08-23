@@ -45,6 +45,8 @@ export type SpotView = {
   thumbnailUrl: string | null;
   /** false 면 크롭 금지. 화면은 object-fit: contain 으로 그린다 */
   imageCroppable: boolean;
+  /** 장소의 종류("한식", "산"). 국문 화면이 한글 원명 자리에 대신 쓴다. 없으면 null */
+  kind: string | null;
   tel: string | null;
 };
 

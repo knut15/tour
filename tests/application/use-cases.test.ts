@@ -28,6 +28,7 @@ function spot(over: Partial<Spot> & { id: SpotId }): Spot {
     image: { url: "https://a/1.jpg", thumbnailUrl: null, copyright: "Type3" },
     tel: null,
     classification: "HS010100",
+    kind: null,
     modifiedAt: null,
     ...over,
   };

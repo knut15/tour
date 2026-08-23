@@ -48,6 +48,16 @@ export type Spot = {
   readonly tel: string | null;
   /** 신분류체계 소분류. 의료관광 배제 판정에 쓴다 */
   readonly classification: string | null;
+  /**
+   * 장소의 종류를 한 마디로 —  "한식", "산", "사찰".
+   *
+   * 코드가 아니라 **사람이 읽는 이름**이다. 도메인이 공급자의 코드 체계를 들고 있을
+   * 이유가 없다. `classification` 이 코드인 것은 그쪽이 배제 판정에 쓰이기 때문이고,
+   * 이 값은 화면에 그대로 나가므로 이름이어야 한다.
+   *
+   * 로케일에 따라 없을 수 있다. 없으면 화면이 그 줄을 다른 것으로 채우거나 비운다.
+   */
+  readonly kind: string | null;
   readonly modifiedAt: string | null;
 };
 

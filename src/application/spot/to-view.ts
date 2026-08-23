@@ -18,6 +18,7 @@ export function toSpotView(spot: Spot): SpotView {
     imageUrl: spot.image?.url ?? null,
     thumbnailUrl: spot.image?.thumbnailUrl ?? null,
     imageCroppable: spot.image ? canCrop(spot.image) : false,
+    kind: spot.kind,
     tel: spot.tel,
   };
 }
