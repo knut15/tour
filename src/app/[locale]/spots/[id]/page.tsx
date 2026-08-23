@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isLocale, type Locale } from "@/domain/shared/locale";
+import type { Category } from "@/domain/spot/category";
 import type { SpotDetailView } from "@/application/spot/dto";
 import { getSpotDetail } from "@/presentation/lib/container";
+import { exploreHref } from "@/presentation/lib/explore-href";
 import { NoImage } from "@/presentation/components/NoImage";
 import { SaveChip } from "@/presentation/components/SaveChip";
 import { SpotStats } from "@/presentation/components/SpotStats";
@@ -51,7 +53,12 @@ export default async function SpotDetailPage({ params }: PageProps<"/[locale]/sp
 
   return (
     <>
-      <DetailMasthead locale={locale} t={t} koreanName={spot.titleKorean} />
+      <DetailMasthead
+        locale={locale}
+        t={t}
+        koreanName={spot.titleKorean}
+        category={spot.category}
+      />
 
       {/*
         ── 한 흐름 ──
@@ -269,11 +276,22 @@ function DetailMasthead({
   locale,
   t,
   koreanName,
+  category,
 }: {
   locale: Locale;
   t: Dictionary;
   /** 언어를 바꿀 때 상대 카탈로그를 찾는 열쇠. 없으면 목록으로 간다 */
   koreanName?: string | null;
+  /**
+   * 돌아갈 탭. **이 장소가 속한 분류다.**
+   *
+   * 목록에서 어느 탭을 보고 있었는지를 URL 로 받지 않는다 — 상세 주소에 남의
+   * 필터가 붙으면 그 주소를 공유했을 때 받은 사람도 그 필터를 물려받는다.
+   * 장소의 분류는 그 자체로 어느 탭에 있었는지를 말해 주므로 그것으로 충분하다.
+   *
+   * 없으면(찾지 못한 화면) 기본 탭으로 간다.
+   */
+  category?: Category;
 }) {
   return (
     <Masthead
@@ -289,11 +307,13 @@ function DetailMasthead({
       localeHref={(l) =>
         koreanName
           ? `/${l}/spots/resolve?ko=${encodeURIComponent(koreanName)}`
-          : `/${l}/explore`
+          : category
+            ? exploreHref(l, { category })
+            : `/${l}/explore`
       }
       leading={
         <Link
-          href={`/${locale}/explore`}
+          href={category ? exploreHref(locale, { category }) : `/${locale}/explore`}
           className="inline-flex items-center gap-2 text-[13px] uppercase tracking-[0.14em] text-muted hover:text-ink focus-visible:outline-2 focus-visible:outline-focus"
         >
           <span aria-hidden="true">←</span>
