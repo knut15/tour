@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
+import { statsKeyOf } from "@/domain/spot/spot-stats";
+import { publishStats } from "@/presentation/lib/live-stats";
 import { visitorId } from "@/presentation/lib/visitor";
 
 /**
@@ -29,7 +31,27 @@ export function ViewCounter({ koreanName }: { koreanName: string | null }) {
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ visitorId: visitor }),
       keepalive: true,
-    }).catch(() => {});
+    })
+      .then(async (res) => {
+        /*
+          기록된 뒤의 총수를 화면에 알린다. 새로고침해야 자기 조회가 반영되는 것은
+          "안 세어졌다" 로 읽힌다.
+
+          **화면이 스스로 +1 하지 않는다.** 같은 날 두 번째 조회는 오르지 않으므로
+          세면 틀린다. 서버가 돌려준 값만 쓴다.
+        */
+        if (!res.ok) return;
+        const body = (await res.json().catch(() => null)) as
+          | { likes?: unknown; views?: unknown }
+          | null;
+        const key = statsKeyOf(koreanName);
+        if (!key || !body) return;
+        publishStats(key, {
+          likes: typeof body.likes === "number" ? body.likes : undefined,
+          views: typeof body.views === "number" ? body.views : undefined,
+        });
+      })
+      .catch(() => {});
   }, [koreanName]);
 
   return null;

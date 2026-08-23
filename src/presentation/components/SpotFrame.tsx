@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { SpotView } from "@/application/spot/dto";
+import { statsKeyOf } from "@/domain/spot/spot-stats";
 import { NoImage } from "@/presentation/components/NoImage";
 import { CardActions } from "@/presentation/components/CardActions";
 import { SpotImage } from "@/presentation/components/SpotImage";
@@ -229,6 +230,7 @@ export function SpotFrame({
         </p>
         <SpotStats
           stats={stats}
+          statsKey={statsKeyOf(spot.titleKorean)}
           locale={spot.locale}
           labelLike={labelLike}
           labelViews={labelViews}

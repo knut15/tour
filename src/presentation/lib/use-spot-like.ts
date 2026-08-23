@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import { statsKeyOf } from "@/domain/spot/spot-stats";
+import { publishStats } from "@/presentation/lib/live-stats";
 import { usePersonalSet } from "@/presentation/lib/personal-set";
 import { visitorId } from "@/presentation/lib/visitor";
 
@@ -44,9 +46,19 @@ export function useSpotLike({
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ visitorId: visitor }),
     })
-      .then((res) => {
+      .then(async (res) => {
         // 서버가 받아들이지 않았으면 눌린 표시를 되돌린다
-        if (!res.ok) local.toggle();
+        if (!res.ok) {
+          local.toggle();
+          return;
+        }
+        /*
+          바뀐 총수를 화면에 알린다. **낙관적으로 +1 하지 않는다** — 다른 기기에서
+          이미 눌러 둔 것일 수 있어 화면이 세면 틀린다. 서버가 센 값만 쓴다.
+        */
+        const body = (await res.json().catch(() => null)) as { likes?: unknown } | null;
+        const key = statsKeyOf(koreanName);
+        if (key && typeof body?.likes === "number") publishStats(key, { likes: body.likes });
       })
       .catch(() => {
         local.toggle();

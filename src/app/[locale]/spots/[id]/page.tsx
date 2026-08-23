@@ -118,6 +118,7 @@ export default async function SpotDetailPage({ params }: PageProps<"/[locale]/sp
             <div className="mt-5 flex justify-center">
               <SpotStats
                 stats={stats}
+                statsKey={statsKey}
                 locale={spot.locale}
                 labelLike={t.frame.like}
                 labelViews={t.frame.views}
