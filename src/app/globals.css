@@ -938,12 +938,41 @@ details[open] > .dropdown-panel {
 }
 
 /*
+ * 핀 둘레의 빛. **점의 맥박과 같은 주기로 함께 숨 쉰다.**
+ *
+ * 주기가 어긋나면 두 움직임이 서로 다른 일로 보여 아이콘 하나가 두 가지를
+ * 알리는 것처럼 읽힌다. 2.4s·`ease-in-out` 을 그대로 맞추면 점이 작아질 때
+ * 빛도 함께 짙어져 하나의 호흡이 된다.
+ *
+ * `drop-shadow` 다. `box-shadow` 는 요소의 사각형을 따르므로 아이콘 주위가 아니라
+ * 네모난 그림자가 생긴다. `drop-shadow` 는 그려진 획의 윤곽을 따라간다.
+ *
+ * 색은 1차 액션 색을 쓴다 — 켜져 있다는 것을 알리는 자리라 앱이 "지금 동작 중"
+ * 을 말할 때 쓰는 색과 같아야 한다. 라이트에서는 코발트, 다크에서는 그 밝은 값이
+ * `--toss-primary` 한 토큰으로 따라온다.
+ */
+@keyframes near-me-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 1px color-mix(in srgb, var(--toss-primary) 30%, transparent));
+  }
+  50% {
+    filter: drop-shadow(0 0 5px color-mix(in srgb, var(--toss-primary) 75%, transparent));
+  }
+}
+
+.near-me-glow {
+  animation: near-me-glow 2.4s ease-in-out infinite;
+}
+
+/*
  * 이 파일 위쪽의 전역 규칙은 지속시간을 0.01ms 로 누르는데, **무한 반복에는
  * 그것이 더 나쁘다** — 0.01ms 마다 처음으로 돌아가 초당 수십 번 깜빡인다.
  * 무한 반복은 지속시간이 아니라 반복 자체를 끈다.
  */
 @media (prefers-reduced-motion: reduce) {
-  .near-me-live {
+  .near-me-live,
+  .near-me-glow {
     animation: none;
   }
 }

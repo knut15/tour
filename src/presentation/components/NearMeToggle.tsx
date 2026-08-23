@@ -50,7 +50,12 @@ export function NearMeToggle({
         (on ? " border-ink/25 text-ink" : " text-muted")
       }
     >
-      <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" aria-hidden="true">
+      <svg
+        viewBox="0 0 24 24"
+        // 빛은 아이콘 전체에 건다. 획의 윤곽을 따라야 핀 모양대로 번진다
+        className={"h-4 w-4 shrink-0" + (on ? " near-me-glow" : "")}
+        aria-hidden="true"
+      >
         <path
           d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11Z"
           fill="none"
