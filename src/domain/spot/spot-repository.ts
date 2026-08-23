@@ -2,13 +2,24 @@ import type { Locale } from "@/domain/shared/locale";
 import type { Page, PageRequest } from "@/domain/shared/paging";
 import type { Category } from "@/domain/spot/category";
 import type { Coordinate } from "@/domain/spot/coordinate";
-import type { District, DistrictCode } from "@/domain/spot/district";
+import type { Area, AreaCode, District, DistrictCode } from "@/domain/spot/region";
 import type { Spot, SpotId } from "@/domain/spot/spot";
 import type { SpotDetail } from "@/domain/spot/spot-detail";
 
 export type ListSpotsQuery = {
   locale: Locale;
   category: Category;
+  /**
+   * 이름으로 좁힌다. 비면 그 분류 전체다.
+   *
+   * **분류·지역과 함께 쓴다.** 검색이 필터를 대신하지 않는다 — 실측 2026-08-23,
+   * 국문 관광지에서 "박물관" 은 22건이고 서울로 좁히면 2건이다. 검색어를 넣는
+   * 순간 지역이 풀리면 사용자는 방금 고른 조건을 잃는다.
+   */
+  keyword?: string;
+  /** 시도. 없으면 전국이다 */
+  areaCode?: AreaCode;
+  /** 시군구. `areaCode` 가 없으면 지역을 식별하지 못하므로 구현이 무시한다 */
   districtCode?: DistrictCode;
   page?: PageRequest;
 };
@@ -36,6 +47,20 @@ export interface SpotRepository {
    * 벽 판정(이미지 필수·의료관광 배제)을 적용하지 않는다 — 직접 링크로 들어온 스팟은 보여준다.
    */
   findDetail(id: SpotId): Promise<SpotDetail | null>;
-  /** 서울 자치구 목록. 이름은 로케일에 따라 다르다 */
-  listDistricts(locale: Locale): Promise<District[]>;
+  /**
+   * 한글 원명이 정확히 같은 스팟을 그 로케일의 카탈로그에서 찾는다.
+   *
+   * **로케일마다 `contentid` 공간이 분리돼 있어** 같은 장소도 ID 가 다르고 서로를
+   * 조회할 수 없다(실측 2026-08-19: 국문 `2031668` 을 영문에 물으면 빈 결과).
+   * 두 카탈로그를 잇는 유일한 값이 제목에 병기된 한글 원명이다.
+   *
+   * 못 찾으면 `null`. **비슷한 것을 돌려주지 않는다** — 다른 장소로 보내는 것은
+   * 목록으로 보내는 것보다 나쁘다.
+   */
+  findByKoreanName(locale: Locale, koreanName: string): Promise<SpotId | null>;
+
+  /** 시도 목록(17개). 이름은 로케일에 따라 다르다 */
+  listAreas(locale: Locale): Promise<Area[]>;
+  /** 한 시도의 시군구 목록. **시도 없이는 부를 수 없다** (region.ts) */
+  listDistricts(locale: Locale, areaCode: AreaCode): Promise<District[]>;
 }

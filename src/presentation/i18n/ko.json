@@ -1,19 +1,32 @@
 {
-  "brand": "당신의 서울",
+  "brand": "당신의 한국",
   "nav": {
     "explore": "둘러보기",
     "switchLocale": "English",
     "theme": "밝게 / 어둡게 전환"
   },
   "explore": {
-    "eyebrow": "나열이 아니라 고른 것",
-    "title": "당신의 서울을, 액자에 담아",
-    "subtitle": "한 번에 몇 곳씩. 보고, 가세요.",
-    "allDistricts": "서울 전체",
-    "districtLabel": "동네",
+    "eyebrow": "좋은 여행이 되도록",
+    "title": "당신의 한국을, 액자에 담아",
+    "subtitle": "오늘 어디 갈지, 몇 곳만 보고 정하세요.",
+    "areaLabel": "지역",
+    "allAreas": "전국",
+    "districtLabel": "시·군·구",
+    "allDistricts": "이 지역 전체",
     "categoryLabel": "무엇을 찾으세요",
     "showAnother": "더 보기",
-    "sourceNote": "장소 정보는 한국관광공사에서 제공합니다."
+    "sourceNote": "장소 정보는 한국관광공사에서 제공합니다.",
+    "nearMeOn": "거리 표시 중",
+    "nearMeOff": "내 위치에서 거리 보기",
+    "nearMeAsking": "위치 확인 중…",
+    "nearMeDenied": "위치 권한이 꺼져 있습니다",
+    "searchLabel": "장소 찾기",
+    "searchPlaceholder": "이름으로 찾기",
+    "searchAction": "찾기",
+    "searchClear": "검색어 지우기",
+    "sortLabel": "정렬",
+    "sortByViews": "조회순",
+    "sortByLikes": "좋아요순"
   },
   "category": {
     "attraction": "가볼 곳",
@@ -26,12 +39,19 @@
     "emptyFilterAction": "필터 지우기",
     "error": "장소를 불러오지 못했습니다.",
     "errorAction": "다시 시도",
-    "loading": "장소를 찾는 중입니다…"
+    "loading": "장소를 찾는 중입니다…",
+    "emptySearch": "‘{q}’에 맞는 곳이 없습니다.",
+    "emptySearchAction": "검색어 지우기"
   },
   "frame": {
     "save": "담기",
     "saved": "담김",
-    "noCrop": "원본 그대로"
+    "like": "좋아요",
+    "liked": "좋아요 취소",
+    "views": "조회",
+    "noCrop": "원본 그대로",
+    "noImage": "이미지 정보 없음",
+    "distance": "내 위치에서"
   },
   "detail": {
     "back": "목록으로",
@@ -54,6 +74,81 @@
       "title": "이 장소를 찾지 못했습니다.",
       "retry": "다시 시도",
       "toList": "목록으로"
+    }
+  },
+  "weather": {
+    "panelLabel": "오늘, 당신의 하늘",
+    "todayTitle": "지금",
+    "sky": {
+      "clear": "맑음",
+      "partly-cloudy": "구름 조금",
+      "cloudy": "흐림",
+      "rain": "비",
+      "rain-snow": "진눈깨비",
+      "snow": "눈",
+      "shower": "소나기"
+    },
+    "feelsLike": "체감",
+    "low": "최저",
+    "high": "최고",
+    "humidity": "습도",
+    "wind": "바람",
+    "unitCelsius": "°",
+    "unitPercent": "%",
+    "unitWind": "m/s",
+    "unitDust": "㎍/㎥",
+    "air": {
+      "title": "공기",
+      "pm10": "미세먼지",
+      "pm25": "초미세먼지",
+      "grade": {
+        "good": "좋음",
+        "moderate": "보통",
+        "bad": "나쁨",
+        "very-bad": "매우 나쁨"
+      },
+      "unavailable": "지금은 공기 정보를 받지 못했습니다.",
+      "noValue": "값 없음"
+    },
+    "outfit": {
+      "title": "오늘 입을 것",
+      "layer": {
+        "sleeveless": "민소매에 반바지",
+        "short-sleeve": "반팔에 얇은 셔츠",
+        "long-sleeve": "긴팔 티셔츠에 면바지",
+        "light-knit": "얇은 니트나 가디건",
+        "jacket": "자켓에 청바지",
+        "trench": "트렌치코트에 니트",
+        "coat": "코트나 가죽 자켓",
+        "padding": "패딩에 목도리"
+      },
+      "extra": {
+        "umbrella": "우산",
+        "mask": "마스크",
+        "windbreaker": "바람막이",
+        "extra-layer": "겉옷 하나 더"
+      }
+    },
+    "observedNote": "{time} 기준",
+    "stationNote": "{station} 측정",
+    "regions": {
+      "서울": "서울",
+      "부산": "부산",
+      "대구": "대구",
+      "인천": "인천",
+      "광주": "광주",
+      "대전": "대전",
+      "울산": "울산",
+      "세종": "세종",
+      "경기": "경기",
+      "강원": "강원",
+      "충북": "충북",
+      "충남": "충남",
+      "전북": "전북",
+      "전남": "전남",
+      "경북": "경북",
+      "경남": "경남",
+      "제주": "제주"
     }
   },
   "a11y": {

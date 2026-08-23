@@ -5,6 +5,11 @@ import type { Category } from "@/domain/spot/category";
 export type ListSpotsInput = {
   locale: Locale;
   category: Category;
+  /** 이름으로 좁힌다. 비면 그 분류 전체다 */
+  keyword?: string;
+  /** 시도. 없으면 전국 */
+  areaCode?: number;
+  /** 시군구. `areaCode` 와 짝이어야 의미가 있다 */
   districtCode?: number;
   page?: number;
   size?: number;
@@ -34,6 +39,7 @@ export type SpotView = {
   titleKorean: string | null;
   category: Category;
   address: string | null;
+  areaCode: number | null;
   districtCode: number | null;
   lng: number | null;
   lat: number | null;
@@ -41,6 +47,8 @@ export type SpotView = {
   thumbnailUrl: string | null;
   /** false 면 크롭 금지. 화면은 object-fit: contain 으로 그린다 */
   imageCroppable: boolean;
+  /** 장소의 종류("한식", "산"). 국문 화면이 한글 원명 자리에 대신 쓴다. 없으면 null */
+  kind: string | null;
   tel: string | null;
 };
 
@@ -63,7 +71,8 @@ export type SpotListView = {
   hasMore: boolean;
 };
 
-export type DistrictView = {
+/** 시도·시군구 공통. 코드와 이름 한 쌍이면 화면에 그리기 충분하다 */
+export type RegionView = {
   code: number;
   name: string;
 };

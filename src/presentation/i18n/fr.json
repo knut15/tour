@@ -1,19 +1,32 @@
 {
-  "brand": "Votre Séoul",
+  "brand": "Votre Corée",
   "nav": {
     "explore": "Explorer",
     "switchLocale": "Langue",
     "theme": "Clair ou sombre"
   },
   "explore": {
-    "eyebrow": "Choisis, pas listés",
-    "title": "Votre Séoul, encadré.",
-    "subtitle": "Quelques lieux à la fois. Regardez, puis partez.",
-    "allDistricts": "Tout Séoul",
-    "districtLabel": "Quartier",
+    "eyebrow": "Pour un beau voyage",
+    "title": "Votre Corée, encadrée.",
+    "subtitle": "Voyez quelques lieux et décidez où aller aujourd'hui.",
+    "areaLabel": "Région",
+    "allAreas": "Toute la Corée",
+    "districtLabel": "District",
+    "allDistricts": "Tous les districts",
     "categoryLabel": "Que cherchez-vous",
     "showAnother": "Plus de lieux",
-    "sourceNote": "Données des lieux fournies par la Korea Tourism Organization."
+    "sourceNote": "Données des lieux fournies par la Korea Tourism Organization.",
+    "nearMeOn": "Distance affichée",
+    "nearMeOff": "Afficher la distance",
+    "nearMeAsking": "Localisation…",
+    "nearMeDenied": "Accès à la position bloqué",
+    "searchLabel": "Trouver un lieu",
+    "searchPlaceholder": "Rechercher par nom",
+    "searchAction": "Rechercher",
+    "searchClear": "Effacer la recherche",
+    "sortLabel": "Trier",
+    "sortByViews": "Plus vus",
+    "sortByLikes": "Plus aimés"
   },
   "category": {
     "attraction": "Lieux",
@@ -26,12 +39,19 @@
     "emptyFilterAction": "Effacer le filtre",
     "error": "Impossible de charger ces lieux.",
     "errorAction": "Réessayer",
-    "loading": "Recherche de lieux…"
+    "loading": "Recherche de lieux…",
+    "emptySearch": "Aucun lieu ne correspond à « {q} ».",
+    "emptySearchAction": "Effacer la recherche"
   },
   "frame": {
     "save": "Enregistrer",
     "saved": "Enregistré",
-    "noCrop": "Non recadrée"
+    "like": "J’aime",
+    "liked": "Je n’aime plus",
+    "views": "Vues",
+    "noCrop": "Non recadrée",
+    "noImage": "Aucune image disponible",
+    "distance": "Depuis votre position"
   },
   "detail": {
     "back": "Retour à la liste",
@@ -54,6 +74,81 @@
       "title": "Nous n'avons pas trouvé ce lieu.",
       "retry": "Réessayer",
       "toList": "Retour à la liste"
+    }
+  },
+  "weather": {
+    "panelLabel": "Votre ciel aujourd'hui",
+    "todayTitle": "En ce moment",
+    "sky": {
+      "clear": "Ciel dégagé",
+      "partly-cloudy": "Peu nuageux",
+      "cloudy": "Couvert",
+      "rain": "Pluie",
+      "rain-snow": "Neige fondue",
+      "snow": "Neige",
+      "shower": "Averses"
+    },
+    "feelsLike": "Ressenti",
+    "low": "Min.",
+    "high": "Max.",
+    "humidity": "Humidité",
+    "wind": "Vent",
+    "unitCelsius": "°",
+    "unitPercent": "%",
+    "unitWind": "m/s",
+    "unitDust": "µg/m³",
+    "air": {
+      "title": "Air",
+      "pm10": "PM10",
+      "pm25": "PM2,5",
+      "grade": {
+        "good": "Bon",
+        "moderate": "Moyen",
+        "bad": "Mauvais",
+        "very-bad": "Très mauvais"
+      },
+      "unavailable": "Aucune mesure de l'air pour le moment.",
+      "noValue": "Pas de données"
+    },
+    "outfit": {
+      "title": "À porter aujourd'hui",
+      "layer": {
+        "sleeveless": "Un débardeur et un short",
+        "short-sleeve": "Un T-shirt et une chemise légère",
+        "long-sleeve": "Manches longues et chino",
+        "light-knit": "Un pull fin ou un cardigan",
+        "jacket": "Une veste sur un jean",
+        "trench": "Un trench sur un pull",
+        "coat": "Un manteau ou une veste en cuir",
+        "padding": "Une doudoune et une écharpe"
+      },
+      "extra": {
+        "umbrella": "Parapluie",
+        "mask": "Masque",
+        "windbreaker": "Coupe-vent",
+        "extra-layer": "Une couche de plus"
+      }
+    },
+    "observedNote": "À {time}",
+    "stationNote": "Mesuré à {station}",
+    "regions": {
+      "서울": "Séoul",
+      "부산": "Busan",
+      "대구": "Daegu",
+      "인천": "Incheon",
+      "광주": "Gwangju",
+      "대전": "Daejeon",
+      "울산": "Ulsan",
+      "세종": "Sejong",
+      "경기": "Gyeonggi",
+      "강원": "Gangwon",
+      "충북": "Chungbuk",
+      "충남": "Chungnam",
+      "전북": "Jeonbuk",
+      "전남": "Jeonnam",
+      "경북": "Gyeongbuk",
+      "경남": "Gyeongnam",
+      "제주": "Jeju"
     }
   },
   "a11y": {

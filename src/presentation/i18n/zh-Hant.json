@@ -1,19 +1,32 @@
 {
-  "brand": "你的首爾",
+  "brand": "你的韓國",
   "nav": {
     "explore": "探索",
     "switchLocale": "語言",
     "theme": "切換明暗"
   },
   "explore": {
-    "eyebrow": "精選，而非清單",
-    "title": "你的首爾，裱入畫框。",
-    "subtitle": "一次幾個地方。看過，就出發。",
-    "allDistricts": "首爾全區",
-    "districtLabel": "區域",
+    "eyebrow": "為了一趟好旅行",
+    "title": "你的韓國，裱入畫框。",
+    "subtitle": "只看幾個地方，決定今天要去哪裡。",
+    "areaLabel": "地區",
+    "allAreas": "全國",
+    "districtLabel": "市郡區",
+    "allDistricts": "此地區全部",
     "categoryLabel": "想找什麼",
     "showAnother": "看更多",
-    "sourceNote": "地點資料由韓國觀光公社提供。"
+    "sourceNote": "地點資料由韓國觀光公社提供。",
+    "nearMeOn": "顯示距離中",
+    "nearMeOff": "顯示與我的距離",
+    "nearMeAsking": "定位中…",
+    "nearMeDenied": "位置權限已關閉",
+    "searchLabel": "尋找地點",
+    "searchPlaceholder": "依名稱搜尋",
+    "searchAction": "搜尋",
+    "searchClear": "清除搜尋",
+    "sortLabel": "排序",
+    "sortByViews": "依瀏覽",
+    "sortByLikes": "依喜歡"
   },
   "category": {
     "attraction": "景點",
@@ -26,12 +39,19 @@
     "emptyFilterAction": "清除篩選",
     "error": "無法載入地點。",
     "errorAction": "重試",
-    "loading": "正在尋找地點…"
+    "loading": "正在尋找地點…",
+    "emptySearch": "沒有符合「{q}」的地點。",
+    "emptySearchAction": "清除搜尋"
   },
   "frame": {
     "save": "收藏",
     "saved": "已收藏",
-    "noCrop": "原圖"
+    "like": "喜歡",
+    "liked": "取消喜歡",
+    "views": "瀏覽",
+    "noCrop": "原圖",
+    "noImage": "無圖片資訊",
+    "distance": "距離您的位置"
   },
   "detail": {
     "back": "回到列表",
@@ -54,6 +74,81 @@
       "title": "找不到這個地點。",
       "retry": "重試",
       "toList": "回到列表"
+    }
+  },
+  "weather": {
+    "panelLabel": "今天，你的天空",
+    "todayTitle": "此刻",
+    "sky": {
+      "clear": "晴",
+      "partly-cloudy": "多雲時晴",
+      "cloudy": "陰",
+      "rain": "雨",
+      "rain-snow": "雨夾雪",
+      "snow": "雪",
+      "shower": "陣雨"
+    },
+    "feelsLike": "體感",
+    "low": "最低",
+    "high": "最高",
+    "humidity": "濕度",
+    "wind": "風",
+    "unitCelsius": "°",
+    "unitPercent": "%",
+    "unitWind": "m/s",
+    "unitDust": "㎍/㎥",
+    "air": {
+      "title": "空氣",
+      "pm10": "PM10",
+      "pm25": "PM2.5",
+      "grade": {
+        "good": "良好",
+        "moderate": "普通",
+        "bad": "不良",
+        "very-bad": "非常不良"
+      },
+      "unavailable": "目前收不到空氣品質資料。",
+      "noValue": "無資料"
+    },
+    "outfit": {
+      "title": "今天穿什麼",
+      "layer": {
+        "sleeveless": "背心配短褲",
+        "short-sleeve": "短袖配薄襯衫",
+        "long-sleeve": "長袖上衣配長褲",
+        "light-knit": "薄針織或開襟衫",
+        "jacket": "外套配牛仔褲",
+        "trench": "風衣配針織衫",
+        "coat": "大衣或皮外套",
+        "padding": "羽絨外套加圍巾"
+      },
+      "extra": {
+        "umbrella": "雨傘",
+        "mask": "口罩",
+        "windbreaker": "防風外套",
+        "extra-layer": "多帶一件外套"
+      }
+    },
+    "observedNote": "{time} 更新",
+    "stationNote": "{station} 觀測",
+    "regions": {
+      "서울": "首爾",
+      "부산": "釜山",
+      "대구": "大邱",
+      "인천": "仁川",
+      "광주": "光州",
+      "대전": "大田",
+      "울산": "蔚山",
+      "세종": "世宗",
+      "경기": "京畿",
+      "강원": "江原",
+      "충북": "忠北",
+      "충남": "忠南",
+      "전북": "全北",
+      "전남": "全南",
+      "경북": "慶北",
+      "경남": "慶南",
+      "제주": "濟州"
     }
   },
   "a11y": {

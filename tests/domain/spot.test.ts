@@ -8,11 +8,13 @@ function makeSpot(over: Partial<Spot> = {}): Spot {
     name: { primary: "A", korean: "가" },
     category: "attraction",
     address: null,
+    areaCode: 1,
     districtCode: 23,
     coordinate: { lng: 127, lat: 37 },
     image: { url: "https://a/1.jpg", thumbnailUrl: null, copyright: "Type3" },
     tel: null,
     classification: "HS010100",
+    kind: null,
     modifiedAt: null,
     ...over,
   };

@@ -1,5 +1,6 @@
-import Link from "next/link";
 import { CATEGORIES, type Category } from "@/domain/spot/category";
+import { exploreHref } from "@/presentation/lib/explore-href";
+import { CategoryTabs } from "@/presentation/components/CategoryTabs";
 
 /**
  * 카테고리 선택.
@@ -16,43 +17,38 @@ import { CATEGORIES, type Category } from "@/domain/spot/category";
 export function CategoryPicker({
   locale,
   current,
+  areaCode,
   districtCode,
+  keyword,
   labels,
   groupLabel,
 }: {
   locale: string;
   current: Category;
+  areaCode?: number;
   districtCode?: number;
+  /**
+   * 찾고 있는 말. **분류를 바꿔도 들고 간다** — "박물관" 을 찾다가 문화 탭으로
+   * 옮기는 것은 검색을 그만두는 것이 아니라 같은 말을 다른 분류에서 찾는 것이다.
+   */
+  keyword?: string;
   labels: Record<Category, string>;
   groupLabel: string;
 }) {
-  return (
-    <nav aria-label={groupLabel}>
-      <ul className="flex flex-wrap items-center gap-x-8 border-b border-line sm:gap-x-9">
-        {CATEGORIES.map((c) => {
-          const active = c === current;
-          const params = new URLSearchParams({ category: c });
-          if (districtCode) params.set("district", String(districtCode));
-          return (
-            <li key={c}>
-              <Link
-                href={`/${locale}/explore?${params.toString()}`}
-                aria-current={active ? "page" : undefined}
-                className={
-                  "inline-block pb-3.5 -mb-px border-b text-[15px] " +
-                  "transition-colors duration-200 ease-[var(--ease-signature)] " +
-                  "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-focus " +
-                  (active
-                    ? "border-ink font-semibold text-ink"
-                    : "border-transparent text-muted hover:text-ink")
-                }
-              >
-                {labels[c]}
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
-    </nav>
-  );
+  /*
+    링크를 여기서 만든다. URL 규칙은 서버 쪽 한 곳에 두고
+    (`presentation/lib/explore-href.ts`) 클라이언트 컴포넌트는 받은 것을 그리기만 한다.
+    카테고리를 바꿔도 지역과 검색어는 유지한다. 페이지는 1로 돌아간다.
+  */
+  const tabs = CATEGORIES.map((c) => ({
+    key: c,
+    label: labels[c],
+    href: exploreHref(locale, { category: c, areaCode, districtCode, keyword }),
+  }));
+
+  /*
+    강조색은 넘기지 않는다. 필터 바가 `--tab-accent` 를 갖고 있고 탭은 그것을
+    상속받는다 — 색은 탭만의 것이 아니라 바 전체의 성질이다.
+  */
+  return <CategoryTabs tabs={tabs} current={current} groupLabel={groupLabel} />;
 }

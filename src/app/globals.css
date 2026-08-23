@@ -47,15 +47,158 @@
   /* toss.im 마케팅 CTA 는 별도 값이다. TDS 와 합치지 않는다 */
   --round-marketing: 7px;
 
+  /*
+   * ── GOAL 팔레트 (§2.3) ──
+   *
+   * 크림 바탕 위에 비비드 색면. **회색조 UI 를 만들고 색을 뿌리는 것이 아니다.**
+   * 값은 GOAL.md §2.3 의 표 그대로다 — 눈으로 조정하지 않는다.
+   *
+   * `--ink-body` 만 표에 없어서 정했다. `--goal-ink`(#1C1A17)와
+   * `--goal-ink-muted`(#6B6459) 사이에서, 크림 바탕 대비 7:1 이 나오는 값이다.
+   */
+  --goal-paper: #faf6ef;
+  --goal-paper-deep: #f2ebe0;
+  --goal-ink: #1c1a17;
+  --goal-ink-body: #3a342c;
+  --goal-ink-muted: #6b6459;
+  --goal-line: #e0d8ca;
+
+  --goal-cobalt: #1b4fd8;
+  --goal-cobalt-deep: #163fad;
+  --goal-cobalt-wash: #e4eafb;
+  --goal-cyan: #12b5c9;
+  --goal-mint: #4fd1b0;
+  --goal-coral: #ff5a46;
+  --goal-pink: #f5a7c0;
+  --goal-mustard: #e8b33c;
+
+  /*
+   * 카테고리마다 색을 배정한다 (GOAL.md §2.3 규칙 3).
+   * 사용자가 색으로 종류를 기억하게 하는 것이 목적이라 **색상은 바꾸지 않는다** —
+   * 관광지=파랑, 문화=민트, 음식=코랄, 축제=머스터드.
+   *
+   * **명도는 테마마다 다르다.** 이 값은 탭 밑줄뿐 아니라 **활성 탭 글자**에도
+   * 쓰이므로 바탕 대비 4.5:1 을 넘겨야 한다. GOAL §2.3 의 원색을 양쪽에 그대로
+   * 쓰면 라이트에서 민트 1.76 · 코랄 2.87 · 머스터드 1.78 로 읽을 수 없고,
+   * 코발트는 반대로 다크에서 2.68 이 된다. 색면으로만 쓴다면 원색으로 충분하지만
+   * 글자를 겸하는 자리라 그럴 수 없다.
+   *
+   * 라이트: 4.82 / 4.89 / 4.70 / 4.77 (계산값)
+   */
+  --cat-attraction: #2a66dd;
+  --cat-culture: #0f7a63;
+  --cat-food: #cd3623;
+  --cat-festival: #94640f;
+
   /* ── 앱 역할 매핑 ── */
-  --paper-canvas: var(--toss-canvas);
-  --paper-surface: var(--toss-surface);
-  --ink-primary: var(--toss-foreground);
-  --ink-body: var(--toss-body);
-  --ink-muted: var(--toss-muted);
-  --line-subtle: var(--toss-border);
-  --focus-ring: var(--toss-primary);
+  --paper-canvas: var(--goal-paper);
+  --paper-surface: var(--goal-paper-deep);
+  --ink-primary: var(--goal-ink);
+  --ink-body: var(--goal-ink-body);
+  --ink-muted: var(--goal-ink-muted);
+  --line-subtle: var(--goal-line);
+  --focus-ring: var(--goal-cobalt);
+
+  /* 컨트롤도 크림 위에 선다. 토스 파랑 대신 코발트가 1차 액션을 진다 */
+  --toss-primary: var(--goal-cobalt);
+  --toss-primary-hover: var(--goal-cobalt-deep);
+  --toss-weak-bg: var(--goal-cobalt-wash);
+  --toss-weak-fg: var(--goal-cobalt);
+  --toss-danger: var(--goal-coral);
+
+  /*
+   * ── 겹침 순서 ──
+   *
+   * **z-index 를 이 목록 밖에서 쓰지 않는다.** 값이 아니라 역할로 고른다.
+   *
+   * 숫자를 그때그때 정하면 서로 다른 컴포넌트가 같은 값을 갖게 되고, 그러면
+   * 순서가 DOM 위치로 결정된다 — 실제로 카드의 저장 칩과 지역 드롭다운이 둘 다
+   * `z-10` 이라 카드가 뒤에 있다는 이유만으로 칩이 드롭다운을 뚫고 나왔다.
+   * 같은 카드의 이미지는 z-auto 라 드롭다운 아래로 깔려서, 한 카드가 위아래로
+   * 찢어져 보였다.
+   *
+   * 간격을 10 으로 벌려 둔 것은 사이에 낄 자리를 남기기 위해서다.
+   */
+  /* 카드 안에서 사진 위에 얹는 것 — 저장 칩, 배지 */
+  --layer-card-overlay: 10;
+  /* 화면에 붙어 있는 막대 — 상세 화면 하단 액션 바 */
+  --layer-bar: 20;
+  /* 눌러서 여는 것. 항상 위다 — 사용자가 방금 연 것이 가려지면 고장으로 읽힌다 */
+  --layer-popover: 30;
+  /*
+   * 헤더 아래에 붙는 필터 바. **헤더보다 낮다** — 줄어드는 전환 중에 두 바의
+   * 경계가 1px 겹칠 수 있는데, 그때 필터가 위로 올라오면 헤더를 파고든 것처럼 보인다.
+   */
+  --layer-sticky-filter: 15;
+  /*
+   * 화면 전환 중 마스트헤드 스냅샷. **전환 레이어 안에서만 쓰는 값이다** —
+   * 그 레이어는 문서와 별도의 최상위 스택이라 위의 값들과 겨루지 않는다.
+   * 그래도 여기 적는다. 숫자를 컴포넌트나 규칙에 흩뿌리지 않는다는 규칙은 같다.
+   */
+  --layer-vt-anchor: 100;
+
+  /*
+   * ── 마스트헤드 높이 ──
+   *
+   * 필터 바가 이 값을 `top` 으로 쓴다. **두 곳에 숫자를 따로 쓰지 않는다** —
+   * 어긋나면 헤더와 필터 사이에 틈이 생기거나 서로 파고든다.
+   *
+   * 기본값은 컨트롤 36px + 상하 20px 이다. 줄어든 값은 같은 컨트롤에 상하 8px.
+   * 컨트롤보다 작아질 수는 없다.
+   */
+  --masthead-h-base: 76px;
+  --masthead-h-condensed: 52px;
+  --masthead-h: var(--masthead-h-base);
+
+  /*
+   * 붙어 있는 필터 바 아래 드랍쉐도우.
+   *
+   * 다크에서 더 진하다. 어두운 바탕 위의 검은 그림자는 같은 값으로는 보이지 않아서,
+   * 라이트와 같은 세기로 두면 다크에서만 경계가 사라진다.
+   */
+  --filter-bar-shadow-alpha: 0.2;
+
+  /*
+   * ── 카드 액션의 표시 색 ──
+   *
+   * 눌린 상태에서만 쓴다. 담기는 노랑, 좋아요는 빨강 — 둘을 같은 색으로 두면
+   * 아이콘 모양 하나로만 구분해야 하고, 그 둘은 작게 그리면 비슷해 보인다.
+   *
+   * `--color-danger` 를 좋아요에 쓰지 않는다. 그 색은 "실패·경고" 라는 뜻을 갖고
+   * 있어서, 같은 값을 두 뜻에 쓰면 나중에 한쪽만 바꿀 수 없다.
+   *
+   * 다크는 더 밝은 값이다. 같은 값을 어두운 바탕에 두면 탁해진다.
+   */
+  --action-like: var(--goal-coral);
+  --action-save: var(--goal-mustard);
+
+  /*
+   * ── 미세먼지 등급 (환경부 4단계) ──
+   *
+   * 이 프로젝트에서 **새로 하드코딩하는 유일한 색이다.** 등급은 토스 팔레트의 역할
+   * (primary/weak/danger)로 표현할 수 없다 — 4단계가 필요하고 순서가 의미를 갖는다.
+   *
+   * 값은 타일 배경(`--paper-surface`) 대비 4.5:1 이상으로 고른다. 점과 라벨 글자가
+   * 같은 토큰을 쓰므로 글자 대비 기준을 통과해야 한다.
+   *
+   * GOAL 팔레트 계열이지만 **표의 값을 그대로 쓰지 못한다.** 민트(#4FD1B0)와
+   * 머스터드(#E8B33C)는 크림 위에서 3.6 / 3.4 라 기준에 못 미친다. 같은 색상을
+   * 어둡게 낮춰 맞췄다.
+   * 라이트: 5.6 / 5.1 / 4.8 / 4.6, 다크: 7.6 / 8.9 / 8.5 / 7.1 (계산값)
+   *
+   * **색만으로 등급을 구분하지 않는다.** 화면에는 항상 등급 이름이 함께 나온다.
+   */
+  --dust-good: var(--goal-cobalt);
+  --dust-moderate: #14705a;
+  --dust-bad: #8a5e12;
+  --dust-very-bad: #c6301e;
 }
+
+/* 필터가 헤더 밑에 붙는 순간 헤더가 줄어든다 */
+:root[data-condensed="true"] {
+  --masthead-h: var(--masthead-h-condensed);
+}
+
 
 /*
  * 테마 선택은 **양성 매칭**으로만 한다.
@@ -70,48 +213,90 @@
  *   2. data-theme="dark"   → 다크
  *   3. data-theme="light"  → 라이트 (값을 다시 선언한다)
  */
+/*
+ * 다크는 GOAL 표에 없다. 크림을 그대로 어둡게 만들 수는 없으므로 **같은 온도의
+ * 야간 대응**으로 정했다 — 중성 회색이 아니라 붉은 기가 도는 검정(#1A1714)이고,
+ * 글자도 순백이 아닌 크림빛(#F2EDE4)이다. 중성 회색을 쓰면 라이트에서 크림이던
+ * 화면이 다크에서만 차가워져 같은 앱으로 보이지 않는다.
+ * 비비드는 어두운 바탕에서 탁해지므로 코발트·코랄·머스터드를 한 단계씩 밝혔다.
+ */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
-  --paper-canvas: #17171a;
-  --paper-surface: #1f2024;
-  --ink-primary: #eef0f3;
-  --ink-body: #b6bdc7;
-  --ink-muted: #868e99;
-  --line-subtle: #2c2e33;
-  --toss-primary: #4a92f8;
-  --toss-primary-hover: #6aa6fa;
-  --toss-weak-bg: #17263c;
-  --toss-weak-fg: #8ab6f5;
-  --focus-ring: #4a92f8;
+  --paper-canvas: #1a1714;
+  --paper-surface: #241f1a;
+  --ink-primary: #f2ede4;
+  --ink-body: #c4baa9;
+  --ink-muted: #8f8779;
+  --line-subtle: #332d26;
+  --toss-primary: #6b8fff;
+  --toss-primary-hover: #8aa6ff;
+  --toss-weak-bg: #1e2740;
+  --toss-weak-fg: #a9c0ff;
+  --focus-ring: #6b8fff;
+  --dust-good: #8fb0ff;
+  --dust-moderate: #63d3a3;
+  --dust-bad: #e8b33c;
+  --dust-very-bad: #ff8a7a;
+  --filter-bar-shadow-alpha: 0.4;
+  --action-like: #ff7a68;
+  --action-save: #f0c05a;
+  /* 어두운 바탕에서는 원색이 그대로 밝다. 다크: 7.40 / 9.67 / 7.79 / 9.30 (계산값) */
+  --cat-attraction: #6ea8ff;
+  --cat-culture: var(--goal-mint);
+  --cat-food: #ff8a7a;
+  --cat-festival: var(--goal-mustard);
   }
 }
 
 :root[data-theme="dark"] {
-  --paper-canvas: #17171a;
-  --paper-surface: #1f2024;
-  --ink-primary: #eef0f3;
-  --ink-body: #b6bdc7;
-  --ink-muted: #868e99;
-  --line-subtle: #2c2e33;
-  --toss-primary: #4a92f8;
-  --toss-primary-hover: #6aa6fa;
-  --toss-weak-bg: #17263c;
-  --toss-weak-fg: #8ab6f5;
-  --focus-ring: #4a92f8;
+  --paper-canvas: #1a1714;
+  --paper-surface: #241f1a;
+  --ink-primary: #f2ede4;
+  --ink-body: #c4baa9;
+  --ink-muted: #8f8779;
+  --line-subtle: #332d26;
+  --toss-primary: #6b8fff;
+  --toss-primary-hover: #8aa6ff;
+  --toss-weak-bg: #1e2740;
+  --toss-weak-fg: #a9c0ff;
+  --focus-ring: #6b8fff;
+  --dust-good: #8fb0ff;
+  --dust-moderate: #63d3a3;
+  --dust-bad: #e8b33c;
+  --dust-very-bad: #ff8a7a;
+  --filter-bar-shadow-alpha: 0.4;
+  --action-like: #ff7a68;
+  --action-save: #f0c05a;
+  /* 어두운 바탕에서는 원색이 그대로 밝다. 다크: 7.40 / 9.67 / 7.79 / 9.30 (계산값) */
+  --cat-attraction: #6ea8ff;
+  --cat-culture: var(--goal-mint);
+  --cat-food: #ff8a7a;
+  --cat-festival: var(--goal-mustard);
 }
 
 :root[data-theme="light"] {
-  --paper-canvas: var(--toss-canvas);
-  --paper-surface: var(--toss-surface);
-  --ink-primary: var(--toss-foreground);
-  --ink-body: var(--toss-body);
-  --ink-muted: var(--toss-muted);
-  --line-subtle: var(--toss-border);
-  --toss-primary: #3182f6;
-  --toss-primary-hover: #2272eb;
-  --toss-weak-bg: #e8f3ff;
-  --toss-weak-fg: #1b64da;
-  --focus-ring: #3182f6;
+  --paper-canvas: var(--goal-paper);
+  --paper-surface: var(--goal-paper-deep);
+  --ink-primary: var(--goal-ink);
+  --ink-body: var(--goal-ink-body);
+  --ink-muted: var(--goal-ink-muted);
+  --line-subtle: var(--goal-line);
+  --toss-primary: var(--goal-cobalt);
+  --toss-primary-hover: var(--goal-cobalt-deep);
+  --toss-weak-bg: var(--goal-cobalt-wash);
+  --toss-weak-fg: var(--goal-cobalt);
+  --focus-ring: var(--goal-cobalt);
+  --dust-good: var(--goal-cobalt);
+  --dust-moderate: #14705a;
+  --dust-bad: #8a5e12;
+  --dust-very-bad: #c6301e;
+  --filter-bar-shadow-alpha: 0.2;
+  --action-like: var(--goal-coral);
+  --action-save: var(--goal-mustard);
+  --cat-attraction: #2a66dd;
+  --cat-culture: #0f7a63;
+  --cat-food: #cd3623;
+  --cat-festival: #94640f;
 }
 
 @theme inline {
@@ -128,6 +313,12 @@
   --color-weak-bg: var(--toss-weak-bg);
   --color-weak-fg: var(--toss-weak-fg);
   --color-danger: var(--toss-danger);
+  --color-like: var(--action-like);
+  --color-save: var(--action-save);
+  --color-dust-good: var(--dust-good);
+  --color-dust-moderate: var(--dust-moderate);
+  --color-dust-bad: var(--dust-bad);
+  --color-dust-very-bad: var(--dust-very-bad);
 
   /*
    * Toss Product Sans 는 **재배포 권리가 확인되지 않았다.**
@@ -141,10 +332,30 @@
 
   --radius-sm: var(--round-sm);
   --radius-md: var(--round-md);
-  --radius-btn: var(--round-btn-xl);
+  /*
+   * 버튼 반경의 정본. **모든 버튼이 이것 하나를 쓴다.**
+   *
+   * 전에는 다섯 상수가 제각각이었다 — TDS 주 버튼 16px, 마케팅 CTA 7px,
+   * 헤더 컨트롤 6px, 필터 16px, 상세 액션 4px. 같은 화면에 서너 개가 함께 서면
+   * 모서리가 저마다 다른 것이 형태의 차이가 아니라 마감의 실수로 읽힌다.
+   *
+   * TDS 문서는 xlarge 에 16px 을, toss.im 은 마케팅 CTA 에 7px 을 지정하고 둘을
+   * 섞지 말라고 못박는다. 이 프로젝트는 그 규칙 대신 **한 값으로 통일하는 쪽**을
+   * 택했다 — 컨트롤 기하만 빌려 쓸 뿐 토스의 화면을 만드는 것이 아니고,
+   * 바탕이 크림·코발트로 바뀐 뒤로는 토스 화면과 같아 보일 이유도 없다.
+   */
+  --radius-btn: var(--round-btn-sm);
   --radius-marketing: var(--round-marketing);
 
   --ease-signature: cubic-bezier(0.16, 1, 0.3, 1);
+  /*
+   * 화면 사이 전환 전용.
+   *
+   * `--ease-signature` 는 시작에서 거의 튀어나가듯 빠르다(0.16, 1). 작은 컨트롤에는
+   * 경쾌하지만 화면 절반을 차지하는 제목이 그 곡선으로 움직이면 튕긴 것처럼 보인다.
+   * 이 곡선은 시작을 눌러 두고 끝을 길게 끌어 **무게가 있는 물체가 멎는** 모양이 된다.
+   */
+  --ease-apple: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 html {
@@ -184,3 +395,726 @@ body {
  * 그래서 TDS 기하·색은 컴포넌트에서 유틸리티 조합으로 표현한다.
  * 값의 정본은 `presentation/components/tds.ts` 다.
  */
+
+/*
+ * 날씨 위젯이 열릴 때.
+ *
+ * **칩 오른쪽 위 모서리에서 자란다** — 패널은 칩에서 나온 것이지 화면에 얹힌 것이 아니다.
+ * 180ms 를 넘기면 두 번째 클릭부터 느려 보인다. 위의 `prefers-reduced-motion` 전역 규칙이
+ * 이 애니메이션도 0.01ms 로 눌러 준다.
+ *
+ * 클래스가 아니라 keyframes 만 둔다. 색을 참조하는 컴포넌트 클래스는 이 파일 아래쪽
+ * 주석의 이유로 금지돼 있고, 사용은 컴포넌트의 `animate-[...]` 유틸리티가 한다.
+ */
+@keyframes weather-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/*
+ * 스켈레톤.
+ *
+ * **200ms 안에 끝나는 로딩에는 보이지 않는다.** 순식간에 나타났다 사라지는 스켈레톤은
+ * 화면이 깜빡이는 것으로만 읽혀 오히려 느려 보인다. 0.2s 지연 후 페이드인한다.
+ * 근거: .curvez/design/screens/explore.md state:loading
+ */
+@keyframes skeleton-appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+.skeleton-root {
+  animation: skeleton-appear 0.25s var(--ease-signature) 0.2s both;
+}
+
+.skeleton-block {
+  background: var(--paper-surface);
+  border-radius: var(--round-sm);
+  animation: skeleton-pulse 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-block {
+    animation: none;
+  }
+  .skeleton-root {
+    animation: skeleton-appear 0.01ms 0.2s both;
+  }
+}
+
+/*
+ * 더보기로 **새로 붙은 카드만** 들어온다.
+ *
+ * 이미 있던 카드는 그대로 있어야 한다 — 목록 전체가 다시 나타나면 "추가" 가 아니라
+ * "교체" 로 읽히고, 방금 보던 카드를 다시 찾아야 한다. 그래서 애니메이션 클래스를
+ * 새 항목에만 붙인다.
+ *
+ * `both` 로 시작 상태를 미리 적용한다. 없으면 첫 프레임에 제자리에 그려졌다가
+ * 튀어 오른다.
+ */
+@keyframes spot-enter {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.spot-enter {
+  animation: spot-enter 0.42s var(--ease-signature) both;
+  /* 한 줄이 통째로 뜨지 않고 왼쪽부터 차례로 들어온다 */
+  animation-delay: calc(var(--enter-index, 0) * 55ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spot-enter {
+    animation: spot-enter 0.01ms both;
+  }
+}
+
+/* 더보기 대기 표시. 세 점이 차례로 밝아진다 */
+@keyframes spot-dot {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @keyframes spot-dot {
+    0%,
+    100% {
+      opacity: 0.6;
+    }
+  }
+}
+
+/*
+ * 스크롤 고정 요소의 전환.
+ *
+ * `height` 와 `top` 은 합성 전용 속성이 아니라 레이아웃을 다시 계산시킨다.
+ * 다만 움직이는 것은 화면 최상단의 바 하나뿐이고, `transform` 으로 대신하면
+ * 아래에 붙는 필터의 `top` 기준이 따라오지 않아 둘이 어긋난다.
+ */
+.masthead-sticky {
+  height: var(--masthead-h);
+  transition: height 0.28s var(--ease-signature);
+}
+
+.filter-sticky {
+  top: var(--masthead-h);
+  transition: top 0.28s var(--ease-signature);
+}
+
+/*
+ * 필터 바 아래 경계 — 드랍쉐도우.
+ *
+ * `0 12px 12px -12px` 는 임의 조합이 아니다. spread 를 -12 로 두면 그림자 사각형의
+ * 아래 변이 바의 아래 변과 정확히 겹쳐서, **위로는 한 픽셀도 새지 않고 아래로만 12px**
+ * 퍼진다. 위로 새면 반투명한 헤더를 통해 얼룩으로 비친다.
+ */
+/*
+ * 바의 **바탕·블러·그림자를 그리는 면.** 내용은 컨테이너 폭(1200px)에 맞춰 두고
+ * 이 면만 화면 폭 전체로 넓힌다 — 그림자가 컨테이너에서 끊기면 바가 화면 가운데
+ * 떠 있는 판때기처럼 보인다.
+ *
+ * `100vw` 는 세로 스크롤바 폭까지 포함하므로 가로 스크롤이 생긴다.
+ * `body` 의 `overflow-x: clip` 이 그것을 자른다 — `hidden` 이 아니라 `clip` 인 이유는
+ * `hidden` 이 스크롤 컨테이너를 만들어 `position: sticky` 의 기준을 뷰포트에서
+ * 그 컨테이너로 옮겨 버리기 때문이다. 그러면 헤더 밑에 붙는 동작 자체가 깨진다.
+ */
+.filter-sticky::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  left: 50%;
+  width: 100vw;
+  margin-left: -50vw;
+  z-index: -1;
+  background: color-mix(in srgb, var(--paper-canvas) 90%, transparent);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 0 rgb(0 0 0 / 0);
+  transition: box-shadow 0.28s var(--ease-signature);
+}
+
+/* 붙었을 때만 경계가 필요하다. 흐름에 있을 때는 가릴 것이 없다 */
+:root[data-condensed="true"] .filter-sticky::before {
+  box-shadow: 0 12px 12px -12px rgb(0 0 0 / var(--filter-bar-shadow-alpha));
+}
+
+/* 줄어든 상태에서만 헤어라인이 생긴다. 맨 위에서는 선이 없다 */
+.masthead-sticky::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--line-subtle);
+  opacity: 0;
+  transition: opacity 0.28s var(--ease-signature);
+}
+
+:root[data-condensed="true"] .masthead-sticky::after {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .masthead-sticky,
+  .filter-sticky,
+  .filter-sticky::before,
+  .masthead-sticky::after {
+    transition: none;
+  }
+}
+
+/*
+ * ── 탭 밑줄 ──
+ *
+ * 줄은 하나뿐이고 위치와 폭이 옮겨 다닌다. 탭마다 밑줄을 두면 이동이 아니라
+ * 교체가 되어 깜빡인다.
+ *
+ * `CategoryTabs` 가 실제 위치를 재고 나서야 `data-slider="on"` 을 켠다.
+ * 그전까지는 서버가 그린 정적 밑줄이 자리를 지킨다 — JS 가 없는 환경에서도
+ * 현재 탭이 보여야 한다.
+ */
+.tab-indicator {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  /*
+   * 3px 다. 1px 헤어라인에 색을 넣는 것은 GOAL §2.3 규칙 2 가 금지한 쓰임이다 —
+   * "색은 면으로 쓴다. 1px 테두리에만 쓰는 건 이 디자인이 아니다."
+   */
+  height: 3px;
+  width: 0;
+  background: var(--tab-accent, var(--ink-primary));
+  opacity: 0;
+  transition:
+    transform 0.32s var(--ease-signature),
+    width 0.32s var(--ease-signature);
+}
+
+.tab-list[data-slider="on"] .tab-indicator {
+  opacity: 1;
+}
+
+/* 미끄러지는 줄이 켜지면 정적 밑줄은 물러난다. 둘이 겹치면 두 줄로 보인다 */
+.tab-list[data-slider="on"] .tab-link {
+  border-bottom-color: transparent;
+}
+
+/*
+ * ── 드롭다운 여닫기 ──
+ *
+ * `<details>` 는 즉시 나타나고 즉시 사라진다. 닫힐 때가 특히 거칠다 —
+ * 방금까지 목록이 있던 자리가 한 프레임에 비어 버린다.
+ *
+ * 닫는 애니메이션이 재생되려면 브라우저가 내용을 **바로 감추지 않고 기다려야** 한다.
+ * `::details-content` 의 `content-visibility` 에 `allow-discrete` 를 걸어 그 전환을
+ * 미룬다. 이것이 없으면 열 때만 움직이고 닫을 때는 그대로 사라진다.
+ */
+details[data-dismissable]::details-content {
+  transition: content-visibility 0.18s allow-discrete;
+}
+
+.dropdown-panel {
+  opacity: 0;
+  transform: translateY(-6px) scale(0.985);
+  transform-origin: top center;
+  transition:
+    opacity 0.18s var(--ease-signature),
+    transform 0.18s var(--ease-signature);
+}
+
+details[open] > .dropdown-panel {
+  opacity: 1;
+  transform: none;
+}
+
+/*
+ * 열릴 때의 **시작 값**. `content-visibility: hidden` 이던 요소가 드러나는 순간에는
+ * 전환의 시작점이 없어서 그냥 최종 상태로 나타난다. 시작점을 명시해야 움직인다.
+ */
+@starting-style {
+  details[open] > .dropdown-panel {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.985);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab-indicator,
+  .dropdown-panel {
+    transition: none;
+  }
+  details[data-dismissable]::details-content {
+    transition: none;
+  }
+}
+
+/*
+ * ── 카드 액션 (담기·좋아요) ──
+ *
+ * 평소에는 없다. 카드에 마우스를 올리거나 **안의 무엇이든 포커스를 받으면** 떠오른다.
+ * `:focus-within` 이 없으면 키보드로는 버튼에 닿을 수 없다 — 보이지 않는 것에
+ * 탭으로 들어가면 초점이 화면 밖으로 사라진 것처럼 보인다.
+ */
+.card-actions {
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 0.2s var(--ease-signature),
+    transform 0.2s var(--ease-signature);
+  /*
+   * **이 면은 클릭을 받지 않는다.** 사진 전체를 덮고 있어서, 받으면 사진 아무 데나
+   * 눌러도 상세로 가지 않는다 — 카드 전체를 덮는 링크가 이 아래에 깔려 있다.
+   * 버튼만 각자 `pointer-events: auto` 로 되살린다.
+   */
+  pointer-events: none;
+}
+
+.card-actions button {
+  pointer-events: auto;
+}
+
+/*
+ * `:focus-within` 이 아니라 `:has(:focus-visible)` 이다.
+ *
+ * 마우스로 버튼을 누르면 그 버튼이 포커스를 갖는다. `:focus-within` 을 쓰면
+ * **커서가 떠나도 액션이 그대로 남는다** — 누른 카드만 계속 아이콘을 달고 있게 된다.
+ * `:focus-visible` 은 키보드로 옮겨 온 포커스에만 붙으므로, 키보드 사용자는 보이고
+ * 마우스 사용자는 커서를 따라 사라진다.
+ */
+.card-thumb:hover .card-actions,
+.card-thumb:has(:focus-visible) .card-actions {
+  opacity: 1;
+  transform: none;
+}
+
+/*
+ * 포인터가 없는 기기에는 호버가 없다. 항상 보여 준다 —
+ * 안 그러면 터치 기기에서 담기·좋아요에 닿을 방법이 아예 없다.
+ */
+@media (hover: none) {
+  .card-actions {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-actions {
+    transition: none;
+  }
+}
+
+/*
+ * ─────────────────────────────────────────────────────────────
+ * ── 화면 사이 전환 ──
+ *
+ * 홈과 탐색은 **같은 머리말을 공유한다.** 그래서 오갈 때 한 화면이 사라지고 다른
+ * 화면이 나타나는 것이 아니라, 머리말이 크기와 자리를 옮기고 그 아래로 목록이
+ * 들어오거나 빠진다.
+ *
+ * 이름과 클래스의 출처는 JSX 다:
+ *   `lede-eyebrow`/`lede-title`/`lede-subtitle` + `morph-down`/`morph-up`
+ *                        — `components/Lede.tsx` 의 `<ViewTransition name share>`
+ *   `to-explore`/`to-home` (방향)
+ *                        — `components/Button.tsx` · `Masthead.tsx` 의 `transitionTypes`
+ *   `body-enter`/`body-exit`
+ *                        — `explore/page.tsx` 의 필터·목록 묶음
+ *   `site-header`        — `components/Masthead.tsx` 의 인라인 스타일
+ * 여기서 이름을 새로 지어내지 않는다. 한쪽만 고치면 규칙이 조용히 죽는다.
+ * ─────────────────────────────────────────────────────────────
+ */
+
+/*
+ * 전환 중에도 아래 화면이 클릭을 받는다.
+ *
+ * `::view-transition` 오버레이는 기본적으로 포인터 이벤트를 삼킨다. 400ms 는 짧지만
+ * 그사이 누른 것이 통째로 사라지면 "먹통" 으로 읽힌다.
+ */
+::view-transition {
+  pointer-events: none;
+}
+
+/*
+ * 바탕. 머리말·목록·헤더처럼 이름이 붙은 것은 각자 스냅샷을 가지므로 여기서 빠진다.
+ * 남는 것은 홈의 CTA 와 탐색의 각주 정도다 — 자리를 옮기지 않으니 페이드면 족하다.
+ */
+::view-transition-old(root) {
+  animation: 200ms var(--ease-apple) both vt-fade reverse;
+}
+::view-transition-new(root) {
+  animation: 320ms var(--ease-apple) 120ms both vt-fade;
+}
+
+/*
+ * 머리말. **하나의 물체가 커지고 작아진다.**
+ *
+ * 기본 morph 는 옛 스냅샷과 새 스냅샷을 겹쳐 크로스페이드한다. 두 스냅샷의 글자
+ * 크기가 다르므로 그동안 같은 문장이 두 겹으로 어긋나 보인다 — 하나가 스케일되는
+ * 것이 아니라 둘이 섞이는 것으로 읽힌다. 흐림을 얹어 감춰 봐도 "흐려졌다 선명해지는
+ * 두 개" 일 뿐이다.
+ *
+ * 그래서 **스냅샷 하나만 남긴다.** 남은 하나는 group 의 크기 보간을 따라 실제로
+ * 늘어나고 줄어든다. 겹치는 것이 없으니 흐림도 필요 없다.
+ *
+ * 어느 쪽을 남기느냐가 선명도를 정한다. 스냅샷은 비트맵이라 **원래보다 키우면
+ * 뭉개지고 줄이면 멀쩡하다.** 그래서 항상 **큰 쪽**을 남긴다:
+ *   `.morph-down` (홈 → 탐색) — 큰 쪽은 옛 스냅샷. 그것이 줄어든다
+ *   `.morph-up`   (탐색 → 홈) — 큰 쪽은 새 스냅샷. 그것이 늘어난다
+ * 두 경우 모두 홈 크기의 이미지에서 시작하거나 끝나므로 확대 보간이 일어나지 않는다.
+ *
+ * 방향을 아는 곳은 링크다 — `Button.tsx` 와 `Masthead.tsx` 의 `transitionTypes`,
+ * 그리고 그것을 클래스로 바꾸는 `Lede.tsx` 의 `share`. 셋 중 하나만 고치면 죽는다.
+ */
+::view-transition-group(.morph-down),
+::view-transition-group(.morph-up) {
+  animation-duration: 520ms;
+  animation-timing-function: var(--ease-apple);
+}
+
+/* 홈 → 탐색: 옛 스냅샷(큰 것)만 남아 줄어든다 */
+::view-transition-old(.morph-down) {
+  animation: none;
+  opacity: 1;
+}
+::view-transition-new(.morph-down) {
+  animation: none;
+  opacity: 0;
+}
+
+/* 탐색 → 홈: 새 스냅샷(큰 것)만 남아 늘어난다 */
+::view-transition-old(.morph-up) {
+  animation: none;
+  opacity: 0;
+}
+::view-transition-new(.morph-up) {
+  animation: none;
+  opacity: 1;
+}
+
+/*
+ * 탐색 화면에만 있는 것 — 필터 탭과 목록.
+ *
+ * 머리말이 줄어드는 것과 **같은 언어로** 움직인다. 미끄러져 들어오는 대신 살짝
+ * 작은 상태에서 제 크기로 열린다 — 머리말이 스케일로 말하는데 목록만 위아래로
+ * 움직이면 두 동작이 서로 다른 규칙을 따르는 것으로 보인다.
+ *
+ * 기준점은 위쪽이다. 머리말 바로 아래에서 자라야 머리말이 비운 자리를 이어받는
+ * 것으로 읽힌다. 가운데를 기준으로 두면 목록이 화면 밖에서 밀려든다.
+ *
+ * 비대칭이다. **나갈 때는 빠르고(200ms) 들어올 때는 느리다(520ms).** 떠나는 것이
+ * 오래 남아 있으면 새로 오는 것과 주의를 다투고, 새로 오는 것이 급히 튀어나오면
+ * 읽을 새가 없다. 들어오는 페이드에 120ms 지연을 두어 옛것이 빠진 뒤 밝아진다.
+ */
+::view-transition-new(.body-enter) {
+  transform-origin: top center;
+  animation:
+    320ms var(--ease-apple) 120ms both vt-fade,
+    520ms var(--ease-apple) both vt-open;
+}
+::view-transition-old(.body-exit) {
+  transform-origin: top center;
+  animation:
+    200ms var(--ease-apple) both vt-fade reverse,
+    420ms var(--ease-apple) both vt-open reverse;
+}
+
+/*
+ * 마스트헤드는 멈춘다.
+ *
+ * `display: none` 은 옛 스냅샷용이다. 없으면 옛 헤더와 새 헤더가 한 프레임 겹쳐
+ * 반투명한 바탕끼리 포개져 색이 진해진다 — 헤더만 깜빡인 것처럼 보인다.
+ */
+::view-transition-group(site-header) {
+  animation: none;
+  z-index: var(--layer-vt-anchor);
+}
+::view-transition-old(site-header) {
+  display: none;
+}
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+@keyframes vt-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/*
+ * 목록이 열리고 닫히는 폭. **0.96 이다.**
+ *
+ * 이보다 작게 두면 목록이 멀리서 날아오는 것처럼 보여 머리말의 조용한 스케일과
+ * 어긋나고, 1 에 가까우면 페이드만 남아 움직임이 사라진다.
+ */
+@keyframes vt-open {
+  from {
+    transform: scale(0.96);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+/*
+ * 이 파일 위쪽의 전역 `prefers-reduced-motion` 규칙은 `*` 선택자를 쓴다.
+ * `::view-transition-*` 는 의사 요소라 거기 걸리지 않는다 — 따로 눌러야 한다.
+ *
+ * 지우는 것은 시간뿐이다. 전환 자체를 끄면 브라우저 기본 동작(즉시 교체)으로
+ * 돌아가는데, 그것이 여기서 원하는 결과와 같다.
+ */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-image-pair(*) {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+  }
+}
+
+/*
+ * 거리 표시가 켜져 있다는 표시.
+ *
+ * **핀 가운데 점만 맥박친다.** 핀 전체를 움직이면 옆 글자와 함께 흔들려서 버튼이
+ * 떨리는 것처럼 보인다. 활성 상태를 알리는 것이 목적이지 주의를 끄는 것이 아니라,
+ * 필터 바에 늘 떠 있어도 거슬리지 않을 만큼만 움직인다.
+ *
+ * 2.4초는 사람의 편안한 호흡에 가깝다. 1초 아래로 내리면 신호가 아니라 경고로
+ * 읽히고, 4초를 넘기면 움직인다는 것을 알아채지 못한다.
+ *
+ * `transform-box: fill-box` 가 없으면 SVG 안의 도형은 뷰포트 원점을 기준으로
+ * 커져서, 점이 제자리에서 부푸는 것이 아니라 왼쪽 위로 끌려간다.
+ */
+@keyframes near-me-live {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.75);
+  }
+}
+
+.near-me-live {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: near-me-live 2.4s ease-in-out infinite;
+}
+
+/*
+ * 핀 둘레의 빛. **점의 맥박과 같은 주기로 함께 숨 쉰다.**
+ *
+ * 주기가 어긋나면 두 움직임이 서로 다른 일로 보여 아이콘 하나가 두 가지를
+ * 알리는 것처럼 읽힌다. 2.4s·`ease-in-out` 을 그대로 맞추면 점이 작아질 때
+ * 빛도 함께 짙어져 하나의 호흡이 된다.
+ *
+ * **그림자를 세 겹 쌓는다.** 한 겹이면 경계가 또렷한 테두리가 되어 빛이 아니라
+ * 윤곽선으로 보인다. 반경을 1·4·10 으로 벌리고 짙기를 반대로 낮추면 안쪽이
+ * 진하고 바깥으로 갈수록 옅어지는 그라데이션이 된다.
+ *
+ * `drop-shadow` 다. `box-shadow` 는 요소의 사각형을 따르므로 아이콘 주위가 아니라
+ * 네모난 그림자가 생긴다. `drop-shadow` 는 그려진 획의 윤곽을 따라간다.
+ *
+ * 색은 **지금 보고 있는 분류의 색**이다(`--tab-accent`). 탭 밑줄과 같은 색으로
+ * 빛나야 두 컨트롤이 한 벌로 읽힌다. 그 변수는 필터 바가 갖고 있고 여기까지
+ * 상속된다 — 분류가 없는 자리에서도 쓰일 수 있으므로 1차 액션 색을 대비로 둔다.
+ */
+@keyframes near-me-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 1px var(--near-me-glow-near))
+      drop-shadow(0 0 3px var(--near-me-glow-mid));
+  }
+  50% {
+    filter: drop-shadow(0 0 2px var(--near-me-glow-near))
+      drop-shadow(0 0 6px var(--near-me-glow-mid))
+      drop-shadow(0 0 12px var(--near-me-glow-far));
+  }
+}
+
+.near-me-glow {
+  --near-me-accent: var(--tab-accent, var(--toss-primary));
+  /* 안쪽이 진하고 바깥으로 옅어진다. 세 겹이 겹쳐 그라데이션이 된다 */
+  --near-me-glow-near: color-mix(in srgb, var(--near-me-accent) 85%, transparent);
+  --near-me-glow-mid: color-mix(in srgb, var(--near-me-accent) 55%, transparent);
+  --near-me-glow-far: color-mix(in srgb, var(--near-me-accent) 28%, transparent);
+  animation: near-me-glow 2.4s ease-in-out infinite;
+}
+
+/*
+ * 빛이 도는 동안 아이콘 획도 그 색을 쓴다. 먹색 아이콘에 색 빛만 두르면
+ * 빛이 아이콘에서 난 것이 아니라 뒤에 깔린 것으로 보인다.
+ */
+.near-me-glow {
+  color: var(--near-me-accent);
+}
+
+/*
+ * 이 파일 위쪽의 전역 규칙은 지속시간을 0.01ms 로 누르는데, **무한 반복에는
+ * 그것이 더 나쁘다** — 0.01ms 마다 처음으로 돌아가 초당 수십 번 깜빡인다.
+ * 무한 반복은 지속시간이 아니라 반복 자체를 끈다.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .near-me-live,
+  .near-me-glow {
+    animation: none;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+ * 머리말 옆의 연결망 (NetworkArt.tsx)
+ *
+ * **양 끝이 흐려진다.** 사각형 그림이 그대로 놓이면 잘린 이미지처럼 보이고,
+ * 왼쪽 모서리가 제목과 부딪친다. 좌우를 완전 투명까지 빼면 그림이 지면에서
+ * 자라난 것처럼 경계가 사라진다. 위아래도 조금 뺀다 — 네 변 중 두 곳만
+ * 흐리면 나머지 두 변이 오히려 또렷한 선으로 드러난다.
+ *
+ * 전체 불투명도를 여기서 한 번 더 누른다. SVG 안의 값은 요소끼리의 비율이고,
+ * 이 값이 그림 전체가 배경에서 얼마나 물러날지를 정한다.
+ * ───────────────────────────────────────────────────────────── */
+.network-art {
+  /*
+    **이 한 값이 그림 전체의 세기다.** SVG/canvas 안의 알파는 선과 점의 비율(점이
+    선보다 진하다)이고, 여기서 그 덩어리가 배경에서 얼마나 물러날지를 정한다.
+    더 흐리게 하려면 이 숫자만 내리면 된다 — 안쪽 값을 건드리면 비율이 무너져
+    점만 남거나 선만 남는다.
+  */
+  opacity: 0.55;
+
+  /*
+    **장식은 입력을 가로채지 않는다.** 탐색 화면에서는 확대돼 헤더와 탭 위까지
+    걸치는데, 그 위에 떠 있으면 그 아래 버튼을 누를 수 없다.
+  */
+  pointer-events: none;
+
+  /*
+    **자기 레이어에서 갱신된다.** canvas 는 매 프레임 다시 그려지는데, 같은 합성
+    레이어에 있으면 겹친 영역의 다른 요소들(헤더 유틸 버튼 · 탭 · 필터)도 함께
+    리페인트된다. 그것이 깜빡임으로 보인다.
+
+    `will-change: transform` 이 이 요소를 GPU 레이어로 올려 canvas 의 갱신이
+    바깥으로 번지지 않게 하고, `contain: paint` 가 그리기 범위를 자기 박스 안으로
+    가둔다 — 브라우저가 바깥을 다시 계산할 이유 자체를 없앤다.
+
+    `isolation` 은 쓰지 않는다. 이 요소는 이미 `mask` 때문에 stacking context 를
+    만들고, 겹치는 헤더가 sticky 라 그 위에 그려진다.
+  */
+  will-change: transform;
+  contain: paint;
+
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, #000 26%, #000 74%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #000 14%, #000 86%, transparent 100%);
+  mask-image:
+    linear-gradient(to right, transparent 0%, #000 26%, #000 74%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #000 14%, #000 86%, transparent 100%);
+  /* 두 그라데이션이 곱해져야 네 변이 함께 빠진다. 기본값(add)이면 한쪽만 듣는다 */
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+
+/*
+ * 움직임은 canvas 가 맡는다 (NetworkArt.tsx). **CSS 로는 할 수 없는 일이다** —
+ * 점이 움직이면 선의 양 끝 좌표를 매 프레임 다시 써야 하고, 어떤 점끼리
+ * 이어질지도 거리에 따라 매번 달라진다. `prefers-reduced-motion` 도 그쪽에서
+ * 읽어 루프를 돌리지 않는다.
+ */
+
+/* ─────────────────────────────────────────────────────────────
+ * 좋아요를 누른 순간 (CardActions.tsx · use-spot-like.ts)
+ *
+ * **누른 것이 먼저 보이고 수는 뒤따른다.** 서버가 총수를 돌려주기까지 왕복이
+ * 있는데, 그 사이 화면에 아무 일도 없으면 눌리지 않은 것으로 읽힌다. 하트가
+ * 먼저 뛰고, 그 뜀이 끝나는 자리에서 숫자가 오른다.
+ * ───────────────────────────────────────────────────────────── */
+
+/*
+ * 하트가 한 번 뛴다. 커졌다 돌아오는 것이 아니라 **크게 튀었다가 살짝 작아진 뒤
+ * 제자리로** 온다 — 단순한 확대·축소는 기계가 늘렸다 줄인 것처럼 보이고,
+ * 되돌아오며 한 번 지나치는 것이 살아 있는 반동으로 읽힌다.
+ */
+@keyframes like-pop {
+  0% {
+    transform: scale(1);
+  }
+  28% {
+    transform: scale(1.32);
+  }
+  55% {
+    transform: scale(0.94);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.like-pop {
+  animation: like-pop var(--like-pop-ms, 420ms) var(--ease-signature) 1;
+}
+
+/*
+ * 수가 바뀌는 순간. 아래에서 올라오며 든다 — 자리에서 숫자만 갈리면 언제 바뀌었는지
+ * 알 수 없고, 하트의 뜀과 이어지지도 않는다.
+ */
+@keyframes count-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(0.35em);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.count-rise {
+  animation: count-rise 260ms var(--ease-signature) 1;
+}
+
+/*
+ * 위쪽 전역 규칙은 지속시간을 0.01ms 로 누른다. 여기서는 그것으로 충분하다 —
+ * 무한 반복이 아니라 한 번 재생이라, 짧아지면 그냥 즉시 끝난 것과 같다.
+ * 명시적으로 꺼서 의도를 남긴다.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .like-pop,
+  .count-rise {
+    animation: none;
+  }
+}

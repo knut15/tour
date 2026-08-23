@@ -55,5 +55,12 @@ function pickLocale(header: string | null): Locale {
 }
 
 export const config = {
-  matcher: ["/((?!_next|favicon.ico|.*\\..*).*)"],
+  /*
+    `api` 를 뺀다. **API 에는 로케일이 없다.**
+
+    없으면 `/api/...` 요청이 `/ko/api/...` 로 307 되어 라우트에 닿지 않는다.
+    화면 주소는 언어별로 갈리지만 데이터를 주고받는 자리는 그렇지 않다 —
+    좋아요는 어느 언어에서 눌러도 같은 곳에 쌓인다.
+  */
+  matcher: ["/((?!api|_next|favicon.ico|.*\\..*).*)"],
 };

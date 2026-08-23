@@ -11,12 +11,14 @@ export function toSpotView(spot: Spot): SpotView {
     titleKorean: spot.name.korean,
     category: spot.category,
     address: spot.address,
+    areaCode: spot.areaCode,
     districtCode: spot.districtCode,
     lng: spot.coordinate?.lng ?? null,
     lat: spot.coordinate?.lat ?? null,
     imageUrl: spot.image?.url ?? null,
     thumbnailUrl: spot.image?.thumbnailUrl ?? null,
     imageCroppable: spot.image ? canCrop(spot.image) : false,
+    kind: spot.kind,
     tel: spot.tel,
   };
 }

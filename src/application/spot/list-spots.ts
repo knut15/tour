@@ -6,7 +6,7 @@ import type { ListSpotsInput, SpotListView } from "@/application/spot/dto";
 import { toSpotView } from "@/application/spot/to-view";
 
 /**
- * 카테고리·자치구로 벽에 걸 스팟을 조회한다.
+ * 카테고리·지역으로 걸어 둘 스팟을 조회한다.
  *
  * 공급자가 이미지 보유 항목을 앞으로 정렬해 주지만 그것은 **필터가 아니라 정렬**이다.
  * 따라서 도메인 판정으로 한 번 더 거른다 — 공급자 정렬 규칙이 바뀌어도 화면이 깨지지 않는다.
@@ -20,6 +20,8 @@ export function makeListSpots(repo: SpotRepository) {
     const result = await repo.list({
       locale: input.locale,
       category: input.category,
+      keyword: input.keyword,
+      areaCode: input.areaCode,
       districtCode: input.districtCode,
       page: { page, size },
     });

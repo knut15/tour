@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { LOCALES, LOCALE_LABEL, type Locale } from "@/domain/shared/locale";
+import { CONTROL_SM } from "@/presentation/components/tds";
 
 /**
  * 언어 전환.
@@ -24,9 +25,9 @@ export function LocaleSwitcher({
   note?: string;
 }) {
   return (
-    <details className="relative">
+    <details className="relative" data-dismissable>
       <summary
-        className="flex cursor-pointer list-none items-center gap-1.5 rounded-md border border-line px-3 py-2 text-[13px] text-muted hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+        className={`${CONTROL_SM} cursor-pointer list-none px-3`}
         aria-label={label}
       >
         {LOCALE_LABEL[current]}
@@ -34,7 +35,7 @@ export function LocaleSwitcher({
           <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" strokeWidth="1.8" />
         </svg>
       </summary>
-      <div className="absolute right-0 z-20 mt-2 w-44 rounded-md border border-line bg-canvas p-1.5 shadow-[0_12px_32px_-12px_rgba(0,0,0,0.18)]">
+      <div className="dropdown-panel absolute right-0 z-[var(--layer-popover)] mt-2 w-44 rounded-md border border-line bg-canvas p-1.5 shadow-[0_12px_32px_-12px_rgba(0,0,0,0.18)]">
         {LOCALES.map((l) => (
           <Link
             key={l}

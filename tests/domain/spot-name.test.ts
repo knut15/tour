@@ -108,3 +108,34 @@ describe("parseSpotName — 다국어", () => {
     });
   });
 });
+
+describe("parseSpotName — 중첩 괄호", () => {
+  it("한글 부분 안에 또 괄호가 있어도 원명을 잘라낸다", () => {
+    // 실제 JpnService2 응답. 정규식으로는 못 다뤄 한글 줄이 통째로 사라졌다
+    expect(parseSpotName("金仙寺（ソウル）（금선사（서울））", "ja")).toEqual({
+      primary: "金仙寺（ソウル）",
+      korean: "금선사（서울）",
+    });
+  });
+
+  it("반각 중첩도 처리한다", () => {
+    expect(parseSpotName("Some Hall (A) (경복궁 (본관))", "en")).toEqual({
+      primary: "Some Hall (A)",
+      korean: "경복궁 (본관)",
+    });
+  });
+
+  it("짝이 맞지 않는 괄호는 원명으로 보지 않는다", () => {
+    expect(parseSpotName("어긋난 괄호)", "en")).toEqual({
+      primary: "어긋난 괄호)",
+      korean: null,
+    });
+  });
+
+  it("괄호만 있고 앞이 비면 통째로 primary 다", () => {
+    expect(parseSpotName("（금선사）", "ja")).toEqual({
+      primary: "（금선사）",
+      korean: null,
+    });
+  });
+});

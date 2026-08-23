@@ -14,16 +14,32 @@ export function ButtonLink({
   href,
   variant = "primary",
   fullWidth = false,
+  scroll,
+  transitionTypes,
   children,
 }: {
   href: string;
   variant?: "primary" | "weak";
   fullWidth?: boolean;
+  /**
+   * `false` 면 이동 후 스크롤 위치를 지킨다.
+   * 목록이 아래로 늘어나는 더보기처럼, 화면이 바뀌는 게 아니라 이어지는 경우에 쓴다.
+   */
+  scroll?: boolean;
+  /**
+   * 이 이동이 **어느 방향인지** 전환에 알린다 (`to-explore` / `to-home`).
+   *
+   * 방향을 모르면 화면 사이를 오갈 때 어느 쪽 스냅샷을 남길지 정할 수 없다.
+   * 규칙은 `globals.css` 의 `::view-transition-*(.morph-*)` 가 갖는다.
+   */
+  transitionTypes?: string[];
   children: ReactNode;
 }) {
   return (
     <Link
       href={href}
+      scroll={scroll}
+      transitionTypes={transitionTypes}
       className={
         TDS_BUTTON +
         " " +

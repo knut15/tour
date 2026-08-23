@@ -1,7 +1,7 @@
 import type { Locale } from "@/domain/shared/locale";
 import type { Category } from "@/domain/spot/category";
 import type { Coordinate } from "@/domain/spot/coordinate";
-import type { DistrictCode } from "@/domain/spot/district";
+import type { AreaCode, DistrictCode } from "@/domain/spot/region";
 import type { SpotImage } from "@/domain/spot/image";
 
 /**
@@ -40,26 +40,71 @@ export type Spot = {
   readonly name: SpotName;
   readonly category: Category;
   readonly address: string | null;
+  /** 시도. 시군구 코드는 이것 없이는 지역을 식별하지 못한다 (region.ts) */
+  readonly areaCode: AreaCode | null;
   readonly districtCode: DistrictCode | null;
   readonly coordinate: Coordinate | null;
   readonly image: SpotImage | null;
   readonly tel: string | null;
   /** 신분류체계 소분류. 의료관광 배제 판정에 쓴다 */
   readonly classification: string | null;
+  /**
+   * 장소의 종류를 한 마디로 —  "한식", "산", "사찰".
+   *
+   * 코드가 아니라 **사람이 읽는 이름**이다. 도메인이 공급자의 코드 체계를 들고 있을
+   * 이유가 없다. `classification` 이 코드인 것은 그쪽이 배제 판정에 쓰이기 때문이고,
+   * 이 값은 화면에 그대로 나가므로 이름이어야 한다.
+   *
+   * 로케일에 따라 없을 수 있다. 없으면 화면이 그 줄을 다른 것으로 채우거나 비운다.
+   */
+  readonly kind: string | null;
   readonly modifiedAt: string | null;
 };
 
 /**
+ * 끝에 붙은 괄호 한 쌍을 **중첩까지 고려해** 잘라낸다.
+ *
+ * 정규식으로는 중첩을 다룰 수 없다. `金仙寺（ソウル）（금선사（서울））` 처럼
+ * 한글 부분 안에 또 괄호가 있으면 매칭에 실패해 원명이 통째로 사라진다.
+ * 뒤에서부터 깊이를 세며 짝을 찾는다.
+ */
+function splitTrailingParenthetical(
+  title: string,
+): { head: string; inner: string } | null {
+  const t = title.trimEnd();
+  const close = t[t.length - 1];
+  const open = close === ")" ? "(" : close === "）" ? "（" : null;
+  if (!open) return null;
+
+  let depth = 0;
+  for (let i = t.length - 1; i >= 0; i--) {
+    if (t[i] === close) depth++;
+    else if (t[i] === open) {
+      depth--;
+      if (depth === 0) {
+        return {
+          head: t.slice(0, i).trim(),
+          inner: t.slice(i + 1, t.length - 1).trim(),
+        };
+      }
+    }
+  }
+  return null;
+}
+
+const HANGUL = /[가-힣]/;
+
+/**
  * 다국어 `title` 은 `현지어 (한글)` 형태로 번역명과 한글 원명을 함께 담는다.
  *
- * **괄호 문자가 언어마다 다르다.** 일본어는 전각 괄호를 쓴다:
- *   ja  `スパレイ（스파레이）`      ← 전각 （）
- *   zh  `首爾遊覽船(서울크루즈)`     ← 반각 ()
- *   de  `ARTEASPOON (아티스푼)`
- *   fr  `세종마을 음식문화거리`       ← 번역이 없으면 한글만 온다
+ * **괄호 문자가 언어마다 다르고 중첩되기도 한다.**
+ *   ja  `スパレイ（스파레이）`                  ← 전각 （）
+ *   ja  `金仙寺（ソウル）（금선사（서울））`        ← 전각 + 중첩
+ *   ja  `崔赫(チェヒョク)韓医院 (최혁한의원)`      ← 앞쪽에 다른 괄호
+ *   zh  `首爾遊覽船(서울크루즈)`                 ← 반각 ()
+ *   fr  `세종마을 음식문화거리`                  ← 번역이 없으면 한글만 온다
  *
- * 안쪽에 다른 괄호가 낀 경우도 있다: `崔赫(チェヒョク)韓医院 (최혁한의원)`.
- * 그래서 **끝에 붙은, 한글을 담은 괄호 한 쌍**만 원명으로 본다.
+ * 끝에 붙은 괄호 한 쌍만 원명으로 본다. 그 안에 한글이 없거나 앞이 비면 원명이 아니다.
  * 근거: .curvez/research/tourapi-english-coverage.md 사실 12, 다국어 서비스 실측
  */
 export function parseSpotName(rawTitle: string, locale: Locale): SpotName {
@@ -67,12 +112,12 @@ export function parseSpotName(rawTitle: string, locale: Locale): SpotName {
   if (locale === "ko") {
     return { primary: title, korean: title };
   }
-  const match = title.match(/^(.*?)\s*[(（]([^()（）]*[가-힣][^()（）]*)[)）]\s*$/);
-  if (!match) return { primary: title, korean: null };
-  const primary = match[1].trim();
-  const korean = match[2].trim();
-  if (!primary) return { primary: title, korean: null };
-  return { primary, korean };
+  const split = splitTrailingParenthetical(title);
+  if (!split) return { primary: title, korean: null };
+  if (!split.head || !HANGUL.test(split.inner)) {
+    return { primary: title, korean: null };
+  }
+  return { primary: split.head, korean: split.inner };
 }
 
 /**

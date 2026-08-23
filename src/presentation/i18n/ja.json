@@ -1,19 +1,32 @@
 {
-  "brand": "あなたのソウル",
+  "brand": "あなたの韓国",
   "nav": {
     "explore": "見てまわる",
     "switchLocale": "言語",
     "theme": "明るさを切り替える"
   },
   "explore": {
-    "eyebrow": "並べるのではなく、選んだもの",
-    "title": "あなたのソウルを、額に。",
-    "subtitle": "一度に数か所ずつ。見て、行く。",
-    "allDistricts": "ソウル全域",
-    "districtLabel": "エリア",
+    "eyebrow": "よい旅になるように",
+    "title": "あなたの韓国を、額に。",
+    "subtitle": "数か所だけ見て、今日どこへ行くか決めましょう。",
+    "areaLabel": "地域",
+    "allAreas": "全国",
+    "districtLabel": "市郡区",
+    "allDistricts": "この地域すべて",
     "categoryLabel": "何をお探しですか",
     "showAnother": "もっと見る",
-    "sourceNote": "場所の情報は韓国観光公社が提供しています。"
+    "sourceNote": "場所の情報は韓国観光公社が提供しています。",
+    "nearMeOn": "距離を表示中",
+    "nearMeOff": "現在地からの距離を表示",
+    "nearMeAsking": "現在地を取得中…",
+    "nearMeDenied": "位置情報が許可されていません",
+    "searchLabel": "場所を探す",
+    "searchPlaceholder": "名前で探す",
+    "searchAction": "探す",
+    "searchClear": "検索語を消す",
+    "sortLabel": "並べ替え",
+    "sortByViews": "閲覧順",
+    "sortByLikes": "いいね順"
   },
   "category": {
     "attraction": "見どころ",
@@ -26,12 +39,19 @@
     "emptyFilterAction": "条件をクリア",
     "error": "場所を読み込めませんでした。",
     "errorAction": "再試行",
-    "loading": "場所を探しています…"
+    "loading": "場所を探しています…",
+    "emptySearch": "「{q}」に一致する場所がありません。",
+    "emptySearchAction": "検索語を消す"
   },
   "frame": {
     "save": "保存",
     "saved": "保存済み",
-    "noCrop": "原本のまま"
+    "like": "いいね",
+    "liked": "いいね解除",
+    "views": "閲覧",
+    "noCrop": "原本のまま",
+    "noImage": "画像情報なし",
+    "distance": "現在地から"
   },
   "detail": {
     "back": "一覧へ戻る",
@@ -54,6 +74,81 @@
       "title": "この場所が見つかりませんでした。",
       "retry": "再試行",
       "toList": "一覧へ戻る"
+    }
+  },
+  "weather": {
+    "panelLabel": "今日の、あなたの空",
+    "todayTitle": "いま",
+    "sky": {
+      "clear": "晴れ",
+      "partly-cloudy": "晴れ時々くもり",
+      "cloudy": "くもり",
+      "rain": "雨",
+      "rain-snow": "みぞれ",
+      "snow": "雪",
+      "shower": "にわか雨"
+    },
+    "feelsLike": "体感",
+    "low": "最低",
+    "high": "最高",
+    "humidity": "湿度",
+    "wind": "風",
+    "unitCelsius": "°",
+    "unitPercent": "%",
+    "unitWind": "m/s",
+    "unitDust": "㎍/㎥",
+    "air": {
+      "title": "空気",
+      "pm10": "PM10",
+      "pm25": "PM2.5",
+      "grade": {
+        "good": "良い",
+        "moderate": "ふつう",
+        "bad": "悪い",
+        "very-bad": "非常に悪い"
+      },
+      "unavailable": "いまは空気の情報を取得できませんでした。",
+      "noValue": "データなし"
+    },
+    "outfit": {
+      "title": "今日着るもの",
+      "layer": {
+        "sleeveless": "ノースリーブに短パン",
+        "short-sleeve": "半袖に薄手のシャツ",
+        "long-sleeve": "長袖Tシャツにチノパン",
+        "light-knit": "薄手のニットやカーディガン",
+        "jacket": "ジャケットにジーンズ",
+        "trench": "トレンチコートにニット",
+        "coat": "コートか革ジャケット",
+        "padding": "ダウンにマフラー"
+      },
+      "extra": {
+        "umbrella": "傘",
+        "mask": "マスク",
+        "windbreaker": "ウインドブレーカー",
+        "extra-layer": "羽織るものをもう一枚"
+      }
+    },
+    "observedNote": "{time} 現在",
+    "stationNote": "{station}で観測",
+    "regions": {
+      "서울": "ソウル",
+      "부산": "釜山",
+      "대구": "大邱",
+      "인천": "仁川",
+      "광주": "光州",
+      "대전": "大田",
+      "울산": "蔚山",
+      "세종": "世宗",
+      "경기": "京畿",
+      "강원": "江原",
+      "충북": "忠北",
+      "충남": "忠南",
+      "전북": "全北",
+      "전남": "全南",
+      "경북": "慶北",
+      "경남": "慶南",
+      "제주": "済州"
     }
   },
   "a11y": {
