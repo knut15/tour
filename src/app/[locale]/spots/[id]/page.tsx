@@ -36,6 +36,17 @@ export default async function SpotDetailPage({ params }: PageProps<"/[locale]/sp
     ...spot.facts,
   ];
 
+  /*
+    두 단에 나눠 담는다. **앞 절반이 왼쪽, 뒤 절반이 오른쪽이다** — 좌우를 번갈아
+    담으면(1·3·5 왼쪽, 2·4·6 오른쪽) 읽는 순서가 지그재그가 되어, 주소 다음에
+    영업시간을 찾으려면 눈이 단을 건너뛰어야 한다.
+
+    홀수면 왼쪽이 하나 더 갖는다. 첫 항목인 주소가 대개 가장 길어 왼쪽이
+    자연스럽게 무거워지고, 거기에 한 줄을 더 얹는 편이 두 단의 높이가 맞는다.
+  */
+  const half = Math.ceil(factRows.length / 2);
+  const factColumns = [factRows.slice(0, half), factRows.slice(half)];
+
 
 
   return (
@@ -138,37 +149,47 @@ export default async function SpotDetailPage({ params }: PageProps<"/[locale]/sp
           )}
 
           {/*
-            사실 표. **두 단으로 접는다.**
+            사실 표 — 인쇄물의 판권면(colophon)처럼 짠다.
 
-            한 단으로 지면을 가로지르면 라벨과 값 사이가 벌어져, 어느 값이 어느
-            항목인지 눈으로 이어 붙여야 한다. 두 단이면 한 셀의 폭이 절반이 되어
-            그 거리가 사라진다.
+            **행마다 선을 긋지 않는다.** 항목이 일곱이면 선도 일곱이고, 그 줄무늬가
+            표를 지면 위에 붙인 격자로 만든다. 대신 **각 단 위에 선 하나**만 두고
+            아래는 여백으로 나눈다 — 항목들이 한 덩어리로 쌓여 위의 글과 같은
+            물건으로 읽힌다.
 
-            좁아진 셀에서는 라벨을 **값 위**에 둔다. 옆에 두면 라벨이 차지한 만큼
-            값이 밀려 주소처럼 긴 값이 세 줄 네 줄로 접힌다.
+            그러려면 두 단을 CSS 로 흘려보낼 수 없다. 흘리면 어느 항목이 어느 단에
+            갈지 브라우저가 정해서 단 위의 선을 어디에 둘지 알 수 없다. 그래서
+            항목을 **미리 반으로 나눠** 각 단에 담는다.
 
-            바깥 테두리를 두르지 않는다. 표를 상자로 만들면 지면 위에 붙인 조각처럼
-            보이고, 위의 글과 다른 물건이 된다.
+            라벨은 값 위에 둔다. 옆에 두면 라벨이 차지한 만큼 값이 밀려 주소처럼
+            긴 값이 서너 줄로 접힌다.
+
+            **값을 대문자로 바꾸지 않는다.** 레퍼런스는 전부 대문자지만 그건 영문
+            지면이라 가능하다. `uppercase` 는 라틴에만 걸려서, 같은 화면의 한국어·
+            일본어 값은 그대로 남는다 — 언어마다 다른 화면이 된다.
           */}
-          <dl className="mt-14 grid border-t border-line sm:grid-cols-2 sm:gap-x-12 md:mt-16">
-            {factRows.map((row) => (
-              <div key={row.key} className="border-b border-line py-4">
-                <dt className="text-[10px] uppercase tracking-[0.16em] text-muted">
-                  {t.detail.fact[row.key as keyof Dictionary["detail"]["fact"]] ?? row.key}
-                </dt>
-                {/* 값이 없어도 행을 지우지 않는다. 숨기면 "정보가 없다" 와 "그런 항목이 없다" 가 구분되지 않는다 */}
-                <dd
-                  lang={locale}
-                  className={
-                    "mt-2 whitespace-pre-line text-[15px] leading-[23px] " +
-                    (row.value ? "text-ink" : "text-muted italic")
-                  }
-                >
-                  {row.value ?? t.detail.noInfo}
-                </dd>
-              </div>
+          <div className="mt-14 grid gap-x-12 gap-y-10 sm:grid-cols-2 md:mt-16">
+            {factColumns.map((column, i) => (
+              <dl key={i} className="border-t border-line pt-5">
+                {column.map((row) => (
+                  <div key={row.key} className="mb-5 last:mb-0">
+                    <dt className="text-[10px] uppercase tracking-[0.18em] text-muted">
+                      {t.detail.fact[row.key as keyof Dictionary["detail"]["fact"]] ?? row.key}
+                    </dt>
+                    {/* 값이 없어도 행을 지우지 않는다. 숨기면 "정보가 없다" 와 "그런 항목이 없다" 가 구분되지 않는다 */}
+                    <dd
+                      lang={locale}
+                      className={
+                        "mt-1.5 whitespace-pre-line text-[14px] leading-[21px] " +
+                        (row.value ? "text-ink" : "text-muted italic")
+                      }
+                    >
+                      {row.value ?? t.detail.noInfo}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
             ))}
-          </dl>
+          </div>
 
         </div>
       </main>
