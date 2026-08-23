@@ -19,6 +19,17 @@ export interface SpotStatsRepository {
    */
   findMany(keys: readonly SpotStatsKey[]): Promise<Map<SpotStatsKey, SpotStats>>;
 
+  /**
+   * 반응이 가장 많은 장소의 키를 **많은 순서대로** 돌려준다.
+   *
+   * **좋아요가 먼저다.** 조회는 지나간 것만으로도 오르지만 좋아요는 누른 것이다 —
+   * 둘을 더하면 조회 수가 훨씬 커서 좋아요는 사실상 반영되지 않는다. 좋아요로 세우고
+   * 같으면 조회로 가른다.
+   *
+   * 아직 아무도 누르지 않은 장소는 저장소에 행이 없으므로 여기 나오지 않는다.
+   */
+  findTopKeys(limit: number): Promise<SpotStatsKey[]>;
+
   /** 이 방문자가 좋아요를 누른 장소들 */
   findLikedBy(visitorId: string, keys: readonly SpotStatsKey[]): Promise<Set<SpotStatsKey>>;
 

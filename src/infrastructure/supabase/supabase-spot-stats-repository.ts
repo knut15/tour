@@ -44,6 +44,26 @@ export class SupabaseSpotStatsRepository implements SpotStatsRepository {
     return out;
   }
 
+  async findTopKeys(limit: number): Promise<SpotStatsKey[]> {
+    if (limit <= 0) return [];
+
+    /*
+      **정렬을 두 번 건다.** 가중합(`like_count * n + view_count`)으로 한 줄에
+      세우려면 계산 컬럼이 필요하고 그것은 마이그레이션을 다시 돌려야 한다.
+      좋아요로 세우고 같으면 조회로 가르는 것만으로 뜻이 충분히 서고,
+      가중치라는 임의의 숫자를 만들지 않아도 된다.
+    */
+    const { data, error } = await this.client
+      .from("spot_stats")
+      .select("key")
+      .order("like_count", { ascending: false })
+      .order("view_count", { ascending: false })
+      .limit(limit);
+
+    if (error || !data) return [];
+    return data.map((row) => row.key as SpotStatsKey);
+  }
+
   async findLikedBy(
     visitorId: string,
     keys: readonly SpotStatsKey[],

@@ -3,7 +3,13 @@ import { notFound } from "next/navigation";
 import { isLocale, type Locale } from "@/domain/shared/locale";
 import { isCategory, type Category } from "@/domain/spot/category";
 import { isAreaCode, isDistrictCode } from "@/domain/spot/region";
-import { getSpotStats, listAreas, listDistricts, listSpots } from "@/presentation/lib/container";
+import {
+  getSpotStats,
+  getTopSpotKeys,
+  listAreas,
+  listDistricts,
+  listSpots,
+} from "@/presentation/lib/container";
 import { exploreHref } from "@/presentation/lib/explore-href";
 import { statsKeyOf } from "@/domain/spot/spot-stats";
 import {
@@ -62,6 +68,18 @@ function parseDistrictCode(raw: string | string[] | undefined): number | undefin
  * Suspense 안에 두어 각자 준비되는 대로 스트리밍한다. 사양이 요구하는
  * "필터는 조작 가능한 상태로 유지" 를 이 구조가 만족한다.
  */
+/**
+ * 벽의 맨 앞을 채울 인기 장소 수.
+ *
+ * **한 줄을 넘기지 않는다.** 4열이므로 그보다 많으면 목록 첫 화면이 통째로 인기
+ * 순이 되어, 사용자가 고른 분류·지역보다 인기가 먼저 읽힌다. 넷이면 첫 줄만
+ * 바뀌고 그 아래는 공급자 순서 그대로다.
+ *
+ * 저장소에서 뽑는 수는 이보다 넉넉해야 한다 — 상위 넷이 이 분류에 하나도 없을 수
+ * 있고, 그때 아래쪽 순위가 그 자리를 대신한다.
+ */
+const TOP_PINNED = 24;
+
 export default async function ExplorePage({ params, searchParams }: PageProps<"/[locale]/explore">) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
@@ -429,6 +447,32 @@ async function Spots({
     ? await getSpotStats(wall.items.map((s) => s.titleKorean)).catch(() => null)
     : null;
 
+  /*
+    **반응이 많은 곳을 앞으로 올린다.**
+
+    순위는 **저장소 전체**에서 뽑는다 — 이 화면에 온 열두 개 안에서만 세면 "지금
+    보이는 것 중 인기" 가 되고, 그건 벽을 넘길 때마다 다른 답을 낸다. 대신 자리를
+    바꾸는 것은 **이미 받아 둔 목록 안에서**다. 전체 1위가 이 분류에 없으면 억지로
+    데려오지 않는다 — 먹을 곳 탭에 관광지가 서면 탭이 뜻을 잃고, 데려오려면
+    로케일마다 검색이 한 번씩 더 든다(개발계정 한도 일 1,000건).
+
+    실패해도 목록은 그대로 뜬다. 순서가 공급자 순서로 남을 뿐이다.
+  */
+  const topKeys = getTopSpotKeys ? await getTopSpotKeys(TOP_PINNED).catch(() => []) : [];
+  const rank = new Map(topKeys.map((k, i) => [k, i]));
+  /*
+    `sort` 는 안정 정렬이다(ES2019~). 순위에 없는 것끼리는 원래 순서가 그대로
+    남으므로, 앞으로 끌어올린 몇 개를 빼면 벽은 공급자 순서 그대로다.
+  */
+  const ordered =
+    rank.size === 0
+      ? wall.items
+      : [...wall.items].sort((a, b) => {
+          const ra = rank.get(statsKeyOf(a.titleKorean) ?? "") ?? Number.MAX_SAFE_INTEGER;
+          const rb = rank.get(statsKeyOf(b.titleKorean) ?? "") ?? Number.MAX_SAFE_INTEGER;
+          return ra - rb;
+        });
+
   const districtName = districts.find((r) => r.code === districtCode)?.name;
 
   // 스크린 리더에도 내부 은유를 흘리지 않는다. 사용자는 장소를 찾는다
@@ -437,7 +481,7 @@ async function Spots({
   return (
     <>
       <Wall
-        items={wall.items}
+        items={ordered}
         ariaLabel={listLabel}
         hrefOf={(s) => `/${locale}/spots/${s.contentId}`}
         districtNameOf={(s) => districts.find((r) => r.code === s.districtCode)?.name}
