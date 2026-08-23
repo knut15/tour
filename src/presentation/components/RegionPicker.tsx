@@ -49,6 +49,8 @@ export function RegionPicker({
       >
         <Link
           href={hrefFor()}
+          // 탭과 같다. 조건을 바꾸는 것이지 다른 화면으로 가는 것이 아니다
+          scroll={false}
           className="rounded-md px-3 py-2 text-[14px] text-ink hover:bg-surface focus-visible:outline-2 focus-visible:outline-focus"
         >
           {allLabel}
@@ -57,6 +59,7 @@ export function RegionPicker({
           <Link
             key={r.code}
             href={hrefFor(r.code)}
+            scroll={false}
             aria-current={r.code === current ? "true" : undefined}
             className={
               "rounded-md px-3 py-2 text-[14px] hover:bg-surface " +

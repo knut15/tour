@@ -97,6 +97,13 @@ export function CategoryTabs({
             <li key={tab.key}>
               <Link
                 href={tab.href}
+                /*
+                  **맨 위로 올리지 않는다.** 탭은 다른 화면으로 가는 것이 아니라
+                  보고 있던 목록의 조건을 바꾸는 것이다. 스크롤을 되감으면 방금
+                  훑던 자리를 잃고, 헤더 밑에 붙어 있던 필터 바도 흐름 위치로
+                  돌아가 화면 전체가 한 번 튄다.
+                */
+                scroll={false}
                 aria-current={active ? "page" : undefined}
                 className={
                   "tab-link inline-block pb-3.5 -mb-px border-b text-[15px] " +
