@@ -165,11 +165,17 @@ export function SpotFrame({
         같은 높이를 차지한다. 빈 줄은 스크린 리더가 읽지 않도록 감춘다.
       */}
       {hasKorean ? (
-        <p lang="ko" className="mt-1.5 text-[14px] leading-[21px] text-body">
+        /*
+          제목보다 작고 진하다. 크기로 위계를 주되 색은 낮추지 않는다 —
+          현장에서 보여 줄 이름이라 흐리면 그 자리에서 못 읽는다.
+          서체가 이미 다르므로(제목은 세리프) 같은 먹색이어도 둘이 섞이지 않는다.
+        */
+        <p lang="ko" className="mt-1.5 text-[13px] leading-[19px] text-ink">
           {spot.titleKorean}
         </p>
       ) : (
-        <p className="mt-1.5 h-[21px]" aria-hidden="true" />
+        // 값이 없어도 같은 높이를 차지한다. 위 줄과 숫자가 어긋나면 단이 틀어진다
+        <p className="mt-1.5 h-[19px]" aria-hidden="true" />
       )}
 
       {/*
