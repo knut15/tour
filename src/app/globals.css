@@ -74,12 +74,21 @@
 
   /*
    * 카테고리마다 색을 배정한다 (GOAL.md §2.3 규칙 3).
-   * 사용자가 색으로 종류를 기억하게 하는 것이 목적이라 **한 번 정하면 바꾸지 않는다.**
+   * 사용자가 색으로 종류를 기억하게 하는 것이 목적이라 **색상은 바꾸지 않는다** —
+   * 관광지=파랑, 문화=민트, 음식=코랄, 축제=머스터드.
+   *
+   * **명도는 테마마다 다르다.** 이 값은 탭 밑줄뿐 아니라 **활성 탭 글자**에도
+   * 쓰이므로 바탕 대비 4.5:1 을 넘겨야 한다. GOAL §2.3 의 원색을 양쪽에 그대로
+   * 쓰면 라이트에서 민트 1.76 · 코랄 2.87 · 머스터드 1.78 로 읽을 수 없고,
+   * 코발트는 반대로 다크에서 2.68 이 된다. 색면으로만 쓴다면 원색으로 충분하지만
+   * 글자를 겸하는 자리라 그럴 수 없다.
+   *
+   * 라이트: 4.82 / 4.89 / 4.70 / 4.77 (계산값)
    */
-  --cat-attraction: var(--goal-cobalt);
-  --cat-culture: var(--goal-mint);
-  --cat-food: var(--goal-coral);
-  --cat-festival: var(--goal-mustard);
+  --cat-attraction: #2a66dd;
+  --cat-culture: #0f7a63;
+  --cat-food: #cd3623;
+  --cat-festival: #94640f;
 
   /* ── 앱 역할 매핑 ── */
   --paper-canvas: var(--goal-paper);
@@ -231,6 +240,11 @@
   --filter-bar-shadow-alpha: 0.4;
   --action-like: #ff7a68;
   --action-save: #f0c05a;
+  /* 어두운 바탕에서는 원색이 그대로 밝다. 다크: 7.40 / 9.67 / 7.79 / 9.30 (계산값) */
+  --cat-attraction: #6ea8ff;
+  --cat-culture: var(--goal-mint);
+  --cat-food: #ff8a7a;
+  --cat-festival: var(--goal-mustard);
   }
 }
 
@@ -253,6 +267,11 @@
   --filter-bar-shadow-alpha: 0.4;
   --action-like: #ff7a68;
   --action-save: #f0c05a;
+  /* 어두운 바탕에서는 원색이 그대로 밝다. 다크: 7.40 / 9.67 / 7.79 / 9.30 (계산값) */
+  --cat-attraction: #6ea8ff;
+  --cat-culture: var(--goal-mint);
+  --cat-food: #ff8a7a;
+  --cat-festival: var(--goal-mustard);
 }
 
 :root[data-theme="light"] {
@@ -274,6 +293,10 @@
   --filter-bar-shadow-alpha: 0.2;
   --action-like: var(--goal-coral);
   --action-save: var(--goal-mustard);
+  --cat-attraction: #2a66dd;
+  --cat-culture: #0f7a63;
+  --cat-food: #cd3623;
+  --cat-festival: #94640f;
 }
 
 @theme inline {
