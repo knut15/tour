@@ -4,6 +4,8 @@ export type ExploreFilter = {
   category: Category;
   areaCode?: number;
   districtCode?: number;
+  /** 검색어. 비었거나 공백뿐이면 URL 에 쓰지 않는다 */
+  keyword?: string;
   /**
    * 더보기를 **몇 번 눌렀는가**. 0 이면 첫 묶음만 본다.
    *
@@ -34,6 +36,9 @@ export function exploreHref(locale: string, filter: ExploreFilter): string {
     p.set("area", String(filter.areaCode));
     if (filter.districtCode) p.set("district", String(filter.districtCode));
   }
+  // 검색어가 먼저 온다. 주소를 눈으로 읽을 때 무엇을 찾는 중인지가 가장 앞이다
+  const keyword = filter.keyword?.trim();
+  if (keyword) p.set("q", keyword);
   if (filter.more && filter.more > 0) p.set("more", String(filter.more));
   return `/${locale}/explore?${p.toString()}`;
 }

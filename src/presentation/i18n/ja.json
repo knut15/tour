@@ -19,7 +19,11 @@
     "nearMeOn": "距離を表示中",
     "nearMeOff": "現在地からの距離を表示",
     "nearMeAsking": "現在地を取得中…",
-    "nearMeDenied": "位置情報が許可されていません"
+    "nearMeDenied": "位置情報が許可されていません",
+    "searchLabel": "場所を探す",
+    "searchPlaceholder": "名前で探す",
+    "searchAction": "探す",
+    "searchClear": "検索語を消す"
   },
   "category": {
     "attraction": "見どころ",
@@ -32,7 +36,9 @@
     "emptyFilterAction": "条件をクリア",
     "error": "場所を読み込めませんでした。",
     "errorAction": "再試行",
-    "loading": "場所を探しています…"
+    "loading": "場所を探しています…",
+    "emptySearch": "「{q}」に一致する場所がありません。",
+    "emptySearchAction": "検索語を消す"
   },
   "frame": {
     "save": "保存",

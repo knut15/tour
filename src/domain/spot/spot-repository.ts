@@ -9,6 +9,14 @@ import type { SpotDetail } from "@/domain/spot/spot-detail";
 export type ListSpotsQuery = {
   locale: Locale;
   category: Category;
+  /**
+   * 이름으로 좁힌다. 비면 그 분류 전체다.
+   *
+   * **분류·지역과 함께 쓴다.** 검색이 필터를 대신하지 않는다 — 실측 2026-08-23,
+   * 국문 관광지에서 "박물관" 은 22건이고 서울로 좁히면 2건이다. 검색어를 넣는
+   * 순간 지역이 풀리면 사용자는 방금 고른 조건을 잃는다.
+   */
+  keyword?: string;
   /** 시도. 없으면 전국이다 */
   areaCode?: AreaCode;
   /** 시군구. `areaCode` 가 없으면 지역을 식별하지 못하므로 구현이 무시한다 */

@@ -51,9 +51,19 @@ export class MockSpotRepository implements SpotRepository {
   async list(query: ListSpotsQuery): Promise<Page<Spot>> {
     const { page, size } = query.page ?? DEFAULT_PAGE;
     const wanted = contentTypeIdOf(query.category, query.locale);
+    const keyword = query.keyword?.trim().toLowerCase();
     const filtered = this.spots(query.locale).filter((s) => {
       const raw = this.raw(query.locale).find((r) => r.contentid === s.id.contentId);
       if (toNumber(raw?.contenttypeid) !== wanted) return false;
+      /*
+        검색어는 **양쪽 이름 어디에 들어 있어도** 잡는다. 실제 공급자의
+        `searchKeyword2` 도 번역명과 한글 원명을 함께 훑는다 — 영문 화면에서
+        한글로 찾는 일이 실제로 있다.
+      */
+      if (keyword) {
+        const hay = `${s.name.primary} ${s.name.korean ?? ""}`.toLowerCase();
+        if (!hay.includes(keyword)) return false;
+      }
       if (query.areaCode && s.areaCode !== query.areaCode) return false;
       // 시도 없이 온 시군구 코드는 실제 구현과 마찬가지로 무시한다
       if (query.areaCode && query.districtCode && s.districtCode !== query.districtCode) {

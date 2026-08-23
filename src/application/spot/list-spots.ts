@@ -20,6 +20,7 @@ export function makeListSpots(repo: SpotRepository) {
     const result = await repo.list({
       locale: input.locale,
       category: input.category,
+      keyword: input.keyword,
       areaCode: input.areaCode,
       districtCode: input.districtCode,
       page: { page, size },

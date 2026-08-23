@@ -36,10 +36,24 @@ export class TourApiSpotRepository implements SpotRepository {
 
   async list(query: ListSpotsQuery): Promise<Page<Spot>> {
     const { page, size } = query.page ?? DEFAULT_PAGE;
-    const result = await this.client.call(query.locale, "areaBasedList2", {
+    const keyword = query.keyword?.trim();
+
+    /*
+      **검색어가 있으면 다른 엔드포인트다.** `areaBasedList2` 에는 키워드 파라미터가
+      없어 여기서 갈라진다. 나머지 조건(분류·지역·정렬·쪽)은 이름이 같고 뜻도 같아
+      그대로 넘긴다 — 검색이 필터를 대신하지 않는다.
+
+      실측 2026-08-23: 국문 관광지에서 "박물관" 은 22건, `areaCode=1` 을 함께 주면
+      2건이다. 두 조건이 곱해진다.
+    */
+    const result = await this.client.call(
+      query.locale,
+      keyword ? "searchKeyword2" : "areaBasedList2",
+      {
       numOfRows: size,
       pageNo: page,
       arrange: ARRANGE_IMAGE_FIRST,
+      keyword,
       contentTypeId: contentTypeIdOf(query.category, query.locale),
       // areaCode 는 매뉴얼 v4.4 에 문서화돼 있지 않지만 실측상 동작한다.
       // 폐기되면 lDongRegnCd 로 갈아탄다. 그 변경은 이 파일 안에서 끝난다.
@@ -50,7 +64,8 @@ export class TourApiSpotRepository implements SpotRepository {
       areaCode: query.areaCode,
       // 시도 없는 시군구 코드는 어느 지역인지 정해지지 않는다. 함께 없을 때만 보낸다
       sigunguCode: query.areaCode ? query.districtCode : undefined,
-    });
+      },
+    );
 
     const items = result.items
       .map((i) => toSpot(i, query.locale, query.category))
