@@ -3,9 +3,15 @@ import { notFound } from "next/navigation";
 import { isLocale, type Locale } from "@/domain/shared/locale";
 import { isCategory, type Category } from "@/domain/spot/category";
 import { isAreaCode, isDistrictCode } from "@/domain/spot/region";
-import { getSpotStats, listAreas, listDistricts, listSpots } from "@/presentation/lib/container";
+import {
+  getSpotStats,
+  getTopSpotKeys,
+  listAreas,
+  listDistricts,
+  listSpots,
+} from "@/presentation/lib/container";
 import { exploreHref } from "@/presentation/lib/explore-href";
-import { statsKeyOf } from "@/domain/spot/spot-stats";
+import { parseStatsSort, statsKeyOf, type StatsSort } from "@/domain/spot/spot-stats";
 import {
   MORE_MAX,
   enterFrom,
@@ -15,6 +21,8 @@ import {
 import { CategoryPicker } from "@/presentation/components/CategoryPicker";
 import { Lede, SHARE } from "@/presentation/components/Lede";
 import { NetworkArt } from "@/presentation/components/NetworkArt";
+import { SortToggle } from "@/presentation/components/SortToggle";
+import { SpotSearch } from "@/presentation/components/SpotSearch";
 import { RegionPicker } from "@/presentation/components/RegionPicker";
 import { MoreLabel } from "@/presentation/components/MoreLabel";
 import { NearMeToggle } from "@/presentation/components/NearMeToggle";
@@ -61,6 +69,18 @@ function parseDistrictCode(raw: string | string[] | undefined): number | undefin
  * Suspense 안에 두어 각자 준비되는 대로 스트리밍한다. 사양이 요구하는
  * "필터는 조작 가능한 상태로 유지" 를 이 구조가 만족한다.
  */
+/**
+ * 벽의 맨 앞을 채울 인기 장소 수.
+ *
+ * **한 줄을 넘기지 않는다.** 4열이므로 그보다 많으면 목록 첫 화면이 통째로 인기
+ * 순이 되어, 사용자가 고른 분류·지역보다 인기가 먼저 읽힌다. 넷이면 첫 줄만
+ * 바뀌고 그 아래는 공급자 순서 그대로다.
+ *
+ * 저장소에서 뽑는 수는 이보다 넉넉해야 한다 — 상위 넷이 이 분류에 하나도 없을 수
+ * 있고, 그때 아래쪽 순위가 그 자리를 대신한다.
+ */
+const TOP_PINNED = 24;
+
 export default async function ExplorePage({ params, searchParams }: PageProps<"/[locale]/explore">) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
@@ -71,6 +91,13 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
   // 시도 없는 시군구는 어느 지역인지 정해지지 않는다. 통째로 버린다
   const districtCode = areaCode ? parseDistrictCode(sp.district) : undefined;
   const more = parseMore(first(sp.more));
+  /*
+    검색어. 공백만 남으면 없는 것으로 본다 — `?q=%20` 같은 주소로 들어와도
+    "빈 검색" 이 아니라 그냥 목록이어야 한다.
+  */
+  const keyword = first(sp.q)?.trim() || undefined;
+  // 모르는 값이면 기본(조회순)이다. 주소를 손으로 고친 사람에게 보여줄 화면은 그것뿐이다
+  const sort = parseStatsSort(first(sp.sort));
   const t = await getDictionary(locale);
 
   return (
@@ -84,7 +111,7 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
       <Masthead
         locale={locale}
         t={t}
-        localeHref={(l) => exploreHref(l, { category, areaCode, districtCode, more })}
+        localeHref={(l) => exploreHref(l, { category, areaCode, districtCode, keyword, sort, more })}
       />
 
       <main className="mx-auto w-full max-w-[1200px] flex-1 px-6 pb-32">
@@ -160,6 +187,7 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
                 current={category}
                 areaCode={areaCode}
                 districtCode={districtCode}
+                keyword={keyword}
                 labels={t.category}
                 groupLabel={t.explore.categoryLabel}
               />
@@ -180,7 +208,7 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
                   labelDenied={t.explore.nearMeDenied}
                 />
                 <Suspense fallback={<RegionPickerSkeleton />}>
-                  <Areas locale={locale} category={category} current={areaCode} t={t} />
+                  <Areas locale={locale} category={category} keyword={keyword} current={areaCode} t={t} />
                 </Suspense>
                 {areaCode && (
                   <Suspense key={areaCode} fallback={<RegionPickerSkeleton />}>
@@ -188,11 +216,51 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
                       locale={locale}
                       category={category}
                       areaCode={areaCode}
+                      keyword={keyword}
                       current={districtCode}
                       t={t}
                     />
                   </Suspense>
                 )}
+
+                {/*
+                  검색은 **줄의 반대쪽 끝**에 선다. `ms-auto` 가 남은 폭을 앞으로
+                  밀어 붙인다 — 지역 선택 옆에 붙여 두면 둘이 한 벌처럼 읽히는데,
+                  지역은 목록을 좁히는 조건이고 검색은 찾는 행위라 성격이 다르다.
+
+                  좁은 화면에서는 줄이 바뀌며 폭을 다 쓴다. 그때는 오른쪽에 밀 자리가
+                  없고, 칸이 좁으면 검색어가 몇 글자만 보인다.
+                */}
+                {/*
+                  정렬 스위치가 검색 **앞**에 선다. 둘 다 줄의 오른쪽 끝으로 밀리되
+                  순서는 "무엇으로 세울까" 다음에 "무엇을 찾을까" 다 — 앞의 것은
+                  지금 보이는 목록을 다시 세우고, 뒤의 것은 목록 자체를 갈아치운다.
+                */}
+                <div className="ms-auto flex min-w-0 flex-wrap items-center justify-end gap-3">
+                  <SortToggle
+                    locale={locale}
+                    category={category}
+                    areaCode={areaCode}
+                    districtCode={districtCode}
+                    keyword={keyword}
+                    current={sort}
+                    label={t.explore.sortLabel}
+                    labels={{ views: t.explore.sortByViews, likes: t.explore.sortByLikes }}
+                  />
+                  <div className="w-full min-w-0 sm:w-auto sm:min-w-[240px]">
+                  <SpotSearch
+                    locale={locale}
+                    category={category}
+                    areaCode={areaCode}
+                    districtCode={districtCode}
+                    current={keyword}
+                    label={t.explore.searchLabel}
+                    placeholder={t.explore.searchPlaceholder}
+                    action={t.explore.searchAction}
+                    clearLabel={t.explore.searchClear}
+                  />
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -204,7 +272,7 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
               "교체" 다. 빼면 React 가 key 로 기존 카드를 알아보고 새 카드만 끼워 넣는다.
             */}
             <Suspense
-              key={`${locale}:${category}:${areaCode ?? "all"}:${districtCode ?? "all"}`}
+              key={`${locale}:${category}:${areaCode ?? "all"}:${districtCode ?? "all"}:${keyword ?? ""}:${sort}`}
               fallback={<WallSkeleton label={t.state.loading} />}
             >
               <Spots
@@ -212,6 +280,8 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
                 category={category}
                 areaCode={areaCode}
                 districtCode={districtCode}
+                keyword={keyword}
+                sort={sort}
                 more={more}
                 t={t}
               />
@@ -239,11 +309,14 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
 async function Areas({
   locale,
   category,
+  keyword,
   current,
   t,
 }: {
   locale: Locale;
   category: Category;
+  /** 지역을 바꿔도 찾던 말은 그대로 간다 */
+  keyword?: string;
   current?: number;
   t: Dictionary;
 }) {
@@ -261,7 +334,7 @@ async function Areas({
       label={t.explore.areaLabel}
       allLabel={t.explore.allAreas}
       // 시도를 바꾸면 시군구는 버린다. 다른 시도에서 같은 번호는 다른 곳이다
-      hrefFor={(code) => exploreHref(locale, { category, areaCode: code })}
+      hrefFor={(code) => exploreHref(locale, { category, keyword, areaCode: code })}
     />
   );
 }
@@ -270,12 +343,15 @@ async function Districts({
   locale,
   category,
   areaCode,
+  keyword,
   current,
   t,
 }: {
   locale: Locale;
   category: Category;
   areaCode: number;
+  /** 지역을 바꿔도 찾던 말은 그대로 간다 */
+  keyword?: string;
   current?: number;
   t: Dictionary;
 }) {
@@ -292,7 +368,7 @@ async function Districts({
       current={current}
       label={t.explore.districtLabel}
       allLabel={t.explore.allDistricts}
-      hrefFor={(code) => exploreHref(locale, { category, areaCode, districtCode: code })}
+      hrefFor={(code) => exploreHref(locale, { category, keyword, areaCode, districtCode: code })}
     />
   );
 }
@@ -302,6 +378,8 @@ async function Spots({
   category,
   areaCode,
   districtCode,
+  keyword,
+  sort,
   more,
   t,
 }: {
@@ -309,6 +387,10 @@ async function Spots({
   category: Category;
   areaCode?: number;
   districtCode?: number;
+  /** 이름으로 좁힌다. 분류·지역과 함께 걸린다 */
+  keyword?: string;
+  /** 벽을 무엇으로 세울지 */
+  sort: StatsSort;
   /** 더보기를 누른 횟수. 0 이면 첫 묶음만 */
   more: number;
   t: Dictionary;
@@ -326,7 +408,7 @@ async function Spots({
   let districts;
   try {
     [wall, districts] = await Promise.all([
-      listSpots({ locale, category, areaCode, districtCode, page: 1, size }),
+      listSpots({ locale, category, keyword, areaCode, districtCode, page: 1, size }),
       /*
         카드에 붙일 시군구 이름의 출처. **시도를 골랐을 때만 받는다.**
 
@@ -353,6 +435,23 @@ async function Spots({
   }
 
   if (wall.items.length === 0) {
+    /*
+      **검색 중이면 다른 말을 한다.** 찾던 말을 그대로 되돌려 줘야 오타인지 정말
+      없는 것인지 판단할 수 있고, 되돌아갈 자리도 "필터 지우기" 가 아니라 "검색어
+      지우기" 다 — 분류와 지역은 사용자가 방금 고른 것이라 함께 지우면 안 된다.
+    */
+    if (keyword) {
+      return (
+        <Panel lang={locale} message={t.state.emptySearch.replace("{q}", keyword)}>
+          <ButtonLink
+            href={exploreHref(locale, { category, areaCode, districtCode })}
+            variant="weak"
+          >
+            {t.state.emptySearchAction}
+          </ButtonLink>
+        </Panel>
+      );
+    }
     return (
       <Panel lang={locale} message={t.state.emptyFilter}>
         <ButtonLink href={exploreHref(locale, { category })} variant="weak">
@@ -372,6 +471,32 @@ async function Spots({
     ? await getSpotStats(wall.items.map((s) => s.titleKorean)).catch(() => null)
     : null;
 
+  /*
+    **반응이 많은 곳을 앞으로 올린다.**
+
+    순위는 **저장소 전체**에서 뽑는다 — 이 화면에 온 열두 개 안에서만 세면 "지금
+    보이는 것 중 인기" 가 되고, 그건 벽을 넘길 때마다 다른 답을 낸다. 대신 자리를
+    바꾸는 것은 **이미 받아 둔 목록 안에서**다. 전체 1위가 이 분류에 없으면 억지로
+    데려오지 않는다 — 먹을 곳 탭에 관광지가 서면 탭이 뜻을 잃고, 데려오려면
+    로케일마다 검색이 한 번씩 더 든다(개발계정 한도 일 1,000건).
+
+    실패해도 목록은 그대로 뜬다. 순서가 공급자 순서로 남을 뿐이다.
+  */
+  const topKeys = getTopSpotKeys ? await getTopSpotKeys(TOP_PINNED, sort).catch(() => []) : [];
+  const rank = new Map(topKeys.map((k, i) => [k, i]));
+  /*
+    `sort` 는 안정 정렬이다(ES2019~). 순위에 없는 것끼리는 원래 순서가 그대로
+    남으므로, 앞으로 끌어올린 몇 개를 빼면 벽은 공급자 순서 그대로다.
+  */
+  const ordered =
+    rank.size === 0
+      ? wall.items
+      : [...wall.items].sort((a, b) => {
+          const ra = rank.get(statsKeyOf(a.titleKorean) ?? "") ?? Number.MAX_SAFE_INTEGER;
+          const rb = rank.get(statsKeyOf(b.titleKorean) ?? "") ?? Number.MAX_SAFE_INTEGER;
+          return ra - rb;
+        });
+
   const districtName = districts.find((r) => r.code === districtCode)?.name;
 
   // 스크린 리더에도 내부 은유를 흘리지 않는다. 사용자는 장소를 찾는다
@@ -380,7 +505,7 @@ async function Spots({
   return (
     <>
       <Wall
-        items={wall.items}
+        items={ordered}
         ariaLabel={listLabel}
         hrefOf={(s) => `/${locale}/spots/${s.contentId}`}
         districtNameOf={(s) => districts.find((r) => r.code === s.districtCode)?.name}
@@ -404,7 +529,7 @@ async function Spots({
             "3,412건 중 1–20" 이라는 문구 하나가 기관 느낌의 핵심이다 (GOAL.md §0.5-3).
           */}
           <ButtonLink
-            href={exploreHref(locale, { category, areaCode, districtCode, more: more + 1 })}
+            href={exploreHref(locale, { category, areaCode, districtCode, keyword, sort, more: more + 1 })}
             variant="weak"
             // 스크롤 위치를 지킨다. 목록이 아래로 늘어나는데 맨 위로 올라가면
             // 방금 보던 카드를 다시 찾아 내려와야 한다

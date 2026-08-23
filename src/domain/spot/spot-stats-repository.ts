@@ -1,4 +1,4 @@
-import type { SpotStats, SpotStatsKey } from "@/domain/spot/spot-stats";
+import type { SpotStats, SpotStatsKey, StatsSort } from "@/domain/spot/spot-stats";
 
 /**
  * 반응을 세고 기록하는 곳.
@@ -18,6 +18,18 @@ export interface SpotStatsRepository {
    * 부르는 쪽이 구분할 수 있어야 해서다.
    */
   findMany(keys: readonly SpotStatsKey[]): Promise<Map<SpotStatsKey, SpotStats>>;
+
+  /**
+   * 반응이 가장 많은 장소의 키를 **많은 순서대로** 돌려준다.
+   *
+   * **무엇으로 셀지는 부르는 쪽이 정한다.** 둘을 더해 하나로 만들지 않는다 —
+   * 조회 수가 좋아요보다 훨씬 커서 합치면 좋아요가 사실상 반영되지 않고,
+   * 가중치를 두면 그 숫자가 어디서 왔는지 아무도 설명할 수 없게 된다.
+   * 고른 것으로 세우고 같으면 나머지로 가른다.
+   *
+   * 아직 아무 반응도 없는 장소는 저장소에 행이 없으므로 여기 나오지 않는다.
+   */
+  findTopKeys(limit: number, sort: StatsSort): Promise<SpotStatsKey[]>;
 
   /** 이 방문자가 좋아요를 누른 장소들 */
   findLikedBy(visitorId: string, keys: readonly SpotStatsKey[]): Promise<Set<SpotStatsKey>>;

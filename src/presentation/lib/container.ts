@@ -6,7 +6,7 @@ import type {
 } from "@/domain/weather/weather-repository";
 import { makeFindSpotInLocale } from "@/application/spot/find-spot-in-locale";
 import { makeGetSpotDetail } from "@/application/spot/get-spot-detail";
-import { makeGetSpotStats } from "@/application/spot/get-spot-stats";
+import { makeGetSpotStats, makeGetTopSpotKeys } from "@/application/spot/get-spot-stats";
 import { makeRecordSpotView, makeToggleSpotLike } from "@/application/spot/react-to-spot";
 import { makeListAreas, makeListDistricts } from "@/application/spot/list-regions";
 import { makeListNearbySpots } from "@/application/spot/list-nearby-spots";
@@ -94,6 +94,10 @@ export const statsEnabled = spotStatsRepository !== null;
 
 export const getSpotStats = spotStatsRepository
   ? makeGetSpotStats(spotStatsRepository)
+  : null;
+/** 반응이 가장 많은 장소의 키. 벽의 맨 앞을 채운다 */
+export const getTopSpotKeys = spotStatsRepository
+  ? makeGetTopSpotKeys(spotStatsRepository)
   : null;
 export const toggleSpotLike = spotStatsRepository
   ? makeToggleSpotLike(spotStatsRepository)

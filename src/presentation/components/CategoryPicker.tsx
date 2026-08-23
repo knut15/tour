@@ -19,6 +19,7 @@ export function CategoryPicker({
   current,
   areaCode,
   districtCode,
+  keyword,
   labels,
   groupLabel,
 }: {
@@ -26,18 +27,23 @@ export function CategoryPicker({
   current: Category;
   areaCode?: number;
   districtCode?: number;
+  /**
+   * 찾고 있는 말. **분류를 바꿔도 들고 간다** — "박물관" 을 찾다가 문화 탭으로
+   * 옮기는 것은 검색을 그만두는 것이 아니라 같은 말을 다른 분류에서 찾는 것이다.
+   */
+  keyword?: string;
   labels: Record<Category, string>;
   groupLabel: string;
 }) {
   /*
     링크를 여기서 만든다. URL 규칙은 서버 쪽 한 곳에 두고
     (`presentation/lib/explore-href.ts`) 클라이언트 컴포넌트는 받은 것을 그리기만 한다.
-    카테고리를 바꿔도 지역은 유지한다. 페이지는 1로 돌아간다.
+    카테고리를 바꿔도 지역과 검색어는 유지한다. 페이지는 1로 돌아간다.
   */
   const tabs = CATEGORIES.map((c) => ({
     key: c,
     label: labels[c],
-    href: exploreHref(locale, { category: c, areaCode, districtCode }),
+    href: exploreHref(locale, { category: c, areaCode, districtCode, keyword }),
   }));
 
   /*

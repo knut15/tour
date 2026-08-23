@@ -19,7 +19,14 @@
     "nearMeOn": "Entfernung wird angezeigt",
     "nearMeOff": "Entfernung von mir anzeigen",
     "nearMeAsking": "Standort wird ermittelt…",
-    "nearMeDenied": "Standortzugriff ist blockiert"
+    "nearMeDenied": "Standortzugriff ist blockiert",
+    "searchLabel": "Ort finden",
+    "searchPlaceholder": "Nach Namen suchen",
+    "searchAction": "Suchen",
+    "searchClear": "Suche löschen",
+    "sortLabel": "Sortieren",
+    "sortByViews": "Meist gesehen",
+    "sortByLikes": "Meist gemocht"
   },
   "category": {
     "attraction": "Orte",
@@ -32,7 +39,9 @@
     "emptyFilterAction": "Filter zurücksetzen",
     "error": "Diese Orte konnten nicht geladen werden.",
     "errorAction": "Erneut versuchen",
-    "loading": "Orte werden gesucht…"
+    "loading": "Orte werden gesucht…",
+    "emptySearch": "Nichts passt zu „{q}“.",
+    "emptySearchAction": "Suche löschen"
   },
   "frame": {
     "save": "Merken",

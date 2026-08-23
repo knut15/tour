@@ -5,6 +5,8 @@ import type { Category } from "@/domain/spot/category";
 export type ListSpotsInput = {
   locale: Locale;
   category: Category;
+  /** 이름으로 좁힌다. 비면 그 분류 전체다 */
+  keyword?: string;
   /** 시도. 없으면 전국 */
   areaCode?: number;
   /** 시군구. `areaCode` 와 짝이어야 의미가 있다 */

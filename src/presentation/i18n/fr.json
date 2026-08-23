@@ -19,7 +19,14 @@
     "nearMeOn": "Distance affichée",
     "nearMeOff": "Afficher la distance",
     "nearMeAsking": "Localisation…",
-    "nearMeDenied": "Accès à la position bloqué"
+    "nearMeDenied": "Accès à la position bloqué",
+    "searchLabel": "Trouver un lieu",
+    "searchPlaceholder": "Rechercher par nom",
+    "searchAction": "Rechercher",
+    "searchClear": "Effacer la recherche",
+    "sortLabel": "Trier",
+    "sortByViews": "Plus vus",
+    "sortByLikes": "Plus aimés"
   },
   "category": {
     "attraction": "Lieux",
@@ -32,7 +39,9 @@
     "emptyFilterAction": "Effacer le filtre",
     "error": "Impossible de charger ces lieux.",
     "errorAction": "Réessayer",
-    "loading": "Recherche de lieux…"
+    "loading": "Recherche de lieux…",
+    "emptySearch": "Aucun lieu ne correspond à « {q} ».",
+    "emptySearchAction": "Effacer la recherche"
   },
   "frame": {
     "save": "Enregistrer",

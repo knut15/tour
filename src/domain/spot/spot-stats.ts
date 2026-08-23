@@ -34,3 +34,26 @@ export function statsKeyOf(koreanName: string | null | undefined): SpotStatsKey 
 export type SpotStatsWithMine = SpotStats & {
   readonly liked: boolean;
 };
+
+/**
+ * 벽을 세우는 기준.
+ *
+ * **기본은 조회다.** 좋아요는 누른 사람만 남기지만 조회는 들른 모두가 남긴다 —
+ * 아직 반응이 적은 초기에는 좋아요가 대부분 0 이라 순위가 서지 않는다.
+ * 무엇으로 셀지는 보는 사람이 고를 수 있게 하되, 아무것도 고르지 않았을 때
+ * 더 많은 장소를 줄 세우는 쪽을 기본으로 둔다.
+ */
+export const STATS_SORTS = ["views", "likes"] as const;
+export type StatsSort = (typeof STATS_SORTS)[number];
+
+export const DEFAULT_STATS_SORT: StatsSort = "views";
+
+export function isStatsSort(value: string | undefined): value is StatsSort {
+  return (STATS_SORTS as readonly string[]).includes(value ?? "");
+}
+
+/** URL 의 `sort` 를 읽는다. 모르는 값이면 기본이다 */
+export function parseStatsSort(raw: string | undefined): StatsSort {
+  const v = raw?.trim();
+  return isStatsSort(v) ? v : DEFAULT_STATS_SORT;
+}

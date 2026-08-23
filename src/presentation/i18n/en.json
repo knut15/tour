@@ -19,7 +19,14 @@
     "nearMeOn": "Showing distance",
     "nearMeOff": "Show distance from me",
     "nearMeAsking": "Locating…",
-    "nearMeDenied": "Location access is blocked"
+    "nearMeDenied": "Location access is blocked",
+    "searchLabel": "Find a place",
+    "searchPlaceholder": "Search by name",
+    "searchAction": "Search",
+    "searchClear": "Clear search",
+    "sortLabel": "Sort",
+    "sortByViews": "Most viewed",
+    "sortByLikes": "Most liked"
   },
   "category": {
     "attraction": "Places",
@@ -32,7 +39,9 @@
     "emptyFilterAction": "Clear the filter",
     "error": "We couldn't load these places.",
     "errorAction": "Try again",
-    "loading": "Finding places…"
+    "loading": "Finding places…",
+    "emptySearch": "Nothing matches “{q}”.",
+    "emptySearchAction": "Clear search"
   },
   "frame": {
     "save": "Save",

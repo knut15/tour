@@ -2,7 +2,7 @@ import "server-only";
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type { SpotStatsRepository } from "@/domain/spot/spot-stats-repository";
-import type { SpotStats, SpotStatsKey } from "@/domain/spot/spot-stats";
+import type { SpotStats, SpotStatsKey, StatsSort } from "@/domain/spot/spot-stats";
 import type { SupabaseConfig } from "@/infrastructure/config/env";
 
 /**
@@ -42,6 +42,29 @@ export class SupabaseSpotStatsRepository implements SpotStatsRepository {
       out.set(row.key, { key: row.key, likes: row.like_count, views: row.view_count });
     }
     return out;
+  }
+
+  async findTopKeys(limit: number, sort: StatsSort): Promise<SpotStatsKey[]> {
+    if (limit <= 0) return [];
+
+    /*
+      **정렬을 두 번 건다.** 고른 것이 먼저이고 같으면 나머지로 가른다.
+      가중합(`like_count * n + view_count`)으로 한 줄에 세우려면 계산 컬럼이
+      필요해 마이그레이션을 다시 돌려야 하고, 그 가중치는 어디서 왔는지 설명할 수
+      없는 숫자가 된다.
+    */
+    const first = sort === "likes" ? "like_count" : "view_count";
+    const second = sort === "likes" ? "view_count" : "like_count";
+
+    const { data, error } = await this.client
+      .from("spot_stats")
+      .select("key")
+      .order(first, { ascending: false })
+      .order(second, { ascending: false })
+      .limit(limit);
+
+    if (error || !data) return [];
+    return data.map((row) => row.key as SpotStatsKey);
   }
 
   async findLikedBy(
