@@ -19,6 +19,7 @@ import { NearMeToggle } from "@/presentation/components/NearMeToggle";
 import { Wall } from "@/presentation/components/Wall";
 import { ButtonLink } from "@/presentation/components/Button";
 import { Masthead } from "@/presentation/components/Masthead";
+import { ScrollMemory } from "@/presentation/components/ScrollMemory";
 import { StickyFilterSync } from "@/presentation/components/StickyFilterSync";
 import { STICKY_SENTINEL } from "@/presentation/lib/sticky";
 import { RegionPickerSkeleton, WallSkeleton } from "@/presentation/components/Skeleton";
@@ -187,6 +188,11 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
         </ViewTransition>
       </main>
 
+      {/*
+        상세로 들어갔다 돌아오면 보던 자리로 되돌린다. 탭·지역을 바꾸는 것은
+        다른 목록이라 맨 위에서 시작하고, 그건 Next 기본 동작에 맡긴다.
+      */}
+      <ScrollMemory />
       <StickyFilterSync />
 
       <footer className="border-t border-line px-6 py-8">
