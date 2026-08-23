@@ -33,31 +33,36 @@ describe("requestSize", () => {
     expect(requestSize(0)).toBe(BATCH);
   });
 
-  it("누른 만큼 늘어난다 — 한 번 누르면 18개다", () => {
-    expect(requestSize(1)).toBe(18);
-    expect(requestSize(2)).toBe(27);
+  it("누른 만큼 늘어난다", () => {
+    expect(requestSize(1)).toBe(BATCH * 2);
+    expect(requestSize(2)).toBe(BATCH * 3);
   });
 
   it("상한까지 눌러도 TourAPI numOfRows 상한 200 을 넘지 않는다", () => {
     // 실측 2026-08-19: numOfRows 200 까지 200건을 준다
     expect(requestSize(MORE_MAX)).toBeLessThanOrEqual(200);
   });
+
+  it("한 묶음이 열 수로 나누어떨어진다", () => {
+    // 아니면 마지막 줄만 이가 빠진 채 남는다. 벽은 최대 4열이다
+    for (const columns of [1, 2, 3, 4]) expect(BATCH % columns).toBe(0);
+  });
 });
 
 describe("enterFrom", () => {
   it("첫 화면은 아무것도 등장시키지 않는다", () => {
     // 페이지를 여는 것은 "추가" 가 아니다
-    expect(enterFrom(0, 9)).toBeUndefined();
+    expect(enterFrom(0, BATCH)).toBeUndefined();
   });
 
   it("새로 붙은 묶음의 첫 인덱스를 준다", () => {
-    expect(enterFrom(1, 18)).toBe(9);
-    expect(enterFrom(2, 27)).toBe(18);
+    expect(enterFrom(1, BATCH * 2)).toBe(BATCH);
+    expect(enterFrom(2, BATCH * 3)).toBe(BATCH * 2);
   });
 
   it("걸러져서 적게 왔으면 목록 끝으로 자른다", () => {
     // 자르지 않으면 경계가 목록 밖을 가리켜 새 카드가 하나도 애니메이션되지
     // 않는다 — 사용자에게는 "눌렀는데 반응이 없다" 로 보인다
-    expect(enterFrom(2, 14)).toBe(14);
+    expect(enterFrom(2, BATCH * 2 - 4)).toBe(BATCH * 2 - 4);
   });
 });

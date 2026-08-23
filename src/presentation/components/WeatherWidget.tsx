@@ -98,7 +98,13 @@ export function WeatherWidget({
 
       <div className="grid grid-cols-2 gap-2">
         <TodayTile weather={weather} t={t} />
-        <AirTile air={air} t={t} />
+        {/*
+          마스크는 **미세먼지 때문에** 권하는 것이라 그 값 옆에 둔다. 옷차림 타일에
+          두면 왜 마스크가 떴는지가 옆 타일에 있어서, 두 타일을 번갈아 봐야 이유가
+          이어진다. 판정은 도메인이 이미 했으므로(`outfit.extras`) 여기서 다시
+          등급을 따지지 않는다 — 기준이 두 곳에 생기면 한쪽만 바뀐다.
+        */}
+        <AirTile air={air} needsMask={outfit.extras.includes("mask")} t={t} />
         <OutfitTile outfit={outfit} t={t} />
       </div>
 
@@ -174,10 +180,27 @@ function Metric({
 }
 
 /** 미세먼지. **없으면 빈 칸을 남기지 않고 없다고 말한다** (이 저장소의 기존 결정) */
-function AirTile({ air, t }: { air: TodayWeatherView["air"]; t: WeatherStrings }) {
+function AirTile({
+  air,
+  needsMask,
+  t,
+}: {
+  air: TodayWeatherView["air"];
+  /** 미세먼지가 나빠 마스크를 권하는 날인가 */
+  needsMask: boolean;
+  t: WeatherStrings;
+}) {
   return (
     <section className={TILE}>
-      <h3 className={TILE_TITLE}>{t.air.title}</h3>
+      {/* 제목과 배지가 한 줄에 선다. 배지가 없는 날에도 제목 높이는 그대로다 */}
+      <div className="flex items-center justify-between gap-2">
+        <h3 className={TILE_TITLE}>{t.air.title}</h3>
+        {needsMask && (
+          <span className="shrink-0 rounded-full bg-weak-bg px-2 py-0.5 text-[11px] leading-[16px] text-weak-fg">
+            {t.outfit.extra.mask}
+          </span>
+        )}
+      </div>
 
       {air === null ? (
         <p className="mt-2.5 text-[12px] leading-[17px] text-muted">{t.air.unavailable}</p>
@@ -236,6 +259,8 @@ function DustRow({
  * 두 타일의 높이를 따로 놀게 하면 패널에 계단이 생긴다.
  */
 function OutfitTile({ outfit, t }: { outfit: TodayWeatherView["outfit"]; t: WeatherStrings }) {
+  const wearables = outfit.extras.filter((e) => e !== "mask");
+
   return (
     <section className={`${TILE} flex flex-col`}>
       <h3 className={TILE_TITLE}>{t.outfit.title}</h3>
@@ -243,9 +268,10 @@ function OutfitTile({ outfit, t }: { outfit: TodayWeatherView["outfit"]; t: Weat
         <p className="mt-2.5 text-[13px] leading-[18px] text-ink">
           {t.outfit.layer[outfit.layer]}
         </p>
-        {outfit.extras.length > 0 && (
+        {/* 마스크는 공기 타일이 가져갔다. 같은 배지를 두 곳에 두면 두 가지 일로 읽힌다 */}
+        {wearables.length > 0 && (
           <ul className="mt-2.5 flex flex-wrap gap-1">
-            {outfit.extras.map((extra) => (
+            {wearables.map((extra) => (
               <li
                 key={extra}
                 className="rounded-full bg-weak-bg px-2 py-0.5 text-[11px] leading-[16px] text-weak-fg"

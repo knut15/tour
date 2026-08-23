@@ -74,12 +74,21 @@
 
   /*
    * 카테고리마다 색을 배정한다 (GOAL.md §2.3 규칙 3).
-   * 사용자가 색으로 종류를 기억하게 하는 것이 목적이라 **한 번 정하면 바꾸지 않는다.**
+   * 사용자가 색으로 종류를 기억하게 하는 것이 목적이라 **색상은 바꾸지 않는다** —
+   * 관광지=파랑, 문화=민트, 음식=코랄, 축제=머스터드.
+   *
+   * **명도는 테마마다 다르다.** 이 값은 탭 밑줄뿐 아니라 **활성 탭 글자**에도
+   * 쓰이므로 바탕 대비 4.5:1 을 넘겨야 한다. GOAL §2.3 의 원색을 양쪽에 그대로
+   * 쓰면 라이트에서 민트 1.76 · 코랄 2.87 · 머스터드 1.78 로 읽을 수 없고,
+   * 코발트는 반대로 다크에서 2.68 이 된다. 색면으로만 쓴다면 원색으로 충분하지만
+   * 글자를 겸하는 자리라 그럴 수 없다.
+   *
+   * 라이트: 4.82 / 4.89 / 4.70 / 4.77 (계산값)
    */
-  --cat-attraction: var(--goal-cobalt);
-  --cat-culture: var(--goal-mint);
-  --cat-food: var(--goal-coral);
-  --cat-festival: var(--goal-mustard);
+  --cat-attraction: #2a66dd;
+  --cat-culture: #0f7a63;
+  --cat-food: #cd3623;
+  --cat-festival: #94640f;
 
   /* ── 앱 역할 매핑 ── */
   --paper-canvas: var(--goal-paper);
@@ -231,6 +240,11 @@
   --filter-bar-shadow-alpha: 0.4;
   --action-like: #ff7a68;
   --action-save: #f0c05a;
+  /* 어두운 바탕에서는 원색이 그대로 밝다. 다크: 7.40 / 9.67 / 7.79 / 9.30 (계산값) */
+  --cat-attraction: #6ea8ff;
+  --cat-culture: var(--goal-mint);
+  --cat-food: #ff8a7a;
+  --cat-festival: var(--goal-mustard);
   }
 }
 
@@ -253,6 +267,11 @@
   --filter-bar-shadow-alpha: 0.4;
   --action-like: #ff7a68;
   --action-save: #f0c05a;
+  /* 어두운 바탕에서는 원색이 그대로 밝다. 다크: 7.40 / 9.67 / 7.79 / 9.30 (계산값) */
+  --cat-attraction: #6ea8ff;
+  --cat-culture: var(--goal-mint);
+  --cat-food: #ff8a7a;
+  --cat-festival: var(--goal-mustard);
 }
 
 :root[data-theme="light"] {
@@ -274,6 +293,10 @@
   --filter-bar-shadow-alpha: 0.2;
   --action-like: var(--goal-coral);
   --action-save: var(--goal-mustard);
+  --cat-attraction: #2a66dd;
+  --cat-culture: #0f7a63;
+  --cat-food: #cd3623;
+  --cat-festival: #94640f;
 }
 
 @theme inline {
@@ -309,7 +332,19 @@
 
   --radius-sm: var(--round-sm);
   --radius-md: var(--round-md);
-  --radius-btn: var(--round-btn-xl);
+  /*
+   * 버튼 반경의 정본. **모든 버튼이 이것 하나를 쓴다.**
+   *
+   * 전에는 다섯 상수가 제각각이었다 — TDS 주 버튼 16px, 마케팅 CTA 7px,
+   * 헤더 컨트롤 6px, 필터 16px, 상세 액션 4px. 같은 화면에 서너 개가 함께 서면
+   * 모서리가 저마다 다른 것이 형태의 차이가 아니라 마감의 실수로 읽힌다.
+   *
+   * TDS 문서는 xlarge 에 16px 을, toss.im 은 마케팅 CTA 에 7px 을 지정하고 둘을
+   * 섞지 말라고 못박는다. 이 프로젝트는 그 규칙 대신 **한 값으로 통일하는 쪽**을
+   * 택했다 — 컨트롤 기하만 빌려 쓸 뿐 토스의 화면을 만드는 것이 아니고,
+   * 바탕이 크림·코발트로 바뀐 뒤로는 토스 화면과 같아 보일 이유도 없다.
+   */
+  --radius-btn: var(--round-btn-sm);
   --radius-marketing: var(--round-marketing);
 
   --ease-signature: cubic-bezier(0.16, 1, 0.3, 1);
@@ -868,5 +903,96 @@ details[open] > .dropdown-panel {
   ::view-transition-image-pair(*) {
     animation-duration: 0.01ms !important;
     animation-delay: 0s !important;
+  }
+}
+
+/*
+ * 거리 표시가 켜져 있다는 표시.
+ *
+ * **핀 가운데 점만 맥박친다.** 핀 전체를 움직이면 옆 글자와 함께 흔들려서 버튼이
+ * 떨리는 것처럼 보인다. 활성 상태를 알리는 것이 목적이지 주의를 끄는 것이 아니라,
+ * 필터 바에 늘 떠 있어도 거슬리지 않을 만큼만 움직인다.
+ *
+ * 2.4초는 사람의 편안한 호흡에 가깝다. 1초 아래로 내리면 신호가 아니라 경고로
+ * 읽히고, 4초를 넘기면 움직인다는 것을 알아채지 못한다.
+ *
+ * `transform-box: fill-box` 가 없으면 SVG 안의 도형은 뷰포트 원점을 기준으로
+ * 커져서, 점이 제자리에서 부푸는 것이 아니라 왼쪽 위로 끌려간다.
+ */
+@keyframes near-me-live {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.75);
+  }
+}
+
+.near-me-live {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: near-me-live 2.4s ease-in-out infinite;
+}
+
+/*
+ * 핀 둘레의 빛. **점의 맥박과 같은 주기로 함께 숨 쉰다.**
+ *
+ * 주기가 어긋나면 두 움직임이 서로 다른 일로 보여 아이콘 하나가 두 가지를
+ * 알리는 것처럼 읽힌다. 2.4s·`ease-in-out` 을 그대로 맞추면 점이 작아질 때
+ * 빛도 함께 짙어져 하나의 호흡이 된다.
+ *
+ * **그림자를 세 겹 쌓는다.** 한 겹이면 경계가 또렷한 테두리가 되어 빛이 아니라
+ * 윤곽선으로 보인다. 반경을 1·4·10 으로 벌리고 짙기를 반대로 낮추면 안쪽이
+ * 진하고 바깥으로 갈수록 옅어지는 그라데이션이 된다.
+ *
+ * `drop-shadow` 다. `box-shadow` 는 요소의 사각형을 따르므로 아이콘 주위가 아니라
+ * 네모난 그림자가 생긴다. `drop-shadow` 는 그려진 획의 윤곽을 따라간다.
+ *
+ * 색은 **지금 보고 있는 분류의 색**이다(`--tab-accent`). 탭 밑줄과 같은 색으로
+ * 빛나야 두 컨트롤이 한 벌로 읽힌다. 그 변수는 필터 바가 갖고 있고 여기까지
+ * 상속된다 — 분류가 없는 자리에서도 쓰일 수 있으므로 1차 액션 색을 대비로 둔다.
+ */
+@keyframes near-me-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 1px var(--near-me-glow-near))
+      drop-shadow(0 0 3px var(--near-me-glow-mid));
+  }
+  50% {
+    filter: drop-shadow(0 0 2px var(--near-me-glow-near))
+      drop-shadow(0 0 6px var(--near-me-glow-mid))
+      drop-shadow(0 0 12px var(--near-me-glow-far));
+  }
+}
+
+.near-me-glow {
+  --near-me-accent: var(--tab-accent, var(--toss-primary));
+  /* 안쪽이 진하고 바깥으로 옅어진다. 세 겹이 겹쳐 그라데이션이 된다 */
+  --near-me-glow-near: color-mix(in srgb, var(--near-me-accent) 85%, transparent);
+  --near-me-glow-mid: color-mix(in srgb, var(--near-me-accent) 55%, transparent);
+  --near-me-glow-far: color-mix(in srgb, var(--near-me-accent) 28%, transparent);
+  animation: near-me-glow 2.4s ease-in-out infinite;
+}
+
+/*
+ * 빛이 도는 동안 아이콘 획도 그 색을 쓴다. 먹색 아이콘에 색 빛만 두르면
+ * 빛이 아이콘에서 난 것이 아니라 뒤에 깔린 것으로 보인다.
+ */
+.near-me-glow {
+  color: var(--near-me-accent);
+}
+
+/*
+ * 이 파일 위쪽의 전역 규칙은 지속시간을 0.01ms 로 누르는데, **무한 반복에는
+ * 그것이 더 나쁘다** — 0.01ms 마다 처음으로 돌아가 초당 수십 번 깜빡인다.
+ * 무한 반복은 지속시간이 아니라 반복 자체를 끈다.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .near-me-live,
+  .near-me-glow {
+    animation: none;
   }
 }

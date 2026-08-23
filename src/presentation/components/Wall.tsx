@@ -66,7 +66,13 @@ export function Wall({
       // 간격은 좁다. 피드는 타일이 이어져 보여야 한다
       // 카드에 컨테이너가 없으므로 간격이 곧 구분선이다. 좁으면 카드끼리 붙어 읽힌다
       // `gap-x` 가 곧 `column-gap` 이다. 세로 간격은 아래 항목의 `mb` 가 진다
-      className="columns-1 gap-x-[34px] sm:columns-2 lg:columns-3"
+      /*
+        1 → 2 → 3 → 4 로 넓어진다. 3열에서 4열로 한 번에 뛰지 않고 `md` 를 끼운
+        이유는, 1024px 에서 바로 4열이 되면 카드 폭이 220px 아래로 떨어져 제목이
+        석 줄로 접히기 때문이다. 컨테이너가 1200px 이므로 4열의 카드 폭은
+        (1200 − 34 × 3) ÷ 4 = 274px 다.
+      */
+      className="columns-1 gap-x-[34px] sm:columns-2 md:columns-3 lg:columns-4"
     >
       {items.map((spot, i) => {
         const isNew = enterFrom !== undefined && i >= enterFrom;
