@@ -1009,7 +1009,13 @@ details[open] > .dropdown-panel {
  * 이 값이 그림 전체가 배경에서 얼마나 물러날지를 정한다.
  * ───────────────────────────────────────────────────────────── */
 .network-art {
-  opacity: 0.85;
+  /*
+    **이 한 값이 그림 전체의 세기다.** SVG/canvas 안의 알파는 선과 점의 비율(점이
+    선보다 진하다)이고, 여기서 그 덩어리가 배경에서 얼마나 물러날지를 정한다.
+    더 흐리게 하려면 이 숫자만 내리면 된다 — 안쪽 값을 건드리면 비율이 무너져
+    점만 남거나 선만 남는다.
+  */
+  opacity: 0.55;
   -webkit-mask-image:
     linear-gradient(to right, transparent 0%, #000 26%, #000 74%, transparent 100%),
     linear-gradient(to bottom, transparent 0%, #000 14%, #000 86%, transparent 100%);
