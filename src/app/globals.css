@@ -882,3 +882,45 @@ details[open] > .dropdown-panel {
     animation-delay: 0s !important;
   }
 }
+
+/*
+ * 거리 표시가 켜져 있다는 표시.
+ *
+ * **핀 가운데 점만 맥박친다.** 핀 전체를 움직이면 옆 글자와 함께 흔들려서 버튼이
+ * 떨리는 것처럼 보인다. 활성 상태를 알리는 것이 목적이지 주의를 끄는 것이 아니라,
+ * 필터 바에 늘 떠 있어도 거슬리지 않을 만큼만 움직인다.
+ *
+ * 2.4초는 사람의 편안한 호흡에 가깝다. 1초 아래로 내리면 신호가 아니라 경고로
+ * 읽히고, 4초를 넘기면 움직인다는 것을 알아채지 못한다.
+ *
+ * `transform-box: fill-box` 가 없으면 SVG 안의 도형은 뷰포트 원점을 기준으로
+ * 커져서, 점이 제자리에서 부푸는 것이 아니라 왼쪽 위로 끌려간다.
+ */
+@keyframes near-me-live {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.75);
+  }
+}
+
+.near-me-live {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: near-me-live 2.4s ease-in-out infinite;
+}
+
+/*
+ * 이 파일 위쪽의 전역 규칙은 지속시간을 0.01ms 로 누르는데, **무한 반복에는
+ * 그것이 더 나쁘다** — 0.01ms 마다 처음으로 돌아가 초당 수십 번 깜빡인다.
+ * 무한 반복은 지속시간이 아니라 반복 자체를 끈다.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .near-me-live {
+    animation: none;
+  }
+}

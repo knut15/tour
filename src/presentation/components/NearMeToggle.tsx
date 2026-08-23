@@ -58,7 +58,19 @@ export function NearMeToggle({
           strokeWidth="1.6"
           strokeLinejoin="round"
         />
-        <circle cx="12" cy="10" r="2.4" fill="none" stroke="currentColor" strokeWidth="1.6" />
+        {/*
+          켜져 있는 동안만 맥박친다. 규칙은 `globals.css` 의 `.near-me-live` 가 갖는다 —
+          여기서 지속시간이나 곡선을 정하지 않는다.
+        */}
+        <circle
+          cx="12"
+          cy="10"
+          r="2.4"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          className={on ? "near-me-live" : undefined}
+        />
       </svg>
       {text}
     </button>
