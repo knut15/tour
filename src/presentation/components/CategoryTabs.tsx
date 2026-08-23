@@ -25,6 +25,29 @@ export type Tab = {
  * 강조색(`--tab-accent`)은 **상속으로** 받는다. 이 컴포넌트가 그 값을 정하면
  * 옆에 선 다른 컨트롤이 같은 색을 쓸 수 없다 — 색은 바 전체의 성질이다.
  */
+/**
+ * 필터 줄이 헤더 바로 밑에 붙는 스크롤 위치로 **지금 당장** 옮긴다.
+ *
+ * 이동한 **뒤**에 맞추려 하면 안 된다. 새 목록이 도착하기 전에는 문서가 짧아
+ * 그 자리가 잘리고, 도착을 기다렸다 옮기면 화면이 한 박자 늦게 저 혼자 움직인다.
+ * 떠나기 전 지금 화면에서 옮겨 두면 링크는 그 자리에서 출발한다 — `scroll={false}`
+ * 가 도착 후 되감는 것을 막아 준다.
+ *
+ * 표식(`data-sticky-sentinel`)이 필터 줄 바로 위에 놓여 있어 그 문서상 위치가
+ * 곧 경계다. 헤더는 줄어들 수 있으므로 **줄어들지 않는 기준값**을 쓴다 —
+ * 줄어든 높이로 계산하면 도착 직후 헤더가 펴지며 그만큼 어긋난다.
+ *
+ * 부드럽게 굴리지 않는다. 이동과 겹치면 목적지에 닿기 전에 화면이 갈린다.
+ */
+function alignToFilters() {
+  const sentinel = document.querySelector("[data-sticky-sentinel]");
+  if (!sentinel) return;
+  const raw = getComputedStyle(document.documentElement).getPropertyValue("--masthead-h-base");
+  const headerHeight = Number.parseFloat(raw) || 0;
+  const y = sentinel.getBoundingClientRect().top + window.scrollY - headerHeight;
+  window.scrollTo({ top: Math.max(0, y), behavior: "instant" });
+}
+
 export function CategoryTabs({
   tabs,
   current,
@@ -96,6 +119,13 @@ export function CategoryTabs({
             <li key={tab.key}>
               <Link
                 href={tab.href}
+                /*
+                  다른 목록으로 가는 것이라 머리말까지 되감을 필요는 없지만,
+                  맨 위로 보내면 그 머리말을 다시 지나쳐야 목록에 닿는다.
+                  이 줄이 헤더에 붙은 자리에서 새 목록이 시작한다.
+                */
+                scroll={false}
+                onClick={alignToFilters}
                 aria-current={active ? "page" : undefined}
                 className={
                   "tab-link inline-block pb-3.5 -mb-px border-b text-[15px] " +
