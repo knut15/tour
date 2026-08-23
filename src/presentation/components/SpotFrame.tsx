@@ -172,9 +172,25 @@ export function SpotFrame({
         <p className="mt-1.5 h-[21px]" aria-hidden="true" />
       )}
 
-      {/* mt-auto 로 바닥에 붙인다 — 제목 줄 수가 달라도 주소가 한 줄에 정렬된다 */}
+      {/*
+        위아래를 가르는 줄. **실선이 아니라 점선이다.**
+
+        전면 헤어라인은 카드마다 그어져 목록에 가로줄이 규칙적으로 쌓이고, 사진이
+        주인공인 벽에서 그 줄들이 격자처럼 먼저 읽힌다. 점선은 같은 자리에서 같은
+        일을 하면서 시선을 덜 붙든다.
+
+        `py-3` 이 위아래에 같은 여백을 준다 — 줄이 한글 원명과 주소 줄의 **가운데**에
+        서야 한다. 아래쪽에만 여백을 두면 줄이 위 텍스트에 붙어 그 줄의 밑줄처럼 보인다.
+
+        `mt-auto` 가 여기 있다. 바닥에 붙는 기준이 이 줄이어야 제목 줄 수가 달라도
+        카드마다 아래 줄이 한 선에 정렬된다.
+      */}
+      <div aria-hidden="true" className="mt-auto py-3">
+        <div className="border-t border-dotted border-line" />
+      </div>
+
       {/* 바닥 줄 — 왼쪽에 주소, 오른쪽에 좋아요·조회 */}
-      <div className="mt-auto flex items-center gap-3 border-t border-line pt-3">
+      <div className="flex items-center gap-3">
         {/*
           거리가 주소보다 앞에 선다. 어디인지보다 **얼마나 먼지**가 먼저 걸러 내는
           조건이라서다. 위치를 켜지 않았으면 아무것도 그리지 않고, 그때는 주소가
