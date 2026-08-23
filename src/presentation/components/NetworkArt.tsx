@@ -1,0 +1,258 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+
+/**
+ * 머리말 옆에 놓이는 **연결의 은유.**
+ *
+ * 장소들이 따로 떨어진 목록이 아니라 서로 이어진 하나의 지형이라는 것을, 글로
+ * 설명하는 대신 옆에 둔다. 지도처럼 읽혀도 좋고 기하 도형으로 읽혀도 좋다 —
+ * 어느 쪽이든 "이어져 있다" 가 남으면 된다.
+ *
+ * **눈에 띄면 실패다.** 이 옆에 제목이 서 있고, 읽을 것은 제목이다. 선과 점을
+ * 아주 옅게 두고 양 끝을 흐려서, 보려고 하면 보이고 읽는 동안에는 배경으로
+ * 물러나게 한다. 움직임도 같은 이유로 느리다 — 눈이 따라가기 시작하면 옆의
+ * 글자를 읽지 못한다.
+ *
+ * **왜 SVG 가 아니라 canvas 인가.** 점이 움직이면 선도 함께 움직여야 하고, 어떤
+ * 점끼리 이어질지가 매 순간 달라진다(멀어지면 끊기고 가까워지면 이어진다).
+ * CSS 애니메이션은 요소를 각자 움직일 뿐 **선이 점을 따라가게 할 수 없다** —
+ * 선의 양 끝 좌표를 매 프레임 다시 써야 하기 때문이다. canvas 는 매 프레임
+ * 전부 다시 그리므로 그 관계가 저절로 유지된다.
+ *
+ * 장식이라 서버에서는 아무것도 그리지 않는다. 첫 페인트에 잠깐 비었다가 채워지고,
+ * 그 사이 읽을 것은 옆의 제목이다.
+ */
+
+/** 이 값만 바꾸면 다른 배치가 나온다 */
+const SEED = 20260823;
+
+/** 좌표계. 실제 캔버스 크기와 무관하게 이 안에서 계산하고 마지막에 늘인다 */
+const VIEW = 640;
+const COLS = 9;
+const ROWS = 9;
+/** 칸 크기 대비 흔들 폭. 1 에 가까울수록 무질서해진다 */
+const JITTER = 0.95;
+/**
+ * 이 확률로 점을 비운다. **격자를 깨는 것은 흔들기만으로는 부족하다** —
+ * 칸마다 하나씩 있으면 아무리 흔들어도 밀도가 고르고, 고른 밀도는 무늬로 읽힌다.
+ */
+const DROP = 0.16;
+/**
+ * 이 거리 안의 점끼리 잇는다.
+ *
+ * 점이 움직이므로 정지 그림보다 넉넉해야 한다 — 흩어지는 순간 망이 조각나면
+ * "연결" 이 아니라 흩날리는 점이 된다. 격자 칸의 약 1.8배면 이웃과 그 너머까지
+ * 닿아, 몇 개가 멀어져도 전체는 이어진 채로 남는다.
+ */
+const LINK = (VIEW / COLS) * 1.8;
+
+/**
+ * 점의 속도(초당 좌표 단위). **아주 느리다** — 이 값이면 한 점이 화면을 가로지르는 데
+ * 4분 남짓 걸린다. 눈이 움직임을 좇지 못하고 "아까와 조금 다르다" 로만 느낀다.
+ */
+const SPEED = 2.6;
+
+/** 점이 밖으로 나가도 되는 여유. 경계에서 되튀면 벽이 있는 것으로 읽힌다 */
+const MARGIN = 90;
+
+/** 결정적 의사난수. 시드를 바꾸면 다른 배치가 나온다 */
+function makeRandom(seed: number): () => number {
+  let s = seed >>> 0;
+  return () => {
+    // xorshift32
+    s ^= s << 13;
+    s ^= s >>> 17;
+    s ^= s << 5;
+    s >>>= 0;
+    return s / 0x1_0000_0000;
+  };
+}
+
+type Node = { x: number; y: number; vx: number; vy: number; r: number };
+
+function makeNodes(): Node[] {
+  const rand = makeRandom(SEED);
+  const cellW = VIEW / COLS;
+  const cellH = VIEW / ROWS;
+  const out: Node[] = [];
+
+  for (let row = 0; row < ROWS; row++) {
+    for (let col = 0; col < COLS; col++) {
+      const jx = (rand() - 0.5) * cellW * JITTER;
+      const jy = (rand() - 0.5) * cellH * JITTER;
+      const keep = rand();
+      const r = 1.1 + rand() * 2.4;
+      const angle = rand() * Math.PI * 2;
+      // 속도도 흩는다. 전부 같은 속도면 무리가 한 덩어리로 흘러가 배치가 굳어 보인다
+      const speed = SPEED * (0.35 + rand() * 0.9);
+      if (keep < DROP) continue;
+      out.push({
+        x: (col + 0.5) * cellW + jx,
+        y: (row + 0.5) * cellH + jy,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        r,
+      });
+    }
+  }
+  return out;
+}
+
+/**
+ * 테마 색을 읽는다. 라이트·다크에서 각각 먹색·바랜 흰색이다.
+ *
+ * **커스텀 속성이 아니라 `color` 를 읽는다.** `--ink-primary` 는 다른 변수를
+ * 가리키는 참조라 `getPropertyValue` 가 무엇을 돌려줄지 브라우저에 달렸다.
+ * `color` 는 언제나 `rgb(...)` 로 해석돼 오고, canvas 는 그것을 그대로 쓴다.
+ * 그래서 캔버스에 `text-ink` 를 붙여 두고 자기 색을 물어본다.
+ */
+function readInk(el: HTMLElement): string {
+  return getComputedStyle(el).color || "#1c1a17";
+}
+
+export function NetworkArt({ className = "" }: { className?: string }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const nodes = makeNodes();
+    let ink = readInk(canvas);
+    let width = 0;
+    let height = 0;
+    let scale = 1;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    /*
+      캔버스는 CSS 픽셀이 아니라 장치 픽셀로 그려야 선이 흐려지지 않는다.
+      좌표계(VIEW)를 실제 크기에 맞춰 늘이고, 짧은 변을 채운 뒤 가운데로 민다 —
+      SVG 의 `preserveAspectRatio="slice"` 와 같은 계산이다.
+    */
+    function resize() {
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = rect.width;
+      height = rect.height;
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      scale = Math.max(width, height) / VIEW;
+      offsetX = (width - VIEW * scale) / 2;
+      offsetY = (height - VIEW * scale) / 2;
+      ctx?.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resize();
+
+    const observer = new ResizeObserver(resize);
+    observer.observe(canvas);
+
+    /*
+      테마가 바뀌면 색도 바뀐다. 매 프레임 `getComputedStyle` 을 부르는 것은
+      비싸므로(레이아웃을 강제한다) 루트의 속성 변화만 지켜본다.
+    */
+    const themeWatcher = new MutationObserver(() => {
+      ink = readInk(canvas);
+    });
+    themeWatcher.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme", "class", "style"],
+    });
+
+    const px = (x: number) => offsetX + x * scale;
+    const py = (y: number) => offsetY + y * scale;
+
+    function draw() {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, width, height);
+      ctx.strokeStyle = ink;
+      ctx.fillStyle = ink;
+
+      // 선이 먼저. 점이 그 위에 놓여야 교차점이 매듭으로 읽힌다
+      ctx.lineWidth = Math.max(0.5, 0.6 * scale);
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const a = nodes[i];
+          const b = nodes[j];
+          const dx = a.x - b.x;
+          const dy = a.y - b.y;
+          const d2 = dx * dx + dy * dy;
+          if (d2 > LINK * LINK) continue;
+          const far = Math.sqrt(d2) / LINK;
+          /*
+            멀수록 옅다. **끊기는 순간이 보이면 안 된다** — 임계 거리에서 갑자기
+            사라지면 선이 깜빡이는 것으로 읽힌다. 거리에 따라 0 까지 내려가면
+            이어지고 끊기는 것이 저절로 부드러워진다.
+          */
+          ctx.globalAlpha = 0.17 * (1 - far);
+          ctx.beginPath();
+          ctx.moveTo(px(a.x), py(a.y));
+          ctx.lineTo(px(b.x), py(b.y));
+          ctx.stroke();
+        }
+      }
+
+      ctx.globalAlpha = 0.34;
+      for (const n of nodes) {
+        ctx.beginPath();
+        ctx.arc(px(n.x), py(n.y), n.r * scale, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let frame = 0;
+    let last = 0;
+
+    function step(now: number) {
+      // 첫 프레임은 간격을 모른다. 큰 값이 들어오면 점이 순간이동한다
+      const dt = last ? Math.min((now - last) / 1000, 0.1) : 0;
+      last = now;
+
+      for (const n of nodes) {
+        n.x += n.vx * dt;
+        n.y += n.vy * dt;
+        /*
+          경계에서 되튄다. **밖으로 여유를 준다** — 화면 가장자리에서 정확히 튕기면
+          점들이 테두리를 따라 미끄러져 사각형이 드러난다. 양 끝은 어차피 마스크로
+          흐려지므로 그 바깥에서 도는 것은 보이지 않는다.
+        */
+        if (n.x < -MARGIN || n.x > VIEW + MARGIN) n.vx = -n.vx;
+        if (n.y < -MARGIN || n.y > VIEW + MARGIN) n.vy = -n.vy;
+      }
+
+      draw();
+      frame = requestAnimationFrame(step);
+    }
+
+    if (reduced.matches) {
+      // 움직임을 끈다. **그림은 남긴다** — 정지한 연결망도 연결망이다
+      draw();
+    } else {
+      frame = requestAnimationFrame(step);
+    }
+
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      themeWatcher.disconnect();
+    };
+  }, []);
+
+  return (
+    /*
+      **장식이다.** 정보를 지지 않으므로 보조기술에서 감춘다.
+      `network-art` 가 양 끝 페이드(mask)를 갖는다 (globals.css).
+    */
+    <div className={`network-art ${className}`} aria-hidden="true">
+      {/* `text-ink` 가 곧 그림의 색이다. 루프가 이 요소의 `color` 를 읽는다 */}
+      <canvas ref={canvasRef} className="h-full w-full text-ink" />
+    </div>
+  );
+}
