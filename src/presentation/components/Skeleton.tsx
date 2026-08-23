@@ -1,3 +1,5 @@
+import { BATCH } from "@/presentation/lib/explore-paging";
+
 /**
  * 로딩 표시.
  *
@@ -31,13 +33,23 @@ function SpotFrameSkeleton() {
   );
 }
 
-/** 실제 목록과 같은 열 수·간격으로 그린다 */
-export function WallSkeleton({ count = 9, label }: { count?: number; label: string }) {
+/**
+ * 실제 목록과 **같은 열 수·같은 개수·같은 배치**로 그린다.
+ *
+ * 이것이 어긋나면 데이터가 도착할 때 문서 높이가 널뛴다. 그러면 그 순간 화면에
+ * 머물러 있던 스크롤 위치가 잘려 나가고, 목록으로 돌아오거나 탭을 옮길 때
+ * 원래 가려던 자리에 서지 못한다 — 실제로 그래서 탭을 눌러도 맨 위에 머물렀다.
+ *
+ * 벽이 grid 에서 multi-column 으로 바뀌고 한 묶음이 아홉에서 열둘로 늘었는데
+ * 여기만 옛 값(3열 grid · 9개)에 남아 있었다. 셋을 따로 적어 두면 또 갈린다.
+ * 열 수와 간격은 `Wall.tsx` 와, 개수는 `explore-paging.ts` 의 `BATCH` 와 같아야 한다.
+ */
+export function WallSkeleton({ count = BATCH, label }: { count?: number; label: string }) {
   return (
     <div className="skeleton-root" role="status" aria-live="polite" aria-label={label}>
-      <ul className="grid grid-cols-1 gap-x-[34px] gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="columns-1 gap-x-[34px] sm:columns-2 md:columns-3 lg:columns-4">
         {Array.from({ length: count }, (_, i) => (
-          <li key={i} className="flex min-w-0">
+          <li key={i} className="mb-16 break-inside-avoid">
             <SpotFrameSkeleton />
           </li>
         ))}
