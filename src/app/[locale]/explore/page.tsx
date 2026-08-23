@@ -13,7 +13,8 @@ import {
   requestSize,
 } from "@/presentation/lib/explore-paging";
 import { CategoryPicker } from "@/presentation/components/CategoryPicker";
-import { Lede } from "@/presentation/components/Lede";
+import { Lede, SHARE } from "@/presentation/components/Lede";
+import { NetworkArt } from "@/presentation/components/NetworkArt";
 import { RegionPicker } from "@/presentation/components/RegionPicker";
 import { MoreLabel } from "@/presentation/components/MoreLabel";
 import { NearMeToggle } from "@/presentation/components/NearMeToggle";
@@ -87,8 +88,23 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
       />
 
       <main className="mx-auto w-full max-w-[1200px] flex-1 px-6 pb-32">
-        {/* 홈과 같은 물체다. 이름(`lede`)이 같아서 오갈 때 크기와 자리만 옮긴다 */}
-        <Lede locale={locale} t={t} size="compact" />
+        {/*
+          머리말과 연결망이 나란히 선다. **둘 다 홈에서 이어져 온다** — 이름이 같아서
+          오갈 때 사라졌다 나타나지 않고 크기와 자리를 옮긴다.
+
+          오른쪽 열이 홈보다 좁다(0.9fr → 0.55fr). 머리말이 작아지는 만큼 연결망도
+          작아져야 두 화면이 같은 지면의 다른 배율로 읽힌다. 종횡비는 정사각으로
+          홈과 같게 두므로 줄어들 뿐 찌그러지지 않는다.
+
+          **연결망이 머리말보다 높으면 안 된다.** 그만큼 탭이 아래로 밀려나고,
+          탭이 붙는 위치를 재는 `alignToFilters` 의 기준도 함께 내려간다.
+        */}
+        <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.55fr)]">
+          <Lede locale={locale} t={t} size="compact" />
+          <ViewTransition name="lede-art" share={SHARE} default="none">
+            <NetworkArt className="hidden min-h-0 aspect-square w-full lg:block" />
+          </ViewTransition>
+        </div>
 
         {/*
           **이 화면에만 있는 것 전부.** 홈에는 대응하는 짝이 없으므로 들어올 때

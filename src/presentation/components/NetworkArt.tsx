@@ -111,6 +111,14 @@ function readInk(el: HTMLElement): string {
   return getComputedStyle(el).color || "#1c1a17";
 }
 
+/**
+ * **점은 모듈이 들고 있다.** 홈과 탐색 화면은 서로 다른 라우트라 이 컴포넌트가
+ * 언마운트됐다 다시 마운트된다. 노드를 컴포넌트 안에서 만들면 그때마다 처음 배치로
+ * 돌아가, 화면을 옮길 때 그림이 한 번 튄다. 모듈에 두면 같은 세션 동안 계속
+ * 흐르므로 두 화면이 **같은 그림의 다른 크기**로 읽힌다.
+ */
+const nodes = makeNodes();
+
 export function NetworkArt({ className = "" }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -120,7 +128,6 @@ export function NetworkArt({ className = "" }: { className?: string }) {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const nodes = makeNodes();
     let ink = readInk(canvas);
     let width = 0;
     let height = 0;
