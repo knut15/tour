@@ -62,7 +62,7 @@ const TITLE_WIDTH = { ko: "max-w-[11ch]", latin: "max-w-[14ch]" } as const;
  * 방향별로 어느 스냅샷을 남길지. 세 요소가 **같은 표를 쓴다** — 눈썹줄만 다른
  * 규칙으로 움직이면 한 덩어리가 아니라 세 조각이 따로 노는 것으로 보인다.
  */
-const SHARE = {
+export const SHARE = {
   /** 홈 → 탐색. 큰 쪽은 **옛** 스냅샷이므로 그것을 남겨 줄인다 */
   "to-explore": "morph-down",
   /** 탐색 → 홈. 큰 쪽은 **새** 스냅샷이므로 그것을 남겨 늘인다 */

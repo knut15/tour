@@ -3,8 +3,9 @@ import { notFound } from "next/navigation";
 import { isLocale, type Locale } from "@/domain/shared/locale";
 import { isCategory, type Category } from "@/domain/spot/category";
 import { isAreaCode, isDistrictCode } from "@/domain/spot/region";
-import { listAreas, listDistricts, listSpots } from "@/presentation/lib/container";
+import { getSpotStats, listAreas, listDistricts, listSpots } from "@/presentation/lib/container";
 import { exploreHref } from "@/presentation/lib/explore-href";
+import { statsKeyOf } from "@/domain/spot/spot-stats";
 import {
   MORE_MAX,
   enterFrom,
@@ -12,7 +13,8 @@ import {
   requestSize,
 } from "@/presentation/lib/explore-paging";
 import { CategoryPicker } from "@/presentation/components/CategoryPicker";
-import { Lede } from "@/presentation/components/Lede";
+import { Lede, SHARE } from "@/presentation/components/Lede";
+import { NetworkArt } from "@/presentation/components/NetworkArt";
 import { RegionPicker } from "@/presentation/components/RegionPicker";
 import { MoreLabel } from "@/presentation/components/MoreLabel";
 import { NearMeToggle } from "@/presentation/components/NearMeToggle";
@@ -86,8 +88,32 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
       />
 
       <main className="mx-auto w-full max-w-[1200px] flex-1 px-6 pb-32">
-        {/* 홈과 같은 물체다. 이름(`lede`)이 같아서 오갈 때 크기와 자리만 옮긴다 */}
-        <Lede locale={locale} t={t} size="compact" />
+        {/*
+          머리말과 연결망이 나란히 선다. **둘 다 홈에서 이어져 온다** — 이름이 같아서
+          오갈 때 사라졌다 나타나지 않고 크기와 자리를 옮긴다.
+
+          오른쪽 열이 홈보다 좁다(0.9fr → 0.55fr). 머리말이 작아지는 만큼 연결망도
+          작아져야 두 화면이 같은 지면의 다른 배율로 읽힌다. 종횡비는 정사각으로
+          홈과 같게 두므로 줄어들 뿐 찌그러지지 않는다.
+
+          **연결망이 머리말보다 높으면 안 된다.** 그만큼 탭이 아래로 밀려나고,
+          탭이 붙는 위치를 재는 `alignToFilters` 의 기준도 함께 내려간다.
+        */}
+        <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.55fr)]">
+          <Lede locale={locale} t={t} size="compact" />
+          {/*
+            **레이아웃이 아니라 transform 으로 키운다.** 열 폭을 늘리면 연결망이
+            머리말(416px)보다 높아지고, 그만큼 탭과 목록이 아래로 밀려 첫 화면에
+            보이는 카드가 줄어든다. `scale` 은 자리를 차지하지 않으므로 그림만
+            커지고 그 아래는 그대로 있다.
+
+            위아래로 넘치는 부분은 마스크가 이미 흐려 놓은 자리라 잘린 티가 나지
+            않는다. 배율은 uniform 이므로 홈과의 전환에서도 찌그러지지 않는다.
+          */}
+          <ViewTransition name="lede-art" share={SHARE} default="none">
+            <NetworkArt className="hidden min-h-0 aspect-square w-full lg:block lg:scale-[1.45]" />
+          </ViewTransition>
+        </div>
 
         {/*
           **이 화면에만 있는 것 전부.** 홈에는 대응하는 짝이 없으므로 들어올 때
@@ -336,6 +362,16 @@ async function Spots({
     );
   }
 
+  /*
+    반응은 **한 번에** 읽는다. 카드가 스스로 가져오면 한 화면에 열두 번을 묻는다.
+    저장소를 붙이지 않은 환경에서는 비어 있고, 그때 카드는 그 줄을 그리지 않는다.
+
+    실패해도 목록은 그대로 뜬다 — 반응 수는 이 화면의 본론이 아니다.
+  */
+  const stats = getSpotStats
+    ? await getSpotStats(wall.items.map((s) => s.titleKorean)).catch(() => null)
+    : null;
+
   const districtName = districts.find((r) => r.code === districtCode)?.name;
 
   // 스크린 리더에도 내부 은유를 흘리지 않는다. 사용자는 장소를 찾는다
@@ -353,6 +389,10 @@ async function Spots({
         labelLike={t.frame.like}
         labelLiked={t.frame.liked}
         labelViews={t.frame.views}
+        statsOf={(spot) => {
+          const key = statsKeyOf(spot.titleKorean);
+          return key ? stats?.get(key) : undefined;
+        }}
         labelDistance={t.frame.distance}
         labelNoImage={t.frame.noImage}
         enterFrom={enterFrom(more, wall.items.length)}

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { SpotView } from "@/application/spot/dto";
+import { statsKeyOf } from "@/domain/spot/spot-stats";
 import { NoImage } from "@/presentation/components/NoImage";
 import { CardActions } from "@/presentation/components/CardActions";
 import { SpotImage } from "@/presentation/components/SpotImage";
@@ -50,6 +51,7 @@ export function SpotFrame({
   labelLike,
   labelLiked,
   labelViews,
+  stats,
   labelDistance,
   labelNoImage,
   priority = false,
@@ -64,6 +66,8 @@ export function SpotFrame({
   labelLike: string;
   labelLiked: string;
   labelViews: string;
+  /** 이 장소의 반응. 셀 수 없거나 저장소가 없으면 없다 */
+  stats?: { likes: number; views: number };
   /** 거리의 스크린 리더 설명. "내 위치에서" */
   labelDistance: string;
   labelNoImage: string;
@@ -128,6 +132,7 @@ export function SpotFrame({
         {/* 평소엔 없다. 사진에 올리거나 포커스가 들어오면 가운데 떠오른다 */}
         <CardActions
           spotKey={`${spot.locale}:${spot.contentId}`}
+          koreanName={spot.titleKorean}
           title={spot.titlePrimary}
           labelSave={labelSave}
           labelSaved={labelSaved}
@@ -154,23 +159,74 @@ export function SpotFrame({
       </div>
 
       {/*
-        한글 원명. 현장에서 보여줘야 하므로 보조가 아니라 본문이다.
+        제목 아래 한 줄. **제목이 말하지 않는 것을 하나 더 준다.**
 
-        **값이 없어도 줄을 지우지 않는다.** 지우면 그 카드만 아래 요소가 위로 올라와
-        한 행의 단이 어긋난다. 원명이 없거나(파싱 실패·번역 부재) 번역명과 같은 경우(ko)에도
-        같은 높이를 차지한다. 빈 줄은 스크린 리더가 읽지 않도록 감춘다.
+        다국어 화면에서는 한글 원명이다 — 현장에서 택시 기사에게 보여주거나 표지판과
+        대조해야 하므로 보조가 아니라 본문이다(GOAL.md §5-2). 국문 화면에서는 제목이
+        이미 한글이라 원명이 같은 값이고, 그때 이 자리는 **장소의 종류**가 채운다
+        ("한식", "산", "사찰"). 둘 다 "제목만으로는 모르는 것" 이라는 점에서 같은 슬롯이다.
+
+        영문명을 넣는 안은 버렸다. 영문 카탈로그는 `contentid` 공간이 분리돼 있어 한글
+        원명으로 검색해야 하는데 서울 20건 실측(2026-08-23)에서 **7건(35%)만 잡혔고**,
+        카드마다 검색 1회라 목록 한 페이지가 일 한도 1,000건 중 12건을 먹는다.
+        종류는 목록 응답의 `cat3` 에 이미 실려 오므로 추가 호출이 0 이다.
+
+        **셋 다 없어도 줄을 지우지 않는다.** 지우면 그 카드만 아래 요소가 위로 올라와
+        한 행의 단이 어긋난다. 빈 줄은 스크린 리더가 읽지 않도록 감춘다.
       */}
-      {hasKorean ? (
-        <p lang="ko" className="mt-1.5 text-[14px] leading-[21px] text-body">
-          {spot.titleKorean}
-        </p>
+      {hasKorean || spot.kind ? (
+        <div className="mt-1.5 flex items-baseline justify-between gap-3 text-[13px] leading-[19px]">
+          {/*
+            한글 원명은 제목보다 작고 진하다. 크기로 위계를 주되 색은 낮추지 않는다 —
+            현장에서 보여 줄 이름이라 흐리면 그 자리에서 못 읽는다. 서체가 이미
+            다르므로(제목은 세리프) 같은 먹색이어도 둘이 섞이지 않는다.
+
+            원명이 없으면(국문 화면) 종류가 이 자리를 대신 차지한다. 오른쪽에 홀로
+            떠 있으면 어느 줄에 속한 값인지 읽히지 않는다.
+          */}
+          {hasKorean ? (
+            <p lang="ko" className="min-w-0 truncate text-ink">
+              {spot.titleKorean}
+            </p>
+          ) : (
+            <p className="min-w-0 truncate text-muted">{spot.kind}</p>
+          )}
+
+          {/*
+            종류는 오른쪽 끝에 선다. 이름이 아니라 범주이므로 색을 낮췄다 — 같은
+            먹색이면 "한식" 이 상호의 일부처럼 읽힌다. 자치구 라벨과 같은 축에
+            놓여 카드의 오른쪽 열이 위아래로 정렬된다.
+
+            길면 잘린다. 이름이 먼저이고 종류가 이름을 밀어내면 안 된다.
+          */}
+          {hasKorean && spot.kind && (
+            <span className="max-w-[45%] shrink-0 truncate text-muted">{spot.kind}</span>
+          )}
+        </div>
       ) : (
-        <p className="mt-1.5 h-[21px]" aria-hidden="true" />
+        // 값이 없어도 같은 높이를 차지한다. 위 줄과 숫자가 어긋나면 단이 틀어진다
+        <p className="mt-1.5 h-[19px]" aria-hidden="true" />
       )}
 
-      {/* mt-auto 로 바닥에 붙인다 — 제목 줄 수가 달라도 주소가 한 줄에 정렬된다 */}
+      {/*
+        위아래를 가르는 줄. **실선이 아니라 점선이다.**
+
+        전면 헤어라인은 카드마다 그어져 목록에 가로줄이 규칙적으로 쌓이고, 사진이
+        주인공인 벽에서 그 줄들이 격자처럼 먼저 읽힌다. 점선은 같은 자리에서 같은
+        일을 하면서 시선을 덜 붙든다.
+
+        `py-3` 이 위아래에 같은 여백을 준다 — 줄이 한글 원명과 주소 줄의 **가운데**에
+        서야 한다. 아래쪽에만 여백을 두면 줄이 위 텍스트에 붙어 그 줄의 밑줄처럼 보인다.
+
+        `mt-auto` 가 여기 있다. 바닥에 붙는 기준이 이 줄이어야 제목 줄 수가 달라도
+        카드마다 아래 줄이 한 선에 정렬된다.
+      */}
+      <div aria-hidden="true" className="mt-auto py-3">
+        <div className="border-t border-dotted border-line" />
+      </div>
+
       {/* 바닥 줄 — 왼쪽에 주소, 오른쪽에 좋아요·조회 */}
-      <div className="mt-auto flex items-center gap-3 border-t border-line pt-3">
+      <div className="flex items-center gap-3">
         {/*
           거리가 주소보다 앞에 선다. 어디인지보다 **얼마나 먼지**가 먼저 걸러 내는
           조건이라서다. 위치를 켜지 않았으면 아무것도 그리지 않고, 그때는 주소가
@@ -186,7 +242,8 @@ export function SpotFrame({
           {spot.address ?? <span aria-hidden="true">&nbsp;</span>}
         </p>
         <SpotStats
-          spotKey={`${spot.locale}:${spot.contentId}`}
+          stats={stats}
+          statsKey={statsKeyOf(spot.titleKorean)}
           locale={spot.locale}
           labelLike={labelLike}
           labelViews={labelViews}

@@ -996,3 +996,62 @@ details[open] > .dropdown-panel {
     animation: none;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────
+ * 머리말 옆의 연결망 (NetworkArt.tsx)
+ *
+ * **양 끝이 흐려진다.** 사각형 그림이 그대로 놓이면 잘린 이미지처럼 보이고,
+ * 왼쪽 모서리가 제목과 부딪친다. 좌우를 완전 투명까지 빼면 그림이 지면에서
+ * 자라난 것처럼 경계가 사라진다. 위아래도 조금 뺀다 — 네 변 중 두 곳만
+ * 흐리면 나머지 두 변이 오히려 또렷한 선으로 드러난다.
+ *
+ * 전체 불투명도를 여기서 한 번 더 누른다. SVG 안의 값은 요소끼리의 비율이고,
+ * 이 값이 그림 전체가 배경에서 얼마나 물러날지를 정한다.
+ * ───────────────────────────────────────────────────────────── */
+.network-art {
+  /*
+    **이 한 값이 그림 전체의 세기다.** SVG/canvas 안의 알파는 선과 점의 비율(점이
+    선보다 진하다)이고, 여기서 그 덩어리가 배경에서 얼마나 물러날지를 정한다.
+    더 흐리게 하려면 이 숫자만 내리면 된다 — 안쪽 값을 건드리면 비율이 무너져
+    점만 남거나 선만 남는다.
+  */
+  opacity: 0.55;
+
+  /*
+    **장식은 입력을 가로채지 않는다.** 탐색 화면에서는 확대돼 헤더와 탭 위까지
+    걸치는데, 그 위에 떠 있으면 그 아래 버튼을 누를 수 없다.
+  */
+  pointer-events: none;
+
+  /*
+    **자기 레이어에서 갱신된다.** canvas 는 매 프레임 다시 그려지는데, 같은 합성
+    레이어에 있으면 겹친 영역의 다른 요소들(헤더 유틸 버튼 · 탭 · 필터)도 함께
+    리페인트된다. 그것이 깜빡임으로 보인다.
+
+    `will-change: transform` 이 이 요소를 GPU 레이어로 올려 canvas 의 갱신이
+    바깥으로 번지지 않게 하고, `contain: paint` 가 그리기 범위를 자기 박스 안으로
+    가둔다 — 브라우저가 바깥을 다시 계산할 이유 자체를 없앤다.
+
+    `isolation` 은 쓰지 않는다. 이 요소는 이미 `mask` 때문에 stacking context 를
+    만들고, 겹치는 헤더가 sticky 라 그 위에 그려진다.
+  */
+  will-change: transform;
+  contain: paint;
+
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, #000 26%, #000 74%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #000 14%, #000 86%, transparent 100%);
+  mask-image:
+    linear-gradient(to right, transparent 0%, #000 26%, #000 74%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #000 14%, #000 86%, transparent 100%);
+  /* 두 그라데이션이 곱해져야 네 변이 함께 빠진다. 기본값(add)이면 한쪽만 듣는다 */
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+
+/*
+ * 움직임은 canvas 가 맡는다 (NetworkArt.tsx). **CSS 로는 할 수 없는 일이다** —
+ * 점이 움직이면 선의 양 끝 좌표를 매 프레임 다시 써야 하고, 어떤 점끼리
+ * 이어질지도 거리에 따라 매번 달라진다. `prefers-reduced-motion` 도 그쪽에서
+ * 읽어 루프를 돌리지 않는다.
+ */

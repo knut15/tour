@@ -4,6 +4,7 @@ import { createCoordinate } from "@/domain/spot/coordinate";
 import { isAreaCode, isDistrictCode } from "@/domain/spot/region";
 import { createSpotImage } from "@/domain/spot/image";
 import { parseSpotName, type Spot } from "@/domain/spot/spot";
+import { spotKindOf } from "@/infrastructure/tourapi/spot-kind";
 import { toNumber, type TourApiItem } from "@/infrastructure/tourapi/tourapi-types";
 
 /**
@@ -37,6 +38,7 @@ export function toSpot(item: TourApiItem, locale: Locale, fallback?: Category): 
     image: createSpotImage(item.firstimage, item.firstimage2, item.cpyrhtDivCd),
     tel: item.tel?.trim() || null,
     classification: item.lclsSystm3?.trim() || null,
+    kind: spotKindOf(item.cat3, item.lclsSystm3, locale),
     modifiedAt: item.modifiedtime?.trim() || null,
   };
 }

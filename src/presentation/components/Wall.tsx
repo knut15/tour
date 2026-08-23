@@ -39,6 +39,7 @@ export function Wall({
   labelLike,
   labelLiked,
   labelViews,
+  statsOf,
   labelDistance,
   labelNoImage,
   enterFrom,
@@ -52,6 +53,11 @@ export function Wall({
   labelLike: string;
   labelLiked: string;
   labelViews: string;
+  /**
+   * 카드 하나의 반응. **부르는 쪽이 한 번에 읽어 여기로 넘긴다** —
+   * 카드가 스스로 가져오면 한 화면에 열두 번을 묻게 된다.
+   */
+  statsOf: (spot: SpotView) => { likes: number; views: number } | undefined;
   labelDistance: string;
   labelNoImage: string;
   /**
@@ -103,6 +109,7 @@ export function Wall({
             labelLike={labelLike}
             labelLiked={labelLiked}
             labelViews={labelViews}
+            stats={statsOf(spot)}
             labelDistance={labelDistance}
             labelNoImage={labelNoImage}
             priority={i < 3}
