@@ -944,25 +944,45 @@ details[open] > .dropdown-panel {
  * 알리는 것처럼 읽힌다. 2.4s·`ease-in-out` 을 그대로 맞추면 점이 작아질 때
  * 빛도 함께 짙어져 하나의 호흡이 된다.
  *
+ * **그림자를 세 겹 쌓는다.** 한 겹이면 경계가 또렷한 테두리가 되어 빛이 아니라
+ * 윤곽선으로 보인다. 반경을 1·4·10 으로 벌리고 짙기를 반대로 낮추면 안쪽이
+ * 진하고 바깥으로 갈수록 옅어지는 그라데이션이 된다.
+ *
  * `drop-shadow` 다. `box-shadow` 는 요소의 사각형을 따르므로 아이콘 주위가 아니라
  * 네모난 그림자가 생긴다. `drop-shadow` 는 그려진 획의 윤곽을 따라간다.
  *
- * 색은 1차 액션 색을 쓴다 — 켜져 있다는 것을 알리는 자리라 앱이 "지금 동작 중"
- * 을 말할 때 쓰는 색과 같아야 한다. 라이트에서는 코발트, 다크에서는 그 밝은 값이
- * `--toss-primary` 한 토큰으로 따라온다.
+ * 색은 **지금 보고 있는 분류의 색**이다(`--tab-accent`). 탭 밑줄과 같은 색으로
+ * 빛나야 두 컨트롤이 한 벌로 읽힌다. 그 변수는 필터 바가 갖고 있고 여기까지
+ * 상속된다 — 분류가 없는 자리에서도 쓰일 수 있으므로 1차 액션 색을 대비로 둔다.
  */
 @keyframes near-me-glow {
   0%,
   100% {
-    filter: drop-shadow(0 0 1px color-mix(in srgb, var(--toss-primary) 30%, transparent));
+    filter: drop-shadow(0 0 1px var(--near-me-glow-near))
+      drop-shadow(0 0 3px var(--near-me-glow-mid));
   }
   50% {
-    filter: drop-shadow(0 0 5px color-mix(in srgb, var(--toss-primary) 75%, transparent));
+    filter: drop-shadow(0 0 2px var(--near-me-glow-near))
+      drop-shadow(0 0 6px var(--near-me-glow-mid))
+      drop-shadow(0 0 12px var(--near-me-glow-far));
   }
 }
 
 .near-me-glow {
+  --near-me-accent: var(--tab-accent, var(--toss-primary));
+  /* 안쪽이 진하고 바깥으로 옅어진다. 세 겹이 겹쳐 그라데이션이 된다 */
+  --near-me-glow-near: color-mix(in srgb, var(--near-me-accent) 85%, transparent);
+  --near-me-glow-mid: color-mix(in srgb, var(--near-me-accent) 55%, transparent);
+  --near-me-glow-far: color-mix(in srgb, var(--near-me-accent) 28%, transparent);
   animation: near-me-glow 2.4s ease-in-out infinite;
+}
+
+/*
+ * 빛이 도는 동안 아이콘 획도 그 색을 쓴다. 먹색 아이콘에 색 빛만 두르면
+ * 빛이 아이콘에서 난 것이 아니라 뒤에 깔린 것으로 보인다.
+ */
+.near-me-glow {
+  color: var(--near-me-accent);
 }
 
 /*

@@ -41,16 +41,8 @@ export function CategoryPicker({
   }));
 
   /*
-    카테고리마다 배정된 색을 넘긴다 (GOAL.md §2.3 규칙 3). 토큰 이름이 슬러그와
-    같으므로 표를 하나 더 두지 않는다 — 카테고리가 늘면 `globals.css` 에
-    `--cat-<슬러그>` 만 추가하면 된다.
+    강조색은 넘기지 않는다. 필터 바가 `--tab-accent` 를 갖고 있고 탭은 그것을
+    상속받는다 — 색은 탭만의 것이 아니라 바 전체의 성질이다.
   */
-  return (
-    <CategoryTabs
-      tabs={tabs}
-      current={current}
-      groupLabel={groupLabel}
-      accent={`var(--cat-${current})`}
-    />
-  );
+  return <CategoryTabs tabs={tabs} current={current} groupLabel={groupLabel} />;
 }

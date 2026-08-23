@@ -116,6 +116,12 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
               안에 있으므로 그 바깥으로 카드가 비쳐 나올 자리는 없다.
             */}
             <div
+              /*
+                현재 분류의 색을 **바 전체에** 둔다. 탭의 밑줄·글자와 거리 토글의
+                빛이 같은 변수를 상속받아, 한 곳만 고치면 둘이 함께 따라온다.
+                탭 안에만 두면 옆에 선 컨트롤은 그 색을 볼 수 없다.
+              */
+              style={{ "--tab-accent": `var(--cat-${category})` } as React.CSSProperties}
               className={
                 // 바탕·블러·그림자는 `globals.css` 의 `.filter-sticky::before` 가 그린다.
                 // 화면 폭 전체를 덮어야 하는데 이 요소는 컨테이너 폭까지만이라서다.

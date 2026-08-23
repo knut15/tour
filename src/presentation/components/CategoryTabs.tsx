@@ -21,18 +21,18 @@ export type Tab = {
  *
  * 상태를 두지 않고 ref 로 직접 스타일을 쓴다. 위치는 렌더 결과가 아니라 렌더된
  * 뒤에야 알 수 있는 값이라, state 로 만들면 매 전환마다 렌더가 한 번 더 돈다.
+ *
+ * 강조색(`--tab-accent`)은 **상속으로** 받는다. 이 컴포넌트가 그 값을 정하면
+ * 옆에 선 다른 컨트롤이 같은 색을 쓸 수 없다 — 색은 바 전체의 성질이다.
  */
 export function CategoryTabs({
   tabs,
   current,
   groupLabel,
-  accent,
 }: {
   tabs: Tab[];
   current: string;
   groupLabel: string;
-  /** 현재 항목의 강조색. 밑줄과 활성 글자가 함께 쓴다 */
-  accent?: string;
 }) {
   const listRef = useRef<HTMLUListElement>(null);
   const barRef = useRef<HTMLSpanElement>(null);
@@ -88,7 +88,6 @@ export function CategoryTabs({
     <nav aria-label={groupLabel}>
       <ul
         ref={listRef}
-        style={accent ? ({ "--tab-accent": accent } as React.CSSProperties) : undefined}
         className="tab-list relative flex flex-wrap items-center gap-x-8 border-b border-line sm:gap-x-9"
       >
         {tabs.map((tab) => {
