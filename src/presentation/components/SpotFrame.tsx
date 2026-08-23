@@ -174,22 +174,35 @@ export function SpotFrame({
         **셋 다 없어도 줄을 지우지 않는다.** 지우면 그 카드만 아래 요소가 위로 올라와
         한 행의 단이 어긋난다. 빈 줄은 스크린 리더가 읽지 않도록 감춘다.
       */}
-      {hasKorean ? (
-        /*
-          제목보다 작고 진하다. 크기로 위계를 주되 색은 낮추지 않는다 —
-          현장에서 보여 줄 이름이라 흐리면 그 자리에서 못 읽는다.
-          서체가 이미 다르므로(제목은 세리프) 같은 먹색이어도 둘이 섞이지 않는다.
-        */
-        <p lang="ko" className="mt-1.5 text-[13px] leading-[19px] text-ink">
-          {spot.titleKorean}
-        </p>
-      ) : spot.kind ? (
-        /*
-          같은 크기, 낮춘 색. 이름 자리에 이름이 아닌 것이 오므로 색으로 갈라 둔다 —
-          같은 먹색이면 "한식" 이 상호의 일부처럼 읽힌다. 크기를 줄이지 않는 것은
-          줄 높이가 바뀌면 카드마다 아래 줄이 어긋나기 때문이다.
-        */
-        <p className="mt-1.5 text-[13px] leading-[19px] text-muted">{spot.kind}</p>
+      {hasKorean || spot.kind ? (
+        <div className="mt-1.5 flex items-baseline justify-between gap-3 text-[13px] leading-[19px]">
+          {/*
+            한글 원명은 제목보다 작고 진하다. 크기로 위계를 주되 색은 낮추지 않는다 —
+            현장에서 보여 줄 이름이라 흐리면 그 자리에서 못 읽는다. 서체가 이미
+            다르므로(제목은 세리프) 같은 먹색이어도 둘이 섞이지 않는다.
+
+            원명이 없으면(국문 화면) 종류가 이 자리를 대신 차지한다. 오른쪽에 홀로
+            떠 있으면 어느 줄에 속한 값인지 읽히지 않는다.
+          */}
+          {hasKorean ? (
+            <p lang="ko" className="min-w-0 truncate text-ink">
+              {spot.titleKorean}
+            </p>
+          ) : (
+            <p className="min-w-0 truncate text-muted">{spot.kind}</p>
+          )}
+
+          {/*
+            종류는 오른쪽 끝에 선다. 이름이 아니라 범주이므로 색을 낮췄다 — 같은
+            먹색이면 "한식" 이 상호의 일부처럼 읽힌다. 자치구 라벨과 같은 축에
+            놓여 카드의 오른쪽 열이 위아래로 정렬된다.
+
+            길면 잘린다. 이름이 먼저이고 종류가 이름을 밀어내면 안 된다.
+          */}
+          {hasKorean && spot.kind && (
+            <span className="max-w-[45%] shrink-0 truncate text-muted">{spot.kind}</span>
+          )}
+        </div>
       ) : (
         // 값이 없어도 같은 높이를 차지한다. 위 줄과 숫자가 어긋나면 단이 틀어진다
         <p className="mt-1.5 h-[19px]" aria-hidden="true" />
