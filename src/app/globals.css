@@ -1016,6 +1016,28 @@ details[open] > .dropdown-panel {
     점만 남거나 선만 남는다.
   */
   opacity: 0.55;
+
+  /*
+    **장식은 입력을 가로채지 않는다.** 탐색 화면에서는 확대돼 헤더와 탭 위까지
+    걸치는데, 그 위에 떠 있으면 그 아래 버튼을 누를 수 없다.
+  */
+  pointer-events: none;
+
+  /*
+    **자기 레이어에서 갱신된다.** canvas 는 매 프레임 다시 그려지는데, 같은 합성
+    레이어에 있으면 겹친 영역의 다른 요소들(헤더 유틸 버튼 · 탭 · 필터)도 함께
+    리페인트된다. 그것이 깜빡임으로 보인다.
+
+    `will-change: transform` 이 이 요소를 GPU 레이어로 올려 canvas 의 갱신이
+    바깥으로 번지지 않게 하고, `contain: paint` 가 그리기 범위를 자기 박스 안으로
+    가둔다 — 브라우저가 바깥을 다시 계산할 이유 자체를 없앤다.
+
+    `isolation` 은 쓰지 않는다. 이 요소는 이미 `mask` 때문에 stacking context 를
+    만들고, 겹치는 헤더가 sticky 라 그 위에 그려진다.
+  */
+  will-change: transform;
+  contain: paint;
+
   -webkit-mask-image:
     linear-gradient(to right, transparent 0%, #000 26%, #000 74%, transparent 100%),
     linear-gradient(to bottom, transparent 0%, #000 14%, #000 86%, transparent 100%);
