@@ -309,7 +309,19 @@
 
   --radius-sm: var(--round-sm);
   --radius-md: var(--round-md);
-  --radius-btn: var(--round-btn-xl);
+  /*
+   * 버튼 반경의 정본. **모든 버튼이 이것 하나를 쓴다.**
+   *
+   * 전에는 다섯 상수가 제각각이었다 — TDS 주 버튼 16px, 마케팅 CTA 7px,
+   * 헤더 컨트롤 6px, 필터 16px, 상세 액션 4px. 같은 화면에 서너 개가 함께 서면
+   * 모서리가 저마다 다른 것이 형태의 차이가 아니라 마감의 실수로 읽힌다.
+   *
+   * TDS 문서는 xlarge 에 16px 을, toss.im 은 마케팅 CTA 에 7px 을 지정하고 둘을
+   * 섞지 말라고 못박는다. 이 프로젝트는 그 규칙 대신 **한 값으로 통일하는 쪽**을
+   * 택했다 — 컨트롤 기하만 빌려 쓸 뿐 토스의 화면을 만드는 것이 아니고,
+   * 바탕이 크림·코발트로 바뀐 뒤로는 토스 화면과 같아 보일 이유도 없다.
+   */
+  --radius-btn: var(--round-btn-sm);
   --radius-marketing: var(--round-marketing);
 
   --ease-signature: cubic-bezier(0.16, 1, 0.3, 1);
