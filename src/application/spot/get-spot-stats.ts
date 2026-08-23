@@ -1,5 +1,5 @@
 import type { SpotStatsRepository } from "@/domain/spot/spot-stats-repository";
-import { statsKeyOf, type SpotStatsKey } from "@/domain/spot/spot-stats";
+import { statsKeyOf, type SpotStatsKey, type StatsSort } from "@/domain/spot/spot-stats";
 
 /** 화면이 쓰는 표현. 없는 장소는 아예 항목이 없다 */
 export type SpotStatsView = {
@@ -57,7 +57,10 @@ export function makeGetSpotStats(repo: SpotStatsRepository) {
  * **이미 받아 둔 목록 안에서 자리를 바꾸는 것**이라 추가 호출이 없다.
  */
 export function makeGetTopSpotKeys(repo: SpotStatsRepository) {
-  return async function getTopSpotKeys(limit: number): Promise<SpotStatsKey[]> {
-    return repo.findTopKeys(limit);
+  return async function getTopSpotKeys(
+    limit: number,
+    sort: StatsSort,
+  ): Promise<SpotStatsKey[]> {
+    return repo.findTopKeys(limit, sort);
   };
 }

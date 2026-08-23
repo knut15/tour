@@ -23,7 +23,10 @@
     "searchLabel": "Ort finden",
     "searchPlaceholder": "Nach Namen suchen",
     "searchAction": "Suchen",
-    "searchClear": "Suche löschen"
+    "searchClear": "Suche löschen",
+    "sortLabel": "Sortieren",
+    "sortByViews": "Meist gesehen",
+    "sortByLikes": "Meist gemocht"
   },
   "category": {
     "attraction": "Orte",

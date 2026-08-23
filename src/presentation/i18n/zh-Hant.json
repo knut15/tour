@@ -23,7 +23,10 @@
     "searchLabel": "尋找地點",
     "searchPlaceholder": "依名稱搜尋",
     "searchAction": "搜尋",
-    "searchClear": "清除搜尋"
+    "searchClear": "清除搜尋",
+    "sortLabel": "排序",
+    "sortByViews": "依瀏覽",
+    "sortByLikes": "依喜歡"
   },
   "category": {
     "attraction": "景點",

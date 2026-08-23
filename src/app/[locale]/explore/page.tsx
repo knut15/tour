@@ -11,7 +11,7 @@ import {
   listSpots,
 } from "@/presentation/lib/container";
 import { exploreHref } from "@/presentation/lib/explore-href";
-import { statsKeyOf } from "@/domain/spot/spot-stats";
+import { parseStatsSort, statsKeyOf, type StatsSort } from "@/domain/spot/spot-stats";
 import {
   MORE_MAX,
   enterFrom,
@@ -21,6 +21,7 @@ import {
 import { CategoryPicker } from "@/presentation/components/CategoryPicker";
 import { Lede, SHARE } from "@/presentation/components/Lede";
 import { NetworkArt } from "@/presentation/components/NetworkArt";
+import { SortToggle } from "@/presentation/components/SortToggle";
 import { SpotSearch } from "@/presentation/components/SpotSearch";
 import { RegionPicker } from "@/presentation/components/RegionPicker";
 import { MoreLabel } from "@/presentation/components/MoreLabel";
@@ -95,6 +96,8 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
     "빈 검색" 이 아니라 그냥 목록이어야 한다.
   */
   const keyword = first(sp.q)?.trim() || undefined;
+  // 모르는 값이면 기본(조회순)이다. 주소를 손으로 고친 사람에게 보여줄 화면은 그것뿐이다
+  const sort = parseStatsSort(first(sp.sort));
   const t = await getDictionary(locale);
 
   return (
@@ -108,7 +111,7 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
       <Masthead
         locale={locale}
         t={t}
-        localeHref={(l) => exploreHref(l, { category, areaCode, districtCode, keyword, more })}
+        localeHref={(l) => exploreHref(l, { category, areaCode, districtCode, keyword, sort, more })}
       />
 
       <main className="mx-auto w-full max-w-[1200px] flex-1 px-6 pb-32">
@@ -228,7 +231,23 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
                   좁은 화면에서는 줄이 바뀌며 폭을 다 쓴다. 그때는 오른쪽에 밀 자리가
                   없고, 칸이 좁으면 검색어가 몇 글자만 보인다.
                 */}
-                <div className="w-full min-w-0 sm:ms-auto sm:w-auto sm:min-w-[240px]">
+                {/*
+                  정렬 스위치가 검색 **앞**에 선다. 둘 다 줄의 오른쪽 끝으로 밀리되
+                  순서는 "무엇으로 세울까" 다음에 "무엇을 찾을까" 다 — 앞의 것은
+                  지금 보이는 목록을 다시 세우고, 뒤의 것은 목록 자체를 갈아치운다.
+                */}
+                <div className="ms-auto flex min-w-0 flex-wrap items-center justify-end gap-3">
+                  <SortToggle
+                    locale={locale}
+                    category={category}
+                    areaCode={areaCode}
+                    districtCode={districtCode}
+                    keyword={keyword}
+                    current={sort}
+                    label={t.explore.sortLabel}
+                    labels={{ views: t.explore.sortByViews, likes: t.explore.sortByLikes }}
+                  />
+                  <div className="w-full min-w-0 sm:w-auto sm:min-w-[240px]">
                   <SpotSearch
                     locale={locale}
                     category={category}
@@ -240,6 +259,7 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
                     action={t.explore.searchAction}
                     clearLabel={t.explore.searchClear}
                   />
+                  </div>
                 </div>
               </div>
             </div>
@@ -252,7 +272,7 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
               "교체" 다. 빼면 React 가 key 로 기존 카드를 알아보고 새 카드만 끼워 넣는다.
             */}
             <Suspense
-              key={`${locale}:${category}:${areaCode ?? "all"}:${districtCode ?? "all"}:${keyword ?? ""}`}
+              key={`${locale}:${category}:${areaCode ?? "all"}:${districtCode ?? "all"}:${keyword ?? ""}:${sort}`}
               fallback={<WallSkeleton label={t.state.loading} />}
             >
               <Spots
@@ -261,6 +281,7 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
                 areaCode={areaCode}
                 districtCode={districtCode}
                 keyword={keyword}
+                sort={sort}
                 more={more}
                 t={t}
               />
@@ -358,6 +379,7 @@ async function Spots({
   areaCode,
   districtCode,
   keyword,
+  sort,
   more,
   t,
 }: {
@@ -367,6 +389,8 @@ async function Spots({
   districtCode?: number;
   /** 이름으로 좁힌다. 분류·지역과 함께 걸린다 */
   keyword?: string;
+  /** 벽을 무엇으로 세울지 */
+  sort: StatsSort;
   /** 더보기를 누른 횟수. 0 이면 첫 묶음만 */
   more: number;
   t: Dictionary;
@@ -458,7 +482,7 @@ async function Spots({
 
     실패해도 목록은 그대로 뜬다. 순서가 공급자 순서로 남을 뿐이다.
   */
-  const topKeys = getTopSpotKeys ? await getTopSpotKeys(TOP_PINNED).catch(() => []) : [];
+  const topKeys = getTopSpotKeys ? await getTopSpotKeys(TOP_PINNED, sort).catch(() => []) : [];
   const rank = new Map(topKeys.map((k, i) => [k, i]));
   /*
     `sort` 는 안정 정렬이다(ES2019~). 순위에 없는 것끼리는 원래 순서가 그대로
@@ -505,7 +529,7 @@ async function Spots({
             "3,412건 중 1–20" 이라는 문구 하나가 기관 느낌의 핵심이다 (GOAL.md §0.5-3).
           */}
           <ButtonLink
-            href={exploreHref(locale, { category, areaCode, districtCode, keyword, more: more + 1 })}
+            href={exploreHref(locale, { category, areaCode, districtCode, keyword, sort, more: more + 1 })}
             variant="weak"
             // 스크롤 위치를 지킨다. 목록이 아래로 늘어나는데 맨 위로 올라가면
             // 방금 보던 카드를 다시 찾아 내려와야 한다

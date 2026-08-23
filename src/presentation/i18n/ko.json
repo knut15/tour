@@ -23,7 +23,10 @@
     "searchLabel": "장소 찾기",
     "searchPlaceholder": "이름으로 찾기",
     "searchAction": "찾기",
-    "searchClear": "검색어 지우기"
+    "searchClear": "검색어 지우기",
+    "sortLabel": "정렬",
+    "sortByViews": "조회순",
+    "sortByLikes": "좋아요순"
   },
   "category": {
     "attraction": "가볼 곳",

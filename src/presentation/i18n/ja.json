@@ -23,7 +23,10 @@
     "searchLabel": "場所を探す",
     "searchPlaceholder": "名前で探す",
     "searchAction": "探す",
-    "searchClear": "検索語を消す"
+    "searchClear": "検索語を消す",
+    "sortLabel": "並べ替え",
+    "sortByViews": "閲覧順",
+    "sortByLikes": "いいね順"
   },
   "category": {
     "attraction": "見どころ",

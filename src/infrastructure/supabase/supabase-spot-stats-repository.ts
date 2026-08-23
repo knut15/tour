@@ -2,7 +2,7 @@ import "server-only";
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type { SpotStatsRepository } from "@/domain/spot/spot-stats-repository";
-import type { SpotStats, SpotStatsKey } from "@/domain/spot/spot-stats";
+import type { SpotStats, SpotStatsKey, StatsSort } from "@/domain/spot/spot-stats";
 import type { SupabaseConfig } from "@/infrastructure/config/env";
 
 /**
@@ -44,20 +44,23 @@ export class SupabaseSpotStatsRepository implements SpotStatsRepository {
     return out;
   }
 
-  async findTopKeys(limit: number): Promise<SpotStatsKey[]> {
+  async findTopKeys(limit: number, sort: StatsSort): Promise<SpotStatsKey[]> {
     if (limit <= 0) return [];
 
     /*
-      **정렬을 두 번 건다.** 가중합(`like_count * n + view_count`)으로 한 줄에
-      세우려면 계산 컬럼이 필요하고 그것은 마이그레이션을 다시 돌려야 한다.
-      좋아요로 세우고 같으면 조회로 가르는 것만으로 뜻이 충분히 서고,
-      가중치라는 임의의 숫자를 만들지 않아도 된다.
+      **정렬을 두 번 건다.** 고른 것이 먼저이고 같으면 나머지로 가른다.
+      가중합(`like_count * n + view_count`)으로 한 줄에 세우려면 계산 컬럼이
+      필요해 마이그레이션을 다시 돌려야 하고, 그 가중치는 어디서 왔는지 설명할 수
+      없는 숫자가 된다.
     */
+    const first = sort === "likes" ? "like_count" : "view_count";
+    const second = sort === "likes" ? "view_count" : "like_count";
+
     const { data, error } = await this.client
       .from("spot_stats")
       .select("key")
-      .order("like_count", { ascending: false })
-      .order("view_count", { ascending: false })
+      .order(first, { ascending: false })
+      .order(second, { ascending: false })
       .limit(limit);
 
     if (error || !data) return [];

@@ -23,7 +23,10 @@
     "searchLabel": "Trouver un lieu",
     "searchPlaceholder": "Rechercher par nom",
     "searchAction": "Rechercher",
-    "searchClear": "Effacer la recherche"
+    "searchClear": "Effacer la recherche",
+    "sortLabel": "Trier",
+    "sortByViews": "Plus vus",
+    "sortByLikes": "Plus aimés"
   },
   "category": {
     "attraction": "Lieux",

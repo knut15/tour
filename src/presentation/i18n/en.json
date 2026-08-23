@@ -23,7 +23,10 @@
     "searchLabel": "Find a place",
     "searchPlaceholder": "Search by name",
     "searchAction": "Search",
-    "searchClear": "Clear search"
+    "searchClear": "Clear search",
+    "sortLabel": "Sort",
+    "sortByViews": "Most viewed",
+    "sortByLikes": "Most liked"
   },
   "category": {
     "attraction": "Places",
