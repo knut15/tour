@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { usePersonalSet } from "@/presentation/lib/personal-set";
+import { useSpotLike } from "@/presentation/lib/use-spot-like";
 
 /**
  * 사진 위에 얹히는 액션 둘 — 담기와 좋아요.
@@ -18,6 +19,7 @@ import { usePersonalSet } from "@/presentation/lib/personal-set";
  */
 export function CardActions({
   spotKey,
+  koreanName,
   title,
   labelSave,
   labelSaved,
@@ -25,6 +27,8 @@ export function CardActions({
   labelLiked,
 }: {
   spotKey: string;
+  /** 서버에 셀 때 쓰는 키. 로케일을 넘나든다. 없으면 로컬 표시만 남는다 */
+  koreanName: string | null;
   title: string;
   labelSave: string;
   labelSaved: string;
@@ -32,7 +36,7 @@ export function CardActions({
   labelLiked: string;
 }) {
   const saved = usePersonalSet("saved", spotKey);
-  const liked = usePersonalSet("liked", spotKey);
+  const liked = useSpotLike({ spotKey, koreanName });
 
   return (
     <div className="card-actions absolute inset-0 z-[var(--layer-card-overlay)] grid place-items-center">
@@ -56,15 +60,15 @@ export function CardActions({
         </ActionButton>
 
         <ActionButton
-          pressed={liked.has}
+          pressed={liked.liked}
           onToggle={liked.toggle}
           tone="like"
-          label={`${liked.has ? labelLiked : labelLike}: ${title}`}
+          label={`${liked.liked ? labelLiked : labelLike}: ${title}`}
         >
           <svg viewBox="0 0 24 24" className="size-[18px]" aria-hidden="true">
             <path
               d="M12 20.3 4.6 13a4.6 4.6 0 0 1 6.5-6.5l.9.9.9-.9A4.6 4.6 0 0 1 19.4 13Z"
-              fill={liked.has ? "currentColor" : "none"}
+              fill={liked.liked ? "currentColor" : "none"}
               stroke="currentColor"
               strokeWidth="1.5"
               strokeLinejoin="round"

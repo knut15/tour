@@ -50,6 +50,7 @@ export function SpotFrame({
   labelLike,
   labelLiked,
   labelViews,
+  stats,
   labelDistance,
   labelNoImage,
   priority = false,
@@ -64,6 +65,8 @@ export function SpotFrame({
   labelLike: string;
   labelLiked: string;
   labelViews: string;
+  /** 이 장소의 반응. 셀 수 없거나 저장소가 없으면 없다 */
+  stats?: { likes: number; views: number };
   /** 거리의 스크린 리더 설명. "내 위치에서" */
   labelDistance: string;
   labelNoImage: string;
@@ -128,6 +131,7 @@ export function SpotFrame({
         {/* 평소엔 없다. 사진에 올리거나 포커스가 들어오면 가운데 떠오른다 */}
         <CardActions
           spotKey={`${spot.locale}:${spot.contentId}`}
+          koreanName={spot.titleKorean}
           title={spot.titlePrimary}
           labelSave={labelSave}
           labelSaved={labelSaved}
@@ -186,7 +190,7 @@ export function SpotFrame({
           {spot.address ?? <span aria-hidden="true">&nbsp;</span>}
         </p>
         <SpotStats
-          spotKey={`${spot.locale}:${spot.contentId}`}
+          stats={stats}
           locale={spot.locale}
           labelLike={labelLike}
           labelViews={labelViews}

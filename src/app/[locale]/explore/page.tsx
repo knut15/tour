@@ -3,8 +3,9 @@ import { notFound } from "next/navigation";
 import { isLocale, type Locale } from "@/domain/shared/locale";
 import { isCategory, type Category } from "@/domain/spot/category";
 import { isAreaCode, isDistrictCode } from "@/domain/spot/region";
-import { listAreas, listDistricts, listSpots } from "@/presentation/lib/container";
+import { getSpotStats, listAreas, listDistricts, listSpots } from "@/presentation/lib/container";
 import { exploreHref } from "@/presentation/lib/explore-href";
+import { statsKeyOf } from "@/domain/spot/spot-stats";
 import {
   MORE_MAX,
   enterFrom,
@@ -336,6 +337,16 @@ async function Spots({
     );
   }
 
+  /*
+    반응은 **한 번에** 읽는다. 카드가 스스로 가져오면 한 화면에 열두 번을 묻는다.
+    저장소를 붙이지 않은 환경에서는 비어 있고, 그때 카드는 그 줄을 그리지 않는다.
+
+    실패해도 목록은 그대로 뜬다 — 반응 수는 이 화면의 본론이 아니다.
+  */
+  const stats = getSpotStats
+    ? await getSpotStats(wall.items.map((s) => s.titleKorean)).catch(() => null)
+    : null;
+
   const districtName = districts.find((r) => r.code === districtCode)?.name;
 
   // 스크린 리더에도 내부 은유를 흘리지 않는다. 사용자는 장소를 찾는다
@@ -353,6 +364,10 @@ async function Spots({
         labelLike={t.frame.like}
         labelLiked={t.frame.liked}
         labelViews={t.frame.views}
+        statsOf={(spot) => {
+          const key = statsKeyOf(spot.titleKorean);
+          return key ? stats?.get(key) : undefined;
+        }}
         labelDistance={t.frame.distance}
         labelNoImage={t.frame.noImage}
         enterFrom={enterFrom(more, wall.items.length)}

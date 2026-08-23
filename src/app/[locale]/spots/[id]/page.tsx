@@ -3,11 +3,13 @@ import { notFound } from "next/navigation";
 import { isLocale, type Locale } from "@/domain/shared/locale";
 import type { Category } from "@/domain/spot/category";
 import type { SpotDetailView } from "@/application/spot/dto";
-import { getSpotDetail } from "@/presentation/lib/container";
+import { getSpotDetail, getSpotStats } from "@/presentation/lib/container";
+import { statsKeyOf } from "@/domain/spot/spot-stats";
 import { exploreHref } from "@/presentation/lib/explore-href";
 import { NoImage } from "@/presentation/components/NoImage";
 import { SaveChip } from "@/presentation/components/SaveChip";
 import { SpotStats } from "@/presentation/components/SpotStats";
+import { ViewCounter } from "@/presentation/components/ViewCounter";
 import { SpotImage } from "@/presentation/components/SpotImage";
 import { Masthead } from "@/presentation/components/Masthead";
 import {
@@ -46,6 +48,12 @@ export default async function SpotDetailPage({ params }: PageProps<"/[locale]/sp
     홀수면 왼쪽이 하나 더 갖는다. 첫 항목인 주소가 대개 가장 길어 왼쪽이
     자연스럽게 무거워지고, 거기에 한 줄을 더 얹는 편이 두 단의 높이가 맞는다.
   */
+  /* 이 장소의 반응. 저장소가 없거나 셀 수 없으면 없다 — 그때는 줄을 그리지 않는다 */
+  const statsKey = statsKeyOf(spot.titleKorean);
+  const stats = getSpotStats && statsKey
+    ? (await getSpotStats([spot.titleKorean]).catch(() => null))?.get(statsKey)
+    : undefined;
+
   const half = Math.ceil(factRows.length / 2);
   const factColumns = [factRows.slice(0, half), factRows.slice(half)];
 
@@ -109,7 +117,7 @@ export default async function SpotDetailPage({ params }: PageProps<"/[locale]/sp
             */}
             <div className="mt-5 flex justify-center">
               <SpotStats
-                spotKey={`${spot.locale}:${spot.contentId}`}
+                stats={stats}
                 locale={spot.locale}
                 labelLike={t.frame.like}
                 labelViews={t.frame.views}
@@ -200,6 +208,9 @@ export default async function SpotDetailPage({ params }: PageProps<"/[locale]/sp
 
         </div>
       </main>
+
+      {/* 봤다고 한 번 알린다. 아무것도 그리지 않는다 */}
+      <ViewCounter koreanName={spot.titleKorean} />
 
       <Actions spot={spot} t={t} />
 

@@ -55,3 +55,23 @@ export function readWeatherConfig(): WeatherApiConfig {
 export function isMockEnabled(): boolean {
   return process.env.USE_MOCK_DATA?.trim().toLowerCase() !== "false";
 }
+
+export type SupabaseConfig = {
+  url: string;
+  /** 공개 키. 브라우저 번들에 들어가도 되는 값이다 */
+  publishableKey: string;
+};
+
+/**
+ * Supabase 설정. **없으면 `null` 이다 — 던지지 않는다.**
+ *
+ * 반응 수는 이 앱의 본론이 아니다. 키를 넣지 않은 개발 환경이나 아직 프로젝트를
+ * 만들지 않은 상태에서도 장소는 보여야 한다. 없을 때 무엇을 할지는 부르는 쪽이
+ * 정한다 — 지금은 반응 줄을 그리지 않는다.
+ */
+export function readSupabaseConfig(): SupabaseConfig | null {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+  const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY?.trim();
+  if (!url || !publishableKey) return null;
+  return { url, publishableKey };
+}
