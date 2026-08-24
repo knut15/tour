@@ -1118,3 +1118,156 @@ details[open] > .dropdown-panel {
     animation: none;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────
+ * 좋아요를 누른 순간 튀어 오르는 하트들 (CardActions.tsx)
+ *
+ * 참고한 기법: CodePen "Like Animation — Jumpy Hearts" (wojtek/pugson).
+ * 그 구현은 하트 둘에 `::before`·`::after` 를 붙여 **한 요소에서 셋씩** 뽑아내고,
+ * 서로 다른 지연을 주어 시차를 만든다. 그 구조를 가져오되 값과 방향은 이 화면에
+ * 맞춰 다시 잡았다 — 카드 사진 위에 뜨는 44px 버튼이라 원본(테두리 있는 넓은 버튼)
+ * 보다 좁게 흩어져야 한다.
+ *
+ * **하트를 배경 이미지로 그리지 않는다.** 원본은 분홍색이 박힌 SVG 를 data URI 로
+ * 깔고 `filter: grayscale()` 로 눌러 쓰는데, 그러면 색이 CSS 에 고정돼 테마를 따라갈
+ * 수 없다. 마스크로 뚫고 `background-color: currentColor` 로 칠하면 버튼이 가진
+ * 색(`--like`)을 그대로 물려받는다.
+ * ───────────────────────────────────────────────────────────── */
+
+/*
+ * 되돌아올 때 한 번 지나치는 이징. 마지막 값이 1 을 넘는다.
+ * 원본이 쓰는 값과 같다 — 튀어 오르는 느낌은 이 곡선에서 나온다.
+ */
+:root {
+  --ease-jump: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/*
+ * 흩어질 자리. 버튼 한가운데에 점 하나로 놓고, 하트들은 여기서 뻗어 나간다.
+ * `pointer-events: none` — 날아다니는 장식이 버튼의 클릭을 가로채면 안 된다.
+ */
+.like-burst {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+}
+
+/*
+ * 하트 한 장. **여섯 장이 같은 모양을 쓴다** — 둘은 이 요소 자신이고 넷은
+ * `::before`·`::after` 다. 한 요소에서 셋을 뽑는 원본의 방식이다.
+ */
+.like-burst span,
+.like-burst span::before,
+.like-burst span::after {
+  content: "";
+  position: absolute;
+  background-color: currentColor;
+  -webkit-mask-image: var(--heart-mask);
+  mask-image: var(--heart-mask);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  opacity: 0;
+}
+
+.like-burst span {
+  --heart-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 20.3 4.6 13a4.6 4.6 0 0 1 6.5-6.5l.9.9.9-.9A4.6 4.6 0 0 1 19.4 13Z'/%3E%3C/svg%3E");
+  width: 11px;
+  height: 11px;
+}
+
+/* 곁딸린 둘은 더 작다. 큰 것 하나에 작은 것 둘이 따라붙는 무리로 읽힌다 */
+.like-burst span::before,
+.like-burst span::after {
+  width: 7px;
+  height: 7px;
+}
+
+/*
+ * 두 무리가 좌우로 갈라진다. 한쪽으로만 날면 버튼이 기울어 보인다.
+ *
+ * `--dir` 이 방향을 뒤집는다. 같은 키프레임을 부호만 바꿔 쓰므로 궤적이 대칭이고,
+ * 각도를 두 벌 적어 두다 한쪽만 고치는 일이 없다.
+ */
+.like-burst-a {
+  --dir: -1;
+  animation: like-burst-main 720ms var(--ease-jump) both;
+}
+
+.like-burst-b {
+  --dir: 1;
+  animation: like-burst-main 720ms 60ms var(--ease-jump) both;
+}
+
+/* 곁딸린 것들은 늦게 출발한다. 동시에 뜨면 여섯이 한 덩어리로 보인다 */
+.like-burst span::before {
+  animation: like-burst-sub-near 640ms 90ms var(--ease-jump) both;
+}
+
+.like-burst span::after {
+  animation: like-burst-sub-far 700ms 150ms var(--ease-jump) both;
+}
+
+/*
+ * 위로 날아오르며 기울고, 끝에서 사라진다.
+ *
+ * **끝을 투명으로 닫는다.** 원본은 정점 상태를 유지한 채 끝나고 1 초 뒤 클래스를
+ * 떼어 지우는데, 그러면 지우는 타이밍이 애니메이션 밖에 있어 둘이 어긋날 수 있다.
+ * 여기서는 애니메이션 자체가 사라짐까지 담아 끝나면 아무것도 남지 않는다.
+ */
+@keyframes like-burst-main {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) rotate(0) scale(0.4);
+  }
+  30% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(var(--dir) * 9px), -26px) rotate(calc(var(--dir) * 22deg))
+      scale(1);
+  }
+}
+
+@keyframes like-burst-sub-near {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.3);
+  }
+  35% {
+    opacity: 0.75;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(var(--dir) * 17px), -13px) scale(1);
+  }
+}
+
+@keyframes like-burst-sub-far {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.3);
+  }
+  35% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(var(--dir) * 5px), -34px) scale(0.9);
+  }
+}
+
+/*
+ * 위쪽 전역 규칙이 지속시간을 0.01ms 로 누르지만, 한 번 재생이라 그것으로 충분하다.
+ * 명시적으로 꺼서 의도를 남긴다 — 움직임을 줄여 달라고 한 사람에게 하트가 흩어지는
+ * 것은 알림이 아니라 방해다. 하트에 색이 차는 것만으로 눌린 것은 전해진다.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .like-burst {
+    display: none;
+  }
+}

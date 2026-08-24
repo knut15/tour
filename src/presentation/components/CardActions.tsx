@@ -66,6 +66,21 @@ export function CardActions({
           label={`${liked.liked ? labelLiked : labelLike}: ${title}`}
         >
           {/*
+            누른 순간 하트들이 튀어 오른다. **켤 때만이다** — 해제는 거두는 동작이라
+            거기에 축포를 터뜨리면 무엇이 일어났는지가 뒤집혀 읽힌다.
+
+            `key` 가 재생을 다시 건다. 요소가 새로 생겨야 애니메이션이 처음부터
+            돌고, 끝나면 다음 클릭까지 그대로 남아 있어도 전부 투명하다
+            (`globals.css` 의 `like-burst-*` 가 끝을 투명으로 닫는다).
+          */}
+          {liked.pop > 0 && liked.liked && (
+            <span key={liked.pop} className="like-burst" aria-hidden="true">
+              <span className="like-burst-a" />
+              <span className="like-burst-b" />
+            </span>
+          )}
+
+          {/*
             **하트만 뛴다.** 버튼째 키우면 옆의 담기 버튼과 간격이 흔들려, 누른 것이
             아니라 줄 전체가 움직인 것으로 보인다.
 
