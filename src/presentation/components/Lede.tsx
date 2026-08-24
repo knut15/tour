@@ -56,15 +56,25 @@ const LEDE = {
  *
  * 한글은 글자당 폭이 라틴의 약 2배라 같은 값을 쓰면 줄이 일찍 끊긴다.
  *
- * **줄 수가 아니라 줄의 균형으로 정한다.** 한국어 제목("한국을 액자에 담아")은
- * 11ch 에서 `한국을 액자에 / 담아` 로 끊겨 아랫줄에 두 글자만 남았다. 큰 세리프에서
- * 그 한 조각은 떨어져 나간 것처럼 보인다. 10ch 는 `한국을 / 액자에 담아` 로 끊어
- * 짧은 줄이 위로 간다 — 위가 짧고 아래가 긴 쪽이 지면에서 안정적이다.
+ * **두 화면 모두에서 이 값이 실제로 걸려야 한다.** 열 폭보다 크게 잡으면 열이 먼저
+ * 걸려 `max-w` 가 무력해지는데, 홈과 탐색은 열 폭이 다르다(실측 2026-08-24:
+ * 홈 581px · 탐색 1152px). 그러면 한쪽은 `ch`(폰트 비례)로, 다른 쪽은 px(고정)로
+ * 폭이 정해져 **종횡비가 어긋나고 스냅샷이 찌그러진다.** 실제로 18ch 일 때 홈은
+ * 581px·80px, 탐색은 693px·68px 로 폭 비율(0.84)과 폰트 비율(1.18)이 서로 반대였다.
+ *
+ * 한국어 11.5ch 는 좁은 쪽(홈, 폰트 80px 에 열 581px ≈ 12.8ch)보다 작아 양쪽 다 이
+ * 값이 걸린다. 그러면 두 화면의 폭이 폰트 크기에 함께 비례해 **uniform scale** 이 된다.
+ *
+ * **12.8ch 를 쓰지 않았다.** 그 값이 `오늘 만난 한국, / 오래도록 마음에 / 남기를.`
+ * 로 쉼표에서 끊어 의미 단위로는 낫지만, 계산 폭이 580px 라 열 폭 581px 과 1px
+ * 차이다. 폰트가 늦게 로드되거나 뷰포트가 조금만 달라져도 열이 먼저 걸려 전환이
+ * 어긋난다. 11.5ch(521px)는 60px 의 여유를 두고 `오늘 만난 / 한국, 오래도록 /
+ * 마음에 남기를.` 로 끊는다 — 짧은 줄이 위로 가는 형태다.
  *
  * 문구를 고치면 이 값도 함께 본다. 폭은 글자 수가 아니라 **그 문장이 어디서
- * 끊기는가**로 정해져 있다.
+ * 끊기는가**와 **두 화면에서 같은 자리에서 끊기는가**로 정해져 있다.
  */
-const TITLE_WIDTH = { ko: "max-w-[10ch]", latin: "max-w-[14ch]" } as const;
+const TITLE_WIDTH = { ko: "max-w-[11.5ch]", latin: "max-w-[12ch]" } as const;
 
 /**
  * 방향별로 어느 스냅샷을 남길지. 세 요소가 **같은 표를 쓴다** — 눈썹줄만 다른
@@ -103,7 +113,7 @@ export function Lede({
     */
     <header className={v.frame}>
       <ViewTransition name="lede-eyebrow" share={SHARE} default="none">
-        <p className="text-[11px] uppercase tracking-[0.18em] text-muted">{t.explore.eyebrow}</p>
+        <p className="text-[13px] uppercase tracking-[0.18em] text-muted">{t.explore.eyebrow}</p>
       </ViewTransition>
       <ViewTransition name="lede-title" share={SHARE} default="none">
         <h1
