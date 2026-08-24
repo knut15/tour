@@ -390,21 +390,6 @@ body {
   line-height: 24px;
 }
 
-/* 단색 워드마크는 다크 캔버스에서만 밝게 뒤집는다 */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme]) .brand-logo {
-    filter: invert(1) brightness(1.2);
-  }
-}
-
-:root[data-theme="dark"] .brand-logo {
-  filter: invert(1) brightness(1.2);
-}
-
-:root[data-theme="light"] .brand-logo {
-  filter: none;
-}
-
 /* 한글은 라틴보다 세로 공간이 더 필요하고 어절 중간에서 끊기면 안 된다 */
 :lang(ko),
 .ko {

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <!--
+    파비콘. 심볼은 `presentation/components/BrandMark.tsx` 와 같은 48×48 좌표계다.
+
+    **배경을 직접 칠한다.** 접힌 자국이 바탕색을 받아야 면이 갈라져 보이는데,
+    투명 배경이면 그 색이 브라우저 탭의 색(밝은 회색·짙은 회색·저마다 다르다)이 되어
+    갈라짐이 보이거나 사라진다. 판을 깔고 그 위에서 색을 완결한다.
+
+    **골을 2.4 에서 4 로 굵혔다.** 16px 에서 2.4 는 화면상 0.8px 이라 갈라짐이 회색으로
+    번지고, 그러면 이 형태는 그냥 삼각형 둘이 된다.
+
+    다크 모드 탭을 위해 `prefers-color-scheme` 를 넣었다. 지원하지 않는 브라우저는
+    첫 규칙(크림 판)을 쓴다.
+  -->
+  <style>
+    .plate { fill: #f4efe4; }
+    .peak  { fill: #1b1815; }
+    .fold  { stroke: #f4efe4; }
+    @media (prefers-color-scheme: dark) {
+      .plate { fill: #16140f; }
+      .peak  { fill: #f0ebe0; }
+      .fold  { stroke: #16140f; }
+    }
+  </style>
+
+  <rect class="plate" width="48" height="48" rx="10"/>
+  <path d="M25 36 35 17l9 19z" fill="#F8C126"/>
+  <path class="peak" d="M5 36 18 7l13 29z"/>
+  <path class="fold" d="M18 8 15.4 36" stroke-width="3.4" stroke-linecap="round"/>
+</svg>
