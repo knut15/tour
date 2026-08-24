@@ -370,6 +370,21 @@ body {
   line-height: 24px;
 }
 
+/* 단색 워드마크는 다크 캔버스에서만 밝게 뒤집는다 */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .brand-logo {
+    filter: invert(1) brightness(1.2);
+  }
+}
+
+:root[data-theme="dark"] .brand-logo {
+  filter: invert(1) brightness(1.2);
+}
+
+:root[data-theme="light"] .brand-logo {
+  filter: none;
+}
+
 /* 한글은 라틴보다 세로 공간이 더 필요하고 어절 중간에서 끊기면 안 된다 */
 :lang(ko),
 .ko {
@@ -1117,4 +1132,243 @@ details[open] > .dropdown-panel {
   .count-rise {
     animation: none;
   }
+}
+
+/* ─────────────────────────────────────────────────────────────
+ * 좋아요를 누른 순간 튀어 오르는 하트들 (CardActions.tsx)
+ *
+ * 참고한 기법: CodePen "Like Animation — Jumpy Hearts" (wojtek/pugson).
+ * 그 구현은 하트 둘에 `::before`·`::after` 를 붙여 **한 요소에서 셋씩** 뽑아내고,
+ * 서로 다른 지연을 주어 시차를 만든다. 그 구조를 가져오되 값과 방향은 이 화면에
+ * 맞춰 다시 잡았다 — 카드 사진 위에 뜨는 44px 버튼이라 원본(테두리 있는 넓은 버튼)
+ * 보다 좁게 흩어져야 한다.
+ *
+ * **하트를 배경 이미지로 그리지 않는다.** 원본은 분홍색이 박힌 SVG 를 data URI 로
+ * 깔고 `filter: grayscale()` 로 눌러 쓰는데, 그러면 색이 CSS 에 고정돼 테마를 따라갈
+ * 수 없다. 마스크로 뚫고 `background-color: currentColor` 로 칠하면 버튼이 가진
+ * 색(`--like`)을 그대로 물려받는다.
+ * ───────────────────────────────────────────────────────────── */
+
+/*
+ * 되돌아올 때 한 번 지나치는 이징. 마지막 값이 1 을 넘는다.
+ * 원본이 쓰는 값과 같다 — 튀어 오르는 느낌은 이 곡선에서 나온다.
+ */
+:root {
+  --ease-jump: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/*
+ * 흩어질 자리. 버튼 한가운데에 점 하나로 놓고, 하트들은 여기서 뻗어 나간다.
+ * `pointer-events: none` — 날아다니는 장식이 버튼의 클릭을 가로채면 안 된다.
+ */
+.like-burst {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+}
+
+/*
+ * 하트 한 장. **여섯 장이 같은 모양을 쓴다** — 둘은 이 요소 자신이고 넷은
+ * `::before`·`::after` 다. 한 요소에서 셋을 뽑는 원본의 방식이다.
+ */
+.like-burst span,
+.like-burst span::before,
+.like-burst span::after {
+  content: "";
+  position: absolute;
+  background-color: currentColor;
+  -webkit-mask-image: var(--heart-mask);
+  mask-image: var(--heart-mask);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  opacity: 0;
+}
+
+.like-burst span {
+  --heart-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 20.3 4.6 13a4.6 4.6 0 0 1 6.5-6.5l.9.9.9-.9A4.6 4.6 0 0 1 19.4 13Z'/%3E%3C/svg%3E");
+  width: 11px;
+  height: 11px;
+}
+
+/* 곁딸린 둘은 더 작다. 큰 것 하나에 작은 것 둘이 따라붙는 무리로 읽힌다 */
+.like-burst span::before,
+.like-burst span::after {
+  width: 7px;
+  height: 7px;
+}
+
+/*
+ * 두 무리가 좌우로 갈라진다. 한쪽으로만 날면 버튼이 기울어 보인다.
+ *
+ * `--dir` 이 방향을 뒤집는다. 같은 키프레임을 부호만 바꿔 쓰므로 궤적이 대칭이고,
+ * 각도를 두 벌 적어 두다 한쪽만 고치는 일이 없다.
+ */
+.like-burst-a {
+  --dir: -1;
+  animation: like-burst-main 720ms var(--ease-jump) both;
+}
+
+.like-burst-b {
+  --dir: 1;
+  animation: like-burst-main 720ms 60ms var(--ease-jump) both;
+}
+
+/* 곁딸린 것들은 늦게 출발한다. 동시에 뜨면 여섯이 한 덩어리로 보인다 */
+.like-burst span::before {
+  animation: like-burst-sub-near 640ms 90ms var(--ease-jump) both;
+}
+
+.like-burst span::after {
+  animation: like-burst-sub-far 700ms 150ms var(--ease-jump) both;
+}
+
+/*
+ * 위로 날아오르며 기울고, 끝에서 사라진다.
+ *
+ * **끝을 투명으로 닫는다.** 원본은 정점 상태를 유지한 채 끝나고 1 초 뒤 클래스를
+ * 떼어 지우는데, 그러면 지우는 타이밍이 애니메이션 밖에 있어 둘이 어긋날 수 있다.
+ * 여기서는 애니메이션 자체가 사라짐까지 담아 끝나면 아무것도 남지 않는다.
+ */
+@keyframes like-burst-main {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) rotate(0) scale(0.4);
+  }
+  30% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(var(--dir) * 9px), -26px) rotate(calc(var(--dir) * 22deg))
+      scale(1);
+  }
+}
+
+@keyframes like-burst-sub-near {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.3);
+  }
+  35% {
+    opacity: 0.75;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(var(--dir) * 17px), -13px) scale(1);
+  }
+}
+
+@keyframes like-burst-sub-far {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.3);
+  }
+  35% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(var(--dir) * 5px), -34px) scale(0.9);
+  }
+}
+
+/*
+ * 위쪽 전역 규칙이 지속시간을 0.01ms 로 누르지만, 한 번 재생이라 그것으로 충분하다.
+ * 명시적으로 꺼서 의도를 남긴다 — 움직임을 줄여 달라고 한 사람에게 하트가 흩어지는
+ * 것은 알림이 아니라 방해다. 하트에 색이 차는 것만으로 눌린 것은 전해진다.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .like-burst {
+    display: none;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+ * 제목에 그은 형광펜 (Lede.tsx)
+ *
+ * 문장의 마지막 마디에만 긋는다. 제목 전체가 칠해지면 강조가 아니라 배경이고,
+ * 세리프 대형 활자에서 그 면적은 사진보다 먼저 눈에 든다.
+ * ───────────────────────────────────────────────────────────── */
+:root {
+  /*
+    연두. **명도를 높이고 채도는 눌러 둔다** — 형광펜은 잉크가 비쳐 보이는 물건이라
+    진하면 칠한 것이 아니라 색면을 덧댄 것으로 보인다. 글자를 덮는 것이 아니라
+    글자 뒤로 지나가야 한다.
+    `oklch` 로 적는 이유는 채도(C)와 밝기(L)를 각각 만질 수 있어서다. 색을 바꾸려면
+    H(색상각)만 돌리면 채도와 밝기가 그대로 따라온다.
+  */
+  --marker: oklch(0.95 0.15 128);
+  /*
+    형광펜 위의 글자. **바탕이 아니라 잉크에 맞춘다.** 형광펜은 밝은 색이라
+    라이트에서든 다크에서든 그 위의 글자는 어두워야 읽힌다 — 다크 테마의 크림색
+    글자를 그대로 두면 연두 위에서 사라진다.
+  */
+  --marker-ink: oklch(0.25 0.06 128);
+}
+
+/*
+ * 다크에서는 **뒤집는다.** 밝은 띠가 아니라 어두운 띠다.
+ *
+ * 같은 연두라도 어두운 바탕에서는 훨씬 세게 온다 — 주변과의 밝기 차가 커서다.
+ * 라이트에서 종이에 그은 자국이던 것이 다크에서는 스스로 빛을 내는 띠가 되어,
+ * 옆의 사진과 아래 문장보다 먼저 눈에 든다. 채도를 낮춰 봐도 밝기 차 자체가
+ * 남아 여전히 튄다.
+ *
+ * 그래서 다크에서는 **바탕보다 어둡게 파고든다.** 종이에 형광펜을 긋는 대신
+ * 검은 판에 글자를 얹은 꼴이라, 강조는 그대로이면서 빛나지 않는다. 잉크도 함께
+ * 뒤집어 밝게 둔다 — 어두운 띠 위의 어두운 글자는 읽히지 않는다.
+ *
+ * 완전한 무채색이 아니라 아주 옅은 초록기를 남긴다(C 0.012). 라이트의 연두와
+ * 같은 색상각이라, 테마를 오갈 때 다른 색이 아니라 같은 색의 다른 밝기로 읽힌다.
+ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --marker: oklch(0.13 0.012 128);
+    --marker-ink: oklch(0.97 0.012 128);
+  }
+}
+
+:root[data-theme="dark"] {
+  --marker: oklch(0.13 0.012 128);
+  --marker-ink: oklch(0.97 0.012 128);
+}
+
+.lede-mark {
+  background: var(--marker);
+  color: var(--marker-ink);
+
+  /*
+    글자보다 조금 넓게, 그러나 줄 높이를 넘지 않게 칠한다. 형광펜은 글자 상자에
+    딱 맞지 않는다 — 앞뒤로 조금 넘치고 위아래로는 획을 덮을 만큼만 지난다.
+    `em` 이라 제목이 작아지는 탐색 화면에서도 비율이 유지된다.
+  */
+  padding: 0.02em 0.08em;
+  margin: 0 -0.04em;
+
+  /*
+    **줄이 바뀌어도 각 줄이 제 형광펜을 갖는다.** 없으면 여러 줄에 걸칠 때 앞뒤
+    여백이 첫 줄과 마지막 줄에만 붙어, 가운데 줄들의 끝이 잘린 것처럼 보인다.
+  */
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+
+  /*
+    아주 살짝 둥글다. 각지면 형광펜이 아니라 선택 영역으로 읽히고, 많이 둥글면
+    알약 모양의 배지가 된다.
+  */
+  border-radius: 0.06em;
+
+  /*
+    **가운데서 끊기지 않는다.** 형광펜은 한 번에 그은 자국이라, 두 줄로 쪼개지면
+    두 번 그은 것으로 보이고 색면도 그만큼 커진다. 폭이 모자라면 통째로 다음 줄로
+    내려간다 — 잘린 형광펜보다 짧아진 윗줄이 낫다.
+
+    `text-wrap` 을 쓴다. 옛 `white-space: nowrap` 은 구간 안의 공백까지 굳혀
+    줄바꿈 외의 것(단어 사이 간격)에도 영향을 준다.
+  */
+  text-wrap: nowrap;
 }

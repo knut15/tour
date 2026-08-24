@@ -66,6 +66,25 @@ export function CardActions({
           label={`${liked.liked ? labelLiked : labelLike}: ${title}`}
         >
           {/*
+            누른 순간 하트들이 튀어 오른다. **켤 때만이다** — 해제는 거두는 동작이라
+            거기에 축포를 터뜨리면 무엇이 일어났는지가 뒤집혀 읽힌다.
+
+            `key` 가 재생을 다시 건다. 요소가 새로 생겨야 애니메이션이 처음부터
+            돌고, 끝나면 다음 클릭까지 그대로 남아 있어도 전부 투명하다
+            (`globals.css` 의 `like-burst-*` 가 끝을 투명으로 닫는다).
+
+            **접두어를 붙인다.** 아래 하트도 같은 `pop` 으로 재생을 거는데, 형제가
+            같은 key 를 가지면 React 가 둘을 같은 자리로 보고 경고한다. 무엇의 몇
+            번째 재생인지까지 담아야 서로 다른 요소가 된다.
+          */}
+          {liked.pop > 0 && liked.liked && (
+            <span key={`burst-${liked.pop}`} className="like-burst" aria-hidden="true">
+              <span className="like-burst-a" />
+              <span className="like-burst-b" />
+            </span>
+          )}
+
+          {/*
             **하트만 뛴다.** 버튼째 키우면 옆의 담기 버튼과 간격이 흔들려, 누른 것이
             아니라 줄 전체가 움직인 것으로 보인다.
 
@@ -75,7 +94,7 @@ export function CardActions({
             나타날 때 모든 카드의 하트가 한 번씩 뛰면 목록이 들썩인다.
           */}
           <svg
-            key={liked.pop}
+            key={`heart-${liked.pop}`}
             viewBox="0 0 24 24"
             className={"size-[18px] " + (liked.pop > 0 ? "like-pop" : "")}
             style={{ "--like-pop-ms": `${LIKE_POP_MS}ms` } as CSSProperties}
