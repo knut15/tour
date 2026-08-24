@@ -37,7 +37,17 @@ export type Tab = {
  * 곧 경계다. 헤더는 줄어들 수 있으므로 **줄어들지 않는 기준값**을 쓴다 —
  * 줄어든 높이로 계산하면 도착 직후 헤더가 펴지며 그만큼 어긋난다.
  *
- * 부드럽게 굴리지 않는다. 이동과 겹치면 목적지에 닿기 전에 화면이 갈린다.
+ * **부드럽게 굴린다.** 순간이동은 목적지가 맞아도 어디로 갔는지가 안 보여서, 탭을
+ * 눌렀더니 화면이 갑자기 다른 데를 비추는 것으로 읽힌다. 굴러가면 그 사이에 눈이
+ * 따라가고, 필터 줄이 헤더에 가서 붙는 것이 동작의 결과로 보인다.
+ *
+ * 이동과 겹쳐도 갈라지지 않는다 — 스켈레톤이 실제 목록과 **같은 수의 자리를**
+ * 차지하도록 맞춰 둔 덕이다(`Skeleton.tsx`). 문서 높이가 유지되므로 굴러가는 도중에
+ * 목록이 바뀌어도 목적지가 사라지지 않는다. 그 전제가 깨지면(스켈레톤 수를 줄이면)
+ * 이 애니메이션이 중간에 끊긴다.
+ *
+ * **이미 그 자리면 움직이지 않는다.** 몇 픽셀을 굴리는 것은 움직임이 아니라 떨림으로
+ * 보인다. 같은 탭을 다시 누르는 경우가 대표적이다.
  */
 function alignToFilters() {
   const sentinel = document.querySelector("[data-sticky-sentinel]");
@@ -45,7 +55,16 @@ function alignToFilters() {
   const raw = getComputedStyle(document.documentElement).getPropertyValue("--masthead-h-base");
   const headerHeight = Number.parseFloat(raw) || 0;
   const y = sentinel.getBoundingClientRect().top + window.scrollY - headerHeight;
-  window.scrollTo({ top: Math.max(0, y), behavior: "instant" });
+  const target = Math.max(0, y);
+
+  if (Math.abs(target - window.scrollY) < 2) return;
+
+  /*
+    움직임을 줄여 달라고 한 사람에게는 굴리지 않는다. 여기서는 그것이 곧 예전
+    동작(순간이동)이라, 목적지도 결과도 달라지지 않는다.
+  */
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  window.scrollTo({ top: target, behavior: reduced ? "instant" : "smooth" });
 }
 
 export function CategoryTabs({
