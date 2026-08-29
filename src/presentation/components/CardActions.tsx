@@ -136,6 +136,15 @@ function ActionButton({
   return (
     <button
       type="button"
+      /*
+        QA 가 집는 이름. **`tone` 에서 파생시킨다** — 담기와 좋아요가 같은 버튼을
+        쓰므로 이름도 한 곳에서 갈라야 둘이 어긋나지 않는다. 상세 화면의 담기
+        칩(`SaveChip`)도 `save-toggle` 로 같은 이름을 쓴다. 화면이 달라도 같은
+        일을 하는 컨트롤이면 같은 이름이어야, 어느 화면에서 눌러도 같은 TC 가 돈다.
+
+        누른 상태는 이 이름이 아니라 `aria-pressed` 가 전한다.
+      */
+      data-testid={`${tone}-toggle`}
       aria-pressed={pressed}
       aria-label={label}
       onClick={(e) => {
