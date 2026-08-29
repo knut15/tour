@@ -99,6 +99,11 @@
   --line-subtle: var(--goal-line);
   --focus-ring: var(--goal-cobalt);
 
+  /* 브랜드 로고 스왑 — PNG 라 currentColor 를 못 따르므로 라이트/다크 변형 중
+     어느 쪽을 보일지를 변수로 정한다. 테마 세 갈래마다 재선언한다 */
+  --brand-logo-light: inline-block;
+  --brand-logo-dark: none;
+
   /* 컨트롤도 크림 위에 선다. 토스 파랑 대신 코발트가 1차 액션을 진다 */
   --toss-primary: var(--goal-cobalt);
   --toss-primary-hover: var(--goal-cobalt-deep);
@@ -245,6 +250,8 @@
   --cat-culture: var(--goal-mint);
   --cat-food: #ff8a7a;
   --cat-festival: var(--goal-mustard);
+  --brand-logo-light: none;
+  --brand-logo-dark: inline-block;
   }
 }
 
@@ -272,6 +279,8 @@
   --cat-culture: var(--goal-mint);
   --cat-food: #ff8a7a;
   --cat-festival: var(--goal-mustard);
+  --brand-logo-light: none;
+  --brand-logo-dark: inline-block;
 }
 
 :root[data-theme="light"] {
@@ -297,6 +306,16 @@
   --cat-culture: #0f7a63;
   --cat-food: #cd3623;
   --cat-festival: #94640f;
+  --brand-logo-light: inline-block;
+  --brand-logo-dark: none;
+}
+
+/* 브랜드 로고 두 변형의 표시 여부는 위 테마 갈래가 정한 변수만 따른다 */
+.brand-logo-light {
+  display: var(--brand-logo-light);
+}
+.brand-logo-dark {
+  display: var(--brand-logo-dark);
 }
 
 @theme inline {

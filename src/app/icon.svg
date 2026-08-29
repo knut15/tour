@@ -1,30 +1,23 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
-  <!--
-    파비콘. 심볼은 `presentation/components/BrandMark.tsx` 와 같은 48×48 좌표계다.
-
-    **배경을 직접 칠한다.** 접힌 자국이 바탕색을 받아야 면이 갈라져 보이는데,
-    투명 배경이면 그 색이 브라우저 탭의 색(밝은 회색·짙은 회색·저마다 다르다)이 되어
-    갈라짐이 보이거나 사라진다. 판을 깔고 그 위에서 색을 완결한다.
-
-    **골을 2.4 에서 4 로 굵혔다.** 16px 에서 2.4 는 화면상 0.8px 이라 갈라짐이 회색으로
-    번지고, 그러면 이 형태는 그냥 삼각형 둘이 된다.
-
-    다크 모드 탭을 위해 `prefers-color-scheme` 를 넣었다. 지원하지 않는 브라우저는
-    첫 규칙(크림 판)을 쓴다.
-  -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
   <style>
-    .plate { fill: #f4efe4; }
-    .peak  { fill: #1b1815; }
-    .fold  { stroke: #f4efe4; }
+    .plate { fill: #FAF6EF; }
     @media (prefers-color-scheme: dark) {
-      .plate { fill: #16140f; }
-      .peak  { fill: #f0ebe0; }
-      .fold  { stroke: #16140f; }
+      .plate { fill: #1A1714; }
     }
   </style>
-
-  <rect class="plate" width="48" height="48" rx="10"/>
-  <path d="M25 36 35 17l9 19z" fill="#F8C126"/>
-  <path class="peak" d="M5 36 18 7l13 29z"/>
-  <path class="fold" d="M18 8 15.4 36" stroke-width="3.4" stroke-linecap="round"/>
+  <defs>
+    <linearGradient id="coral" x1="80" y1="45" x2="235" y2="235" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FF6B4A"/><stop offset="1" stop-color="#F04F35"/>
+    </linearGradient>
+    <linearGradient id="leaf" x1="78" y1="205" x2="250" y2="310" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#61BD43"/><stop offset="1" stop-color="#3D9D35"/>
+    </linearGradient>
+  </defs>
+  <rect class="plate" width="64" height="64" rx="14"/>
+  <g transform="translate(7.9 2.6) scale(0.152)">
+    <path fill="url(#coral)" d="M158 42c-67 0-121 54-121 121 0 43 22 82 59 104l43 26-23-44-1-1c-28-16-45-45-45-77 0-49 39-88 88-88s88 39 88 88c0 12-2 23-7 34l35-22c1-7 2-14 2-20 0-67-54-121-118-121Z"/>
+    <circle cx="158" cy="163" r="30" fill="url(#coral)"/>
+    <path fill="url(#leaf)" d="M151 286c-14-45-48-72-104-82 10 53 40 87 88 99l17 4c6 1 11-4 10-10l-11-11Zm10 26c5-58 38-97 101-119-4 54-29 91-75 110v-34c0-13 8-25 21-30-24 4-38 19-38 43v30h-9Z"/>
+    <circle cx="151" cy="326" r="18" fill="#54AD3D"/>
+  </g>
 </svg>
