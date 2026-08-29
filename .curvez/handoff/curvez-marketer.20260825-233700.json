@@ -1,0 +1,119 @@
+{
+  "from": "curvez-marketer",
+  "to": [
+    "curvez-orchestrator",
+    "curvez-requirements",
+    "curvez-designer"
+  ],
+  "status": "blocked",
+  "summary": "R8 완료 — 사용자가 처음으로 형태를 직접 제안했다(`Life is ___`). 브리프를 이 패턴으로 재수립하고 표기 형태를 값으로 확정했으며(브랜드명=전체 구문, 축약 불가), 선행 점유(Life is Good 200건·소송, Life is Strange, LG Life's Good)를 실검색으로 확인해 패턴 리스크 6건을 평가했다. 빈칸 후보 13개를 개발·실측해 최종 A: Life is Nearby(100점, 이 회의 최초의 전 항목 만점) / B: Life is a Day(95점). 이번 라운드의 구조적 발견은 '좋은 낱말은 이미 다 팔렸고 좋은 문장은 아직 안 팔렸다' — 구문형 13개 중 12개가 .com·.app·npm 이 모두 비어 있다. 사용자의 A/B 선택 대기로 blocked 다.",
+  "artifacts": [
+    {
+      "path": ".curvez/brand/naming.md",
+      "kind": "decision",
+      "note": "## brief 를 Life is ___ 패턴으로 재수립 + `### 표기 형태` 확정표 + `### 패턴 자체의 평가`(리스크 6건) + candidates 48줄(이름 44개) + check 49줄 + R8 shortlist + final:B 코어 긴장 절"
+    }
+  ],
+  "decisions": [
+    {
+      "what": "브랜드명을 전체 구문으로 확정하고 축약형·빈칸 낱말 단독을 브랜드로 쓰지 않기로 했다",
+      "why": "실측이 값을 정했다. 빈칸 낱말은 의미가 좋을수록 단독으로 이미 점유돼 있다 — Detour 는 Bose 가 인수한 도보 투어 앱 + 앱스토어 정확 일치 9건, Meander 는 여행 앱 포함 7건, Nearby 는 5건이고 셋 다 .com·.app·npm 전부 선점이다. 반면 같은 낱말을 구문에 넣으면(lifeisdetour·lifeismeander·lifeisnearby) 전부 비어 있고 앱스토어도 0건이다. **가용성이 구문에만 있다.** 축약형을 브랜드로 삼으면 일곱 라운드 내내 발목을 잡은 문제로 되돌아간다. 대신 앱 아이콘에 구문이 안 들어가는 문제가 남아 curvez-designer 과제로 넘겼다 — Life is Good 이 Jake 라는 막대 인물을 쓰는 것과 같은 구조다",
+      "reversible_at": ".curvez/brand/naming.md:표기 형태"
+    },
+    {
+      "what": "'하이픈·숫자 없이 소문자 ASCII' 식별자 제약을 낱말 결합형(lifeisnearby)까지 허용하도록 개정했다",
+      "why": "R1 부터 유지해 온 제약은 낱말 하나 브랜드를 전제로 쓴 것이다. 구문 브랜드에 그대로 적용하면 패턴 자체가 불가능해진다. 하이픈 금지는 유지하고 결합만 허용해, package.json name·npm·환경변수 접두사(LIFEIS_)가 전부 성립하는지 확인했다",
+      "reversible_at": ".curvez/brand/naming.md:brief constraints"
+    },
+    {
+      "what": "패턴을 채택할 만하다고 평가하되 리스크 6건을 함께 올렸다. 사용자가 '이런건 어떠냐?' 로 의견도 물었기 때문이다",
+      "why": "가장 큰 리스크는 Life is Good 이다 — 1996 년 등록, 약 200건 보유(대부분 의류), ooShirts/TeeChip 상대로 실제 소송을 걸었다. **다만 클래스가 다르면 공존한다**는 것이 조사 자료의 명시적 판단이고 Square Enix(게임)·LG(전자)가 그 증거다. 우리는 여행·소프트웨어 클래스라 공존 가능성이 높으나, **티셔츠·모자 굿즈를 만들면 클래스가 겹치므로 그때 재검토해야 한다**는 조건을 문서에 박았다. 나머지 리스크는 차용된 형식·아이콘 부적합·구어 길이·축약 불가다",
+      "reversible_at": ".curvez/brand/naming.md:패턴 자체의 평가"
+    },
+    {
+      "what": "이 패턴의 가장 큰 강점을 '이름이 곧 설명이다'로 판정했다",
+      "why": "이 회의에서 사용자가 거부한 이름들의 사유는 전부 의미였고 그 형태는 늘 '왜 그 이름이 이 제품인가'였다(눈치는 왜???). `Life is ___` 는 이름 자체가 완결된 문장이라 그 질문이 구조적으로 생기지 않는다. 일곱 라운드를 무너뜨린 실패 모드를 형태가 제거한다. 이것은 사용자의 제안이 단순한 취향이 아니라 문제의 해법이었다는 뜻이고, 내가 R6·R7 에서 '어원 방향을 한 번도 확인하지 못했다'고 올린 미해결 변수의 답이기도 하다",
+      "reversible_at": ".curvez/brand/naming.md:패턴 자체의 평가"
+    },
+    {
+      "what": "85점 넷(Detour·Somewhere·Anywhere·Onward)을 제치고 95점 Life is a Day 를 B 로 올렸다",
+      "why": "R7 에서 세운 원칙을 그대로 적용했다 — 이 사용자의 거부는 전부 의미에서 났고 가용성 때문에 거부된 이름은 한 번도 없다. 85점 넷은 가용성 만점 + 의미 1점이라 총점이 부풀려진 구조이고, Dasom(R7, 85점) 을 뺀 것과 같은 형태다. Life is a Day 는 의미 2점이다",
+      "reversible_at": ".curvez/brand/naming.md:R8 절"
+    },
+    {
+      "what": "Life is Unhurried 를 의미 2점인데도 최종에서 뺐다",
+      "why": "lifeunhurried.com 이 'Slow Stays, and eco travel' 을 내건 웰니스·에코 여행 업체로 실재한다. 한 낱말 차이의 동종 인접이라 Yonder(활성 여행 브랜드)·Resfeber(여행사 4곳)·Sonder(숙박 대기업)를 죽인 것과 같은 기준이다. 구문 도메인이 전부 비어 있어도 근접 브랜드가 같은 업종에 있으면 충돌이다",
+      "reversible_at": ".curvez/brand/naming.md:check Life-is-Unhurried"
+    },
+    {
+      "what": "Life is a Day 의 의미를 2점으로 매기면서 코어 긴장을 별도 절로 공개했다",
+      "why": "이 이름은 R3 에서 promise 에서 뺀 '하루'를 부분적으로 되돌린다. 그럼에도 2점인 근거는 기준표가 `①②가 ③보다 앞이다`로 정의돼 있고 이 이름은 ①이 강하고 ②가 없으며 ③에서만 긴장이 있다는 것이다. 그리고 '삶은 하루다'는 약속이 아니라 관점이라 3박4일은 하루 넷이지 하루의 부정이 아니다. **다만 이 해석은 curvez-requirements 의 R2 이의와 맞닿아 있어 혼자 확정하지 않고 blocked_on 으로 올렸다** — 동의하지 않으면 B 는 80점이 되고 85점 넷이 B 자리를 다투게 된다",
+      "reversible_at": ".curvez/brand/naming.md:final:B 의 코어 긴장"
+    },
+    {
+      "what": "final: 줄의 이름 토큰을 하이픈 결합형(Life-is-Nearby)으로 통일했다",
+      "why": "표기형 `Life is Nearby` 를 그대로 쓰니 자체 검증 파서가 공백에서 끊겨 `Life` 만 잡았고 finals-unchecked=2 가 나왔다. 구문 브랜드가 처음이라 생긴 문제다. candidates·check·final 세 곳의 토큰 규약을 하이픈형으로 맞추고, 실제 표기는 언제나 공백형이라는 것을 brief 에 규약으로 명시했다. 검증을 돌리지 않았으면 finals 가 깨진 채 넘어갔을 것이다",
+      "reversible_at": ".curvez/brand/naming.md:brief 후보 표기 규약"
+    }
+  ],
+  "blocked_on": [
+    {
+      "question": "최종 A/B 중 하나를 골라 주세요. 제안하신 `Life is ___` 패턴으로 다시 잡았습니다. / **A: Life is Nearby** — \"멀리 갈 것 없이, 오늘 걸어서 닿을 수 있는 곳들로 하루를 만든다.\" **이 회의에서 나온 44개 이름 중 처음으로 다섯 항목이 전부 만점입니다(100점).** 브랜드 약속인 '그대로 걸을 수 있는 동선'과 같은 말이고, 지도 주변 탐색 기능이 문자 그대로 nearby 입니다. 여행사 광고체('세상 끝까지')의 정확한 반대편이라 톤과도 맞습니다. / **B: Life is a Day** — \"삶은 결국 하루들이다. 그 하루 하나를 걸을 수 있는 길로 놓아 준다.\" 95점. A 가 **공간**(걸어 닿는 거리)으로 좁힌다면 B 는 **시간**(하루라는 단위)으로 좁힙니다. 앱이 이미 이 말을 쓰고 있습니다 — 현재 카피가 \"기분 좋은 하루를 만들어보세요\"입니다. **약점:** 이름에 '하루'가 들어가 3박4일 코스 기능과 긴장이 생깁니다. / **두 안 모두 `.com`·`.app`·npm·앱스토어가 동시에 비어 있습니다** — 여덟 라운드 만에 처음입니다. / **패턴에 대한 의견도 물으셨으니 답합니다. 채택할 만합니다.** 가장 큰 강점은 **이름이 곧 설명이라는 것**입니다. 그동안 거부하신 이름들은 전부 '왜 그 이름이 이 제품인가'에서 걸렸는데(\"눈치는 왜???\"), `Life is ___` 는 이름 자체가 문장이라 그 질문이 생기지 않습니다. **리스크 셋도 말씀드립니다.** (1) `Life is Good`이 의류 쪽으로 약 200건의 상표를 갖고 실제 소송을 겁니다 — 여행·앱 클래스는 다르므로 공존 가능성이 높지만(게임의 `Life is Strange`, LG의 `Life's Good`이 그렇게 공존합니다), **티셔츠·모자 굿즈를 만드실 계획이면 클래스가 겹치니 그때 다시 봐야 합니다.** (2) 형식을 빌린 것이라 '따라한 것'으로 읽힐 수 있고, 고유성이 빈칸 한 낱말에만 걸립니다. (3) 세 낱말이라 **앱 아이콘·파비콘에 안 들어갑니다** — 심볼을 따로 만들어야 하고 그 심볼이 브랜드 인지의 대부분을 지게 됩니다(Life is Good 이 막대 인물 Jake 를 쓰는 이유입니다). / **공통 참고:** 상표는 제 검증이 웹 검색 범위라 전수 조사가 아닙니다 — **최종 확정 전 KIPRIS·USPTO 를 사람이 직접 조회해야 합니다.**",
+      "who": "user"
+    },
+    {
+      "question": "`Life is a Day`(final:B)의 '하루'가 v1 수용 기준과 충돌하는가. 당신이 R2 에서 올린 이의(promise 의 '하루 하나' vs GOAL.md:168·169·210·324 의 일자별 다일 코스) 때문에 R3 에서 promise 에서 날짜 수를 뺐는데, 이 이름이 그것을 부분적으로 되돌린다. 나는 '삶은 하루다'가 약속이 아니라 관점이고 3박4일은 하루 넷이지 하루의 부정이 아니라고 보아 의미 2점(총 95점)을 줬다. **동의하지 않으면 의미 1점(총 80점)이 되고, 그러면 85점 넷(Life is Detour·Somewhere·Anywhere·Onward)이 B 자리를 다투게 된다.** 사용자가 B 를 고르기 전에 답이 오는 것이 좋다",
+      "who": "curvez-requirements"
+    },
+    {
+      "question": "이 패턴은 **브랜드명이 아이콘에 들어가지 않는다.** 세 낱말이라 파비콘·앱 아이콘·좁은 헤더에 넣을 수 없고, 심볼이나 모노그램이 별도로 필요하다. `Life is Good` 이 Jake 라는 막대 인물을 쓰는 것과 같은 구조이고, 그 심볼이 브랜드 인지의 대부분을 지게 된다 — 지금까지의 후보들보다 디자이너 몫이 훨씬 크다. 아직 착수하지 마라. 다만 이번엔 '이름을 시각화한다'가 아니라 '이름을 대신할 심볼을 만든다'는 과제라는 것을 미리 알고 있어라. 현재 `src/presentation/components/BrandMark.tsx` 의 산봉우리 SVG 는 어느 쪽을 골라도 쓸 수 없다",
+      "who": "curvez-designer"
+    },
+    {
+      "question": "미해결 유지 — GOAL.md §6 완료 기준(:317)이 '`/en`, `/ko` 가 동작한다'만 적고 있어 ja·zh-Hant·de·fr 이 판정 대상인지 답이 없다. R1 부터 여덟 라운드째 열려 있다. **이번 최종안은 영어 구문이라 이 질문의 성격이 달라졌다** — 지금까지의 후보(한국어 고유어·스웨덴어)는 로케일별 표기를 새로 정해야 했지만, 영어 구문은 6개 로케일 전부에서 원문 그대로 노출하는 것이 자연스럽다. 즉 로케일 검수 부담이 오히려 줄었다. A/B 선택을 막지 않는다",
+      "who": "user"
+    }
+  ],
+  "verification": [
+    {
+      "command": "필수 산출물 · positioning 필수키 5종 · naming 섹션 3종",
+      "result": "MISSING-DOC 0줄, MISSING-SECTION 0줄, positioning-missing=0",
+      "passed": true
+    },
+    {
+      "command": "node -e '<naming.md 파싱: candidate/final/check 카운트 + 후보별 check 누락 검사>'",
+      "result": "candidates=48 고유이름=44 providers=5 finals=2 finals-unchecked=0 / finals=Life-is-Nearby,Life-is-a-Day / checks=49 / 후보중 check 없음: 없음 / unverified-marks=70",
+      "passed": true
+    },
+    {
+      "command": "위 파서 1차 실행 (토큰 규약 오류 발견)",
+      "result": "**finals=Life,Life / finals-unchecked=2 / UNCHECKED Life ×2 로 실패했다.** final: 줄에 표기형 `Life is Nearby` 를 그대로 써서 파서가 공백에서 끊겼다. 구문 브랜드가 처음이라 생긴 문제다. candidates·check·final 세 곳의 토큰을 하이픈형(Life-is-Nearby)으로 통일하고 재실행해 통과시켰다. 실패 사실을 지우지 않고 남긴다",
+      "passed": false
+    },
+    {
+      "command": "curl RDAP(Verisign .com / Google .app) + npm — 대조군 zqxwvutsrponm7 / lifeiszqxwvutm7 로 판별력 선검증",
+      "result": "대조군 .com=404 .app=404 로 판별 동작 확인. **구문형 28개 실측 결과 `.com` 미등록 다수: lifeisnearby·lifeisdetour·lifeissomewhere·lifeisonward·lifeiswayfare·lifeismeander·lifeisaday·lifeisdrift·lifeiswandering·lifeisanywhere·lifeiswalkable·lifeisunhurried·lifeisdaily·lifeisstroll·lifeisunplanned·lifeisslow. 등록된 것은 lifeiselsewhere(2010)·lifeisoutside(2007)·lifeishere(2007)·lifeislocal(2002)·lifeisquiet·lifeisopen·lifeiswonder·lifeiseverywhere·lifeisbright·lifeiswide·lifeisadetour·lifeisgentle.** npm 은 조회한 구문 전부 미사용. lifeisaday·lifeisdrift 는 .app 이 429(rate limit)로 나와 재조회해 404 확정",
+      "passed": true
+    },
+    {
+      "command": "iTunes Search API — 구문 및 단독어 정확 일치",
+      "result": "**구문 정확 일치는 `Life is Slow` 1건뿐.** life is nearby·detour·somewhere·anywhere·a day·quiet·wandering·open·wonder·everywhere·gentle·unplanned·unhurried 전부 0건. 반면 **단독어는 심하게 점유**: detour 9건(Bose 인수 도보 투어 앱 포함), meander 7건(Meander: Trip Feedback Rewards 포함), nearby 5건, unhurried 0건",
+      "passed": true
+    },
+    {
+      "command": "웹 검색 — Life is Good 상표·소송 / Life is Strange·LG Life's Good / Detour 앱 인수 / Life is Nearby·Unhurried 기존 브랜드",
+      "result": "**Life is Good: 1996 등록, 약 200건 보유(대부분 의류), ooShirts/TeeChip 상대 수백만 달러 소송 실제 제기. 조사 자료가 '클래스가 다르면 공존한다'고 명시(Square Enix 게임, LG 전자).** Detour: Bose 가 Andrew Mason 의 도보 투어 앱을 2018 인수(소프트웨어·콘텐츠만). **`lifeunhurried.com` 이 'Slow Stays, eco travel' 웰니스 업체로 실재 — Life is Unhurried 를 뺀 근거.** `Life is Nearby` 를 쓰는 기존 브랜드는 발견되지 않았다",
+      "passed": true
+    },
+    {
+      "command": "unverified-marks=70 의 내역",
+      "result": "sns 전 후보 확인 불가(instagram 로그인월이 대조군 핸들에도 200 을 돌려주는 문제 그대로), trademark 대부분 확인 불가(Justia 403·USPTO API 405 가 R3 에서 확인돼 재시도하지 않음). **이번 라운드에서 상표를 실제로 확인한 것은 패턴 선행 점유 3건(Life is Good·Life is Strange·LG Life's Good)뿐이고 빈칸 후보 13개의 상표는 전부 확인 불가다.** 점수에 유리하게 반영하지 않았고, KIPRIS·USPTO 사람 조회 필요를 문서와 사용자 질문 양쪽에 적었다",
+      "passed": true
+    },
+    {
+      "command": "find .curvez/brand \\( -name '*.tsx' -o -name '*.ts' -o -name '*.css' \\) | wc -l / git status --porcelain",
+      "result": "impl-files=0. R8 에서 쓴 파일은 .curvez/brand/naming.md 와 이 핸드오프뿐이다. positioning.md 는 고치지 않았다 — 바뀐 것은 네이밍 형태이지 브랜드 코어가 아니다",
+      "passed": true
+    }
+  ]
+}

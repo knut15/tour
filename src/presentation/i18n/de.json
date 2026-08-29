@@ -1,5 +1,5 @@
 {
-  "brand": "Dein Korea",
+  "brand": "Life is Nearby",
   "nav": {
     "explore": "Entdecken",
     "switchLocale": "Sprache",
@@ -7,8 +7,9 @@
   },
   "explore": {
     "eyebrow": "Für eine gute Reise",
-    "title": "Dein Korea, gerahmt.",
-    "subtitle": "Sieh dir ein paar Orte an und entscheide, wohin es heute geht.",
+    "title": "Möge das Korea von heute lange in Erinnerung bleiben.",
+    "titleAccent": "in Erinnerung bleiben.",
+    "subtitle": "Mach dir einen schönen Tag",
     "areaLabel": "Region",
     "allAreas": "Ganz Korea",
     "districtLabel": "Bezirk",

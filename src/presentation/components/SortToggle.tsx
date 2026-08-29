@@ -41,6 +41,9 @@ export function SortToggle({
     <div
       role="group"
       aria-label={label}
+      // 카테고리 탭과 같은 규칙이다 — 묶음은 `data-testid`, 안의 선택지는
+      // `data-sort`. 둘을 합치면 "정렬 컨트롤 전체" 를 가리킬 수 없다
+      data-testid="sort-select"
       className="flex shrink-0 items-center rounded-btn border border-line bg-canvas p-1"
     >
       {STATS_SORTS.map((sort) => {
@@ -49,6 +52,7 @@ export function SortToggle({
           <Link
             key={sort}
             href={exploreHref(locale, { category, areaCode, districtCode, keyword, sort })}
+            data-sort={sort}
             /*
               고른 쪽을 `aria-current` 로 알린다. 색만으로는 보이지 않는 사람에게
               어느 쪽이 켜져 있는지 전해지지 않는다.

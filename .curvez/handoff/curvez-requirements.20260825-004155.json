@@ -1,0 +1,93 @@
+{
+  "from": "curvez-requirements",
+  "to": [
+    "curvez-marketer",
+    "curvez-orchestrator"
+  ],
+  "status": "partial",
+  "summary": "네이밍 회의 R2 응답이다. 제품 정의·수용 기준 관점에서 후보 4개(Golla / Framea / Todam / Doran)와 MARU 결격 노트 1건을 decisions[] 로 낸다. 이번 라운드는 요구사항 문서 작성 작업이 아니므로 .curvez/requirements.md 를 만들지 않았고 어떤 파일도 쓰지 않았다 — 산출물은 이 핸드오프 하나다. 덧붙여 positioning.md 코어 5줄과 내가 아는 수용 기준(GOAL.md §3 확정 범위 · §6 완료 기준)이 어긋나는 지점 3건을 기록했다: promise 가 v1 보다 좁고(하루 vs 일자별 다일 코스), differentiator 가 v1 보다 넓으며(빈칸을 채운다 vs 빈칸이라고 표시한다), 로케일 6종 전제가 완료 기준에는 2종으로 적혀 있다. 이 셋은 답이 필요해 blocked_on 으로 올렸고, 그래서 done 이 아니라 partial 이다.",
+  "artifacts": [],
+  "decisions": [
+    {
+      "what": "naming-candidate: Golla",
+      "why": "한국어 '골라'(고르다의 명령형). (1) 코어 연결 — differentiator 의 '대안은 건수를 늘어놓는다 / 이 브랜드는 한 화면에 6~9개만 편집해 걸고' 를 동사 하나로 압축한다. 제품이 사용자 대신 하는 일이 곧 이름이다. (2) v1 범위 정합 — 확정 4기능(탐색·주변·AI 일정·코스 저장)이 전부 '고른 결과 한 벌' 로 수렴하므로 어느 기능도 이름 밖으로 밀려나지 않고(좁지 않다), 예약·결제·후기 같은 v1 제외 항목을 이름이 암시하지 않는다(넓지 않다). 결격: 내 관점에서는 없음. 기계 검사로 constraints 전부 통과(golla, 5자, 2음절, 소문자 ASCII, 편집거리 maru 5 / damda 4 / nunchi 6 / nadeuri 7). 아는 충돌은 둘 — 핀란드 액세서리 브랜드 Golla, 그리고 한 글자 차이인 영국 신발 브랜드 Gola(이탈리아어 gola = 목구멍/탐식, 검사 6언어에는 없음). R3 실검색 대상이다",
+      "reversible_at": ".curvez/brand/naming.md:candidates"
+    },
+    {
+      "what": "naming-candidate: Framea",
+      "why": "라틴어 어원의 조어(framea). (1) 코어 연결 — essence 의 '목록이 아니라 벽에 건 액자' 이고 GOAL.md §0.5 장치 1(액자/Frame)이 이 제품의 판정 기준 그 자체다. 이름이 판정 기준을 가리킨다. (2) v1 범위 정합 — 액자는 제시 방식이라 4기능 전 화면에 걸리고 특정 기능으로 좁혀지지 않으며, 기능을 약속하지 않으므로 v1 제외 항목으로 넓어질 여지도 없다. 결격: 범위 관점에서는 없으나 두 가지를 disclose 한다 — 라틴어 framea 는 게르만족 투창을 뜻하고 fr 'framée' · de 'Framee' 로 역사 용어가 남아 있어 검사 대상 6언어 중 둘에 뜻이 있다(흔한 일반명사는 아니다). 또 'frame' 이 UI 일반어라 상표 식별력이 Golla·Todam 보다 낮다. 기계 검사는 통과(framea, 6자, 소문자 ASCII, 편집거리 최소 3)",
+      "reversible_at": ".curvez/brand/naming.md:candidates"
+    },
+    {
+      "what": "naming-candidate: Todam",
+      "why": "한국어 '토담'(흙으로 쌓은 담). (1) 코어 연결 — essence 의 '벽에 건 액자' 에서 액자가 아니라 벽 쪽을 잡는다. GOAL.md §0.5 판정 기준 '이 화면이 누군가의 벽처럼 보이는가' 와 같은 말이고, 로마자 표기가 a/o 모음뿐이라 audience 1순위인 영어권 독자가 첫눈에 읽는다. (2) v1 범위 정합 — 벽은 컨테이너 은유라 기능을 하나도 배제하지 않고, 코스 저장(벽에 남는 것)까지 자연히 포함해 v1 4기능을 정확히 덮는다. 결격: 아는 충돌 둘 — 국내 요식업 상호로 '토담/토담집' 이 흔해 ko 검색에서 묻힐 위험이 후보 중 가장 크고, 풀의 Damda 와 '담' 음절을 공유한다(편집거리 4 라 constraints 위반은 아니지만 한국어 화자 귀에 계열로 들릴 수 있어 Todam 과 Damda 를 같은 shortlist 2개에 함께 올리지 않기를 권한다)",
+      "reversible_at": ".curvez/brand/naming.md:candidates"
+    },
+    {
+      "what": "naming-candidate: Doran",
+      "why": "한국어 '도란도란'(조용하고 사적인 말소리)의 앞 두 음절. (1) 코어 연결 — differentiator 의 대비축을 화법으로 옮긴다. 대안(관광 포털)은 건수를 고지하고 이 브랜드는 옆에서 맥락을 말해 준다. tone 의 금지 톤 '기관 공지체' 와 정확히 반대편에 있는 낱말이다. (2) v1 범위 정합 — 특정 기능을 지목하지 않아 좁지 않고, v1 제외 항목(후기·평점)을 기능으로 약속하지 않는다. 다만 '도란도란' 이 사용자 간 대화로 오독되면 커뮤니티 기능을 기대하게 만들 수 있고, 그것이 이 후보의 유일한 범위 리스크다. 결격: 충돌 관점에서 크다 — League of Legends 아이템 'Doran's Blade/Ring' 이 en 검색을 지배하고 Doran 은 아일랜드계 흔한 성이다. 위 셋보다 우선순위를 낮게 본다",
+      "reversible_at": ".curvez/brand/naming.md:candidates"
+    },
+    {
+      "what": "naming-candidate-note: MARU",
+      "why": "제품 정의·수용 기준 관점의 결격 사유 둘. (1) v1 범위보다 좁다 — 마루는 산마루 은유이고 로고도 산봉우리 SVG(src/presentation/components/BrandMark.tsx)인데, v1 카탈로그의 실측은 도시 쪽이다. 영문 관광지 커버리지가 서울 97% 대 전국 21%(GOAL.md '영문 서비스는 국문의 번역본이 아니다')여서 1차 타깃인 외국인이 실제로 만나는 것은 도시 목록이고, 다루는 contentTypeId 에 문화시설·축제·음식점이 들어간다. 이름과 로고가 '산' 으로 읽히면 이름이 v1 카탈로그보다 좁다. (2) 지원 로케일에서 뜻이 흡수된다 — ja 는 지원 6종 중 하나이고(서울 688건) 「マル/丸」 는 일본어에서 '동그라미·정답 표시·선박명 접미' 로 먼저 읽혀 브랜드가 아니라 기호가 된다. 두 지적 모두 '이미 구현돼 있다' 와 무관한 기준표 항목(의미·확장)에서 나온다",
+      "reversible_at": ".curvez/brand/naming.md:candidates"
+    },
+    {
+      "what": "core-vs-acceptance-criteria: promise 가 v1 수용 기준보다 좁다 — '하루 하나' vs '일자별 다일 코스'",
+      "why": "positioning.md 의 promise 는 '오늘 갈 곳이 하루 동선 하나로 정해진다' 인데, GOAL.md:168 v1 기능 3 은 '기간·관심사 → 동선 고려한 일자별 코스', :169 기능 4 는 '일자별 편집', :324 완료 기준도 '기간·관심사 입력 → 일자별 코스 생성' 이고 스키마(:210 courses.days, course_items.day)가 다일차를 전제한다. 제품은 3박4일을 만드는데 브랜드 약속은 하루다. 이름이 promise 에 붙으면(당일 외출을 뜻하는 Nadeuri, 하루 계열) 이름이 v1 확정 기능 하나를 배제한다. 내 후보 4개를 전부 promise 가 아니라 essence/differentiator 에 건 이유가 이것이다",
+      "reversible_at": ".curvez/brand/positioning.md:코어 promise"
+    },
+    {
+      "what": "core-vs-acceptance-criteria: differentiator 의 '빈칸을 채운다' 가 v1 수용 기준보다 넓다",
+      "why": "differentiator 는 '데이터에 비어 있는 맥락과 동선을 채운다 / 값어치는 번역이 아니라 빈칸 메우기' 인데, GOAL.md:294 설계 원칙 3 은 '데이터 빈칸을 숨기지 않는다 — 영업시간이 없으면 「정보 없음」이라 쓰고 공식 링크를 준다' 다. 즉 v1 이 실제로 하는 것은 빈칸을 메우는 게 아니라 빈칸을 정직하게 표시하는 것이고, 맥락을 생성하는 유일한 수용 기준은 :324 의 'AI 스팟마다 선정 근거 표시' 뿐이다. 브랜드 카피는 이 격차를 견딜 수 있으나 이름이 '채움/메움'(예: 채움 계열 로마자화)을 뜻하면 v1 이 지키지 못하는 약속이 상표에 박힌다 — 그래서 그 계열을 후보에서 뺐다",
+      "reversible_at": ".curvez/brand/positioning.md:코어 differentiator"
+    },
+    {
+      "what": "core-vs-acceptance-criteria: 로케일 6종 전제가 완료 기준에는 2종으로 적혀 있다",
+      "why": "curvez-marketer 가 GOAL.md §3 의 언어 모순을 이미 blocked_on 으로 올렸는데, 같은 모순이 §6 완료 기준에도 있다 — GOAL.md:317 은 '`/en`, `/ko` 가 동작한다' 뿐이라 ja·zh-Hant·de·fr 화면은 현재 판정 대상 자체가 아니다. 부정 함의 검사 범위를 6개 언어로 넓게 잡은 marketer 의 결정은 되돌리기 싼 쪽이라 지지하지만, 확정 이름의 로케일별 표기 검수(위 MARU 노트의 ja 「マル」 같은 문제)가 어느 범위까지 QA 대상인지는 완료 기준이 답하지 않는다",
+      "reversible_at": ".curvez/brand/naming.md:brief constraints"
+    },
+    {
+      "what": "이번 라운드에서 .curvez/requirements.md 를 만들지 않았다. 어떤 파일도 쓰지 않았고 산출물은 이 핸드오프 하나다",
+      "why": "요청이 네이밍 후보 반환이고 '.curvez/brand/ 는 curvez-marketer 소유, 파일을 쓰지 마라' 로 못박혔다. 요구사항 문서를 지금 새로 쓰면 GOAL.md 와 두 벌이 되어 제품 정의의 단일 출처가 갈린다 — positioning.md 도 같은 이유로 GOAL.md 를 1차 출처로 삼았다. 요구사항 문서화가 필요하면 별도 라운드로 요청받아야 한다",
+      "reversible_at": ".curvez/handoff/curvez-requirements.20260825-004155.json"
+    }
+  ],
+  "blocked_on": [
+    {
+      "question": "코어 promise 를 어느 쪽으로 확정하는가. (a) '하루 하나' 를 유지하고 다일차 코스를 v1 범위 밖으로 미는가 — 그러면 GOAL.md:168·169·324 와 courses.days 스키마가 범위 밖 기능을 만들고 있는 것이다. (b) 다일차를 포함하도록 promise 를 고치는가 — 그러면 당일 외출을 뜻하는 Nadeuri 후보의 근거가 약해진다. 어느 쪽이든 이름이 약속의 크기를 상표에 고정하므로 R3 평가 전에 정해야 한다",
+      "who": "curvez-marketer"
+    },
+    {
+      "question": "v1 이 데이터 빈칸을 실제로 채우는가, 아니면 GOAL.md:294 대로 '정보 없음' 으로 표시만 하는가. 채운다면 그 출처(AI 생성 / 수기 편집)와 오기 책임을 수용 기준에 넣어야 하고, 표시만 한다면 differentiator 문장을 '빈칸을 감추지 않고 동선으로 보완한다' 로 좁혀야 한다. 지금 문장은 v1 이 지키지 못하는 약속이다",
+      "who": "user"
+    },
+    {
+      "question": "GOAL.md §6 완료 기준(:317)이 '`/en`, `/ko` 가 동작한다' 만 적고 있다 — ja·zh-Hant·de·fr 화면도 판정 대상인가. curvez-marketer 가 이미 올린 §3 언어 모순 질문의 연장이며, 확정 이름의 로케일별 표기 검수 범위(예: ja 에서 브랜드 표기가 기호로 읽히는지)가 여기에 걸린다",
+      "who": "user"
+    }
+  ],
+  "verification": [
+    {
+      "command": "node scratchpad/check-names.mjs  # 후보 4개를 naming.md brief constraints 로 기계 검사 (길이 4~8, 1~3음절, 소문자 ASCII, 카테고리어·포털조어, 풀 4개와의 편집거리)",
+      "result": "candidates=4 fail=0 / golla len=5 syl=2 dist(maru:5 damda:4 nunchi:6 nadeuri:7) OK / framea len=6 syl=2 dist(maru:5 damda:3 nunchi:6 nadeuri:6) OK / todam len=5 syl=2 dist(maru:5 damda:4 nunchi:6 nadeuri:6) OK / doran len=5 syl=2 dist(maru:4 damda:4 nunchi:6 nadeuri:6) OK — 편집거리 1 이하 0건, 카테고리어·포털조어 0건",
+      "passed": true
+    },
+    {
+      "command": "grep -n \"일자별|/en`, `/ko`|정보 없음|선정 근거\" GOAL.md",
+      "result": "5줄 적중 — 168(일자별 코스) 169(일자별 편집) 294(정보 없음 표시) 317(/en, /ko 만) 324(일자별 코스 생성·선정 근거). 코어-수용기준 어긋남 3건의 인용 위치를 실제 파일에서 확인했다",
+      "passed": true
+    },
+    {
+      "command": "git status --porcelain  # 이번 라운드에 파일을 쓰지 않았는지 확인 (핸드오프 1개 제외)",
+      "result": "내가 만든 것은 .curvez/handoff/curvez-requirements.20260825-004155.json 1건뿐이다. 같은 출력에 보이는 .curvez/team.md(M), .curvez/brand/(??), curvez-designer·curvez-nextjs 핸드오프는 다른 에이전트가 만든 것이고 내가 건드리지 않았다. src/ 변경 0건",
+      "passed": true
+    },
+    {
+      "command": "node \"$CLAUDE_PLUGIN_ROOT/scripts/validate-handoff.mjs\" .curvez/handoff/",
+      "result": "OK 핸드오프 검증 — 검사 9건, 통과 9건, 실패 0건, 오류 0개, 경고 0개 (exit=0)",
+      "passed": true
+    }
+  ]
+}

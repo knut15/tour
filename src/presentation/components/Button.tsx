@@ -16,6 +16,7 @@ export function ButtonLink({
   fullWidth = false,
   scroll,
   transitionTypes,
+  testId,
   children,
 }: {
   href: string;
@@ -33,6 +34,11 @@ export function ButtonLink({
    * 규칙은 `globals.css` 의 `::view-transition-*(.morph-*)` 가 갖는다.
    */
   transitionTypes?: string[];
+  /**
+   * QA 가 이 버튼을 집는 이름. **이 컴포넌트는 여러 자리에 서므로 기본값이 없다** —
+   * 붙이지 않은 버튼에는 속성 자체가 나가지 않아, 한 이름이 여러 버튼에 걸리는 일이 없다.
+   */
+  testId?: string;
   children: ReactNode;
 }) {
   return (
@@ -40,6 +46,7 @@ export function ButtonLink({
       href={href}
       scroll={scroll}
       transitionTypes={transitionTypes}
+      data-testid={testId}
       className={
         TDS_BUTTON +
         " " +

@@ -333,6 +333,7 @@ async function Areas({
       current={current}
       label={t.explore.areaLabel}
       allLabel={t.explore.allAreas}
+      testId="area-select"
       // 시도를 바꾸면 시군구는 버린다. 다른 시도에서 같은 번호는 다른 곳이다
       hrefFor={(code) => exploreHref(locale, { category, keyword, areaCode: code })}
     />
@@ -368,6 +369,7 @@ async function Districts({
       current={current}
       label={t.explore.districtLabel}
       allLabel={t.explore.allDistricts}
+      testId="district-select"
       hrefFor={(code) => exploreHref(locale, { category, keyword, areaCode, districtCode: code })}
     />
   );
@@ -531,6 +533,7 @@ async function Spots({
           <ButtonLink
             href={exploreHref(locale, { category, areaCode, districtCode, keyword, sort, more: more + 1 })}
             variant="weak"
+            testId="load-more"
             // 스크롤 위치를 지킨다. 목록이 아래로 늘어나는데 맨 위로 올라가면
             // 방금 보던 카드를 다시 찾아 내려와야 한다
             scroll={false}

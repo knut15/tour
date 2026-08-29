@@ -91,7 +91,7 @@ export default async function SpotDetailPage({ params }: PageProps<"/[locale]/sp
               {t.category[spot.category]}
             </p>
 
-            <h1 className="mx-auto mt-6 max-w-[20ch] font-display font-light text-[clamp(2rem,4vw,3rem)] leading-[1.1] text-ink">
+            <h1 data-testid="spot-title" className="mx-auto mt-6 max-w-[20ch] font-display font-light text-[clamp(2rem,4vw,3rem)] leading-[1.1] text-ink">
               {spot.titlePrimary}
             </h1>
 
@@ -183,7 +183,7 @@ export default async function SpotDetailPage({ params }: PageProps<"/[locale]/sp
             지면이라 가능하다. `uppercase` 는 라틴에만 걸려서, 같은 화면의 한국어·
             일본어 값은 그대로 남는다 — 언어마다 다른 화면이 된다.
           */}
-          <div className="mt-14 grid gap-x-12 gap-y-10 sm:grid-cols-2 md:mt-16">
+          <div data-testid="spot-facts" className="mt-14 grid gap-x-12 gap-y-10 sm:grid-cols-2 md:mt-16">
             {factColumns.map((column, i) => (
               <dl key={i} className="border-t border-line pt-5">
                 {column.map((row) => (
@@ -253,6 +253,7 @@ function Actions({ spot, t }: { spot: SpotDetailView; t: Dictionary }) {
       {mapsHref && (
         <a
           href={mapsHref}
+          data-testid="map-link"
           target="_blank"
           rel="noopener noreferrer"
           className={`${DETAIL_ACTION} ${TDS_BUTTON_WEAK}`}
@@ -263,6 +264,7 @@ function Actions({ spot, t }: { spot: SpotDetailView; t: Dictionary }) {
       {spot.homepage && (
         <a
           href={spot.homepage}
+          data-testid="official-link"
           target="_blank"
           rel="noopener noreferrer"
           className={`${DETAIL_ACTION} border border-line text-ink hover:border-ink/25`}

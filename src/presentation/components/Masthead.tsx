@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BrandMark } from "@/presentation/components/BrandMark";
 import { Suspense, type ReactNode } from "react";
 import type { Locale } from "@/domain/shared/locale";
 import { getTodayWeather } from "@/presentation/lib/container";
@@ -61,11 +62,20 @@ export function Masthead({
           {leading ?? (
             <Link
               href={`/${locale}`}
+              aria-label={t.brand}
               // 올라오는 방향. 탐색에서 누르면 머리말이 홈 크기로 다시 커진다
               transitionTypes={["to-home"]}
-              className="text-[13px] uppercase tracking-[0.16em] focus-visible:outline-2 focus-visible:outline-focus"
+              className="shrink-0 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-focus"
             >
-              {t.brand}
+              {/*
+                세로형(390×440)이라 **높이를 기준으로 잡는다.** 가로로 재면 헤더
+                높이를 넘어가고, 스크롤로 헤더가 줄어들 때 그만큼 잘린다.
+
+                **크기를 글자 크기로 준다.** 심볼·이름·간격이 전부 `em` 이라 이 한
+                값이 로고 전체를 정한다. 획은 `currentColor` 라 `text-ink` 를
+                물려받아 테마를 따라간다.
+              */}
+              <BrandMark className="text-[30px] text-ink sm:text-[34px]" />
             </Link>
           )}
           <div className="flex items-center gap-2">

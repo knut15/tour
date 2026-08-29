@@ -39,7 +39,11 @@ export function WeatherChip({
         높이는 CONTROL_SM 이 정한다. 옆의 테마 토글·언어 선택과 같은 36px 이어야 한다.
         `list-none` 은 `<summary>` 기본 삼각형을 지운다 — 칩에는 그 표식이 없다.
       */}
-      <summary className={`${CONTROL_SM} cursor-pointer list-none px-2.5`}>
+      <summary
+        // 패널을 여는 자리. 패널 자체는 `weather-panel` 이다
+        data-testid="weather-chip"
+        className={`${CONTROL_SM} cursor-pointer list-none px-2.5`}
+      >
         <WeatherIcon sky={weather.sky} className="size-[18px] shrink-0" />
         <span className="tabular-nums">
           {weather.temperature}

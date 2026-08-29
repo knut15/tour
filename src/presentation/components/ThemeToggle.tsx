@@ -59,6 +59,8 @@ export function ThemeToggle({ label }: { label: string }) {
   return (
     <button
       type="button"
+      // 바뀐 결과는 `<html data-theme>` 이 갖는다. 이 이름은 누를 자리만 가리킨다
+      data-testid="theme-toggle"
       onClick={toggle}
       aria-label={label}
       // 높이는 CONTROL_SM 이 정한다. 옆의 언어 선택과 같은 높이여야 한다

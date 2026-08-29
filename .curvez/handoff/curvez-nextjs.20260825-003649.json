@@ -1,0 +1,49 @@
+{
+  "from": "curvez-nextjs",
+  "to": [
+    "curvez-orchestrator",
+    "curvez-marketer"
+  ],
+  "status": "done",
+  "summary": "curvez-marketer 의 네이밍 R2 요청에 응답했다. `.curvez/brand/naming.md` 의 `## brief`(constraints/criteria/ask, MARU 지위)와 `.curvez/brand/positioning.md` 의 코어 5줄을 읽고, 이미 풀에 있는 MARU/Damda/Nunchi/Nadeuri 와 겹치지 않는 신규 후보 3개(Gyeol / Chaeum / Yeoyu)를 `decisions[]` 에 담았다. 각 후보는 코드 식별자·라우트·`package.json` name·npm 패키지명·환경변수 접두사 관점에서 grep 으로 실제 충돌을 확인했다(0건). MARU 에 대해서는 이 관점에서 아는 결격 사유가 없어 note 를 남기지 않았다. `.curvez/brand/`, `src/` 어디에도 쓰지 않았다 — 유일한 산출물은 이 핸드오프 파일이다",
+  "artifacts": [],
+  "decisions": [
+    {
+      "what": "naming-candidate: Gyeol",
+      "why": "한국어 '결'(결이 맞다 — 정취·성향의 결). positioning.md 의 essence '목록이 아니라 벽에 건 액자' 와 tone '차분하다·사적이다' 로 이어진다 — 장소를 건수가 아니라 개인적 결(nuance)로 보여준다는 축. 코드 식별자 관점: 소문자 ASCII 5자 'gyeol', 하이픈·숫자 없음, 1음절로 브리프의 길이(4~8자)·음절(1~3) 제약을 만족. `grep -rniE \"gyeol\" --include='*.ts' --include='*.tsx' --include='*.json' .` (node_modules·.curvez 제외) 결과 0건 — 기존 코드·라우트·환경변수와 충돌 없음. `src/app` 하위 디렉터리명(`[locale]`, `api`)과도 겹치지 않는다. package.json name/npm 패키지명/`GYEOL_` 환경변수 접두사로 그대로 쓸 수 있다. npm 레지스트리 실사용 여부는 이 라운드 권한(WebSearch 금지) 밖이라 확인하지 못했다 — 이 관점에서는 결격 없음",
+      "reversible_at": ".curvez/brand/naming.md:## candidates"
+    },
+    {
+      "what": "naming-candidate: Chaeum",
+      "why": "한국어 '채움'(빈칸을 채우다). positioning.md 의 differentiator 문장 '값어치는 번역이 아니라 빈칸 메우기에 있다' 와 어휘가 정확히 겹친다 — 브랜드명이 핵심 카피의 동사를 그대로 가리키는 가장 직접적인 후보. 코드 식별자 관점: 소문자 ASCII 6자 'chaeum', 하이픈·숫자 없음, 2음절로 길이·음절 제약 충족. grep 결과(위와 동일 범위) 0건, App Router 예약 이름(`app`·`api`·`page`·`layout`)과도 안 겹친다. package.json name/npm 패키지명/`CHAEUM_` 환경변수 접두사 사용 가능. npm 레지스트리 실검색은 못 했다 — 이 관점에서는 결격 없음",
+      "reversible_at": ".curvez/brand/naming.md:## candidates"
+    },
+    {
+      "what": "naming-candidate: Yeoyu",
+      "why": "한국어 '여유'(여백·편안함). positioning.md 의 promise '오늘 갈 곳이 하루 동선 하나로 정해진다' 가 사용자에게 남기는 결과 — 선택지가 좁혀지며 생기는 심리적 여유 — 를 가리킨다. 코드 식별자 관점: 소문자 ASCII 5자 'yeoyu', 하이픈·숫자 없음, 2음절로 제약 충족. grep 결과 0건, 기존 라우트·환경변수와 충돌 없음. package.json name/npm 패키지명/`YEOYU_` 접두사로 그대로 쓸 수 있다. 다만 로마자 표기가 'yeoyu'/'yeoyou' 로 갈릴 수 있어(브리프의 nadeuri 사례와 같은 유형의 철자 리스크) 철자 항목 감점 가능성을 미리 적어 둔다 — 이 자체는 코드 식별자 결격은 아니지만 R3 평가에서 참고할 사항"
+    },
+    {
+      "what": "MARU 에 대한 식별자 관점 결격 사유 없음 — naming-candidate-note 를 남기지 않았다",
+      "why": "'maru' 는 소문자 ASCII 4자, 하이픈·숫자 없이 코드 식별자·라우트·package.json name·환경변수 접두사(`MARU_`)로 그대로 쓸 수 있다. `grep -rniE \"maru\" --include='*.ts' --include='*.tsx' --include='*.json' .` 결과는 `src/presentation/components/BrandMark.tsx` 와 `src/presentation/i18n/*.json` 6개 파일의 기존 구현뿐이고, App Router 예약어·기존 디렉터리명과의 충돌도 없다. npm 레지스트리 실사용 충돌은 WebSearch 가 막혀 있어 확인 불가이며, 그 확인은 이 라운드의 범위(코드 식별자 관점) 밖이라고 판단했다 — 브리프가 '아는 경우에만' 남기라고 했으므로 추측성 결격 사유를 지어내지 않았다",
+      "reversible_at": ".curvez/brand/naming.md:### MARU 의 지위"
+    }
+  ],
+  "blocked_on": [],
+  "verification": [
+    {
+      "command": "grep -rniE \"chaeum|gyeol|yeoyu\" --include='*.ts' --include='*.tsx' --include='*.json' . | grep -v node_modules | grep -v '\\.curvez/'",
+      "result": "0건 — 세 후보 모두 기존 코드·설정과 식별자 충돌 없음",
+      "passed": true
+    },
+    {
+      "command": "grep -rniE \"maru\" --include='*.ts' --include='*.tsx' --include='*.json' . | grep -v node_modules | grep -v '\\.curvez/' | wc -l",
+      "result": "7건 — BrandMark.tsx 1건 + i18n/*.json 6개 파일의 \"brand\": \"MARU\" (기존 구현, 신규 충돌 아님)",
+      "passed": true
+    },
+    {
+      "command": "cat package.json | grep '\"name\"' && ls src/app",
+      "result": "현재 name=\"tour\". src/app 하위: [locale], api, apple-icon.png, globals.css, icon.svg — 후보 3개 중 어느 것과도 겹치지 않는다",
+      "passed": true
+    }
+  ]
+}

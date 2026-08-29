@@ -1,5 +1,5 @@
 {
-  "brand": "你的韓國",
+  "brand": "Life is Nearby",
   "nav": {
     "explore": "探索",
     "switchLocale": "語言",
@@ -7,8 +7,9 @@
   },
   "explore": {
     "eyebrow": "為了一趟好旅行",
-    "title": "你的韓國，裱入畫框。",
-    "subtitle": "只看幾個地方，決定今天要去哪裡。",
+    "title": "願今日所遇的韓國，長留心中。",
+    "titleAccent": "長留心中。",
+    "subtitle": "為自己安排愉快的一天",
     "areaLabel": "地區",
     "allAreas": "全國",
     "districtLabel": "市郡區",

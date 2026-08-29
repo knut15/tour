@@ -19,17 +19,24 @@ export function RegionPicker({
   label,
   allLabel,
   hrefFor,
+  testId,
 }: {
   items: RegionView[];
   current?: number;
   label: string;
   allLabel: string;
   hrefFor: (code?: number) => string;
+  /**
+   * QA 가 집는 이름. **이 컴포넌트는 시도와 시군구 두 자리에 서므로 부르는 쪽이 준다** —
+   * 같은 이름을 가지면 어느 드롭다운을 연 것인지 가릴 수 없다. 안의 항목은
+   * `data-region` 으로 갈린다(`[data-testid=area-select] [data-region="39"]`).
+   */
+  testId?: string;
 }) {
   const currentName = items.find((r) => r.code === current)?.name ?? allLabel;
 
   return (
-    <details className="group relative" data-dismissable>
+    <details data-testid={testId} className="group relative" data-dismissable>
       {/* 기하는 `FILTER_CONTROL` 이 정본이다. 옆에 서는 컨트롤과 높이를 나눠 쓴다 */}
       <summary className={FILTER_CONTROL}>
         <span className="text-[11px] uppercase tracking-[0.14em] text-muted">
@@ -57,6 +64,7 @@ export function RegionPicker({
           <Link
             key={r.code}
             href={hrefFor(r.code)}
+            data-region={r.code}
             aria-current={r.code === current ? "true" : undefined}
             className={
               "rounded-md px-3 py-2 text-[14px] hover:bg-surface " +

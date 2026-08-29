@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 136 136" role="img" aria-labelledby="title desc">
+  <title id="title">lifeis-nearby LN symbol</title>
+  <desc id="desc">An LN monogram formed by a short route from a dark starting point to a cobalt destination.</desc>
+  <rect width="136" height="136" rx="34" fill="#F2EBE0"/>
+  <path d="M35 35V98H66" fill="none" stroke="#1C1A17" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M66 98V47L101 98V42" fill="none" stroke="#1C1A17" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="35" cy="35" r="7" fill="#1C1A17"/>
+  <circle cx="101" cy="42" r="9" fill="#1B4FD8"/>
+</svg>

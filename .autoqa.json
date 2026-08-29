@@ -1,0 +1,19 @@
+{
+  "project": "tour (Life is Nearby)",
+  "description": "Next.js 16 App Router · 로케일 6종. 수동 QA 케이스는 docs/qa/test-cases.md 가 원본이다. 검증은 전용 워크트리(../tour-qa)에서 3001 포트로 돈다 — Next 16 은 같은 디렉터리에 dev 서버를 둘 띄우지 못해, 개발 서버(3000)와 겹치면 검증이 남의 앱에 붙는다. 데이터 소스는 .env.local 이 정하고 여기서 덮지 않는다 — 배포 가부를 묻는 검증이므로 운영과 같은 공급자를 봐야 한다.",
+  "sources": [
+    {
+      "adapter": "markdown",
+      "file": "docs/qa/test-cases.md"
+    }
+  ],
+  "app": {
+    "start": "pnpm dev",
+    "baseUrl": "http://localhost:3001",
+    "readyTimeoutMs": 120000,
+    "always": true,
+    "env": {
+      "PORT": "3001"
+    }
+  }
+}

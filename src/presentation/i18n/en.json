@@ -1,5 +1,5 @@
 {
-  "brand": "Your Korea",
+  "brand": "Life is Nearby",
   "nav": {
     "explore": "Explore",
     "switchLocale": "한국어",
@@ -7,8 +7,9 @@
   },
   "explore": {
     "eyebrow": "For a good trip",
-    "title": "Your Korea, framed.",
-    "subtitle": "See a few places and decide where to go today.",
+    "title": "May the Korea you meet today stay with you.",
+    "titleAccent": "stay with you.",
+    "subtitle": "Make it a good day",
     "areaLabel": "Region",
     "allAreas": "Anywhere in Korea",
     "districtLabel": "District",

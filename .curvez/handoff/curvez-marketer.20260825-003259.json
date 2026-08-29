@@ -1,0 +1,110 @@
+{
+  "from": "curvez-marketer",
+  "to": [
+    "curvez-orchestrator",
+    "curvez-designer",
+    "curvez-nextjs",
+    "curvez-requirements"
+  ],
+  "status": "blocked",
+  "summary": "R1 완료 — 브랜드 코어 5줄과 네이밍 브리프를 확정했다. essence 는 '공공 관광 데이터를 목록이 아니라 벽에 건 액자로 보여주고, 오늘 걸을 하루 하나로 좁혀 주는 한국 여행 앱', promise 는 '오늘 갈 곳이 하루 동선 하나로 정해진다'. MARU 는 확정 브랜드가 아니라 후보 풀의 by:user 항목으로 명시했다. 후보 풀에 4개(MARU 1 + curvez-marketer 3)를 시드했다. R2 참가자 3명의 후보가 걷혀야 평가로 넘어갈 수 있어 blocked 다.",
+  "artifacts": [
+    {
+      "path": ".curvez/brand/positioning.md",
+      "kind": "decision",
+      "note": "브랜드 코어 정본. 필수 키 5종(essence/audience/promise/differentiator/tone) + 각 줄의 근거 + GOAL.md 언어 범위 모순 기록"
+    },
+    {
+      "path": ".curvez/brand/naming.md",
+      "kind": "decision",
+      "note": "## brief(constraints/criteria/ask) 확정, ## candidates 에 시드 4개. ## shortlist 는 R3 대기로 비어 있다"
+    }
+  ],
+  "decisions": [
+    {
+      "what": "제품 정의를 GOAL.md 에서 뽑았다. 사용자에게 되묻지 않았다",
+      "why": ".curvez/requirements.md 는 없지만 GOAL.md §0 이 '한국 공공데이터(TourAPI)를 기반으로 외국인 여행자가 한국에서 무엇을 할지 정하고 하루 동선을 짜는 웹앱' 이라고 이미 한 문장으로 확정해 두었고, §0.5 모토·§1 문제정의·§3 확정범위가 이를 뒷받침한다. 한 문장이 이미 굳어 있으므로 who:user 로 되물을 사유가 없다",
+      "reversible_at": ".curvez/brand/positioning.md:근거"
+    },
+    {
+      "what": "부정 함의 검사 범위를 2개 언어가 아니라 6개 언어(en/ko/ja/zh-Hant/de/fr)로 잡았다",
+      "why": "GOAL.md §3 안에 모순이 있다 — '언어' 행은 6개 언어를 확정했는데 같은 절의 'v1 제외' 목록에 '영어·한국어 외 언어' 가 남아 있다. src/domain/shared/locale.ts:10 의 LOCALES 가 6개로 구현돼 있어 코드가 문서보다 최신이라고 판정했다. 검사 범위를 좁게 잡았다가 나중에 넓히면 이미 확정한 이름을 다시 심사해야 하므로 넓은 쪽이 보수적이다",
+      "reversible_at": ".curvez/brand/naming.md:brief constraints"
+    },
+    {
+      "what": "criteria 가중치를 기본값(의미30 발음20 철자15 충돌25 확장10) 그대로 두었다",
+      "why": "6개 언어 제품이라 발음·철자를 올릴 유인이 있으나, 가중치를 흔들면 평가 결과가 브리프 조정에 좌우된 것인지 후보 품질 차이인지 구분되지 않는다. 다국어 특수성은 '의미 30' 안의 검사 범위를 6개 언어로 넓히는 것으로 반영했다",
+      "reversible_at": ".curvez/brand/naming.md:brief criteria"
+    },
+    {
+      "what": "curvez-marketer 자신의 후보 3개(Damda / Nunchi / Nadeuri)를 참가자 후보를 받기 전인 R1 에 확정해 파일에 박았다",
+      "why": "마케터가 R3 의 평가자다. 걷힌 후보를 본 뒤에 자기 후보를 쓰면 평가자가 자기 안을 유리한 위치에 놓을 수 있다. 순서를 파일 기록으로 고정해 그 여지를 없앤다. 부작용으로 참가자 앵커링이 생기지만, 브리프에 '한국어 어원에 몰린 것은 시드일 뿐 범위가 아니다' 를 명시해 상쇄했다",
+      "reversible_at": ".curvez/brand/naming.md:candidates"
+    },
+    {
+      "what": "constraints 에 '이미 풀에 있는 이름과 한 글자만 다르거나 같은 소리로 읽히는 이름 금지'(MARU/HARU 류)를 넣었다",
+      "why": "MARU 가 풀에 있는 상태에서 HARU(하루) 같은 강한 후보가 들어오면 최종 A/B 가 MARU vs HARU 가 될 수 있다. 사용자가 두 안을 구별하지 못하는 A/B 는 선택이 아니라 오타 확인이 된다. 실제로 이 이유로 HARU 를 자체 후보에서 뺐다",
+      "reversible_at": ".curvez/brand/naming.md:brief constraints"
+    },
+    {
+      "what": "MARU 를 후보 풀 항목으로 두되 '기존 구현이 있다는 사실은 기준표 다섯 항목 어디에도 들어가지 않는다' 를 브리프에 못박았다",
+      "why": "참가자들이 코드에서 MARU 를 보면 '이미 정해진 것' 으로 읽고 후보를 안 내거나 MARU 에 맞춘 후보만 낼 위험이 크다. 교체 비용은 이름의 좋고 나쁨과 다른 축이고 그 축은 사용자의 최종 선택에서 쓰인다",
+      "reversible_at": ".curvez/brand/naming.md:MARU 의 지위"
+    },
+    {
+      "what": "충돌 검증(도메인·앱스토어·상표·SNS)을 R1 에서 돌리지 않았다",
+      "why": "참가자 후보가 걷히기 전이라 검증 대상 집합이 확정되지 않았다. 시드 4개만 지금 검증하면 R2 후보와 검증 시점이 갈려 기준이 달라진다. R3 에서 전 후보를 한 번에 돌린다",
+      "reversible_at": ".curvez/brand/naming.md:candidates"
+    }
+  ],
+  "blocked_on": [
+    {
+      "question": "네이밍 후보 요청: `.curvez/brand/naming.md` 의 `## brief` 와 `.curvez/brand/positioning.md` 의 코어 5줄을 읽고, 후보 3개 이상을 당신의 핸드오프 `decisions[]` 에 `what: \"naming-candidate: <이름>\"` / `why: <근거 한 줄>` 형식으로 반환하라. `why` 한 줄에 (1) 코어의 어느 줄과 어떻게 이어지는가 (2) 시각·발음·로고 글자 균형 관점에서 결격 사유가 있는가 없는가 를 반드시 담아라. 파일은 쓰지 마라 — `.curvez/brand/` 는 curvez-marketer 소유다. MARU 에 대한 시각적 결격 사유를 아는 경우에만 `what: \"naming-candidate-note: MARU\"` 를 하나 더 남겨라",
+      "who": "curvez-designer"
+    },
+    {
+      "question": "네이밍 후보 요청: `.curvez/brand/naming.md` 의 `## brief` 와 `.curvez/brand/positioning.md` 의 코어 5줄을 읽고, 후보 3개 이상을 당신의 핸드오프 `decisions[]` 에 `what: \"naming-candidate: <이름>\"` / `why: <근거 한 줄>` 형식으로 반환하라. `why` 한 줄에 (1) 코어의 어느 줄과 어떻게 이어지는가 (2) 코드 식별자·라우트·`package.json` name·npm 패키지명·환경변수 접두사 관점에서 결격 사유가 있는가 없는가 를 반드시 담아라. 파일은 쓰지 마라 — `.curvez/brand/` 는 curvez-marketer 소유이고 `src/` 는 이번 라운드에서 건드리지 않는다. MARU 에 대한 식별자 관점의 결격 사유를 아는 경우에만 `what: \"naming-candidate-note: MARU\"` 를 하나 더 남겨라",
+      "who": "curvez-nextjs"
+    },
+    {
+      "question": "네이밍 후보 요청: `.curvez/brand/naming.md` 의 `## brief` 와 `.curvez/brand/positioning.md` 의 코어 5줄을 읽고, 후보 3개 이상을 당신의 핸드오프 `decisions[]` 에 `what: \"naming-candidate: <이름>\"` / `why: <근거 한 줄>` 형식으로 반환하라. `why` 한 줄에 (1) 코어의 어느 줄과 어떻게 이어지는가 (2) 제품 정의·수용 기준 관점에서 이름이 v1 범위보다 좁거나 넓지 않은가 를 반드시 담아라. 파일은 쓰지 마라 — `.curvez/brand/` 는 curvez-marketer 소유다. 덧붙여, `positioning.md` 의 코어 5줄이 당신이 아는 수용 기준과 어긋나는 지점이 있으면 그것도 `decisions[]` 에 남겨라",
+      "who": "curvez-requirements"
+    },
+    {
+      "question": "`GOAL.md` §3 의 모순을 어느 쪽으로 확정하는가. `언어` 행은 6개 언어(en/ko/ja/zh-Hant/de/fr)인데 같은 절 `v1 제외` 목록에 `영어·한국어 외 언어` 가 남아 있다. 코드(`src/domain/shared/locale.ts:10`)는 6개다. 이 브리프는 6개로 진행했고, 이름의 부정 함의 검사 범위가 여기에 걸린다. `GOAL.md` 는 curvez-marketer 의 소유 경로가 아니라 고치지 않았다",
+      "who": "user"
+    }
+  ],
+  "verification": [
+    {
+      "command": "for f in .curvez/brand/positioning.md .curvez/brand/naming.md; do test -f \"$f\" || echo \"MISSING-DOC $f\"; done",
+      "result": "출력 0줄 — 두 파일 모두 존재",
+      "passed": true
+    },
+    {
+      "command": "for k in essence: audience: promise: differentiator: tone:; do grep -q -- \"$k\" .curvez/brand/positioning.md || echo \"MISSING $k\"; done | wc -l",
+      "result": "positioning-missing=0",
+      "passed": true
+    },
+    {
+      "command": "for k in '## brief' '## candidates' '## shortlist'; do grep -q -- \"$k\" .curvez/brand/naming.md || echo \"MISSING-SECTION $k\"; done",
+      "result": "출력 0줄 — 세 섹션 모두 존재",
+      "passed": true
+    },
+    {
+      "command": "node -e '<naming.md 파싱: candidate/final/check 카운트>'",
+      "result": "candidates=4 providers=2 finals=0 finals-unchecked=0 / providers-list=user,curvez-marketer / unverified-marks=0",
+      "passed": false
+    },
+    {
+      "command": "find .curvez/brand \\( -name '*.tsx' -o -name '*.ts' -o -name '*.css' \\) | wc -l",
+      "result": "impl-files=0",
+      "passed": true
+    },
+    {
+      "command": "R1 범위 판정 — 통과 기준 candidates>=5, providers>=3, finals=2 대비 실측",
+      "result": "미달 3건. candidates=4 (기준 5), providers=2 (기준 3, 현재 user·curvez-marketer 뿐), finals=0 (기준 2). 셋 다 R2 참가자 후보가 걷히고 R3 평가를 마쳐야 충족된다. 이번 라운드 임무 범위가 브리프까지이므로 예정된 미달이고, blocked_on 4건으로 해소 경로를 남겼다",
+      "passed": false
+    }
+  ]
+}

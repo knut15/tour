@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 180" role="img" aria-labelledby="title desc">
+  <title id="title">lifeis-nearby LN monogram logo</title>
+  <desc id="desc">An LN monogram drawn as a short route between two nearby points, paired with the lifeis-nearby wordmark.</desc>
+
+  <!--
+    LN 시안
+    L: 왼쪽 세로획과 아래 거리선 — 지금 서 있는 곳.
+    N: 두 기둥을 잇는 대각선 — 가까운 다음 장소로 향하는 움직임.
+    오른쪽 코발트 점은 목적지이며, 워드마크의 하이픈과 같은 색을 쓴다.
+  -->
+  <g transform="translate(24 22)">
+    <rect width="136" height="136" rx="34" fill="#F2EBE0"/>
+
+    <!-- L -->
+    <path
+      d="M35 35V98H66"
+      fill="none"
+      stroke="#1C1A17"
+      stroke-width="12"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+
+    <!-- N: L의 끝점에서 출발해 목적지까지 이어지는 가까운 경로 -->
+    <path
+      d="M66 98V47L101 98V42"
+      fill="none"
+      stroke="#1C1A17"
+      stroke-width="12"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+
+    <circle cx="35" cy="35" r="7" fill="#1C1A17"/>
+    <circle cx="101" cy="42" r="9" fill="#1B4FD8"/>
+  </g>
+
+  <g transform="translate(188 0)">
+    <text
+      x="0"
+      y="92"
+      fill="#1C1A17"
+      font-family="Avenir Next, Avenir, Helvetica Neue, Arial, sans-serif"
+      font-size="62"
+      font-weight="600"
+      letter-spacing="-2.5"
+    >lifeis<tspan fill="#1B4FD8">-</tspan>nearby</text>
+    <text
+      x="3"
+      y="126"
+      fill="#6B6459"
+      font-family="Avenir Next, Avenir, Helvetica Neue, Arial, sans-serif"
+      font-size="13"
+      font-weight="600"
+      letter-spacing="4.2"
+    >LIFE IS CLOSER THAN YOU THINK</text>
+  </g>
+</svg>

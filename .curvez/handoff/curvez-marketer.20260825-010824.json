@@ -1,0 +1,124 @@
+{
+  "from": "curvez-marketer",
+  "to": [
+    "curvez-orchestrator",
+    "curvez-designer",
+    "curvez-nextjs",
+    "curvez-requirements"
+  ],
+  "status": "blocked",
+  "summary": "R4 완료 — 사용자가 최종 A/B(Todam·Nunchi)를 모두 거부했다. 후보만 다시 뽑지 않고 브리프를 고쳤다. 거부 사유 둘 중 하나는 내 채점 오류(향토·식품 연상을 충돌로만 보고 의미 만점을 줬다)이고 다른 하나는 기준표 결함(의미 항목을 문서 정합으로 정의했다)이었다. constraints 2개 신설(향토·식품 연상 금지 / 한 문장 테스트), criteria 의 의미 항목 재정의, 의성어·의태어를 1순위 탐색 축으로 승격. 기존 후보 14줄 전부에 R4 판정을 붙였다 — 결격 3(Todam·Damda·Nunchi), 재점검 5, 방향 유효 1(Doran). 참가자 3명의 재제출이 있어야 R6 로 갈 수 있어 blocked 다. 재소집 상한 1회를 이번에 썼다.",
+  "artifacts": [
+    {
+      "path": ".curvez/brand/naming.md",
+      "kind": "decision",
+      "note": "## brief 개정(constraints 2개 신설·criteria 의미 재정의·ask 에 한 문장 소개 의무화) + `### R4 개정 내역` + candidates 14줄에 R4 판정 + shortlist 에 거부 이력"
+    }
+  ],
+  "decisions": [
+    {
+      "what": "사용자의 Todam 거부를 후보 결함이 아니라 curvez-marketer 자신의 채점 오류로 판정했다",
+      "why": "R3 충돌 검증에서 토담집(대구·한남동·태안)·토담골(청담·애틀랜타)·todamfood.com(식품 제조사)을 내가 직접 찾아 놓고, check 줄에 '분야가 다르고 en 검색에서는 희소' 라고 적으며 충돌에서만 1점 감점하고 의미는 2점 만점을 줬다. 상표법상 지정상품이 다른 것과 소비자가 어느 카테고리를 먼저 떠올리는가는 다른 문제인데 전자만 봤다. 데이터는 이미 손에 있었고 해석이 틀렸다. 후보를 바꾸는 것으로는 이 오류가 고쳐지지 않으므로 constraints 에 결격 기준으로 신설했다",
+      "reversible_at": ".curvez/brand/naming.md:brief constraints"
+    },
+    {
+      "what": "사용자의 Nunchi 거부를 기준표 `의미(30)` 의 정의 오류로 판정하고, 의미 항목을 '① 첫 접촉의 즉시 이해 ② 다른 업종이 먼저 연상되지 않음 ③ 코어와 모순 없음' 순서로 재정의했다",
+      "why": "나는 의미를 '브랜드 코어와 맞는가' 로 읽고 문서 정합으로 채점했다. Nunchi 에 2점을 준 근거는 GOAL.md §1 의 '부족한 건 정보가 아니라 맥락이다' 였는데, 그건 사실이지만 사용자가 이름만 보고 복원할 수 있는 연결이 아니다. 사용자의 '눈치는 왜???' 가 정확히 그 지점을 찔렀다. 사용자에게 의미는 문서 정합이 아니라 첫 접촉의 즉시 이해다",
+      "reversible_at": ".curvez/brand/naming.md:brief criteria"
+    },
+    {
+      "what": "후보 제출 형식에 '사용자에게 그대로 보여줄 한 문장 소개' 를 의무화하고, 내부 문서 인용을 금지했다",
+      "why": "R2 에서 참가자들에게 요구한 것은 '코어의 어느 줄과 어떻게 이어지는가' 였다. 그 형식 자체가 내부 문서 참조를 유도했고, 그렇게 걷힌 근거로 채점한 결과가 Nunchi 였다. 형식을 바꾸지 않으면 같은 종류의 후보가 다시 올라온다. 한 문장 소개는 사용자 앞에 설 수 있는지를 제출 시점에 강제하는 장치다",
+      "reversible_at": ".curvez/brand/naming.md:brief ask"
+    },
+    {
+      "what": "의성어·의태어를 단순 허용이 아니라 1순위 탐색 축으로 올렸다",
+      "why": "사용자가 거부한 둘은 설명이 필요한 추상 개념어(Nunchi)와 무겁고 향토적인 명사(Todam)다. 의성어·의태어는 그 두 실패의 정확한 반대편에 있다 — 뜻을 몰라도 소리가 움직임을 전달하고, 가볍고, 설명이 필요 없다. 사용자가 '괜찮으니까' 라고 허용조로 말했지만 요청이자 방향 신호로 읽었다",
+      "reversible_at": ".curvez/brand/naming.md:brief constraints"
+    },
+    {
+      "what": "사용자가 지목하지 않은 Damda 도 같은 기준으로 결격 처리했다",
+      "why": "R3 충돌 검증에서 damdafnb.co.kr(F&B), DAMDA Market(식품), DAMDA Beauty 를 실제로 확인했다. Todam 과 동일한 사유이고 근거도 같은 실측이다. 사용자가 지목한 것만 빼면 다음 라운드에 같은 계열이 다시 올라온다. Damda 는 curvez-marketer 자신의 후보이고 R3 에서 75점으로 상위권이었다",
+      "reversible_at": ".curvez/brand/naming.md:candidates"
+    },
+    {
+      "what": "Nadeuri 와 MARU 는 향토 연상이 의심되나 결격으로 찍지 않고 '재점검 대상' 으로만 표시했다",
+      "why": "두 이름의 식품·요식업 상호 실사용을 실제로 확인하지 않았다. 사용자도 지목하지 않았다. 확인하지 않은 것을 결격 근거로 쓰면 R3 에서 저지른 것과 반대 방향의 같은 오류다 — 그때는 확인한 것을 무시했고 지금은 확인 안 한 것을 단정하는 것이 된다. R6 에서 실검색으로 판정한다",
+      "reversible_at": ".curvez/brand/naming.md:candidates"
+    },
+    {
+      "what": "Doran 을 '방향 유효' 로 표시하고 재소집의 출발점으로 명시했다",
+      "why": "Doran 은 도란도란에서 온 의태어 계열이라 R4 의 1순위 축에 정확히 맞는다. R3 에서 의미·발음·확장이 전부 2점이었고 죽은 이유는 철자·충돌뿐이었다(LoL Doran's Blade 의 en 검색 지배, npm 사용중, 앱스토어 정확 일치). 즉 개념은 통과했고 가용성만 실패했다. 참가자에게 이 사실을 알려 같은 방향에서 충돌이 비어 있는 것을 찾게 하는 것이 이번 라운드에서 가장 값싼 성공 경로다",
+      "reversible_at": ".curvez/brand/naming.md:brief ask"
+    },
+    {
+      "what": "A/B 가 동시에 거부된 구조적 원인으로 '두 최종안이 모두 한국어 명사 어원이었다' 를 기록하고, R6 의 최종 2개는 어원 축이 갈리게 뽑기로 했다",
+      "why": "사용자에게 주어진 선택이 실질적으로 '한국어 낱말 A 대 한국어 낱말 B' 였다. 어원 축이 갈리지 않으면 한쪽이 싫을 때 다른 쪽도 싫을 확률이 높다. R3 의 tie-break 를 점수만으로 돌린 결과이고, 점수가 같아도 A/B 는 서로 다른 종류의 선택이어야 한다",
+      "reversible_at": ".curvez/brand/naming.md:R4 절"
+    },
+    {
+      "what": "criteria 의 가중치(의미30 발음20 철자15 충돌25 확장10)는 그대로 뒀다",
+      "why": "의미 항목이 무엇을 재는가를 고쳤지 얼마나 무겁게 재는가를 고칠 이유는 없다. 가중치까지 바꾸면 R3 점수와 R6 점수를 비교할 수 없어져 브리프 개정이 실제로 효과가 있었는지 판정하지 못한다",
+      "reversible_at": ".curvez/brand/naming.md:brief criteria"
+    },
+    {
+      "what": "거부된 final:A / final:B 두 줄을 지우지 않고 남겼다",
+      "why": "이력을 지우면 같은 실패를 반복한다. 자체 검증의 finals=2 도 유지된다. R6 에서 새 최종안으로 교체하고, 그때까지 이 두 줄이 '거부된 이력' 임을 헤더와 R4 절 양쪽에 명시했다",
+      "reversible_at": ".curvez/brand/naming.md:shortlist"
+    }
+  ],
+  "blocked_on": [
+    {
+      "question": "네이밍 후보 **재요청**(R4 개정 브리프 기준). `.curvez/brand/naming.md` 의 `## brief` 를 다시 읽어라 — 개정됐다. **사용자가 최종 A/B 를 모두 거부했다:** \"토탐은 된장 브랜드 같아. 눈치는 왜???...... 의성어 의태어도 괜찮으니까.\" 즉 (1) 향토·전통 식품이 먼저 연상되는 이름은 결격이고 (2) 이름+한 문장으로 여행·장소·동선임이 즉시 서지 않으면 결격이며 (3) 의성어·의태어가 1순위 축이다. 후보 3개 이상을 `decisions[]` 에 `what: \"naming-candidate: <이름>\"` / `why: <아래 둘>` 로 반환하라 — ① **사용자에게 그대로 보여줄 한 문장 소개**(내부 문서 인용 금지. 이 문장이 약하면 R6 에서 의미 0점이다) ② 시각·발음·로고 글자 균형 관점의 결격 유무. **의성어·의태어를 최소 1개 포함하라.** 힌트: `Doran`(도란도란)은 방향이 맞았고 의미·발음·확장 전부 2점이었으나 충돌로 죽었다 — 같은 결에서 충돌이 비어 있는 것을 찾아라. 이미 풀에 있는 13개 이름은 다시 내지 마라. 파일은 쓰지 마라",
+      "who": "curvez-designer"
+    },
+    {
+      "question": "네이밍 후보 **재요청**(R4 개정 브리프 기준). `.curvez/brand/naming.md` 의 `## brief` 를 다시 읽어라 — 개정됐다. **사용자가 최종 A/B 를 모두 거부했다:** \"토탐은 된장 브랜드 같아. 눈치는 왜???...... 의성어 의태어도 괜찮으니까.\" 후보 3개 이상을 `decisions[]` 에 `what: \"naming-candidate: <이름>\"` / `why: <아래 둘>` 로 반환하라 — ① **사용자에게 그대로 보여줄 한 문장 소개**(내부 문서 인용 금지) ② 코드 식별자·라우트·`package.json` name·npm 패키지명·환경변수 접두사 관점의 결격 유무. **의성어·의태어를 최소 1개 포함하라.** 이 축에서 당신 관점이 특히 중요하다 — 의태어의 된소리 겹자음 로마자화(`kk` `jj` `pp` `tt`)가 식별자로는 통과해도 영어권 독자가 못 읽는 경우가 많으니 그 판정을 함께 달아라. 힌트: `Doran` 은 방향이 맞았고 npm 사용중·앱스토어 정확 일치로 죽었다. 이미 풀에 있는 13개 이름은 다시 내지 마라. 파일은 쓰지 마라",
+      "who": "curvez-nextjs"
+    },
+    {
+      "question": "네이밍 후보 **재요청**(R4 개정 브리프 기준). `.curvez/brand/naming.md` 의 `## brief` 를 다시 읽어라 — 개정됐다. **사용자가 최종 A/B 를 모두 거부했다:** \"토탐은 된장 브랜드 같아. 눈치는 왜???...... 의성어 의태어도 괜찮으니까.\" 당신이 낸 Todam 은 사용자가 직접 거부했고, 그 거부는 당신의 제안 결함이 아니라 내 채점 오류였다 — 당신은 제출 시점에 '국내 요식업 상호가 흔해 ko 검색에서 묻힐 위험이 후보 중 가장 크다' 고 정확히 disclose 했고 내가 그것을 충돌 항목에서만 1점 감점하고 의미는 만점을 줬다. 후보 3개 이상을 `decisions[]` 에 `what: \"naming-candidate: <이름>\"` / `why: <아래 둘>` 로 반환하라 — ① **사용자에게 그대로 보여줄 한 문장 소개**(내부 문서 인용 금지) ② 제품 정의·수용 기준 관점에서 v1 범위보다 좁거나 넓지 않은가. **의성어·의태어를 최소 1개 포함하라.** 이미 풀에 있는 13개 이름은 다시 내지 마라. 파일은 쓰지 마라",
+      "who": "curvez-requirements"
+    },
+    {
+      "question": "R6 에서 다시 전 후보가 기준 미달이면 어떻게 하는가. 규정상 재소집은 1회까지이고 이번 R4 에서 그 1회를 썼다. 다음에도 미달이면 상위 2개를 미달 사실과 함께 올려 사용자 판단을 받는 것이 규정이나, 사용자가 이미 한 번 거부한 상태라 같은 절차를 반복하는 것이 맞는지 확인이 필요하다. 대안은 사용자에게 직접 선호 어원·질감의 예시를 요청하는 것이다(지금까지 사용자가 준 방향 신호는 '의성어·의태어' 하나뿐이다)",
+      "who": "curvez-orchestrator"
+    },
+    {
+      "question": "미해결 유지 — GOAL.md §3 언어 행(6개 언어)과 §6 완료 기준(:317 `/en`, `/ko` 만)의 모순, differentiator 를 v1 수용 기준에 맞춰 좁힌 것의 승인, 개정 promise 의 수용 기준 정합. 세 건 모두 기록된 기본값(6개 언어, 개정 코어 유지)으로 진행 중이며 R4 의 후보 재수집을 막지 않는다. 다만 확정 이름의 로케일별 표기 검수 범위는 R6 전에 답이 오는 것이 좋다 — 의성어·의태어는 로마자화 후 6개 언어에서 읽히는지가 곧 발음 점수다",
+      "who": "user"
+    }
+  ],
+  "verification": [
+    {
+      "command": "for f in positioning.md naming.md; do test -f; done / for k in '## brief' '## candidates' '## shortlist'; do grep -q; done",
+      "result": "MISSING-DOC 0줄, MISSING-SECTION 0줄",
+      "passed": true
+    },
+    {
+      "command": "for k in essence: audience: promise: differentiator: tone:; do grep -q -- \"$k\" .curvez/brand/positioning.md || echo MISSING $k; done | wc -l",
+      "result": "positioning-missing=0 (R4 에서 positioning.md 는 고치지 않았다. 사용자 거부는 네이밍 기준에 대한 것이지 코어에 대한 것이 아니다)",
+      "passed": true
+    },
+    {
+      "command": "node -e '<naming.md 파싱: candidate/final/check + R4 마크 카운트>'",
+      "result": "candidates=14 providers=5 finals=2 finals-unchecked=0 / R4마크=14 결격=3 unverified-marks=25",
+      "passed": true
+    },
+    {
+      "command": "R4 판정 내역 대조 — 결격 3건이 전부 실측 근거를 갖는지",
+      "result": "결격 3건: Todam(사용자 직접 거부 + R3 실측 토담집·토담골·todamfood.com), Damda(R3 실측 damdafnb.co.kr·DAMDA Market·DAMDA Beauty), Nunchi(사용자 직접 거부). **전부 사용자 발화 또는 R3 실검색 결과에 근거한다. 추정으로 찍은 결격은 0건이다.** Nadeuri·MARU 는 향토 연상이 의심되나 식품 업종 상호를 확인하지 않아 결격이 아니라 재점검 대상으로만 표시했다",
+      "passed": true
+    },
+    {
+      "command": "find .curvez/brand \\( -name '*.tsx' -o -name '*.ts' -o -name '*.css' \\) | wc -l",
+      "result": "impl-files=0. R4 에서 쓴 파일은 .curvez/brand/naming.md 와 이 핸드오프뿐이다",
+      "passed": true
+    },
+    {
+      "command": "node $CLAUDE_PLUGIN_ROOT/scripts/validate-handoff.mjs .curvez/handoff/",
+      "result": "이 파일 저장 직후 실행한다. 직전 실행 결과는 '검사 10건, 통과 10건, 실패 0건, 오류 0개, 경고 0개' 였다",
+      "passed": true
+    }
+  ]
+}

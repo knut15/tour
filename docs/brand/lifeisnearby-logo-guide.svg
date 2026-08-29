@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1100" role="img" aria-labelledby="title desc">
+  <title id="title">lifeisnearby logo guide</title>
+  <desc id="desc">Brand logo guide showing the primary lockup, symbol, clear space, colors, minimum sizes and usage examples.</desc>
+  <defs>
+    <linearGradient id="coral" x1="80" y1="45" x2="235" y2="235" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FF6B4A"/><stop offset="1" stop-color="#F04F35"/></linearGradient>
+    <linearGradient id="leaf" x1="78" y1="205" x2="250" y2="310" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#61BD43"/><stop offset="1" stop-color="#3D9D35"/></linearGradient>
+    <g id="mark">
+      <path fill="url(#coral)" d="M158 42c-67 0-121 54-121 121 0 43 22 82 59 104l43 26-23-44-1-1c-28-16-45-45-45-77 0-49 39-88 88-88s88 39 88 88c0 12-2 23-7 34l35-22c1-7 2-14 2-20 0-67-54-121-118-121Z"/><circle cx="158" cy="163" r="30" fill="url(#coral)"/><path fill="url(#leaf)" d="M151 286c-14-45-48-72-104-82 10 53 40 87 88 99l17 4c6 1 11-4 10-10l-11-11Zm10 26c5-58 38-97 101-119-4 54-29 91-75 110v-34c0-13 8-25 21-30-24 4-38 19-38 43v30h-9Z"/><circle cx="151" cy="326" r="18" fill="#54AD3D"/>
+    </g>
+    <style>
+      .h1{font:800 48px Arial,sans-serif;fill:#17222C}.h2{font:700 25px Arial,sans-serif;fill:#17222C}.body{font:400 18px Arial,sans-serif;fill:#59636B}.small{font:600 15px Arial,sans-serif;fill:#7A838A}.word{font-family:"Avenir Next Rounded","Nunito Sans","Arial Rounded MT Bold",Arial,sans-serif;font-weight:800;letter-spacing:-7px}.rule{stroke:#E6E9EB;stroke-width:2}.dash{fill:none;stroke:#B8C0C5;stroke-width:2;stroke-dasharray:9 8}
+    </style>
+  </defs>
+  <rect width="1600" height="1100" fill="#F7F8F7"/>
+  <text class="h1" x="90" y="90">lifeisnearby · Logo Guide</text>
+  <text class="body" x="90" y="126">Meaningful life and discovery are always close by.</text>
+  <line class="rule" x1="90" y1="160" x2="1510" y2="160"/>
+
+  <text class="h2" x="90" y="215">01  Primary lockup</text>
+  <rect x="90" y="245" width="920" height="300" rx="26" fill="#FFF"/>
+  <g transform="translate(155 275) scale(.65)"><use href="#mark"/><text class="word" x="305" y="230" fill="#17222C" font-size="139">lifeisnearby</text></g>
+  <text class="small" x="125" y="520">Use this horizontal version whenever space allows.</text>
+
+  <text class="h2" x="1080" y="215">02  Symbol</text>
+  <rect x="1080" y="245" width="430" height="300" rx="26" fill="#FFF"/>
+  <g transform="translate(1185 270) scale(.65)"><use href="#mark"/></g>
+  <text class="small" x="1115" y="520">For app icons, avatars and compact spaces.</text>
+
+  <text class="h2" x="90" y="615">03  Clear space</text>
+  <rect x="90" y="645" width="650" height="335" rx="26" fill="#FFF"/>
+  <rect class="dash" x="150" y="700" width="530" height="190" rx="10"/>
+  <g transform="translate(195 714) scale(.45)"><use href="#mark"/><text class="word" x="305" y="230" fill="#17222C" font-size="139">lifeisnearby</text></g>
+  <path d="M150 680h60M150 670v20M210 670v20" stroke="#F04F35" stroke-width="2"/>
+  <text class="small" x="165" y="670">x</text>
+  <text class="body" x="150" y="935">Keep at least “x” clear space on every side.</text>
+
+  <text class="h2" x="790" y="615">04  Brand colors</text>
+  <rect x="790" y="645" width="360" height="335" rx="26" fill="#FFF"/>
+  <circle cx="850" cy="720" r="33" fill="#FF6344"/><text class="body" x="905" y="712">Life Coral</text><text class="small" x="905" y="738">#FF6344</text>
+  <circle cx="850" cy="810" r="33" fill="#54AD3D"/><text class="body" x="905" y="802">Nearby Green</text><text class="small" x="905" y="828">#54AD3D</text>
+  <circle cx="850" cy="900" r="33" fill="#17222C"/><text class="body" x="905" y="892">Deep Charcoal</text><text class="small" x="905" y="918">#17222C</text>
+
+  <text class="h2" x="1200" y="615">05  Minimum size</text>
+  <rect x="1200" y="645" width="310" height="335" rx="26" fill="#FFF"/>
+  <g transform="translate(1240 685) scale(.24)"><use href="#mark"/></g>
+  <text class="body" x="1240" y="805">Symbol</text><text class="small" x="1240" y="832">Digital: 24 px high</text>
+  <g transform="translate(1240 855) scale(.22)"><use href="#mark"/><text class="word" x="305" y="230" fill="#17222C" font-size="139">lifeisnearby</text></g>
+  <text class="small" x="1240" y="950">Lockup: 120 px wide</text>
+
+  <text class="small" x="90" y="1055">Do not stretch, rotate, recolor, add effects, or place on low-contrast backgrounds.</text>
+</svg>

@@ -21,7 +21,10 @@ const newsreader = Newsreader({
 });
 
 export const metadata: Metadata = {
-  title: "Your Korea",
+  /*
+    브랜드명 하나만 둔다. 탭에는 열 몇 자만 보이므로 설명을 붙이면 이름이 잘린다.
+  */
+  title: "Life is Nearby",
   description: "A small, edited selection of Korea. Not a directory.",
 };
 

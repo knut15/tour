@@ -37,7 +37,17 @@ export type Tab = {
  * 곧 경계다. 헤더는 줄어들 수 있으므로 **줄어들지 않는 기준값**을 쓴다 —
  * 줄어든 높이로 계산하면 도착 직후 헤더가 펴지며 그만큼 어긋난다.
  *
- * 부드럽게 굴리지 않는다. 이동과 겹치면 목적지에 닿기 전에 화면이 갈린다.
+ * **부드럽게 굴린다.** 순간이동은 목적지가 맞아도 어디로 갔는지가 안 보여서, 탭을
+ * 눌렀더니 화면이 갑자기 다른 데를 비추는 것으로 읽힌다. 굴러가면 그 사이에 눈이
+ * 따라가고, 필터 줄이 헤더에 가서 붙는 것이 동작의 결과로 보인다.
+ *
+ * 이동과 겹쳐도 갈라지지 않는다 — 스켈레톤이 실제 목록과 **같은 수의 자리를**
+ * 차지하도록 맞춰 둔 덕이다(`Skeleton.tsx`). 문서 높이가 유지되므로 굴러가는 도중에
+ * 목록이 바뀌어도 목적지가 사라지지 않는다. 그 전제가 깨지면(스켈레톤 수를 줄이면)
+ * 이 애니메이션이 중간에 끊긴다.
+ *
+ * **이미 그 자리면 움직이지 않는다.** 몇 픽셀을 굴리는 것은 움직임이 아니라 떨림으로
+ * 보인다. 같은 탭을 다시 누르는 경우가 대표적이다.
  */
 function alignToFilters() {
   const sentinel = document.querySelector("[data-sticky-sentinel]");
@@ -45,7 +55,16 @@ function alignToFilters() {
   const raw = getComputedStyle(document.documentElement).getPropertyValue("--masthead-h-base");
   const headerHeight = Number.parseFloat(raw) || 0;
   const y = sentinel.getBoundingClientRect().top + window.scrollY - headerHeight;
-  window.scrollTo({ top: Math.max(0, y), behavior: "instant" });
+  const target = Math.max(0, y);
+
+  if (Math.abs(target - window.scrollY) < 2) return;
+
+  /*
+    움직임을 줄여 달라고 한 사람에게는 굴리지 않는다. 여기서는 그것이 곧 예전
+    동작(순간이동)이라, 목적지도 결과도 달라지지 않는다.
+  */
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  window.scrollTo({ top: target, behavior: reduced ? "instant" : "smooth" });
 }
 
 export function CategoryTabs({
@@ -119,6 +138,17 @@ export function CategoryTabs({
             <li key={tab.key}>
               <Link
                 href={tab.href}
+                /*
+                  QA 가 탭을 집는 손잡이. **무엇인지(`category-tab`)와 어느
+                  것인지(`data-category`)를 나눠 둔다** — 넷을 한꺼번에 세려면
+                  앞의 것이, 특정 탭을 누르려면 뒤의 것이 필요하다. 하나로 합쳐
+                  `category-tab-food` 로 두면 "탭 전체" 를 가리킬 방법이 없다.
+
+                  클래스나 글자로 집지 않는 이유는 그것들이 바뀔 때 QA 가 함께
+                  깨지기 때문이다. 특히 라벨은 로케일마다 다르다.
+                */
+                data-testid="category-tab"
+                data-category={tab.key}
                 /*
                   다른 목록으로 가는 것이라 머리말까지 되감을 필요는 없지만,
                   맨 위로 보내면 그 머리말을 다시 지나쳐야 목록에 닿는다.

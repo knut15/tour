@@ -1,5 +1,5 @@
 {
-  "brand": "あなたの韓国",
+  "brand": "Life is Nearby",
   "nav": {
     "explore": "見てまわる",
     "switchLocale": "言語",
@@ -7,8 +7,9 @@
   },
   "explore": {
     "eyebrow": "よい旅になるように",
-    "title": "あなたの韓国を、額に。",
-    "subtitle": "数か所だけ見て、今日どこへ行くか決めましょう。",
+    "title": "今日出会った韓国が、長く心に残りますように。",
+    "titleAccent": "心に残りますように。",
+    "subtitle": "気持ちのよい一日にしましょう",
     "areaLabel": "地域",
     "allAreas": "全国",
     "districtLabel": "市郡区",
