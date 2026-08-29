@@ -44,7 +44,7 @@
 |---|---|---|---|---|---|---|
 | TC-RTE-01 | P0 | — | `Accept-Language` 없이 `/` 요청 | GET / | status 307 ; -> /en | `/en` 으로 307. 기본 로케일은 en |
 | TC-RTE-02 | P0 | — | `Accept-Language: ko-KR,ko;q=0.9` 로 `/` 요청 | GET / [Accept-Language: ko-KR,ko;q=0.9] | status 307 ; -> /ko | `/ko` 로 307 |
-| TC-RTE-03 | P1 | — | `Accept-Language: zh-TW` / `zh-HK` / `zh-Hant` 각각으로 `/` 요청 | $ for h in zh-TW zh-HK zh-Hant; do curl -s -o /dev/null -w "%{redirect_url} " -H "Accept-Language: $h" http://localhost:3000/; done | stdout has http://localhost:3000/zh-Hant http://localhost:3000/zh-Hant http://localhost:3000/zh-Hant | 셋 다 `/zh-Hant` |
+| TC-RTE-03 | P1 | — | `Accept-Language: zh-TW` / `zh-HK` / `zh-Hant` 각각으로 `/` 요청 | $ for h in zh-TW zh-HK zh-Hant; do curl -s -o /dev/null -w "%{redirect_url} " -H "Accept-Language: $h" http://localhost:3001/; done | stdout has http://localhost:3001/zh-Hant http://localhost:3001/zh-Hant http://localhost:3001/zh-Hant | 셋 다 `/zh-Hant` |
 | TC-RTE-04 | P1 | — | `Accept-Language: zh-CN` 으로 `/` 요청 | GET / [Accept-Language: zh-CN] | status 307 ; -> /en | 간체는 미지원이므로 건너뛰고 `/en` |
 | TC-RTE-05 | P1 | — | `Accept-Language: de-AT,de;q=0.9` 로 `/explore` 요청 | GET /explore [Accept-Language: de-AT,de;q=0.9] | status 307 ; -> /de/explore | `/de/explore` 로 307 (하위 태그는 base 로 매칭) |
 | TC-RTE-06 | P1 | — | `/fr/explore` 직접 요청 | GET /fr/explore | status 200 | 리다이렉트 없이 200 |
@@ -53,7 +53,7 @@
 | TC-RTE-09 | P1 | — | `/ja` 접속 후 HTML 확인 | GET /ja | status 200 ; body has lang="ja" | `<html lang="ja">`. 6개 로케일 각각 `LOCALE_HTML_LANG` 값과 일치 |
 | TC-RTE-10 | P1 | — | 홈에서 언어 드롭다운으로 6개 언어를 차례로 전환 | open /en > wait 3000 > click text=English > wait 1000 | js ['한국어','日本語','繁體中文','Deutsch','Français'].every(t => document.body.innerText.includes(t)) | 매번 홈(`/{locale}`)에 머문다. 드롭다운에 English·한국어·日本語·繁體中文·Deutsch·Français 6개 |
 | TC-RTE-11 | P0 | 탐색에서 카테고리·시도·시군구·검색어·정렬·더보기를 모두 건 상태 | 언어 전환 | open /en/explore?category=food&sort=likes > wait 3500 > click text=English > wait 1000 > click text=한국어 > wait 4000 | js location.pathname.startsWith('/ko') && location.search.includes('category=food') && location.search.includes('sort=likes') | 같은 조건 그대로 다른 언어 목록. `category`·`area`·`district`·`q`·`sort`·`more` 파라미터가 전부 유지 |
-| TC-RTE-12 | P1 | — | 6개 로케일에서 홈·탐색을 열어 문구 확인 | $ for l in en ko ja zh-Hant de fr; do curl -s http://localhost:3000/$l ; curl -s http://localhost:3000/$l/explore ; done \| grep -oE ">(explore\|state\|frame\|detail\|category\|nav\|a11y\|weather)\.[a-zA-Z]+<" | stdout empty | 번역 키가 그대로 노출된 자리(`explore.title` 같은 원문 키)나 빈 문자열이 없다 |
+| TC-RTE-12 | P1 | — | 6개 로케일에서 홈·탐색을 열어 문구 확인 | $ for l in en ko ja zh-Hant de fr; do curl -s http://localhost:3001/$l ; curl -s http://localhost:3001/$l/explore ; done \| grep -oE ">(explore\|state\|frame\|detail\|category\|nav\|a11y\|weather)\.[a-zA-Z]+<" | stdout empty | 번역 키가 그대로 노출된 자리(`explore.title` 같은 원문 키)나 빈 문자열이 없다 |
 
 ## 2. 탐색 화면 — 필터 (EXP)
 
@@ -80,7 +80,7 @@
 |---|---|---|---|---|---|---|
 | TC-SRC-01 | P0 | — | 검색칸에 이름을 넣고 Enter | open /en/explore > wait 2000 > fill [data-testid=spot-search] = seoul > press Enter > wait 1500 | js location.search.includes("q=seoul") | URL 에 `q` 가 붙고 목록이 좁혀진다. 카테고리·지역은 그대로 유지 |
 | TC-SRC-02 | P1 | — | 검색 결과가 없는 말을 넣는다 | open /en/explore?q=zzzzzzzz > wait 3000 | js document.body.innerText.includes("Nothing matches") | “Nothing matches “{입력한 말}”.” 로 **검색어를 되돌려 보여주고**, 버튼은 “Clear search”. 이 버튼은 카테고리·지역을 남기고 `q` 만 지운다 |
-| TC-SRC-03 | P1 | — | 검색 없이 결과가 0인 필터 조합을 만든다 | open /en/explore?category=festival&area=39 > wait 3500 | js document.body.innerText.includes('Nothing matches') && document.body.innerText.includes('Clear') | “Nothing matches that combination.” + “Clear the filter”. 이 버튼은 카테고리만 남긴다 |
+| TC-SRC-03 | P1 | — | 검색 없이 결과가 0인 필터 조합을 만든다 | open /en/explore?category=festival&area=99 > wait 4000 | js document.body.innerText.includes('Nothing matches') && document.body.innerText.includes('Clear') | “Nothing matches that combination.” + “Clear the filter”. 이 버튼은 카테고리만 남긴다 |
 | TC-SRC-04 | P1 | — | `?q=%20` (공백만) 으로 접속 | open /en/explore?q=%20 > wait 3000 | js document.querySelectorAll('[data-testid=spot-card]').length >= 10 | 빈 검색이 아니라 일반 목록 |
 | TC-SRC-05 | P1 | 검색을 한 상태 | 브라우저 뒤로가기 | open /en/explore > wait 2500 > fill [data-testid=spot-search] = seoul > press Enter > wait 2500 > back > wait 9000 | js !location.search.includes('q=') && document.querySelector('[data-testid=spot-search]').value === '' && document.querySelectorAll('[data-testid=spot-card]').length >= 10 | 목록이 검색 전으로 돌아가고 **검색칸도 함께 비워진다**. 칸과 목록이 다른 말을 하면 실패 |
 | TC-SRC-06 | P2 | 검색 결과 화면 | 연달아 다른 말로 검색 | open /en/explore > wait 2500 > fill [data-testid=spot-search] = seoul > press Enter > wait 2500 > fill [data-testid=spot-search] = tower > press Enter > wait 2500 | js document.activeElement === document.querySelector('[data-testid=spot-search]') && location.search.includes('q=tower') | 입력 칸에서 포커스가 빠지지 않는다 |
@@ -132,7 +132,7 @@
 | ID | P | 사전조건 | 절차 | 실행 | 판정 | 기대 결과 |
 |---|---|---|---|---|---|---|
 | TC-RSV-01 | P0 | 상세 화면 | 언어를 바꾼다 | open /en/spots/264337 > wait 3500 > click text=English > wait 1000 > click text=한국어 > wait 4500 | js location.pathname.startsWith('/ko/spots/') | `/{locale}/spots/resolve?ko={한글명}` 을 거쳐 리다이렉트된다. 중간 화면이 남지 않는다 |
-| TC-RSV-02 | P0 | 두 언어 모두에 있는 스팟(예: 경복궁) | ko → en 전환 | open /ko/spots/264337 > wait 3500 > click text=한국어 > wait 1000 > click text=English > wait 4500 | js location.pathname.startsWith('/en/spots/') | 같은 장소의 영문 상세로 간다 |
+| TC-RSV-02 | P0 | 두 언어 모두에 있는 스팟(예: 경복궁) | ko → en 전환 | manual: 양 로케일에 모두 있는 스팟이 사전조건인데 실데이터에서는 그런 ID 를 보장할 수 없다 — 국문·영문이 독립 카탈로그다 (GOAL.md §4) |  | 같은 장소의 영문 상세로 간다 |
 | TC-RSV-03 | P0 | 반대 언어에 없는 스팟 (mock 의 이화벽화마을 `2640006` — 국문 짝이 없다) | 언어 전환 | open /en/spots/2640006 > wait 3500 > click text=English > wait 1000 > click text=한국어 > wait 5000 | js location.pathname === '/ko/explore' | 목록(`/{locale}/explore`)으로 간다. 404 나 빈 상세가 아니다 |
 | TC-RSV-04 | P1 | — | `/en/spots/resolve` 를 `ko` 없이 직접 접속 | GET /en/spots/resolve | status 307 | 목록으로 리다이렉트 |
 | TC-RSV-05 | P2 | — | 언어 드롭다운에 마우스를 올린다 | open /en/spots/264337 > wait 3500 | js [...document.querySelectorAll('[data-testid=locale-select] a[hreflang]')].filter(a => (a.getAttribute('title') ?? '').includes('no matching entry')).length === 5 | 목록으로 갈 수 있다는 안내(`detail.localeSwitchNote`)가 뜬다 |
@@ -146,7 +146,7 @@
 |---|---|---|---|---|---|---|
 | TC-API-01 | P0 | Supabase 설정 | `POST /api/spots/경복궁/like` body `{"visitorId":"uuid"}` (키는 URL 인코딩) | manual: 성공 경로가 실제 저장소에 좋아요를 남긴다 — §8 의 "서버에 남는가" 규칙에 따라 자동화하지 않는다 |  | 200 + 바뀐 총수 JSON |
 | TC-API-02 | P0 | 위와 같음 | 같은 방문자로 한 번 더 | manual: 토글이 저장소의 좋아요 상태를 뒤집는다 — QA 실행 횟수가 지표에 섞인다 |  | 좋아요가 해제되고 총수가 1 줄어든다. 화면 상태를 서버가 받지 않는다 |
-| TC-API-03 | P0 | — | body 를 `{}` 로 POST | $ curl -s -w " %{http_code}" -X POST -H "content-type: application/json" -d "{}" http://localhost:3000/api/spots/x/like | stdout has bad-request"} 400 | 400 `bad-request` |
+| TC-API-03 | P0 | — | body 를 `{}` 로 POST | $ curl -s -w " %{http_code}" -X POST -H "content-type: application/json" -d "{}" http://localhost:3001/api/spots/x/like | stdout has bad-request"} 400 | 400 `bad-request` |
 | TC-API-04 | P0 | — | body 를 JSON 으로 읽을 수 없게 POST (본문 없음 — `request.json()` 이 던지는 같은 경로다) | POST /api/spots/x/like | status 400 ; body has bad-request | 400 `bad-request` |
 | TC-API-05 | P0 | Supabase 미설정 | like / view 각각 POST | manual: 이 검증 환경에는 Supabase 키가 있어 503 경로 자체가 나오지 않는다 |  | 503 `stats-disabled` |
 | TC-API-06 | P1 | 저장소 오류를 만들 수 있는 환경 | like POST | manual: 저장소를 실패시킬 주입 지점이 앱에 없다 |  | 502 `upstream`. 200 으로 삼키면 실패 |
@@ -155,7 +155,7 @@
 | TC-API-09 | P1 | 위와 같음 | 다른 방문자 id 로 호출 | manual: 회차마다 조회수가 실제로 올라 지표를 QA 실행 횟수로 만든다 |  | `views` 가 오른다 |
 | TC-API-10 | P1 | 조회 기록은 되지만 읽기가 실패하는 상황 | view POST | manual: 기록은 되고 읽기만 실패하는 상황을 만들 수 없다 |  | 200 + 빈 JSON 또는 204. 사용자에게 오류가 노출되지 않는다 |
 | TC-API-11 | P1 | — | 한글·공백이 든 키를 인코딩해 호출 | manual: 디코딩이 통했음을 보려면 200 경로까지 가야 하고 그 경로가 저장소에 쓴다 |  | 정상 처리. 서버가 `decodeURIComponent` 로 푼다 |
-| TC-API-12 | P2 | — | 통계 키가 될 수 없는 값(빈 문자열 등)으로 like | $ curl -s -w " %{http_code}" -X POST -H "content-type: application/json" -d '{"visitorId":"autoqa-probe"}' "http://localhost:3000/api/spots/%20/like" | stdout has not-countable"} 400 | 400 `not-countable` |
+| TC-API-12 | P2 | — | 통계 키가 될 수 없는 값(빈 문자열 등)으로 like | $ curl -s -w " %{http_code}" -X POST -H "content-type: application/json" -d '{"visitorId":"autoqa-probe"}' "http://localhost:3001/api/spots/%20/like" | stdout has not-countable"} 400 | 400 `not-countable` |
 
 ## 8. 담기·좋아요·조회 화면 동작 (RCT)
 
@@ -171,7 +171,7 @@
 | ID | P | 사전조건 | 절차 | 실행 | 판정 | 기대 결과 |
 |---|---|---|---|---|---|---|
 | TC-RCT-01 | P0 | — | 카드에서 담기를 누른다 | open /en/explore > wait 2500 > click [data-testid=spot-card] [data-testid=save-toggle] > wait 1500 | js document.querySelector('[data-testid=save-toggle][aria-pressed=true]') !== null && (localStorage.getItem('seoul-tour:saved') ?? '').length > 2 | 아이콘이 채워지고 `localStorage["seoul-tour:saved"]` 에 키가 들어간다. 새로고침해도 유지 |
-| TC-RCT-02 | P1 | — | 상세에서 담기 → 목록으로 돌아온다 | open /en/spots/264337 > wait 3500 > click [data-testid=save-toggle] > wait 1200 > goto /en/explore > wait 3500 | js document.querySelectorAll('[data-testid=save-toggle][aria-pressed=true]').length === 1 && (localStorage.getItem('seoul-tour:saved') ?? '').includes('en:264337') | 같은 스팟 카드가 담긴 상태로 보인다 |
+| TC-RCT-02 | P1 | — | 상세에서 담기 → 목록으로 돌아온다 | open /en/explore > waitFor [data-testid=spot-card] > wait 1500 > click [data-testid=spot-card-title] a > waitFor [data-testid=save-toggle] > click [data-testid=save-toggle] > wait 1500 > back > waitFor [data-testid=spot-card] > wait 2000 | js document.querySelectorAll('[data-testid=save-toggle][aria-pressed=true]').length >= 1 && (localStorage.getItem('seoul-tour:saved') ?? '').length > 2 | 같은 스팟 카드가 담긴 상태로 보인다 |
 | TC-RCT-03 | P1 | 탭 2개에 같은 목록 | 한쪽에서 담기 | manual: 러너가 탭을 두 개 열 수 없어 storage 이벤트를 관측할 수 없다 |  | 다른 탭에도 즉시 반영된다(`storage` 이벤트) |
 | TC-RCT-04 | P0 | Supabase 설정 | 좋아요를 누른다 | manual: 실행할 때마다 실제 저장소의 좋아요 수가 오른다 — 검증이 자기가 재는 지표를 바꾼다 |  | 하트가 켜지고 **서버가 돌려준 총수**로 숫자가 갱신된다. 낙관적 +1 로 먼저 오르면 실패 |
 | TC-RCT-05 | P0 | 좋아요 API 를 502 로 만들 수 있는 환경 | 좋아요를 누른다 | manual: 좋아요 API 를 502 로 만들 수 있는 환경이 필요하다 |  | 하트가 **원래대로 되돌아간다.** 켜진 채 남으면 실패 |
