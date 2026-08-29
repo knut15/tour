@@ -85,16 +85,17 @@
 
 근거: `src/presentation/components/Wall.tsx`, `SpotFrame.tsx`, `src/application/spot/list-spots.ts`, `src/domain/spot/spot.ts`
 
-| ID | P | 사전조건 | 절차 | 기대 결과 |
-|---|---|---|---|---|
-| TC-WALL-01 | P0 | — | 폭을 375 / 640 / 900 / 1280px 로 바꾼다 | 1 → 2 → 3 → 4열. 4열에서 카드 폭 약 274px, 제목이 3줄로 접히지 않는다 |
-| TC-WALL-02 | P0 | — | 목록 전수 확인 | **이미지 없는 스팟이 하나도 없다.** `isDisplayableOnWall` 이 이미지 없는 항목을 거른다 |
-| TC-WALL-03 | P1 | 실데이터(`USE_MOCK_DATA=false`), 관광지 탭 | 목록을 훑는다 | 성형외과·피부과 등 의료 항목(`lclsSystm3=EX050800`)이 나오지 않는다. 온천·찜질방은 나와도 된다 |
-| TC-WALL-04 | P1 | — | 카드 사진 위에 마우스를 올린다 | 담기·좋아요 버튼이 사진 위에만 뜬다. 제목·주소 위에서는 뜨지 않는다 |
-| TC-WALL-05 | P2 | — | 카드 이미지 비율 확인 | 원본 비율 그대로. 잘리거나 좌우에 빈 띠가 생기지 않는다 |
-| TC-WALL-06 | P1 | Supabase 미설정 | 카드 하단 확인 | 조회·좋아요 줄이 **아예 그려지지 않는다**. 0 으로 표시되면 실패 |
-| TC-WALL-07 | P1 | Supabase 설정 | 카드 하단 확인 | 조회수·좋아요 수가 서버가 그린 값으로 보인다 |
-| TC-WALL-08 | P2 | Supabase 설정, 반응이 쌓인 상태 | 탐색 진입 | 반응이 많은 장소가 앞줄로 올라오되, **현재 카테고리에 속한 것만** 올라온다 |
+| ID | P | 사전조건 | 절차 | 실행 | 판정 | 기대 결과 |
+|---|---|---|---|---|---|---|
+| TC-WALL-01 | P0 | — | 폭을 375 / 640 / 900 / 1280px 로 바꾼다 |  |  | 1 → 2 → 3 → 4열. 4열에서 카드 폭 약 274px, 제목이 3줄로 접히지 않는다 |
+| TC-WALL-02 | P0 | — | **자동화하지 않는다.** `tests/domain/spot.test.ts` 가 덮는다 |  |  | 이미지가 없거나 배제 분류인 항목은 벽에 걸리지 않는다. **화면으로는 판정할 수 없다** — 브라우저에서는 "URL 이 없었다" 와 "URL 은 있었는데 로드에 실패했다" 가 같은 `no-image` 로 보인다. 그 둘을 가르는 것은 데이터이지 화면이 아니다 |
+| TC-WALL-02b | P1 | 이미지 CDN 이 느리거나 막힌 환경 | 목록을 연다 |  |  | 로드에 실패한 자리에 `no-image` 대체 화면이 선다. 빈 색면이나 깨진 아이콘이 아니다. **이것은 위와 다른 관심사다** — 거르기가 아니라 실패 처리를 본다 |
+| TC-WALL-03 | P1 | 실데이터(`USE_MOCK_DATA=false`), 관광지 탭 | 목록을 훑는다 |  |  | 성형외과·피부과 등 의료 항목(`lclsSystm3=EX050800`)이 나오지 않는다. 온천·찜질방은 나와도 된다 |
+| TC-WALL-04 | P1 | — | 카드 사진 위에 마우스를 올린다 |  |  | 담기·좋아요 버튼이 사진 위에만 뜬다. 제목·주소 위에서는 뜨지 않는다 |
+| TC-WALL-05 | P2 | — | 카드 이미지 비율 확인 |  |  | 원본 비율 그대로. 잘리거나 좌우에 빈 띠가 생기지 않는다 |
+| TC-WALL-06 | P1 | Supabase 미설정 | 카드 하단 확인 |  |  | 조회·좋아요 줄이 **아예 그려지지 않는다**. 0 으로 표시되면 실패 |
+| TC-WALL-07 | P1 | Supabase 설정 | 카드 하단 확인 | open /en/explore > wait 3000 | js document.querySelectorAll('[data-testid=spot-stats]').length >= 10 | 조회수·좋아요 수가 서버가 그린 값으로 보인다 |
+| TC-WALL-08 | P2 | Supabase 설정, 반응이 쌓인 상태 | 탐색 진입 |  |  | 반응이 많은 장소가 앞줄로 올라오되, **현재 카테고리에 속한 것만** 올라온다 |
 
 ## 5. 상세 화면 (DTL)
 
@@ -149,6 +150,13 @@
 
 근거: `personal-set.ts`, `use-spot-like.ts`, `live-stats.ts`, `visitor.ts`, `ViewCounter.tsx`
 
+> **좋아요·조회를 누르는 TC 는 자동화하지 않는다.** 이 둘은 서버에 쓰기를 남기므로,
+> 자동 QA 가 돌 때마다 실제 저장소의 수가 오른다. 검증이 자기가 재는 지표를 바꾸면
+> 그 지표는 더 이상 사용자 반응이 아니라 QA 실행 횟수를 센다. 담기는 localStorage 라
+> 부작용이 없어 자동화한다 — 갈림길은 "서버에 남는가" 하나다.
+
+
+
 | ID | P | 사전조건 | 절차 | 실행 | 판정 | 기대 결과 |
 |---|---|---|---|---|---|---|
 | TC-RCT-01 | P0 | — | 카드에서 담기를 누른다 | open /en/explore > wait 2500 > click [data-testid=spot-card] [data-testid=save-toggle] > wait 1500 | js document.querySelector('[data-testid=save-toggle][aria-pressed=true]') !== null && (localStorage.getItem('seoul-tour:saved') ?? '').length > 2 | 아이콘이 채워지고 `localStorage["seoul-tour:saved"]` 에 키가 들어간다. 새로고침해도 유지 |
@@ -182,42 +190,42 @@
 
 근거: `Masthead.tsx`, `WeatherWidget.tsx`, `src/application/weather/get-today-weather.ts`
 
-| ID | P | 사전조건 | 절차 | 기대 결과 |
-|---|---|---|---|---|
-| TC-WTH-01 | P1 | — | 헤더 확인 | 날씨 칩이 뜬다. 준비 전에는 스켈레톤이고 화면 전체를 막지 않는다 |
-| TC-WTH-02 | P1 | — | 칩을 누른다 | 패널이 열리고 기온·체감·최저/최고·습도·바람·미세먼지·옷차림이 보인다 |
-| TC-WTH-03 | P0 | 에어코리아만 실패시킬 수 있는 환경 | 패널 확인 | 날씨는 정상, 미세먼지 자리에만 “No air reading right now.” |
-| TC-WTH-04 | P1 | — | 미세먼지 등급 확인 | PM10·PM2.5 중 **나쁜 쪽** 등급이 종합값이 되고 등급별 색이 다르다 |
-| TC-WTH-05 | P2 | — | 옷차림 문구 확인 | 체감온도 구간에 맞는 문구 하나 + 우산/마스크/바람막이 등 부가 항목 |
-| TC-WTH-06 | P2 | — | 하단 주석 확인 | 관측 시각과 측정소 이름이 로케일 문구로 채워진다(`{time}`·`{station}` 이 그대로 남으면 실패) |
-| TC-WTH-07 | P1 | 패널이 열린 상태 | 패널 바깥을 클릭 / Esc | 패널이 닫힌다 |
-| TC-WTH-08 | P2 | 로케일 ko 외 | 지역명 확인 | `weather.regions` 로 번역된 이름(Seoul 등)으로 보인다 |
+| ID | P | 사전조건 | 절차 | 실행 | 판정 | 기대 결과 |
+|---|---|---|---|---|---|---|
+| TC-WTH-01 | P1 | — | 헤더 확인 | open /en/explore > wait 3000 | js document.querySelector('[data-testid=weather-chip]') !== null | 날씨 칩이 뜬다. 준비 전에는 스켈레톤이고 화면 전체를 막지 않는다 |
+| TC-WTH-02 | P1 | — | 칩을 누른다 | open /en/explore > wait 3000 > click [data-testid=weather-chip] > wait 1000 | js document.querySelectorAll('[data-weather]').length >= 4 | 패널이 열리고 기온·체감·최저/최고·습도·바람·미세먼지·옷차림이 보인다 |
+| TC-WTH-03 | P0 | 에어코리아만 실패시킬 수 있는 환경 | 패널 확인 |  |  | 날씨는 정상, 미세먼지 자리에만 “No air reading right now.” |
+| TC-WTH-04 | P1 | — | 미세먼지 등급 확인 |  |  | PM10·PM2.5 중 **나쁜 쪽** 등급이 종합값이 되고 등급별 색이 다르다 |
+| TC-WTH-05 | P2 | — | 옷차림 문구 확인 |  |  | 체감온도 구간에 맞는 문구 하나 + 우산/마스크/바람막이 등 부가 항목 |
+| TC-WTH-06 | P2 | — | 하단 주석 확인 |  |  | 관측 시각과 측정소 이름이 로케일 문구로 채워진다(`{time}`·`{station}` 이 그대로 남으면 실패) |
+| TC-WTH-07 | P1 | 패널이 열린 상태 | 패널 바깥을 클릭 / Esc |  |  | 패널이 닫힌다 |
+| TC-WTH-08 | P2 | 로케일 ko 외 | 지역명 확인 |  |  | `weather.regions` 로 번역된 이름(Seoul 등)으로 보인다 |
 
 ## 11. 테마 (THM)
 
 근거: `src/presentation/lib/theme.ts`, `ThemeToggle.tsx`, `layout.tsx`
 
-| ID | P | 사전조건 | 절차 | 기대 결과 |
-|---|---|---|---|---|
-| TC-THM-01 | P0 | 쿠키 없음 | 테마 버튼을 누른다 | `<html data-theme>` 가 바뀌고 쿠키 `seoul_tour_theme` 가 1년 만료로 저장된다 |
-| TC-THM-02 | P0 | 테마를 고른 상태 | 새로고침 | **첫 페인트부터** 고른 테마다. 흰 화면이 번쩍이면 실패 |
-| TC-THM-03 | P1 | 쿠키 없음 + OS 다크 | 버튼을 한 번 누른다 | 라이트로 간다(현재 보이는 것의 반대) |
-| TC-THM-04 | P1 | — | 라이트·다크 각각에서 배경색을 뽑는다 | `#FFFFFF` 가 쓰이지 않는다 (GOAL.md §6) |
-| TC-THM-05 | P2 | 다크 테마 | 전 화면을 훑는다 | 글자·테두리 대비가 유지되고 읽히지 않는 자리가 없다 |
+| ID | P | 사전조건 | 절차 | 실행 | 판정 | 기대 결과 |
+|---|---|---|---|---|---|---|
+| TC-THM-01 | P0 | 쿠키 없음 | 테마 버튼을 누른다 | open /en/explore > wait 2500 > click [data-testid=theme-toggle] > wait 1200 | js document.documentElement.hasAttribute('data-theme') && document.cookie.includes('seoul_tour_theme') | `<html data-theme>` 가 바뀌고 쿠키 `seoul_tour_theme` 가 1년 만료로 저장된다 |
+| TC-THM-02 | P0 | 테마를 고른 상태 | 새로고침 |  |  | **첫 페인트부터** 고른 테마다. 흰 화면이 번쩍이면 실패 |
+| TC-THM-03 | P1 | 쿠키 없음 + OS 다크 | 버튼을 한 번 누른다 |  |  | 라이트로 간다(현재 보이는 것의 반대) |
+| TC-THM-04 | P1 | — | 라이트·다크 각각에서 배경색을 뽑는다 |  |  | `#FFFFFF` 가 쓰이지 않는다 (GOAL.md §6) |
+| TC-THM-05 | P2 | 다크 테마 | 전 화면을 훑는다 |  |  | 글자·테두리 대비가 유지되고 읽히지 않는 자리가 없다 |
 
 ## 12. 화면 상태 유지 (STA)
 
 근거: `ScrollMemory.tsx`, `StickyFilterSync.tsx`, `DismissOnOutside.tsx`
 
-| ID | P | 사전조건 | 절차 | 기대 결과 |
-|---|---|---|---|---|
-| TC-STA-01 | P0 | 목록을 한참 내린 상태 | 카드 클릭 → 상세 → 뒤로가기 | 보던 스크롤 위치로 돌아온다 |
-| TC-STA-02 | P1 | 위와 같음 | 복귀 도중 사용자가 스크롤·키 입력을 한다 | 복원이 중단되고 사용자 조작이 이긴다 |
-| TC-STA-03 | P1 | — | 카테고리·지역을 바꾼다 | 목록 맨 위에서 시작한다 |
-| TC-STA-04 | P1 | — | 목록을 내린다 | 필터 바가 헤더 아래에 붙고 헤더가 줄어든다. 붙는 순간 내용이 위아래로 튀지 않는다 |
-| TC-STA-05 | P1 | 언어 드롭다운이 열린 상태 | 바깥 클릭 / Esc / 항목 클릭 | 각각 닫힌다 |
-| TC-STA-06 | P2 | 홈 ↔ 탐색 이동 | 전환 애니메이션 확인 | 헤더는 고정된 채 머리말이 크기만 바뀐다. 화면 전체가 크로스페이드하면 실패 |
-| TC-STA-07 | P1 | 탐색 화면 | 필터를 여러 번 바꾼다 | 바뀔 때마다 화면 전체가 페이드하지 않고 목록만 갱신된다 |
+| ID | P | 사전조건 | 절차 | 실행 | 판정 | 기대 결과 |
+|---|---|---|---|---|---|---|
+| TC-STA-01 | P0 | 목록을 한참 내린 상태 | 카드 클릭 → 상세 → 뒤로가기 | open /en/explore > wait 3000 > scroll 1500 > wait 800 > click [data-testid=spot-card-title] > wait 3000 > back > wait 3000 | js window.scrollY > 500 | 보던 스크롤 위치로 돌아온다 |
+| TC-STA-02 | P1 | 위와 같음 | 복귀 도중 사용자가 스크롤·키 입력을 한다 |  |  | 복원이 중단되고 사용자 조작이 이긴다 |
+| TC-STA-03 | P1 | — | 카테고리·지역을 바꾼다 | open /en/explore > wait 3000 > scroll 1500 > wait 800 > click [data-category=food] > wait 3000 | js window.scrollY < 600 | 목록 맨 위에서 시작한다 |
+| TC-STA-04 | P1 | — | 목록을 내린다 |  |  | 필터 바가 헤더 아래에 붙고 헤더가 줄어든다. 붙는 순간 내용이 위아래로 튀지 않는다 |
+| TC-STA-05 | P1 | 언어 드롭다운이 열린 상태 | 바깥 클릭 / Esc / 항목 클릭 |  |  | 각각 닫힌다 |
+| TC-STA-06 | P2 | 홈 ↔ 탐색 이동 | 전환 애니메이션 확인 |  |  | 헤더는 고정된 채 머리말이 크기만 바뀐다. 화면 전체가 크로스페이드하면 실패 |
+| TC-STA-07 | P1 | 탐색 화면 | 필터를 여러 번 바꾼다 |  |  | 바뀔 때마다 화면 전체가 페이드하지 않고 목록만 갱신된다 |
 
 ## 13. 데이터 소스·환경 (ENV)
 
@@ -248,7 +256,7 @@
 | TC-A11Y-01 | P1 | — | 키보드만으로 탐색 화면을 조작 |  |  | 카테고리·지역·정렬·검색·카드까지 Tab 으로 닿고 Enter 로 동작한다 |
 | TC-A11Y-02 | P1 | — | 스크린 리더로 필터 확인 | open /en/explore > wait 2500 | js document.querySelectorAll('[data-testid=category-tab][aria-current=page]').length === 1 | 선택된 탭·정렬에 `aria-current`, 정렬 묶음에 이름(“Sort”)이 있다 |
 | TC-A11Y-03 | P1 | — | 목록의 접근성 이름 확인 |  |  | “{카테고리} — {지역}” 형태로 읽힌다. 내부 은유(‘벽’ 등)가 노출되지 않는다 |
-| TC-A11Y-04 | P1 | — | 담기·좋아요 버튼 확인 | open /en/explore > wait 2500 | js [...document.querySelectorAll('[data-testid=save-toggle]')].every(b => b.hasAttribute('aria-pressed') && (b.getAttribute('aria-label') ?? '').length > 5) | `aria-pressed` 로 상태를 알리고 라벨에 장소명이 들어간다 |
+| TC-A11Y-04 | P1 | — | 담기·좋아요 버튼 확인 | open /en/explore > wait 2500 | js [...document.querySelectorAll('[data-testid=save-toggle], [data-testid=like-toggle]')].every(b => b.hasAttribute('aria-pressed') && (b.getAttribute('aria-label') ?? '').length > 5) | `aria-pressed` 로 상태를 알리고 라벨에 장소명이 들어간다 |
 | TC-A11Y-05 | P2 | — | 포커스 이동 |  |  | 포커스 링이 모든 컨트롤에서 보인다 |
 | TC-A11Y-06 | P1 | — | 다국어 본문 확인 |  |  | 소개·주소 등 본문 블록에 `lang` 속성이 붙는다 |
 | TC-A11Y-07 | P2 | — | 날씨 패널 확인 |  |  | `role="group"` + 이름이 있고 초점을 가두지 않는다 |
