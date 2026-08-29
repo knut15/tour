@@ -5,15 +5,15 @@
     "P1",
     "P2"
   ],
-  "startedAt": "2026-08-29T06:59:07.008Z",
-  "finishedAt": "2026-08-29T06:59:20.887Z",
+  "startedAt": "2026-08-29T06:57:55.863Z",
+  "finishedAt": "2026-08-29T06:58:08.635Z",
   "baseUrl": "http://localhost:3000",
   "counts": {
-    "pass": 10,
+    "pass": 8,
     "fail": 0,
     "running": 0,
     "pending": 0,
-    "skipped": 127
+    "skipped": 129
   },
   "results": [
     {
@@ -37,11 +37,11 @@
       },
       "evidence": {
         "mode": "http",
-        "durationMs": 5,
+        "durationMs": 7,
         "status": 307,
         "headers": {
           "connection": "keep-alive",
-          "date": "Sat, 29 Aug 2026 06:59:09 GMT",
+          "date": "Sat, 29 Aug 2026 06:57:58 GMT",
           "keep-alive": "timeout=5",
           "location": "/en",
           "transfer-encoding": "chunked"
@@ -78,11 +78,11 @@
       },
       "evidence": {
         "mode": "http",
-        "durationMs": 6,
+        "durationMs": 7,
         "status": 307,
         "headers": {
           "connection": "keep-alive",
-          "date": "Sat, 29 Aug 2026 06:59:09 GMT",
+          "date": "Sat, 29 Aug 2026 06:57:58 GMT",
           "keep-alive": "timeout=5",
           "location": "/ko",
           "transfer-encoding": "chunked"
@@ -142,7 +142,7 @@
         "status": 307,
         "headers": {
           "connection": "keep-alive",
-          "date": "Sat, 29 Aug 2026 06:59:09 GMT",
+          "date": "Sat, 29 Aug 2026 06:57:58 GMT",
           "keep-alive": "timeout=5",
           "location": "/en",
           "transfer-encoding": "chunked"
@@ -194,14 +194,14 @@
       },
       "evidence": {
         "mode": "http",
-        "durationMs": 571,
+        "durationMs": 576,
         "status": 200,
         "headers": {
           "cache-control": "no-cache, must-revalidate",
           "connection": "keep-alive",
           "content-encoding": "gzip",
           "content-type": "text/html; charset=utf-8",
-          "date": "Sat, 29 Aug 2026 06:59:09 GMT",
+          "date": "Sat, 29 Aug 2026 06:57:59 GMT",
           "keep-alive": "timeout=5",
           "link": "</_next/static/media/5f402bd2d8eef81a-s.p.40bho2kviej2o.woff2>; rel=preload; as=\"font\"; crossorigin=\"\"; type=\"font/woff2\", </_next/static/chunks/%5Broot-of-the-server%5D__0pliwnd._.css>; rel=preload; as=\"style\"",
           "transfer-encoding": "chunked",
@@ -340,33 +340,15 @@
       "expected": "카테고리 기본 `attraction`, 카드 12개(BATCH), 필터 바에 카테고리·거리·지역·정렬·검색이 선다",
       "plan": {
         "tcId": "TC-EXP-01",
-        "mode": "browser",
-        "reason": "문서 실행 칸에 적힌 대로 실행한다",
-        "tcHash": "71e6bdfcd7ac",
-        "browser": {
-          "path": "/en/explore",
-          "actions": [
-            {
-              "action": "wait",
-              "ms": 2500
-            }
-          ]
-        },
-        "expect": {
-          "evaluate": "document.querySelectorAll('a[href*=\"/spots/\"]').length >= 1"
-        }
+        "mode": "manual",
+        "reason": "계획을 세우지 못했다",
+        "tcHash": "71e6bdfcd7ac"
       },
-      "evidence": {
-        "mode": "browser",
-        "durationMs": 3325,
-        "finalUrl": "http://localhost:3000/en/explore",
-        "body": "27°\nClear\nEnglish\n\nFOR A GOOD TRIP\n\nMay the Korea you meet today stay with you.\n\nMake it a good day\n\nPlaces\nCulture\nFood\nHappening\nLocation access is blocked\nREGION\nAnywhere in Korea\nMost viewed\nMost liked\nFind a place\nSearch\nNO IMAGE AVAILABLE\nGyeongbokgung Palace\n\n경복궁\n\nRoyal Palaces\n\n161, Sajik-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nCheonggyecheon Stream\n\n청계천\n\nLakes\n\nChangsin-dong, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nAchasan Mountain\n\n아차산\n\nRare Flora and Fauna\n\nGwangjang-dong, Gwangjin-gu, Seoul\n\n0\n0\n\nPlace data from the Korea Tourism Organization.",
-        "evaluated": true
-      },
+      "evidence": null,
       "verdict": {
-        "status": "pass",
-        "reason": "확인함 — 페이지 평가 document.querySelectorAll('a[href*=\"/spots/\"]').length >= 1",
-        "by": "rule"
+        "status": "skipped",
+        "reason": "계획을 세우지 못했다.",
+        "by": "runner"
       }
     },
     {
@@ -2391,25 +2373,15 @@
       "expected": "서버 코드에서도 service role 키를 쓰지 않는다. 공개키만 쓴다",
       "plan": {
         "tcId": "TC-SEC-03",
-        "mode": "command",
-        "reason": "문서 실행 칸에 적힌 대로 실행한다",
-        "tcHash": "156aaec031b1",
-        "command": "grep -r SERVICE_ROLE src",
-        "expect": {
-          "stdoutEmpty": true
-        }
+        "mode": "manual",
+        "reason": "계획을 세우지 못했다",
+        "tcHash": "156aaec031b1"
       },
-      "evidence": {
-        "mode": "command",
-        "durationMs": 24,
-        "exitCode": 1,
-        "stdout": "",
-        "stderr": ""
-      },
+      "evidence": null,
       "verdict": {
-        "status": "pass",
-        "reason": "확인함 — stdout 비어 있음",
-        "by": "rule"
+        "status": "skipped",
+        "reason": "계획을 세우지 못했다.",
+        "by": "runner"
       }
     },
     {
@@ -2588,9 +2560,9 @@
       },
       "evidence": {
         "mode": "browser",
-        "durationMs": 529,
+        "durationMs": 1384,
         "finalUrl": "http://localhost:3000/en/explore",
-        "body": "27°\nClear\nEnglish\n\nFOR A GOOD TRIP\n\nMay the Korea you meet today stay with you.\n\nMake it a good day\n\nPlaces\nCulture\nFood\nHappening\nLocation access is blocked\nREGION\nAnywhere in Korea\nMost viewed\nMost liked\nFind a place\nSearch\n\nPlace data from the Korea Tourism Organization.",
+        "body": "27°\nClear\nEnglish\n\nFOR A GOOD TRIP\n\nMay the Korea you meet today stay with you.\n\nMake it a good day\n\nPlaces\nCulture\nFood\nHappening\nLocation access is blocked\nREGION\nAnywhere in Korea\nMost viewed\nMost liked\nFind a place\nSearch\nNO IMAGE AVAILABLE\nGyeongbokgung Palace\n\n경복궁\n\nRoyal Palaces\n\n161, Sajik-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nCheonggyecheon Stream\n\n청계천\n\nLakes\n\nChangsin-dong, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nAchasan Mountain\n\n아차산\n\nRare Flora and Fauna\n\nGwangjang-dong, Gwangjin-gu, Seoul\n\n0\n0\n\nPlace data from the Korea Tourism Organization.",
         "evaluated": true
       },
       "verdict": {
@@ -2693,9 +2665,9 @@
       },
       "evidence": {
         "mode": "command",
-        "durationMs": 1302,
+        "durationMs": 1366,
         "exitCode": 0,
-        "stdout": "\n RUN  v4.1.10 /Users/kim/Workspace/tour\n\n\n Test Files  20 passed (20)\n      Tests  196 passed (196)\n   Start at  15:59:14\n   Duration  551ms (transform 815ms, setup 0ms, import 1.16s, tests 103ms, environment 2ms)\n\n",
+        "stdout": "\n RUN  v4.1.10 /Users/kim/Workspace/tour\n\n\n Test Files  20 passed (20)\n      Tests  196 passed (196)\n   Start at  15:58:02\n   Duration  568ms (transform 822ms, setup 0ms, import 1.19s, tests 100ms, environment 2ms)\n\n",
         "stderr": "$ vitest run\n"
       },
       "verdict": {
@@ -2722,7 +2694,7 @@
       },
       "evidence": {
         "mode": "command",
-        "durationMs": 1820,
+        "durationMs": 1833,
         "exitCode": 0,
         "stdout": "Generating route types...\n✓ Types generated successfully\n",
         "stderr": "$ next typegen && tsc --noEmit\n"
@@ -2751,7 +2723,7 @@
       },
       "evidence": {
         "mode": "command",
-        "durationMs": 3883,
+        "durationMs": 3859,
         "exitCode": 0,
         "stdout": "",
         "stderr": "$ eslint\n"
