@@ -75,6 +75,12 @@ export function WeatherWidget({
     <div
       id={panelId}
       /*
+        QA 가 패널을 집는 이름. 안의 값들은 `data-weather` 로 갈린다 —
+        타일이 셋이고 각각 다른 공급자에서 오므로, 하나가 비어도 나머지가
+        떴는지를 따로 물을 수 있어야 한다.
+      */
+      data-testid="weather-panel"
+      /*
         `role="dialog"` 를 쓰지 않는다. 이 패널은 `<details>` 안에 있어 열림 상태를
         브라우저가 이미 전하고, dialog 는 모달이라는 뜻이라 초점을 가두는 동작을
         기대하게 만든다. 여기서는 묶음이라는 것만 말하면 된다.
@@ -133,11 +139,16 @@ function TodayTile({ weather, t }: { weather: TodayWeatherView; t: WeatherString
         <WeatherIcon sky={weather.sky} className="size-11 shrink-0 text-ink" />
         <div className="min-w-0">
           <p className="flex items-baseline gap-2">
-            <span className="text-[34px] font-light leading-none tabular-nums text-ink">
+            <span
+              data-weather="temp"
+              className="text-[34px] font-light leading-none tabular-nums text-ink"
+            >
               {weather.temperature}
               {t.unitCelsius}
             </span>
-            <span className="truncate text-[13px] text-body">{t.sky[weather.sky]}</span>
+            <span data-weather="sky" className="truncate text-[13px] text-body">
+              {t.sky[weather.sky]}
+            </span>
           </p>
           <p className="mt-2 text-[12px] leading-[16px] text-muted">
             {`${t.feelsLike} ${weather.feelsLike}${t.unitCelsius}`}
@@ -191,7 +202,7 @@ function AirTile({
   t: WeatherStrings;
 }) {
   return (
-    <section className={TILE}>
+    <section data-weather="air" className={TILE}>
       {/* 제목과 배지가 한 줄에 선다. 배지가 없는 날에도 제목 높이는 그대로다 */}
       <div className="flex items-center justify-between gap-2">
         <h3 className={TILE_TITLE}>{t.air.title}</h3>
@@ -262,7 +273,7 @@ function OutfitTile({ outfit, t }: { outfit: TodayWeatherView["outfit"]; t: Weat
   const wearables = outfit.extras.filter((e) => e !== "mask");
 
   return (
-    <section className={`${TILE} flex flex-col`}>
+    <section data-weather="outfit" className={`${TILE} flex flex-col`}>
       <h3 className={TILE_TITLE}>{t.outfit.title}</h3>
       <div className="flex flex-1 flex-col justify-center">
         <p className="mt-2.5 text-[13px] leading-[18px] text-ink">

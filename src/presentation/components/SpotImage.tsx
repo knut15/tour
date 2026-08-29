@@ -49,6 +49,9 @@ export function SpotImage({
     // 크롭하지 않는다. 이미지의 82% 가 변경금지(cpyrhtDivCd=Type3)다
     // eslint-disable-next-line @next/next/no-img-element
     <img
+      // 사진이 실제로 그려진 자리. 이름이 없다는 것은 사진이 없다는 뜻이고,
+      // 그때는 `no-image` 가 대신 선다 — 둘을 세면 "이미지 없는 스팟" 을 가릴 수 있다
+      data-testid="spot-image"
       ref={ref}
       src={src}
       alt={alt}

@@ -57,7 +57,11 @@ export function LiveStatsLine({
   const icon = size === "md" ? "size-4" : "size-3.5";
 
   return (
-    <p className={`flex shrink-0 items-center gap-3 text-muted ${text}`}>
+    /*
+      이 줄이 **있는지 없는지**가 곧 판정이다. 저장소가 없으면 `SpotStats` 가
+      아무것도 그리지 않으므로, 이름이 하나도 없는 것과 0 이 찍힌 것을 QA 가 가른다.
+    */
+    <p data-testid="spot-stats" className={`flex shrink-0 items-center gap-3 text-muted ${text}`}>
       <span className="inline-flex items-center gap-1" aria-label={`${labelLike} ${likeShown}`}>
         <svg viewBox="0 0 24 24" className={icon} aria-hidden="true">
           <path

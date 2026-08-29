@@ -145,7 +145,10 @@ export function SpotFrame({
 
       {/* 제목과 자치구가 같은 기준선에 놓인다 */}
       <div className="flex min-w-0 items-baseline justify-between gap-3 pt-[18px]">
-        <h3 className={"min-w-0 font-display font-normal leading-[1.2] text-ink " + titleSize}>
+        <h3
+          data-testid="spot-card-title"
+          className={"min-w-0 font-display font-normal leading-[1.2] text-ink " + titleSize}
+        >
           <Link
             href={href}
             className="after:absolute after:inset-0 after:content-[''] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-focus"
