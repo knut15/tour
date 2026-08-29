@@ -68,16 +68,16 @@
 | ID | P | 사전조건 | 절차 | 실행 | 판정 | 기대 결과 |
 |---|---|---|---|---|---|---|
 | TC-SRC-01 | P0 | — | 검색칸에 이름을 넣고 Enter | open /en/explore > wait 2000 > fill [data-testid=spot-search] = seoul > press Enter > wait 1500 | js location.search.includes("q=seoul") | URL 에 `q` 가 붙고 목록이 좁혀진다. 카테고리·지역은 그대로 유지 |
-| TC-SRC-02 | P1 | — | 검색 결과가 없는 말을 넣는다 |  |  | “Nothing matches “{입력한 말}”.” 로 **검색어를 되돌려 보여주고**, 버튼은 “Clear search”. 이 버튼은 카테고리·지역을 남기고 `q` 만 지운다 |
+| TC-SRC-02 | P1 | — | 검색 결과가 없는 말을 넣는다 | open /en/explore?q=zzzzzzzz > wait 3000 | js document.body.innerText.includes("Nothing matches") | “Nothing matches “{입력한 말}”.” 로 **검색어를 되돌려 보여주고**, 버튼은 “Clear search”. 이 버튼은 카테고리·지역을 남기고 `q` 만 지운다 |
 | TC-SRC-03 | P1 | — | 검색 없이 결과가 0인 필터 조합을 만든다 |  |  | “Nothing matches that combination.” + “Clear the filter”. 이 버튼은 카테고리만 남긴다 |
-| TC-SRC-04 | P1 | — | `?q=%20` (공백만) 으로 접속 |  |  | 빈 검색이 아니라 일반 목록 |
+| TC-SRC-04 | P1 | — | `?q=%20` (공백만) 으로 접속 | open /en/explore?q=%20 > wait 3000 | js document.querySelectorAll('[data-testid=spot-card]').length >= 10 | 빈 검색이 아니라 일반 목록 |
 | TC-SRC-05 | P1 | 검색을 한 상태 | 브라우저 뒤로가기 |  |  | 목록이 검색 전으로 돌아가고 **검색칸도 함께 비워진다**. 칸과 목록이 다른 말을 하면 실패 |
 | TC-SRC-06 | P2 | 검색 결과 화면 | 연달아 다른 말로 검색 |  |  | 입력 칸에서 포커스가 빠지지 않는다 |
 | TC-SRC-07 | P1 | — | 정렬을 Most liked 로 바꾼다 |  |  | URL `sort=likes`, 목록 상단 순서 변경. **스크롤 위치가 유지된다**(맨 위로 튀지 않는다) |
 | TC-SRC-08 | P2 | — | 정렬을 다시 Most viewed 로 |  |  | 기본값이므로 URL 에서 `sort` 가 **빠진다** |
-| TC-SRC-09 | P0 | — | 더보기를 1회 누른다 |  |  | 카드가 24개가 되고 URL `more=1`. **기존 카드는 그대로 남고** 새 12개만 등장 애니메이션. 스켈레톤이 다시 뜨면 실패 |
+| TC-SRC-09 | P0 | — | 더보기를 1회 누른다 | open /en/explore > wait 2500 > click [data-testid=load-more] > wait 2500 | js location.search.includes("more=1") && document.querySelectorAll('[data-testid=spot-card]').length >= 12 | URL `more=1` 이 붙고 카드가 늘어난다(실데이터 24장, mock 은 표시 가능한 만큼). **기존 카드는 그대로 남고** 새 묶음만 등장 애니메이션. 스켈레톤이 다시 뜨면 실패 |
 | TC-SRC-10 | P1 | — | 더보기를 반복해 상한까지 누른다 |  |  | `more` 는 최대 15, 최대 192개. 그 이상 눌러도 파라미터가 안 오른다 |
-| TC-SRC-11 | P1 | — | 더보기로 늘린 상태에서 카테고리를 바꾼다 |  |  | `more` 가 초기화되고 12개부터 다시 시작 |
+| TC-SRC-11 | P1 | — | 더보기로 늘린 상태에서 카테고리를 바꾼다 | open /en/explore?more=1 > wait 2500 > click [data-category=food] > wait 2000 | js !location.search.includes("more=") | `more` 가 초기화되고 12개부터 다시 시작 |
 | TC-SRC-12 | P2 | 느린 네트워크(throttling) | 더보기 클릭 |  |  | 라벨이 대기 표시(점 3개)로 바뀐다 |
 | TC-SRC-13 | P1 | — | 목록 전체를 훑는다 |  |  | **총 건수·페이지 번호가 어디에도 없다** (GOAL.md §0.5-3) |
 
@@ -243,15 +243,15 @@
 
 ## 15. 접근성 (A11Y)
 
-| ID | P | 사전조건 | 절차 | 기대 결과 |
-|---|---|---|---|---|
-| TC-A11Y-01 | P1 | — | 키보드만으로 탐색 화면을 조작 | 카테고리·지역·정렬·검색·카드까지 Tab 으로 닿고 Enter 로 동작한다 |
-| TC-A11Y-02 | P1 | — | 스크린 리더로 필터 확인 | 선택된 탭·정렬에 `aria-current`, 정렬 묶음에 이름(“Sort”)이 있다 |
-| TC-A11Y-03 | P1 | — | 목록의 접근성 이름 확인 | “{카테고리} — {지역}” 형태로 읽힌다. 내부 은유(‘벽’ 등)가 노출되지 않는다 |
-| TC-A11Y-04 | P1 | — | 담기·좋아요 버튼 확인 | `aria-pressed` 로 상태를 알리고 라벨에 장소명이 들어간다 |
-| TC-A11Y-05 | P2 | — | 포커스 이동 | 포커스 링이 모든 컨트롤에서 보인다 |
-| TC-A11Y-06 | P1 | — | 다국어 본문 확인 | 소개·주소 등 본문 블록에 `lang` 속성이 붙는다 |
-| TC-A11Y-07 | P2 | — | 날씨 패널 확인 | `role="group"` + 이름이 있고 초점을 가두지 않는다 |
+| ID | P | 사전조건 | 절차 | 실행 | 판정 | 기대 결과 |
+|---|---|---|---|---|---|---|
+| TC-A11Y-01 | P1 | — | 키보드만으로 탐색 화면을 조작 |  |  | 카테고리·지역·정렬·검색·카드까지 Tab 으로 닿고 Enter 로 동작한다 |
+| TC-A11Y-02 | P1 | — | 스크린 리더로 필터 확인 | open /en/explore > wait 2500 | js document.querySelectorAll('[data-testid=category-tab][aria-current=page]').length === 1 | 선택된 탭·정렬에 `aria-current`, 정렬 묶음에 이름(“Sort”)이 있다 |
+| TC-A11Y-03 | P1 | — | 목록의 접근성 이름 확인 |  |  | “{카테고리} — {지역}” 형태로 읽힌다. 내부 은유(‘벽’ 등)가 노출되지 않는다 |
+| TC-A11Y-04 | P1 | — | 담기·좋아요 버튼 확인 |  |  | `aria-pressed` 로 상태를 알리고 라벨에 장소명이 들어간다 |
+| TC-A11Y-05 | P2 | — | 포커스 이동 |  |  | 포커스 링이 모든 컨트롤에서 보인다 |
+| TC-A11Y-06 | P1 | — | 다국어 본문 확인 |  |  | 소개·주소 등 본문 블록에 `lang` 속성이 붙는다 |
+| TC-A11Y-07 | P2 | — | 날씨 패널 확인 |  |  | `role="group"` + 이름이 있고 초점을 가두지 않는다 |
 
 ## 16. 반응형·성능 (RSP)
 
