@@ -5,10 +5,21 @@
 
 ## 실행 환경
 
+> **이 문서의 판정 기준은 실데이터다.** 배포해도 되는지를 묻는 검증이므로, 공급자가
+> 죽은 것도 배포를 막아야 할 사실이다 — 원인이 앱이든 TourAPI 든 운영에 나가면
+> 안 되는 것은 같다. mock 에서 몇 건이 통과했다는 숫자로는 "배포해도 된다" 를 말할
+> 수 없고, 실데이터를 사전조건으로 명시한 TC 9건(그중 `TC-SEC-02` 는 P0)은 mock 에서
+> **검증 자체가 성립하지 않는다.**
+>
+> mock 은 공급자 없이 화면을 만들 때, 그리고 공급자 장애와 앱 결함을 갈라 볼 때
+> 쓴다. 그때의 통과는 "이 조건에서 화면이 동작했다" 까지이지 배포 가부가 아니다.
+
 | 구분 | 값 |
 |---|---|
-| 기동 | `pnpm dev` (기본 포트 3000) |
-| 데이터 | `USE_MOCK_DATA` 가 `"false"` 가 **아니면 전부 mock** (`src/infrastructure/config/env.ts:isMockEnabled`) |
+| 기동 | `pnpm dev` (개발 3000 / 검증 3001) |
+| 검증 위치 | 전용 워크트리 `../tour-qa`. **Next 16 은 같은 디렉터리에 dev 서버를 둘 띄우지 못한다** — 포트가 달라도 거부하므로 트리를 갈라야 개발과 검증이 공존한다 |
+| 데이터 | `.env.local` 이 정한다. 검증도 그것을 그대로 따른다 — 설정으로 덮지 않는다 |
+| mock 전환 | `USE_MOCK_DATA` 가 `"false"` 가 **아니면 전부 mock** (`src/infrastructure/config/env.ts:isMockEnabled`) |
 | 실데이터 | `USE_MOCK_DATA=false` + `TOUR_API_KEY` 필요 |
 | 반응(좋아요·조회) | `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` 둘 다 있어야 켜진다. 없으면 기능 자체가 화면에서 사라진다 |
 | 기준 브라우저 | Chrome 최신 / iOS Safari. 폭 375px 를 최소 기준으로 본다 |
