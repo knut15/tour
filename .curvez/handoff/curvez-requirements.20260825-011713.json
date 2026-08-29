@@ -1,0 +1,75 @@
+{
+  "from": "curvez-requirements",
+  "to": [
+    "curvez-marketer",
+    "curvez-orchestrator"
+  ],
+  "status": "partial",
+  "summary": "네이밍 회의 R5 응답이다. R4 개정 브리프(향토·전통·식품 연상 금지, 한 문장 테스트, 의성어·의태어 1순위 축, 된소리 로마자화 금지)를 적용해 후보 4개를 낸다 — Jabak · Chagok · Sabujak(의태어 3개) + Yonder(영어, 어원 축 분산용). 후보마다 사용자에게 그대로 보여줄 한 문장과 v1 범위 정합 판정, 내가 아는 결격을 붙였다. 탈락시킨 이름과 그 사유도 한 건으로 남겼다(Golmok·Chorong·Sabak·훌쩍/뚜벅). R3 의 promise·differentiator 개정으로 내가 R2 에 올린 이의 2건은 해소됐음을 개정 이력에서 확인했고, 남은 1건(GOAL.md:317 완료 기준이 /en·/ko 만 적고 있다)은 아직 열려 있어 blocked_on 으로 유지한다. 그래서 done 이 아니라 partial 이다. 파일은 이 핸드오프 하나만 썼다.",
+  "artifacts": [],
+  "decisions": [
+    {
+      "what": "naming-candidate: Jabak",
+      "why": "① 한 문장 소개 — \"Jabak(자박) — 자박자박 걷는 발소리에서 온 이름으로, 오늘 어디를 어떤 순서로 걸을지 그 길 하나를 놓아 준다.\" (영문판: \"Jabak — from the Korean sound of soft footsteps; it lays out today's places in the order you'll walk them.\") 발소리는 곧 동선이라 이름과 한 문장을 나란히 놓으면 여행·장소·동선이 즉시 선다. ② v1 범위 정합 — 확정 4기능(지역·테마 탐색, 지도 주변 탐색, AI 일정, 코스 저장) 어느 것도 이름 밖으로 밀려나지 않고, 예약·결제·후기 같은 v1 제외 항목을 암시하지 않는다. 날짜 수를 함의하지 않아 개정된 promise('정해졌다' 는 상태)와도 어긋나지 않는다. ③ 결격 — 두 가지를 disclose 한다. 첫째, 한국어에서 '자박자박' 은 국물이 적게 잡힌 상태를 가리키기도 해 식품 연상이 완전히 0 은 아니다(다만 첫 연상은 발소리이고, 상호로 대량 소비되는 명사가 아니라 의태어라 Todam 과 층위가 다르다). 둘째, 걷기 은유라 시도 간 장거리 이동이 섞인 코스에서는 이름이 실제 범위보다 작게 읽힐 수 있다. 도메인·상표 충돌은 아는 바 없음(미검증). 기계 검사 통과: jabak 5자 2음절 소문자 ASCII, 된소리 겹자음 0, 풀 13개와 최소 편집거리 4",
+      "reversible_at": ".curvez/brand/naming.md:candidates"
+    },
+    {
+      "what": "naming-candidate: Chagok",
+      "why": "① 한 문장 소개 — \"Chagok(차곡) — 차곡차곡 쌓는다는 뜻으로, 흩어진 갈 곳들을 하나씩 쌓아 오늘 걸을 길 한 줄로 만들어 준다.\" (영문판: \"Chagok — Korean for stacking things neatly one on another; it stacks a handful of places into a single day you can actually walk.\") ② v1 범위 정합 — 네 후보 중 가장 깨끗하다. '쌓는다' 가 코스에 스팟을 담고 일자별로 편집하는 확정 기능과 그대로 겹치고, 이동수단을 함의하지 않아 도보·대중교통 어느 쪽으로 코스가 짜여도 참이며, 하루치를 쌓든 사흘치를 쌓든 참이라 개정된 promise 와 정확히 같은 단위를 쓴다. 좁지도 넓지도 않다 — 수집·아카이브로 읽혀 v1 제외인 후기·커뮤니티를 기대하게 만들 여지도 없다. ③ 결격 — 내 관점에서는 없음. 사소한 disclose 둘: 영어권 독자가 앞 음절을 'cha(차/tea)' 로 읽을 수 있고, 의태어 중 움직임보다 정리에 가까워 Jabak 보다 동적 인상이 약하다. 향토·전통·식품 연상은 확인되는 것이 없다. 도메인·상표 미검증. 기계 검사 통과: chagok 6자 2음절, 풀과 최소 편집거리 3(chaeum)",
+      "reversible_at": ".curvez/brand/naming.md:candidates"
+    },
+    {
+      "what": "naming-candidate: Sabujak",
+      "why": "① 한 문장 소개 — \"Sabujak(사부작) — 서두르지 않고 사부작사부작 움직인다는 뜻으로, 무리하지 않고 딱 걸을 수 있는 만큼만 오늘의 길을 짜 준다.\" (영문판: \"Sabujak — Korean for pottering along at your own unhurried pace; it plans a day-walk sized to that pace.\") ② v1 범위 정합 — 속도·태도를 말할 뿐 기능을 지목하지 않아 4기능 전부에 걸리고, v1 제외 항목을 약속하지 않는다. '무리하지 않는 분량' 은 한 화면에 6~9개만 거는 편집 방침과 같은 방향이라 이름이 제품을 실제보다 크게 약속하지 않는다. ③ 결격 — 두 가지. 7자 3음절로 constraints 상한에 붙어 발음 항목에서 감점될 수 있고(로고·URL 부담도 넷 중 가장 크다), 낯선 낱말이라 한국어 화자도 뜻을 즉시 못 떠올릴 수 있다. 대신 철자열이 희소해 충돌 위험은 넷 중 가장 낮을 것으로 본다(미검증). 기계 검사 통과: sabujak 7자 3음절, 된소리 겹자음 0, 풀과 최소 편집거리 5",
+      "reversible_at": ".curvez/brand/naming.md:candidates"
+    },
+    {
+      "what": "naming-candidate: Yonder",
+      "why": "① 한 문장 소개 — \"Yonder — '저 너머' 라는 뜻의 영어 낱말로, 지금 서 있는 곳에서 저기까지 오늘 갈 곳과 그 길을 하나로 정해 준다.\" ② v1 범위 정합 — 1차 타깃이 영어권 독자라 첫 접촉에서 뜻과 방향이 그대로 서고, 특정 기능으로 좁혀지지 않는다. 다만 넓어질 위험이 하나 있다 — '저 너머' 가 오지·모험·트레킹으로 읽히면 도시 편중된 실제 카탈로그(영문 데이터는 서울 쪽에 몰려 있고 지방 커버리지가 얇다)보다 큰 약속이 된다. 한 문장을 '지금 서 있는 곳에서 저기까지' 로 묶어 그 확장을 눌렀다. ③ 결격 — 어원 축을 갈라 두려고 넣은 후보이지 단독 1순위로 밀지 않는다. 사전 등재 일반어라 상표 식별력이 낮고, 아는 충돌이 있다 — 영국 신용카드 Yonder, 그리고 한 글자 차이인 휴대폰 파우치 브랜드 Yondr. npm·도메인은 미확인. R4 가 요구한 의성어·의태어 조건은 위 셋이 이미 충족하므로 이 후보는 그 축 밖에 있다. 기계 검사 통과: yonder 6자 2음절, 풀과 최소 편집거리 4",
+      "reversible_at": ".curvez/brand/naming.md:candidates"
+    },
+    {
+      "what": "naming-note: 탐색했으나 내지 않은 이름과 그 사유 — Golmok · Chorong · Sabak · 훌쩍/뚜벅",
+      "why": "R4 가 채점 오류의 재발을 막으려 기준을 신설했으므로, 내가 그 기준으로 스스로 잘라낸 것을 남긴다. (1) Golmok(골목) — 한 문장 테스트는 통과하지만 국내에서 '골목식당' 연상이 강해 기준A 에 걸리고, 도시 뒷골목으로 읽히면 축제·자연·문화시설을 포함한 v1 카탈로그보다 이름이 좁다. (2) Chorong(초롱) — '길을 비추는 등불' 이라 한 문장은 강하지만 청사초롱이 전통 소품이라 Todam 과 같은 기준A 재발 위험이 있다. (3) Sabak(사박사박, 눈·모래를 밟는 소리) — 자음이 Jabak 보다 부드러우나 말레이시아 지명 Sabah·Sabak Bernam 과 혼동되기 쉽다. 여행 앱에서 다른 여행지 지명으로 읽히는 것은 치명적이라 잘랐다. (4) 훌쩍(훌쩍 떠나다)·뚜벅(뚜벅뚜벅 걷다) — 의미로는 이번 축의 최상위인데 로마자로 적으면 huljjeok·ttubeok 이 되어 R4 의 된소리 겹자음 금지에 정면으로 걸린다. 소리가 살아남지 않아 후보로 내지 않았다",
+      "reversible_at": ".curvez/brand/naming.md:candidates"
+    },
+    {
+      "what": "R2 에 올린 코어-수용기준 이의 2건이 R3 개정으로 해소됐음을 확인했다. 이번 라운드에서 다시 올리지 않는다",
+      "why": "positioning.md 의 `## 개정 이력` 1·2 를 직접 읽었다. promise 는 날짜 수를 빼고 '갈 곳을 못 정한 채로 들어와서, 그대로 걸을 수 있는 동선 하나를 갖고 나간다' 로 바뀌어 GOAL.md:168·169·210·324 의 일자별 다일 코스와 더 이상 충돌하지 않는다. differentiator 는 '빈칸을 채운다' 를 빼고 네 동사(건다·이유를 붙인다·없다고 쓴다·원명을 준다)로 좁혔고 각각 GOAL.md §0.5·:324·:294·:292 에 대응 수용 기준이 있다. 내가 물었던 (a)/(b) 중 어느 쪽도 아닌 세 번째 답이지만, 약속이 확정 기능을 배제하지 않게 됐다는 점에서 이의의 목적은 달성됐다. 같은 지적을 반복해 R6 을 지연시키지 않는다",
+      "reversible_at": ".curvez/brand/positioning.md:개정 이력"
+    },
+    {
+      "what": "이번 라운드에도 .curvez/requirements.md 를 만들지 않았고 .curvez/brand/ 를 포함해 어떤 파일도 쓰지 않았다. 산출물은 이 핸드오프 하나다",
+      "why": "요청이 후보 재반환이고 '.curvez/brand/ 는 curvez-marketer 소유, 파일을 쓰지 마라' 가 그대로 유지됐다. 요구사항 문서를 지금 만들면 GOAL.md 와 제품 정의가 두 벌이 되어, 브랜드 코어가 어느 쪽을 따라야 하는지 갈린다",
+      "reversible_at": ".curvez/handoff/curvez-requirements.20260825-011713.json"
+    }
+  ],
+  "blocked_on": [
+    {
+      "question": "GOAL.md §6 완료 기준(:317)이 '`/en`, `/ko` 가 동작한다' 만 적고 있다 — ja·zh-Hant·de·fr 화면도 판정 대상인가. R2 에서 올린 뒤 아직 답이 없고, 확정 이름의 부정 함의 검사 범위(6개 언어냐 2개냐)와 로케일별 표기 검수 범위가 여기에 걸린다. 이번 후보 4개는 6개 언어 기준으로 검토했다",
+      "who": "user"
+    }
+  ],
+  "verification": [
+    {
+      "command": "node scratchpad/check-names-r5.mjs  # R4 개정 constraints 로 후보 4개 기계 검사 (길이 4~8, 1~3음절, 소문자 ASCII, 카테고리어·포털조어, 된소리 겹자음 kk/jj/pp/tt, 풀 13개 및 제출 4개 상호 편집거리)",
+      "result": "candidates=4 pool=13 fail=0 pool-name-reuse=0 / jabak len=5 syl=2 pool-min=4(maru) OK / chagok len=6 syl=2 pool-min=3(chaeum) OK / sabujak len=7 syl=3 pool-min=5(maru) OK / yonder len=6 syl=2 pool-min=4(todam) OK — 편집거리 1 이하 0건, 된소리 겹자음 0건, 풀 이름 재제출 0건",
+      "passed": true
+    },
+    {
+      "command": "grep -c '^- candidate:' .curvez/brand/naming.md",
+      "result": "14 (Gyeol 이 두 제안자에게서 중복돼 이름 기준 13개). 재제출 금지 대상 13개를 이 목록에서 뽑아 검사 스크립트의 pool 에 그대로 넣었다",
+      "passed": true
+    },
+    {
+      "command": "후보마다 R4 ask 2요소(한 문장 소개 / 결격 유무) 충족 여부 수기 확인",
+      "result": "4/4 충족. 한 문장 소개는 전부 내부 문서(GOAL.md·positioning.md) 인용 없이 작성했고, 결격은 Chagok 만 '내 관점에서는 없음' 이며 나머지 3개는 구체 사유를 적었다. 의성어·의태어 최소 1개 요구 대비 3개(Jabak·Chagok·Sabujak) 제출",
+      "passed": true
+    },
+    {
+      "command": "node \"$CLAUDE_PLUGIN_ROOT/scripts/validate-handoff.mjs\" .curvez/handoff/curvez-requirements.20260825-011713.json",
+      "result": "OK 핸드오프 검증 — 검사 1건, 통과 1건, 실패 0건, 오류 0개, 경고 0개 (exit=0)",
+      "passed": true
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "from": "curvez-designer",
+  "to": ["curvez-orchestrator", "curvez-marketer"],
+  "status": "done",
+  "summary": "네이밍 R4 재요청 — 개정 브리프(향토·식품 연상 금지, 한 문장 테스트, 의성어·의태어 1순위)를 읽고 후보 3개(Jabak / Dureon / Sogon)를 냈다. 셋 다 Doran(도란도란) 과 같은 결 — 도치가 아닌 완전 동일 반복형 의태어·의성어이고 tone 의 '기관 공지체' 반대편에 있는 개인적·다정한 소리다 — 이지만 서로 다른 낱말이라 Doran 을 죽인 충돌(LoL 아이템, npm 사용중, 아일랜드계 성씨)이 비어 있을 가능성이 있다. 다만 도메인·상표 실검색은 이번 라운드에서 하지 않았다 — R6 에서 curvez-marketer 가 직접 돌려야 한다. 이번 라운드도 화면 설계·토큰 작업이 아니므로 `.curvez/design/` 에는 아무것도 쓰지 않았다.",
+  "artifacts": [],
+  "decisions": [
+    {
+      "what": "naming-candidate: Jabak",
+      "why": "① Jabak — 오늘 하루치 동선을 자박자박 걸어서 다 채운다. ② 결격 없음(시각·발음·자수 균형 기준) — j-a-b-a-k 5글자, 모음 a-a 가 대칭을 잡고 상승·하강선이 b·k 둘뿐이라 로고 실루엣의 리듬이 고르다. 로마자 그대로 '자-박' 으로 읽혀 겹자음·이중모음 오독 위험이 없다. 자박자박(잔잔한 물기·모래 위를 조심스레 걷는 발소리)은 도란도란과 마찬가지로 완전 동일 반복형이라 브리프의 [R4 신설] 반복형 축약 규칙에 그대로 들어맞는다"
+    },
+    {
+      "what": "naming-candidate: Dureon",
+      "why": "① Dureon — 낯선 동네를 두런두런 걸어 다니며 하루의 동선을 잡는다. ② 결격 있음 — 로마자 'eo' 이중모음이 비한국어 화자에게 두 음절로 갈라져(두-레-온) 읽힐 수 있어 원래 2음절(두런) 발음이 무너질 위험이 있다(Gyeol 에서 지적한 것과 같은 결의 문제). 로고에서도 상승선이 앞 글자 d 하나뿐이라 좌우 무게가 왼쪽으로 쏠린다. 두런두런(낮고 편안한 말소리)은 도란도란과 정확히 같은 방향 — 다정하고 사적인 소리, 기관 공지체의 반대편 — 이면서 다른 낱말이라 Doran 을 죽인 충돌(LoL 아이템·npm·성씨)이 비어 있을 가능성이 있다. 다만 이번 라운드에서 도메인·상표·npm 실검색은 하지 않았다"
+    },
+    {
+      "what": "naming-candidate: Sogon",
+      "why": "① Sogon — 여행지의 소문을 소곤소곤 귀띔받아 오늘 갈 곳을 정한다. ② 결격 없음(시각·발음·자수 균형 기준) — s-o-g-o-n 5글자, o 가 두 번 반복돼 대칭축을 만들고 g 의 하강선 하나만 있어 실루엣이 낮고 안정적이다. 로마자 발음도 '소-곤' 으로 그대로 읽혀 왜곡이 적다. 소곤소곤(작고 다정한 속삭임)도 완전 동일 반복형이라 축약 규칙에 맞고, 도란도란과 같은 결이지만 다른 낱말이다"
+    }
+  ],
+  "blocked_on": [],
+  "verification": [
+    {
+      "command": "후보 3개 각각 길이(4~8자)·음절(1~3)·소문자 ASCII 여부·하이픈/숫자 포함 여부를 수동 확인",
+      "result": "jabak=5자/2음절, dureon=6자/2음절, sogon=5자/2음절. 셋 다 소문자 ASCII 만이고 하이픈·숫자 없음 — 코드 식별자 제약 통과",
+      "passed": true
+    },
+    {
+      "command": "풀(.curvez/brand/naming.md ## candidates 의 13개 이름 — MARU/Damda/Nunchi/Nadeuri/Gyeol(x2)/Chaeum/Yeoyu/Dulle/Nooka/Golla/Framea/Todam/Doran)과 한 글자 차이·동음 여부 대조",
+      "result": "3개 후보 모두 풀과 철자·발음이 겹치지 않음. Dureon 은 Doran 과 같은 의미 방향이지만 철자·음절 구성이 달라 한 글자 차이·동음 기준에 해당하지 않음",
+      "passed": true
+    },
+    {
+      "command": "[R4 신설] 향토·전통·식품 연상 검토 및 된소리 겹자음(kk/jj/pp/tt) 포함 여부 확인",
+      "result": "3개 후보 모두 흙·담·장독·초가·시골 계열 명사가 아니라 소리(의성어)·움직임(의태어)이며 된소리 겹자음을 포함하지 않음",
+      "passed": true
+    },
+    {
+      "command": "[R4 신설] 한 문장 테스트 — 이름+한 문장이 내부 문서 인용 없이 여행·장소·동선임을 즉시 드러내는지 자체 점검",
+      "result": "3개 문장 모두 '동선'/'걸어 다니며'/'여행지'/'갈 곳' 을 문장 안에 직접 명시해 GOAL.md·positioning.md 를 몰라도 여행 앱 문맥이 선다고 판단. 다만 이 판정은 curvez-designer 자체 점검이고 최종 채점은 R6 에서 curvez-marketer 가 한다",
+      "passed": true
+    },
+    {
+      "command": "카테고리어(tour/trip/travel/korea/visit/guide/place) 및 포털 조어(-portal/-info/-data/K- 접두) 포함 여부 확인",
+      "result": "3개 후보 모두 해당 문자열을 포함하지 않음",
+      "passed": true
+    },
+    {
+      "command": "find .curvez/design -newer .curvez/brand/naming.md 2>/dev/null | wc -l",
+      "result": "0 — 이번 라운드에 .curvez/design/ 아래 아무 파일도 쓰지 않았다",
+      "passed": true
+    }
+  ]
+}
