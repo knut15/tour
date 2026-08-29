@@ -107,6 +107,9 @@ export function SpotSearch({
 
         <input
           id={inputId}
+          // QA 가 찾는 칸. `name="q"` 로도 집히지만 그것은 URL 파라미터 이름이라,
+          // 주소 규칙을 바꾸면 검증까지 함께 깨진다
+          data-testid="spot-search"
           type="search"
           name="q"
           value={value}

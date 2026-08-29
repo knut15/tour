@@ -531,6 +531,7 @@ async function Spots({
           <ButtonLink
             href={exploreHref(locale, { category, areaCode, districtCode, keyword, sort, more: more + 1 })}
             variant="weak"
+            testId="load-more"
             // 스크롤 위치를 지킨다. 목록이 아래로 늘어나는데 맨 위로 올라가면
             // 방금 보던 카드를 다시 찾아 내려와야 한다
             scroll={false}

@@ -139,6 +139,17 @@ export function CategoryTabs({
               <Link
                 href={tab.href}
                 /*
+                  QA 가 탭을 집는 손잡이. **무엇인지(`category-tab`)와 어느
+                  것인지(`data-category`)를 나눠 둔다** — 넷을 한꺼번에 세려면
+                  앞의 것이, 특정 탭을 누르려면 뒤의 것이 필요하다. 하나로 합쳐
+                  `category-tab-food` 로 두면 "탭 전체" 를 가리킬 방법이 없다.
+
+                  클래스나 글자로 집지 않는 이유는 그것들이 바뀔 때 QA 가 함께
+                  깨지기 때문이다. 특히 라벨은 로케일마다 다르다.
+                */
+                data-testid="category-tab"
+                data-category={tab.key}
+                /*
                   다른 목록으로 가는 것이라 머리말까지 되감을 필요는 없지만,
                   맨 위로 보내면 그 머리말을 다시 지나쳐야 목록에 닿는다.
                   이 줄이 헤더에 붙은 자리에서 새 목록이 시작한다.
