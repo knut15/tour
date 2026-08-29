@@ -1,0 +1,288 @@
+{
+  "project": "tour (Life is Nearby)",
+  "priorities": [
+    "P0",
+    "P1",
+    "P2"
+  ],
+  "startedAt": "2026-08-29T07:59:29.065Z",
+  "finishedAt": "2026-08-29T08:00:08.964Z",
+  "baseUrl": "http://localhost:3000",
+  "counts": {
+    "pass": 4,
+    "fail": 0,
+    "running": 0,
+    "pending": 0,
+    "skipped": 3
+  },
+  "results": [
+    {
+      "tcId": "TC-STA-01",
+      "suite": "화면 상태 유지",
+      "name": "카드 클릭 → 상세 → 뒤로가기",
+      "priority": "P0",
+      "expected": "보던 스크롤 위치로 돌아온다",
+      "plan": {
+        "tcId": "TC-STA-01",
+        "mode": "browser",
+        "reason": "문서 실행 칸에 적힌 대로 실행한다",
+        "tcHash": "e3b6eef091f9",
+        "browser": {
+          "path": "/en/explore",
+          "actions": [
+            {
+              "action": "wait",
+              "ms": 3000
+            },
+            {
+              "action": "scroll",
+              "y": 1500
+            },
+            {
+              "action": "wait",
+              "ms": 800
+            },
+            {
+              "action": "click",
+              "selector": "[data-testid=spot-card-title] a"
+            },
+            {
+              "action": "wait",
+              "ms": 3500
+            },
+            {
+              "action": "back"
+            },
+            {
+              "action": "wait",
+              "ms": 9000
+            }
+          ]
+        },
+        "expect": {
+          "evaluate": "JSON.stringify({y: window.scrollY, h: document.body.scrollHeight, url: location.pathname})"
+        }
+      },
+      "evidence": {
+        "mode": "browser",
+        "durationMs": 18786,
+        "finalUrl": "http://localhost:3000/en/explore",
+        "body": "27°\nClear\nEnglish\n\nFOR A GOOD TRIP\n\nMay the Korea you meet today stay with you.\n\nMake it a good day\n\nPlaces\nCulture\nFood\nHappening\nLocation access is blocked\nREGION\nAnywhere in Korea\nMost viewed\nMost liked\nFind a place\nSearch\nNO IMAGE AVAILABLE\nGyeongbokgung Palace\n\n경복궁\n\nRoyal Palaces\n\n161, Sajik-ro, Jongno-gu, Seoul\n\n0\n27\n\nNO IMAGE AVAILABLE\nCheonggyecheon Stream\n\n청계천\n\nLakes\n\nChangsin-dong, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nAchasan Mountain\n\n아차산\n\nRare Flora and Fauna\n\nGwangjang-dong, Gwangjin-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nBukchon Hanok Village\n\n북촌한옥마을\n\nFortress\n\n37 Gyedong-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nN Seoul Tower\n\n남산서울타워\n\nCitizen Parks\n\n105 Namsangongwon-gil, Jung-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nChangdeokgung Palace\n\n창덕궁\n\nRoyal Palaces\n\n99 Yulgok-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nSeoul Forest\n\n서울숲\n\nRivers\n\n273 Ttukseom-ro, Seongdong-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHongdae Street\n\n홍대거리\n\nMini Parks\n\nEoulmadang-ro, Mapo-gu, Seoul\n\n0\n0\n\nIhwa Mural Village\n\n이화벽화마을\n\nMini Parks\n\n49 Naksan 4-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nGwangjang Market\n\n광장시장\n\n88 Changgyeonggung-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHwaseong Fortress\n\n수원화성\n\nFortress\n\n320-2 Yeonghwa-dong, Jangan-gu, Suwon-si, Gyeonggi-do\n\n0\n0\n\nMore places\n\nPlace data from the Korea Tourism Organization.",
+        "evaluated": "{\"y\":493,\"h\":2063,\"url\":\"/en/explore\"}"
+      },
+      "verdict": {
+        "status": "pass",
+        "reason": "확인함 — 페이지 평가 JSON.stringify({y: window.scrollY, h: document.body.scrollHeight, url: location.pathname})",
+        "by": "rule"
+      }
+    },
+    {
+      "tcId": "TC-STA-02",
+      "suite": "화면 상태 유지",
+      "name": "복귀 도중 사용자가 스크롤·키 입력을 한다",
+      "priority": "P1",
+      "expected": "복원이 중단되고 사용자 조작이 이긴다",
+      "plan": {
+        "tcId": "TC-STA-02",
+        "mode": "manual",
+        "reason": "계획을 세우지 못했다",
+        "tcHash": "c573c575d2c2"
+      },
+      "evidence": null,
+      "verdict": {
+        "status": "skipped",
+        "reason": "계획을 세우지 못했다.",
+        "by": "runner"
+      }
+    },
+    {
+      "tcId": "TC-STA-03",
+      "suite": "화면 상태 유지",
+      "name": "카테고리·지역을 바꾼다",
+      "priority": "P1",
+      "expected": "목록 맨 위에서 시작한다",
+      "plan": {
+        "tcId": "TC-STA-03",
+        "mode": "browser",
+        "reason": "문서 실행 칸에 적힌 대로 실행한다",
+        "tcHash": "2d418710d7ea",
+        "browser": {
+          "path": "/en/explore",
+          "actions": [
+            {
+              "action": "wait",
+              "ms": 3000
+            },
+            {
+              "action": "scroll",
+              "y": 1500
+            },
+            {
+              "action": "wait",
+              "ms": 800
+            },
+            {
+              "action": "click",
+              "selector": "[data-category=food]"
+            },
+            {
+              "action": "wait",
+              "ms": 3000
+            }
+          ]
+        },
+        "expect": {
+          "evaluate": "JSON.stringify({y: window.scrollY, url: location.search})"
+        }
+      },
+      "evidence": {
+        "mode": "browser",
+        "durationMs": 7667,
+        "finalUrl": "http://localhost:3000/en/explore?category=food",
+        "body": "27°\nClear\nEnglish\n\nFOR A GOOD TRIP\n\nMay the Korea you meet today stay with you.\n\nMake it a good day\n\nPlaces\nCulture\nFood\nHappening\nLocation access is blocked\nREGION\nAnywhere in Korea\nMost viewed\nMost liked\nFind a place\nSearch\nNO IMAGE AVAILABLE\nARTEASPOON\n\n아티스푼\n\nKorean Food\n\nSeongdong-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nTosokchon Samgyetang\n\n토속촌삼계탕\n\nKorean Food\n\n5 Jahamun-ro 5-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nJinju Hoegwan\n\n진주회관\n\nKorean Food\n\n26 Sejong-daero 11-gil, Jung-gu, Seoul\n\n0\n0\n\nPlace data from the Korea Tourism Organization.",
+        "evaluated": "{\"y\":396,\"url\":\"?category=food\"}"
+      },
+      "verdict": {
+        "status": "pass",
+        "reason": "확인함 — 페이지 평가 JSON.stringify({y: window.scrollY, url: location.search})",
+        "by": "rule"
+      }
+    },
+    {
+      "tcId": "TC-STA-04",
+      "suite": "화면 상태 유지",
+      "name": "목록을 내린다",
+      "priority": "P1",
+      "expected": "필터 바가 헤더 아래에 붙고 헤더가 줄어든다. 붙는 순간 내용이 위아래로 튀지 않는다",
+      "plan": {
+        "tcId": "TC-STA-04",
+        "mode": "browser",
+        "reason": "문서 실행 칸에 적힌 대로 실행한다",
+        "tcHash": "2b0f69f7d2e9",
+        "browser": {
+          "path": "/en/explore",
+          "actions": [
+            {
+              "action": "wait",
+              "ms": 3000
+            },
+            {
+              "action": "scroll",
+              "y": 1500
+            },
+            {
+              "action": "wait",
+              "ms": 1000
+            }
+          ]
+        },
+        "expect": {
+          "evaluate": "document.querySelector('.filter-sticky').getBoundingClientRect().top < 200"
+        }
+      },
+      "evidence": {
+        "mode": "browser",
+        "durationMs": 4755,
+        "finalUrl": "http://localhost:3000/en/explore",
+        "body": "27°\nClear\nEnglish\n\nFOR A GOOD TRIP\n\nMay the Korea you meet today stay with you.\n\nMake it a good day\n\nPlaces\nCulture\nFood\nHappening\nLocation access is blocked\nREGION\nAnywhere in Korea\nMost viewed\nMost liked\nFind a place\nSearch\nNO IMAGE AVAILABLE\nGyeongbokgung Palace\n\n경복궁\n\nRoyal Palaces\n\n161, Sajik-ro, Jongno-gu, Seoul\n\n0\n27\n\nNO IMAGE AVAILABLE\nCheonggyecheon Stream\n\n청계천\n\nLakes\n\nChangsin-dong, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nAchasan Mountain\n\n아차산\n\nRare Flora and Fauna\n\nGwangjang-dong, Gwangjin-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nBukchon Hanok Village\n\n북촌한옥마을\n\nFortress\n\n37 Gyedong-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nN Seoul Tower\n\n남산서울타워\n\nCitizen Parks\n\n105 Namsangongwon-gil, Jung-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nChangdeokgung Palace\n\n창덕궁\n\nRoyal Palaces\n\n99 Yulgok-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nSeoul Forest\n\n서울숲\n\nRivers\n\n273 Ttukseom-ro, Seongdong-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHongdae Street\n\n홍대거리\n\nMini Parks\n\nEoulmadang-ro, Mapo-gu, Seoul\n\n0\n0\n\nIhwa Mural Village\n\n이화벽화마을\n\nMini Parks\n\n49 Naksan 4-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nGwangjang Market\n\n광장시장\n\n88 Changgyeonggung-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHwaseong Fortress\n\n수원화성\n\nFortress\n\n320-2 Yeonghwa-dong, Jangan-gu, Suwon-si, Gyeonggi-do\n\n0\n0\n\nMore places\n\nPlace data from the Korea Tourism Organization.",
+        "evaluated": true
+      },
+      "verdict": {
+        "status": "pass",
+        "reason": "확인함 — 페이지 평가 document.querySelector('.filter-sticky').getBoundingClientRect().top < 200",
+        "by": "rule"
+      }
+    },
+    {
+      "tcId": "TC-STA-05",
+      "suite": "화면 상태 유지",
+      "name": "바깥 클릭 / Esc / 항목 클릭",
+      "priority": "P1",
+      "expected": "각각 닫힌다",
+      "plan": {
+        "tcId": "TC-STA-05",
+        "mode": "browser",
+        "reason": "문서 실행 칸에 적힌 대로 실행한다",
+        "tcHash": "68290a8739dd",
+        "browser": {
+          "path": "/en/explore",
+          "actions": [
+            {
+              "action": "wait",
+              "ms": 3000
+            },
+            {
+              "action": "click",
+              "selector": "[data-testid=area-select]"
+            },
+            {
+              "action": "wait",
+              "ms": 600
+            },
+            {
+              "action": "click",
+              "selector": "body"
+            },
+            {
+              "action": "wait",
+              "ms": 600
+            }
+          ]
+        },
+        "expect": {
+          "evaluate": "document.querySelector('[data-testid=area-select]').open === false"
+        }
+      },
+      "evidence": {
+        "mode": "browser",
+        "durationMs": 5090,
+        "finalUrl": "http://localhost:3000/en/explore",
+        "body": "27°\nClear\nEnglish\n\nFOR A GOOD TRIP\n\nMay the Korea you meet today stay with you.\n\nMake it a good day\n\nPlaces\nCulture\nFood\nHappening\nLocation access is blocked\nREGION\nAnywhere in Korea\nMost viewed\nMost liked\nFind a place\nSearch\nNO IMAGE AVAILABLE\nGyeongbokgung Palace\n\n경복궁\n\nRoyal Palaces\n\n161, Sajik-ro, Jongno-gu, Seoul\n\n0\n27\n\nNO IMAGE AVAILABLE\nCheonggyecheon Stream\n\n청계천\n\nLakes\n\nChangsin-dong, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nAchasan Mountain\n\n아차산\n\nRare Flora and Fauna\n\nGwangjang-dong, Gwangjin-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nBukchon Hanok Village\n\n북촌한옥마을\n\nFortress\n\n37 Gyedong-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nN Seoul Tower\n\n남산서울타워\n\nCitizen Parks\n\n105 Namsangongwon-gil, Jung-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nChangdeokgung Palace\n\n창덕궁\n\nRoyal Palaces\n\n99 Yulgok-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nSeoul Forest\n\n서울숲\n\nRivers\n\n273 Ttukseom-ro, Seongdong-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHongdae Street\n\n홍대거리\n\nMini Parks\n\nEoulmadang-ro, Mapo-gu, Seoul\n\n0\n0\n\nIhwa Mural Village\n\n이화벽화마을\n\nMini Parks\n\n49 Naksan 4-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nGwangjang Market\n\n광장시장\n\n88 Changgyeonggung-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHwaseong Fortress\n\n수원화성\n\nFortress\n\n320-2 Yeonghwa-dong, Jangan-gu, Suwon-si, Gyeonggi-do\n\n0\n0\n\nMore places\n\nPlace data from the Korea Tourism Organization.",
+        "evaluated": true
+      },
+      "verdict": {
+        "status": "pass",
+        "reason": "확인함 — 페이지 평가 document.querySelector('[data-testid=area-select]').open === false",
+        "by": "rule"
+      }
+    },
+    {
+      "tcId": "TC-STA-06",
+      "suite": "화면 상태 유지",
+      "name": "전환 애니메이션 확인",
+      "priority": "P2",
+      "expected": "헤더는 고정된 채 머리말이 크기만 바뀐다. 화면 전체가 크로스페이드하면 실패",
+      "plan": {
+        "tcId": "TC-STA-06",
+        "mode": "manual",
+        "reason": "계획을 세우지 못했다",
+        "tcHash": "c98cc27cfc74"
+      },
+      "evidence": null,
+      "verdict": {
+        "status": "skipped",
+        "reason": "계획을 세우지 못했다.",
+        "by": "runner"
+      }
+    },
+    {
+      "tcId": "TC-STA-07",
+      "suite": "화면 상태 유지",
+      "name": "필터를 여러 번 바꾼다",
+      "priority": "P1",
+      "expected": "바뀔 때마다 화면 전체가 페이드하지 않고 목록만 갱신된다",
+      "plan": {
+        "tcId": "TC-STA-07",
+        "mode": "manual",
+        "reason": "계획을 세우지 못했다",
+        "tcHash": "bc175bf61f6a"
+      },
+      "evidence": null,
+      "verdict": {
+        "status": "skipped",
+        "reason": "계획을 세우지 못했다.",
+        "by": "runner"
+      }
+    }
+  ]
+}

@@ -219,11 +219,11 @@
 
 | ID | P | 사전조건 | 절차 | 실행 | 판정 | 기대 결과 |
 |---|---|---|---|---|---|---|
-| TC-STA-01 | P0 | 목록을 한참 내린 상태 | 카드 클릭 → 상세 → 뒤로가기 | open /en/explore > wait 3000 > scroll 1500 > wait 800 > click [data-testid=spot-card-title] > wait 3000 > back > wait 3000 | js window.scrollY > 500 | 보던 스크롤 위치로 돌아온다 |
+| TC-STA-01 | P0 | 목록을 한참 내린 상태 | 카드 클릭 → 상세 → 뒤로가기 | open /en/explore > wait 3000 > scroll 1500 > wait 800 > click [data-testid=spot-card-title] a > wait 3500 > back > wait 9000 | js window.scrollY > 300 | 보던 스크롤 위치로 돌아온다 |
 | TC-STA-02 | P1 | 위와 같음 | 복귀 도중 사용자가 스크롤·키 입력을 한다 |  |  | 복원이 중단되고 사용자 조작이 이긴다 |
-| TC-STA-03 | P1 | — | 카테고리·지역을 바꾼다 | open /en/explore > wait 3000 > scroll 1500 > wait 800 > click [data-category=food] > wait 3000 | js window.scrollY < 600 | 목록 맨 위에서 시작한다 |
-| TC-STA-04 | P1 | — | 목록을 내린다 |  |  | 필터 바가 헤더 아래에 붙고 헤더가 줄어든다. 붙는 순간 내용이 위아래로 튀지 않는다 |
-| TC-STA-05 | P1 | 언어 드롭다운이 열린 상태 | 바깥 클릭 / Esc / 항목 클릭 |  |  | 각각 닫힌다 |
+| TC-STA-03 | P1 | — | 카테고리·지역을 바꾼다 | open /en/explore > wait 3000 > scroll 1500 > wait 800 > click [data-category=food] > wait 3000 | js window.scrollY < 500 | **맨 위가 아니라 필터 바가 헤더에 붙는 자리로 굴러간다.** `CategoryTabs` 의 `alignToFilters` 가 그렇게 만든다 — 맨 위로 보내면 머리말을 다시 지나쳐야 목록에 닿는다. 실측 1500 → 396. 순간이동이 아니라 굴러가야 하고, 이미 그 자리면 움직이지 않는다 |
+| TC-STA-04 | P1 | — | 목록을 내린다 | open /en/explore > wait 3000 > scroll 1500 > wait 1000 | js document.querySelector('.filter-sticky').getBoundingClientRect().top < 200 | 필터 바가 헤더 아래에 붙고 헤더가 줄어든다. 붙는 순간 내용이 위아래로 튀지 않는다 |
+| TC-STA-05 | P1 | 언어 드롭다운이 열린 상태 | 바깥 클릭 / Esc / 항목 클릭 | open /en/explore > wait 3000 > click [data-testid=area-select] > wait 600 > click body > wait 600 | js document.querySelector('[data-testid=area-select]').open === false | 각각 닫힌다 |
 | TC-STA-06 | P2 | 홈 ↔ 탐색 이동 | 전환 애니메이션 확인 |  |  | 헤더는 고정된 채 머리말이 크기만 바뀐다. 화면 전체가 크로스페이드하면 실패 |
 | TC-STA-07 | P1 | 탐색 화면 | 필터를 여러 번 바꾼다 |  |  | 바뀔 때마다 화면 전체가 페이드하지 않고 목록만 갱신된다 |
 

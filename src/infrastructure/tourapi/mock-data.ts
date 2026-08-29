@@ -311,6 +311,175 @@ export const MOCK_KO: TourApiItem[] = [
     firstimage2: "", cpyrhtDivCd: "Type3", tel: "", modifiedtime: "20250505100000",
     lclsSystm1: "NA", lclsSystm2: "NA02", lclsSystm3: "NA020100",
   },
+
+
+  /*
+    ── 여기부터는 QA 용으로 지어낸 항목이다 ──
+
+    영문 쪽과 같은 규칙을 따른다(위 `MOCK_EN` 의 주석 참조). `contentid` 는 가공값이고
+    이미지 URL 은 실재하는 것을 돌려 쓴다.
+
+    **영문과 한 벌로 짝지었지만 일부러 하나를 뺐다.** 실제 TourAPI 에서 국문과 영문은
+    번역쌍이 아니라 독립된 두 카탈로그이고(GOAL.md §4), 한쪽에만 있는 장소가 흔하다.
+    영문의 `Ihwa Mural Village (이화벽화마을)` 에 대응하는 국문 항목을 두지 않아,
+    상세에서 언어를 바꿨을 때 **목록으로 보내지는 경로**를 목으로도 밟을 수 있게 했다.
+
+    이름은 한글 원명 그대로다 — `ko` 로케일에서는 제목이 곧 원명이고
+    (`parseSpotName("경복궁", "ko")`), 그 값이 두 카탈로그를 잇는 유일한 열쇠다.
+  */
+  {
+    contentid: "3640001", contenttypeid: "12",
+    title: "북촌한옥마을",
+    addr1: "서울특별시 종로구 계동길 37", areacode: "1", sigungucode: "23",
+    mapx: "126.9850", mapy: "37.5826",
+    firstimage: "https://tong.visitkorea.or.kr/cms/resource/23/2678023_image2_1.jpg",
+    firstimage2: "", cpyrhtDivCd: "Type3", tel: "", modifiedtime: "20250901120000",
+    lclsSystm1: "HS", lclsSystm2: "HS01", lclsSystm3: "HS010200",
+  },
+  {
+    contentid: "3640002", contenttypeid: "12",
+    title: "남산서울타워",
+    addr1: "서울특별시 중구 남산공원길 105", areacode: "1", sigungucode: "24",
+    mapx: "126.9882", mapy: "37.5512",
+    firstimage: "https://tong.visitkorea.or.kr/cms/resource/64/1701164_image2_1.jpg",
+    firstimage2: "", cpyrhtDivCd: "Type3", tel: "", modifiedtime: "20250901120000",
+    lclsSystm1: "VE", lclsSystm2: "VE03", lclsSystm3: "VE030100",
+  },
+  {
+    contentid: "3640003", contenttypeid: "12",
+    title: "창덕궁",
+    addr1: "서울특별시 종로구 율곡로 99", areacode: "1", sigungucode: "23",
+    mapx: "126.9910", mapy: "37.5794",
+    firstimage: "https://tong.visitkorea.or.kr/cms/resource/11/2660711_image2_1.jpg",
+    firstimage2: "", cpyrhtDivCd: "Type3", tel: "", modifiedtime: "20250901120000",
+    lclsSystm1: "HS", lclsSystm2: "HS01", lclsSystm3: "HS010100",
+  },
+  {
+    contentid: "3640004", contenttypeid: "12",
+    title: "서울숲",
+    addr1: "서울특별시 성동구 뚝섬로 273", areacode: "1", sigungucode: "16",
+    mapx: "127.0374", mapy: "37.5444",
+    firstimage: "https://tong.visitkorea.or.kr/cms/resource/53/3400953_image2_1.jpg",
+    firstimage2: "", cpyrhtDivCd: "Type3", tel: "", modifiedtime: "20250901120000",
+    lclsSystm1: "NA", lclsSystm2: "NA02", lclsSystm3: "NA020100",
+  },
+  {
+    contentid: "3640005", contenttypeid: "12",
+    title: "홍대거리",
+    addr1: "서울특별시 마포구 어울마당로", areacode: "1", sigungucode: "13",
+    mapx: "126.9236", mapy: "37.5563",
+    firstimage: "https://tong.visitkorea.or.kr/cms/resource/17/3544517_image2_1.jpg",
+    firstimage2: "", cpyrhtDivCd: "Type3", tel: "", modifiedtime: "20250901120000",
+    lclsSystm1: "VE", lclsSystm2: "VE03", lclsSystm3: "VE030200",
+  },
+  {
+    contentid: "3640006", contenttypeid: "12",
+    title: "광장시장",
+    addr1: "서울특별시 종로구 창경궁로 88", areacode: "1", sigungucode: "23",
+    mapx: "126.9997", mapy: "37.5701",
+    firstimage: "https://tong.visitkorea.or.kr/cms/resource/90/3467490_image2_1.jpg",
+    firstimage2: "", cpyrhtDivCd: "Type3", tel: "", modifiedtime: "20250901120000",
+    lclsSystm1: "VE", lclsSystm2: "VE04", lclsSystm3: "VE040100",
+  },
+  {
+    contentid: "3640007", contenttypeid: "12",
+    title: "수원화성",
+    addr1: "경기도 수원시 장안구 영화동 320-2", areacode: "31", sigungucode: "",
+    mapx: "127.0129", mapy: "37.2881",
+    firstimage: "https://tong.visitkorea.or.kr/cms/resource/23/2678023_image2_1.jpg",
+    firstimage2: "", cpyrhtDivCd: "Type3", tel: "", modifiedtime: "20250901120000",
+    lclsSystm1: "HS", lclsSystm2: "HS01", lclsSystm3: "HS010200",
+  },
+  {
+    contentid: "3640008", contenttypeid: "12",
+    title: "에버랜드",
+    addr1: "경기도 용인시 처인구 에버랜드로 199", areacode: "31", sigungucode: "",
+    mapx: "127.2020", mapy: "37.2941",
+    firstimage: "https://tong.visitkorea.or.kr/cms/resource/64/1701164_image2_1.jpg",
+    firstimage2: "", cpyrhtDivCd: "Type3", tel: "", modifiedtime: "20250901120000",
+    lclsSystm1: "VE", lclsSystm2: "VE01", lclsSystm3: "VE010100",
+  },
+  {
+    contentid: "3640009", contenttypeid: "12",
+    title: "성산일출봉",
+    addr1: "제주특별자치도 서귀포시 일출로 284-12", areacode: "39", sigungucode: "",
+    mapx: "126.9403", mapy: "33.4581",
+    firstimage: "https://tong.visitkorea.or.kr/cms/resource/11/2660711_image2_1.jpg",
+    firstimage2: "", cpyrhtDivCd: "Type3", tel: "", modifiedtime: "20250901120000",
+    lclsSystm1: "NA", lclsSystm2: "NA01", lclsSystm3: "NA010100",
+  },
+  {
+    contentid: "3640010", contenttypeid: "12",
+    title: "한라산",
+    addr1: "제주특별자치도 제주시", areacode: "39", sigungucode: "",
+    mapx: "126.5312", mapy: "33.3617",
+    firstimage: "https://tong.visitkorea.or.kr/cms/resource/53/3400953_image2_1.jpg",
+    firstimage2: "", cpyrhtDivCd: "Type3", tel: "", modifiedtime: "20250901120000",
+    lclsSystm1: "NA", lclsSystm2: "NA01", lclsSystm3: "NA010100",
+  },
+  {
+    contentid: "3640011", contenttypeid: "12",
+    title: "해운대해수욕장",
+    addr1: "부산광역시 해운대구 해운대해변로 264", areacode: "6", sigungucode: "",
+    mapx: "129.1603", mapy: "35.1587",
+    firstimage: "https://tong.visitkorea.or.kr/cms/resource/17/3544517_image2_1.jpg",
+    firstimage2: "", cpyrhtDivCd: "Type3", tel: "", modifiedtime: "20250901120000",
+    lclsSystm1: "NA", lclsSystm2: "NA01", lclsSystm3: "NA010300",
+  },
+  {
+    contentid: "3640012", contenttypeid: "12",
+    title: "감천문화마을",
+    addr1: "부산광역시 사하구 감내2로 203", areacode: "6", sigungucode: "",
+    mapx: "129.0107", mapy: "35.0975",
+    firstimage: "https://tong.visitkorea.or.kr/cms/resource/90/3467490_image2_1.jpg",
+    firstimage2: "", cpyrhtDivCd: "Type3", tel: "", modifiedtime: "20250901120000",
+    lclsSystm1: "VE", lclsSystm2: "VE03", lclsSystm3: "VE030200",
+  },
+  {
+    contentid: "3640020", contenttypeid: "14",
+    title: "국립중앙박물관",
+    addr1: "서울특별시 용산구 서빙고로 137", areacode: "1", sigungucode: "24",
+    mapx: "126.9803", mapy: "37.5240",
+    firstimage: "https://tong.visitkorea.or.kr/cms/resource/23/2678023_image2_1.jpg",
+    firstimage2: "", cpyrhtDivCd: "Type3", tel: "", modifiedtime: "20250901120000",
+    lclsSystm1: "VE", lclsSystm2: "VE06", lclsSystm3: "VE060200",
+  },
+  {
+    contentid: "3640021", contenttypeid: "14",
+    title: "리움미술관",
+    addr1: "서울특별시 용산구 이태원로55길 60-16", areacode: "1", sigungucode: "24",
+    mapx: "126.9995", mapy: "37.5384",
+    firstimage: "https://tong.visitkorea.or.kr/cms/resource/64/1701164_image2_1.jpg",
+    firstimage2: "", cpyrhtDivCd: "Type3", tel: "", modifiedtime: "20250901120000",
+    lclsSystm1: "VE", lclsSystm2: "VE06", lclsSystm3: "VE060100",
+  },
+  {
+    contentid: "3640030", contenttypeid: "39",
+    title: "토속촌삼계탕",
+    addr1: "서울특별시 종로구 자하문로5길 5", areacode: "1", sigungucode: "23",
+    mapx: "126.9709", mapy: "37.5779",
+    firstimage: "https://tong.visitkorea.or.kr/cms/resource/11/2660711_image2_1.jpg",
+    firstimage2: "", cpyrhtDivCd: "Type3", tel: "", modifiedtime: "20250901120000",
+    lclsSystm1: "FD", lclsSystm2: "FD01", lclsSystm3: "FD010100",
+  },
+  {
+    contentid: "3640031", contenttypeid: "39",
+    title: "진주회관",
+    addr1: "서울특별시 중구 세종대로11길 26", areacode: "1", sigungucode: "24",
+    mapx: "126.9765", mapy: "37.5648",
+    firstimage: "https://tong.visitkorea.or.kr/cms/resource/53/3400953_image2_1.jpg",
+    firstimage2: "", cpyrhtDivCd: "Type3", tel: "", modifiedtime: "20250901120000",
+    lclsSystm1: "FD", lclsSystm2: "FD01", lclsSystm3: "FD010100",
+  },
+  {
+    contentid: "3640040", contenttypeid: "15",
+    title: "서울빛초롱축제",
+    addr1: "서울특별시 종로구 청계천로", areacode: "1", sigungucode: "23",
+    mapx: "126.9784", mapy: "37.5691",
+    firstimage: "https://tong.visitkorea.or.kr/cms/resource/17/3544517_image2_1.jpg",
+    firstimage2: "", cpyrhtDivCd: "Type3", tel: "", modifiedtime: "20250901120000",
+    lclsSystm1: "EV", lclsSystm2: "EV01", lclsSystm3: "EV010200",
+  },
 ];
 
 /**
