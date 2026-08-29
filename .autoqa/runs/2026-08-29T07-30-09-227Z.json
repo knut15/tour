@@ -5,12 +5,12 @@
     "P1",
     "P2"
   ],
-  "startedAt": "2026-08-29T07:38:35.914Z",
-  "finishedAt": "2026-08-29T07:40:15.875Z",
+  "startedAt": "2026-08-29T07:30:09.227Z",
+  "finishedAt": "2026-08-29T07:31:42.369Z",
   "baseUrl": "http://localhost:3000",
   "counts": {
-    "pass": 35,
-    "fail": 0,
+    "pass": 29,
+    "fail": 6,
     "running": 0,
     "pending": 0,
     "skipped": 103
@@ -37,11 +37,11 @@
       },
       "evidence": {
         "mode": "http",
-        "durationMs": 6,
+        "durationMs": 8,
         "status": 307,
         "headers": {
           "connection": "keep-alive",
-          "date": "Sat, 29 Aug 2026 07:38:38 GMT",
+          "date": "Sat, 29 Aug 2026 07:30:12 GMT",
           "keep-alive": "timeout=5",
           "location": "/en",
           "transfer-encoding": "chunked"
@@ -78,11 +78,11 @@
       },
       "evidence": {
         "mode": "http",
-        "durationMs": 5,
+        "durationMs": 6,
         "status": 307,
         "headers": {
           "connection": "keep-alive",
-          "date": "Sat, 29 Aug 2026 07:38:38 GMT",
+          "date": "Sat, 29 Aug 2026 07:30:12 GMT",
           "keep-alive": "timeout=5",
           "location": "/ko",
           "transfer-encoding": "chunked"
@@ -138,11 +138,11 @@
       },
       "evidence": {
         "mode": "http",
-        "durationMs": 5,
+        "durationMs": 4,
         "status": 307,
         "headers": {
           "connection": "keep-alive",
-          "date": "Sat, 29 Aug 2026 07:38:38 GMT",
+          "date": "Sat, 29 Aug 2026 07:30:12 GMT",
           "keep-alive": "timeout=5",
           "location": "/en",
           "transfer-encoding": "chunked"
@@ -194,14 +194,14 @@
       },
       "evidence": {
         "mode": "http",
-        "durationMs": 569,
+        "durationMs": 568,
         "status": 200,
         "headers": {
           "cache-control": "no-cache, must-revalidate",
           "connection": "keep-alive",
           "content-encoding": "gzip",
           "content-type": "text/html; charset=utf-8",
-          "date": "Sat, 29 Aug 2026 07:38:38 GMT",
+          "date": "Sat, 29 Aug 2026 07:30:12 GMT",
           "keep-alive": "timeout=5",
           "link": "</_next/static/media/5f402bd2d8eef81a-s.p.40bho2kviej2o.woff2>; rel=preload; as=\"font\"; crossorigin=\"\"; type=\"font/woff2\", </_next/static/chunks/%5Broot-of-the-server%5D__0pliwnd._.css>; rel=preload; as=\"style\"",
           "transfer-encoding": "chunked",
@@ -238,20 +238,20 @@
       },
       "evidence": {
         "mode": "http",
-        "durationMs": 46,
+        "durationMs": 56,
         "status": 404,
         "headers": {
           "cache-control": "no-cache, must-revalidate",
           "connection": "keep-alive",
           "content-encoding": "gzip",
           "content-type": "text/html; charset=utf-8",
-          "date": "Sat, 29 Aug 2026 07:38:38 GMT",
+          "date": "Sat, 29 Aug 2026 07:30:13 GMT",
           "keep-alive": "timeout=5",
           "transfer-encoding": "chunked",
           "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding",
           "x-powered-by": "Next.js"
         },
-        "body": "<!DOCTYPE html><html><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"preload\" as=\"script\" fetchPriority=\"low\" href=\"/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_20mw2pf._.js\"/><script src=\"/_next/static/chunks/1ls4_next_dist_compiled_next-devtools_index_1v9x55-.js\" async=\"\"></script><script src=\"/_next/static/chunks/1ls4_next_dist_compiled_react-dom_0_t52sc._.js\" async=\"\"></script><script src=\"/_next/static/chunks/1ls4_next_dist_compiled_react-server-dom-turbopack_0bo2cje._.js\" async=\"\"></script><script src=\"/_next/static/chunks/1ls4_next_dist_compiled_0-j-lvy._.js\" async=\"\"></script><script src=\"/_next/static/chunks/1ls4_next_dist_client_1e1w42e._.js\" async=\"\"></script><script src=\"/_next/static/chunks/1ls4_next_dist_0jbz77j._.js\" async=\"\"></script><script src=\"/_next/static/chunks/0zix_%40swc_helpers_cjs_0hi-e47._.js\" async=\"\"></script><script src=\"/_next/static/chunks/_1anvha4._.js\" async=\"\"></script><script src=\"/_next/static/chunks/turbopack-_0wuc_nx._.js\" async=\"\"></script><script src=\"/_next/static/chunks/_18x7jxu._.js\" async=\"\"></script><script src=\"/_next/static/chunks/1ls4_next_dist_0bxtfjl._.js\" async=\"\" crossorigin=\"\"></script><meta name=\"robots\" content=\"noindex\"/><link rel=\"icon\" href=\"/icon.svg?icon.2pn2t2gms1cxt.svg\" sizes=\"any\" type=\"image/svg+xml\"/><link rel=\"apple-touch-icon\" href=\"/apple-icon.png?apple-icon.0_yjzvo7i-fal.png\" sizes=\"180x180\" type=\"image/png\"/><meta name=\"next-size-adjust\" content=\"\"/><title>404: This page could not be found.</title><script src=\"/_next/static/chunks/1ls4_next_dist_build_polyfills_polyfill-nomodule.js\" noModule=\"\"></script></head><body><div hidden=\"\"><!--$--><!--/$--></div><div style=\"font-family:system-ui,&quot;Segoe UI&quot;,Roboto,Helvetica,Arial,sans-serif,&quot;Apple Color Emoji&quot;,&quot;Segoe UI Emoji&quot;;height:100vh;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center\"><div><style>body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}</style><h1 class=\"next-error-h1\" style=\"display:inline-block;margin:0 20px 0 0;padding:0 23px 0 0;font-size:24px;font-weight:500;vertical-align:top;line-height:49px\">404</h1><div style=\"display:inline-block\"><h2 style=\"font-size:14px;font-weight:400;line-height:49px;margin:0\">This page could not be found.</h2></div></div></div><!--$--><!--/$--><script id=\"_R_\">self.__next_r=\"fFhgJCdRTiOTloYHoMWQ4\";if(document.cookie.indexOf('next-instant-navigation-testing=')>-1){self.__next_instant_test=fetch(location.pathname+'?_rsc=xhdorIanPcIpYSsE',{credentials:'same-origin',headers:{'rsc':'1','next-router-prefetch':'1','next-router-segment-prefetch':'/_full'}})}</script><script src=\"/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_20mw2pf._.js\" async=\"\"></script><script>(self.__next_f=self.__next_f||[]).push([0])</script><script>self.__next_f.push([1,\"6:I[\\\"[project]/node_modules/.pnpm/next@16.3.1_@babel+core@7.29.7_supports-color@7.2.0__@types+node@20.19.43_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js [app-client] (ecmascript)\\\",[\\\"/_next/static/chunks/1ls4_next_dist_0bxtfjl._.js\\\"],\\\"SegmentViewNode\\\"]\\n8:\\\"$Sreact.fragment\\\"\\n19:I[\\\"[project]/node_modules/.pnpm/next@16.3.1_@babel+core@7.29.7_supports-color@7.2.0__@types+node@20.19.43_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/next/dist/client/components/layout-router.js [app-client] (ecmascript)\\\",[\\\"/_next/static/chunks/1ls4_next_dist_0bxtfjl._.js\\\"],\\\"default\\\"]\\n1b:I[\\\"[project]/node_modules/.pnpm/next@16.3.1_@babel+core@7.29.7_supports-color@7.2.0__@types+node@20.19.43_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/next/dist/client/components/render-from-template-context.js [app-client] (ecmascript)\\\",[\\\"/_next/static/chunks/1ls4_next_dist_0bxtfjl._.js\\\"],\\\"default\\\"]\\n45:I[\\\"[project]/node_modules/.pnpm/next@16.3.1_@babel+core@7.29.7_supports-color@7.2.0__@types+node@20.19.43_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/next/dist/lib/framework/boundary-components.js [app-client] (ecmascript)\\\",[\\\"/_next/static/chunks/1ls4_next_dist_0bxtfjl._.js\\\"],\\\"OutletBoundary\\\"]\\n47:\\\"$Sreact.suspense\\\"\\n56:I[\\\"[project]/node_modules/.pnpm/next@16.3.1_@babel+core@7.29.7_supports-color@7.2.0__@types+node@20.19.43_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/next/dist/lib/framework/boundary-components.js [app-client] (ecmascript)\\\",[\\\"/_next/static/chunks/1ls4_next_dist_0bxtfjl._.js\\\"],\\\"ViewportBoundary\\\"]\\n60:I[\\\"[project]/node_modules/.pnpm/next@16.3.1_@babel+core@7.29.7_supports-color@7.2.0__@types+node@20.19.43_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/next/dist/lib/framework/boundary-components.js [app-client] (ecmascript)\\\",[\\\"/_next/static/chunks/1ls4_next_dist_0bxtfjl._.js\\\"],\\\"MetadataBoundary\\\"]\\n67:I[\\\"[project]/node_modules/.pnpm/next@16.3.1_@babel+core@7.29.7_supports-color@7.2.0__@types+node@20.19.43_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/next/dist/client/components/builtin/global-error.js [app-client] (ecmascript)\\\",[\\\"/_next/static/chunks/1ls4_next_dist_0bxtfjl._.js\\\"],\\\"default\\\",1]\\n1:D\\\"$3\\\"\\n1:D\\\"$2\\\"\\n1:D\\\"$4\\\"\\n1:null\\na:D\\\"$14\\\"\\na:D\\\"$b\\\"\\na:D\\\"$16\\\"\\n1d:D\\\"$1f\\\"\\n1d:D\\\"$1e\\\"\\n1d:D\\\"$21\\\"\\n1d:D\\\"$20\\\"\\n1d:D\\\"$22\\\"\\n1d:[[\\\"$\\\",\\\"title\\\",null,{\\\"children\\\":\\\"404: This page could not be found.\\\"},\\\"$20\\\",\\\"$23\\\",1],[\\\"$\\\",\\\"div\\\",null,{\\\"style\\\":{\\\"fontFamily\\\":\\\"system-ui,\\\\\\\"Segoe UI\\\\\\\",Roboto,Helvetica,Arial,sans-serif,\\\\\\\"Apple Color Emoji\\\\\\\",\\\\\\\"Segoe UI Emoji\\\\\\\"\\\",\\\"height\\\":\\\"100vh\\\",\\\"textAlign\\\":\\\"center\\\",\\\"display\\\":\\\"flex\\\",\\\"flexDirection\\\":\\\"column\\\",\\\"alignItems\\\":\\\"center\\\",\\\"justifyContent\\\":\\\"center\\\"},\\\"children\\\":[\\\"$\\\",\\\"div\\\",null,{\\\"children\\\":[[\\\"$\\\",\\\"style\\\",null,{\\\"dangerouslySetInnerHTML\\\":{\\\"__html\\\":\\\"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}\\\"}},\\\"$20\\\",\\\"$26\\\",1],[\\\"$\\\",\\\"h1\\\",null,{\\\"className\\\":\\\"next-error-h1\\\",\\\"style\\\":{\\\"display\\\":\\\"inline-block\\\",\\\"margin\\\":\\\"0 20px 0 0\\\",\\\"padding\\\":\\\"0 23px 0 0\\\",\\\"fontSize\\\":24,\\\"fontWeight\\\":500,\\\"verticalAlign\\\":\\\"top\\\",\\\"lineHeight\\\":\\\"49px\\\"},\\\"children\\\":404},\\\"$20\\\",\\\"$27\\\",1],[\\\"$\\\",\\\"div\\\",null,{\\\"style\\\":{\\\"display\\\":\\\"inline-block\\\"},\\\"children\\\":[\\\"$\\\",\\\"h2\\\",null,{\\\"style\\\":{\\\"fontSize\\\":14,\\\"fontWeight\\\":400,\\\"lineHeight\\\":\\\"49px\\\",\\\"margin\\\":0},\\\"children\\\":\\\"This page could not be found.\\\"},\\\"$20\\\",\\\"$29\\\",1]},\\\"$20\\\",\\\"$28\\\",1]]},\\\"$20\\\",\\\"$25\\\",1]},\\\"$20\\\",\\\"$24\\\",1]]\\na:[\\\"$\\\",\\\"html\\\",null,{\\\"children\\\":[\\\"$\\\",\\\"body\\\",null,{\\\"children\\\":[\\\"$\\\",\\\"$L19\\\",null,{\\\"parallelRouterKey\\\":\\\"children\\\",\\\"error\\\":\\\"$undefined\\\",\\\"errorStyles\\\":\\\"$undefined\\\",\\\"errorScripts\\\":\\\"$undefined\\\",\\\"template\\\":[\\\"$\\\",\\\"$L1b\\\",null,{},null,\\\"$1a\\\",1],\\\"templateStyles\\\":\\\"$undefined\\\",\\\"templateScripts\\\":\\\"$undefined\\\",\\\"notFound\\\":[\\\"$\\\",\\\"$L6\\\",\\\"c-not-found\\\",{\\\"type\\\":\\\"not-found\\\",\\\"pagePath\\\":\\\"__next_builtin__not-found.js\\\",\\\"children\\\":[\\\"$1d\\\",[]]},null,\\\"$1c\\\",0],\\\"forbidden\\\":\\\"$undefined\\\",\\\"unauthorized\\\":\\\"$undefined\\\",\\\"segmentViewBoundaries\\\":[[\\\"$\\\",\\\"$L6\\\",null,{\\\"type\\\":\\\"boundary:not-found\\\",\\\"pagePath\\\":\\\"__next_builtin__not-found.js@boundary\\\"},null,\\\"$2a\\\",1],\\\"$undefined\\\",\\\"$undefined\\\",[\\\"$\\\",\\\"$L6\\\",null,{\\\"type\\\":\\\"boundary:global-error\\\",\\\"pagePath\\\":\\\"__next_builtin__global-error.js\\\"},null,\\\"$2b\\\",1]]},null,\\\"$18\\\",1]},\\\"$b\\\",\\\"$17\\\",1]},\\\"$b\\\",\\\"$15\\\",1]\\n31:D\\\"$35\\\"\\n31:D\\\"$32\\\"\\n31:D\\\"$37\\\"\\n31:D\\\"$36\\\"\\n31:D\\\"$38\\\"\\n31:[[\\\"$\\\",\\\"title\\\",null,{\\\"children\\\":\\\"404: This page could not be found.\\\"},\\\"$36\\\",\\\"$39\\\",1],[\\\"$\\\",\\\"div\\\",null,{\\\"style\\\n…(4475자 생략)"
+        "body": "<!DOCTYPE html><html><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"preload\" as=\"script\" fetchPriority=\"low\" href=\"/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_20mw2pf._.js\"/><script src=\"/_next/static/chunks/1ls4_next_dist_compiled_next-devtools_index_1v9x55-.js\" async=\"\"></script><script src=\"/_next/static/chunks/1ls4_next_dist_compiled_react-dom_0_t52sc._.js\" async=\"\"></script><script src=\"/_next/static/chunks/1ls4_next_dist_compiled_react-server-dom-turbopack_0bo2cje._.js\" async=\"\"></script><script src=\"/_next/static/chunks/1ls4_next_dist_compiled_0-j-lvy._.js\" async=\"\"></script><script src=\"/_next/static/chunks/1ls4_next_dist_client_1e1w42e._.js\" async=\"\"></script><script src=\"/_next/static/chunks/1ls4_next_dist_0jbz77j._.js\" async=\"\"></script><script src=\"/_next/static/chunks/0zix_%40swc_helpers_cjs_0hi-e47._.js\" async=\"\"></script><script src=\"/_next/static/chunks/_1anvha4._.js\" async=\"\"></script><script src=\"/_next/static/chunks/turbopack-_0wuc_nx._.js\" async=\"\"></script><script src=\"/_next/static/chunks/_18x7jxu._.js\" async=\"\"></script><script src=\"/_next/static/chunks/1ls4_next_dist_0bxtfjl._.js\" async=\"\" crossorigin=\"\"></script><meta name=\"robots\" content=\"noindex\"/><link rel=\"icon\" href=\"/icon.svg?icon.2pn2t2gms1cxt.svg\" sizes=\"any\" type=\"image/svg+xml\"/><link rel=\"apple-touch-icon\" href=\"/apple-icon.png?apple-icon.0_yjzvo7i-fal.png\" sizes=\"180x180\" type=\"image/png\"/><meta name=\"next-size-adjust\" content=\"\"/><title>404: This page could not be found.</title><script src=\"/_next/static/chunks/1ls4_next_dist_build_polyfills_polyfill-nomodule.js\" noModule=\"\"></script></head><body><div hidden=\"\"><!--$--><!--/$--></div><div style=\"font-family:system-ui,&quot;Segoe UI&quot;,Roboto,Helvetica,Arial,sans-serif,&quot;Apple Color Emoji&quot;,&quot;Segoe UI Emoji&quot;;height:100vh;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center\"><div><style>body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}</style><h1 class=\"next-error-h1\" style=\"display:inline-block;margin:0 20px 0 0;padding:0 23px 0 0;font-size:24px;font-weight:500;vertical-align:top;line-height:49px\">404</h1><div style=\"display:inline-block\"><h2 style=\"font-size:14px;font-weight:400;line-height:49px;margin:0\">This page could not be found.</h2></div></div></div><!--$--><!--/$--><script id=\"_R_\">self.__next_r=\"YBKvbIkI7ZcgsFYmQOpBP\";if(document.cookie.indexOf('next-instant-navigation-testing=')>-1){self.__next_instant_test=fetch(location.pathname+'?_rsc=xhdorIanPcIpYSsE',{credentials:'same-origin',headers:{'rsc':'1','next-router-prefetch':'1','next-router-segment-prefetch':'/_full'}})}</script><script src=\"/_next/static/chunks/%5Bturbopack%5D_browser_dev_hmr-client_hmr-client_ts_20mw2pf._.js\" async=\"\"></script><script>(self.__next_f=self.__next_f||[]).push([0])</script><script>self.__next_f.push([1,\"6:I[\\\"[project]/node_modules/.pnpm/next@16.3.1_@babel+core@7.29.7_supports-color@7.2.0__@types+node@20.19.43_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/next/dist/next-devtools/userspace/app/segment-explorer-node.js [app-client] (ecmascript)\\\",[\\\"/_next/static/chunks/1ls4_next_dist_0bxtfjl._.js\\\"],\\\"SegmentViewNode\\\"]\\n8:\\\"$Sreact.fragment\\\"\\n19:I[\\\"[project]/node_modules/.pnpm/next@16.3.1_@babel+core@7.29.7_supports-color@7.2.0__@types+node@20.19.43_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/next/dist/client/components/layout-router.js [app-client] (ecmascript)\\\",[\\\"/_next/static/chunks/1ls4_next_dist_0bxtfjl._.js\\\"],\\\"default\\\"]\\n1b:I[\\\"[project]/node_modules/.pnpm/next@16.3.1_@babel+core@7.29.7_supports-color@7.2.0__@types+node@20.19.43_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/next/dist/client/components/render-from-template-context.js [app-client] (ecmascript)\\\",[\\\"/_next/static/chunks/1ls4_next_dist_0bxtfjl._.js\\\"],\\\"default\\\"]\\n45:I[\\\"[project]/node_modules/.pnpm/next@16.3.1_@babel+core@7.29.7_supports-color@7.2.0__@types+node@20.19.43_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/next/dist/lib/framework/boundary-components.js [app-client] (ecmascript)\\\",[\\\"/_next/static/chunks/1ls4_next_dist_0bxtfjl._.js\\\"],\\\"OutletBoundary\\\"]\\n47:\\\"$Sreact.suspense\\\"\\n56:I[\\\"[project]/node_modules/.pnpm/next@16.3.1_@babel+core@7.29.7_supports-color@7.2.0__@types+node@20.19.43_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/next/dist/lib/framework/boundary-components.js [app-client] (ecmascript)\\\",[\\\"/_next/static/chunks/1ls4_next_dist_0bxtfjl._.js\\\"],\\\"ViewportBoundary\\\"]\\n60:I[\\\"[project]/node_modules/.pnpm/next@16.3.1_@babel+core@7.29.7_supports-color@7.2.0__@types+node@20.19.43_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/next/dist/lib/framework/boundary-components.js [app-client] (ecmascript)\\\",[\\\"/_next/static/chunks/1ls4_next_dist_0bxtfjl._.js\\\"],\\\"MetadataBoundary\\\"]\\n67:I[\\\"[project]/node_modules/.pnpm/next@16.3.1_@babel+core@7.29.7_supports-color@7.2.0__@types+node@20.19.43_react-dom@19.2.8_react@19.2.8__react@19.2.8/node_modules/next/dist/client/components/builtin/global-error.js [app-client] (ecmascript)\\\",[\\\"/_next/static/chunks/1ls4_next_dist_0bxtfjl._.js\\\"],\\\"default\\\",1]\\n1:D\\\"$3\\\"\\n1:D\\\"$2\\\"\\n1:D\\\"$4\\\"\\n1:null\\na:D\\\"$14\\\"\\na:D\\\"$b\\\"\\na:D\\\"$16\\\"\\n1d:D\\\"$1f\\\"\\n1d:D\\\"$1e\\\"\\n1d:D\\\"$21\\\"\\n1d:D\\\"$20\\\"\\n1d:D\\\"$22\\\"\\n1d:[[\\\"$\\\",\\\"title\\\",null,{\\\"children\\\":\\\"404: This page could not be found.\\\"},\\\"$20\\\",\\\"$23\\\",1],[\\\"$\\\",\\\"div\\\",null,{\\\"style\\\":{\\\"fontFamily\\\":\\\"system-ui,\\\\\\\"Segoe UI\\\\\\\",Roboto,Helvetica,Arial,sans-serif,\\\\\\\"Apple Color Emoji\\\\\\\",\\\\\\\"Segoe UI Emoji\\\\\\\"\\\",\\\"height\\\":\\\"100vh\\\",\\\"textAlign\\\":\\\"center\\\",\\\"display\\\":\\\"flex\\\",\\\"flexDirection\\\":\\\"column\\\",\\\"alignItems\\\":\\\"center\\\",\\\"justifyContent\\\":\\\"center\\\"},\\\"children\\\":[\\\"$\\\",\\\"div\\\",null,{\\\"children\\\":[[\\\"$\\\",\\\"style\\\",null,{\\\"dangerouslySetInnerHTML\\\":{\\\"__html\\\":\\\"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}\\\"}},\\\"$20\\\",\\\"$26\\\",1],[\\\"$\\\",\\\"h1\\\",null,{\\\"className\\\":\\\"next-error-h1\\\",\\\"style\\\":{\\\"display\\\":\\\"inline-block\\\",\\\"margin\\\":\\\"0 20px 0 0\\\",\\\"padding\\\":\\\"0 23px 0 0\\\",\\\"fontSize\\\":24,\\\"fontWeight\\\":500,\\\"verticalAlign\\\":\\\"top\\\",\\\"lineHeight\\\":\\\"49px\\\"},\\\"children\\\":404},\\\"$20\\\",\\\"$27\\\",1],[\\\"$\\\",\\\"div\\\",null,{\\\"style\\\":{\\\"display\\\":\\\"inline-block\\\"},\\\"children\\\":[\\\"$\\\",\\\"h2\\\",null,{\\\"style\\\":{\\\"fontSize\\\":14,\\\"fontWeight\\\":400,\\\"lineHeight\\\":\\\"49px\\\",\\\"margin\\\":0},\\\"children\\\":\\\"This page could not be found.\\\"},\\\"$20\\\",\\\"$29\\\",1]},\\\"$20\\\",\\\"$28\\\",1]]},\\\"$20\\\",\\\"$25\\\",1]},\\\"$20\\\",\\\"$24\\\",1]]\\na:[\\\"$\\\",\\\"html\\\",null,{\\\"children\\\":[\\\"$\\\",\\\"body\\\",null,{\\\"children\\\":[\\\"$\\\",\\\"$L19\\\",null,{\\\"parallelRouterKey\\\":\\\"children\\\",\\\"error\\\":\\\"$undefined\\\",\\\"errorStyles\\\":\\\"$undefined\\\",\\\"errorScripts\\\":\\\"$undefined\\\",\\\"template\\\":[\\\"$\\\",\\\"$L1b\\\",null,{},null,\\\"$1a\\\",1],\\\"templateStyles\\\":\\\"$undefined\\\",\\\"templateScripts\\\":\\\"$undefined\\\",\\\"notFound\\\":[\\\"$\\\",\\\"$L6\\\",\\\"c-not-found\\\",{\\\"type\\\":\\\"not-found\\\",\\\"pagePath\\\":\\\"__next_builtin__not-found.js\\\",\\\"children\\\":[\\\"$1d\\\",[]]},null,\\\"$1c\\\",0],\\\"forbidden\\\":\\\"$undefined\\\",\\\"unauthorized\\\":\\\"$undefined\\\",\\\"segmentViewBoundaries\\\":[[\\\"$\\\",\\\"$L6\\\",null,{\\\"type\\\":\\\"boundary:not-found\\\",\\\"pagePath\\\":\\\"__next_builtin__not-found.js@boundary\\\"},null,\\\"$2a\\\",1],\\\"$undefined\\\",\\\"$undefined\\\",[\\\"$\\\",\\\"$L6\\\",null,{\\\"type\\\":\\\"boundary:global-error\\\",\\\"pagePath\\\":\\\"__next_builtin__global-error.js\\\"},null,\\\"$2b\\\",1]]},null,\\\"$18\\\",1]},\\\"$b\\\",\\\"$17\\\",1]},\\\"$b\\\",\\\"$15\\\",1]\\n31:D\\\"$35\\\"\\n31:D\\\"$32\\\"\\n31:D\\\"$37\\\"\\n31:D\\\"$36\\\"\\n31:D\\\"$38\\\"\\n31:[[\\\"$\\\",\\\"title\\\",null,{\\\"children\\\":\\\"404: This page could not be found.\\\"},\\\"$36\\\",\\\"$39\\\",1],[\\\"$\\\",\\\"div\\\",null,{\\\"style\\\n…(4475자 생략)"
       },
       "verdict": {
         "status": "pass",
@@ -280,12 +280,12 @@
       },
       "evidence": {
         "mode": "http",
-        "durationMs": 584,
+        "durationMs": 607,
         "status": 400,
         "headers": {
           "connection": "keep-alive",
           "content-type": "application/json",
-          "date": "Sat, 29 Aug 2026 07:38:39 GMT",
+          "date": "Sat, 29 Aug 2026 07:30:13 GMT",
           "keep-alive": "timeout=5",
           "transfer-encoding": "chunked",
           "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
@@ -319,14 +319,14 @@
       },
       "evidence": {
         "mode": "http",
-        "durationMs": 39,
+        "durationMs": 44,
         "status": 200,
         "headers": {
           "cache-control": "no-cache, must-revalidate",
           "connection": "keep-alive",
           "content-encoding": "gzip",
           "content-type": "text/html; charset=utf-8",
-          "date": "Sat, 29 Aug 2026 07:38:39 GMT",
+          "date": "Sat, 29 Aug 2026 07:30:13 GMT",
           "keep-alive": "timeout=5",
           "link": "</_next/static/media/5f402bd2d8eef81a-s.p.40bho2kviej2o.woff2>; rel=preload; as=\"font\"; crossorigin=\"\"; type=\"font/woff2\", </_next/static/chunks/%5Broot-of-the-server%5D__0pliwnd._.css>; rel=preload; as=\"style\"",
           "transfer-encoding": "chunked",
@@ -426,9 +426,9 @@
       },
       "evidence": {
         "mode": "browser",
-        "durationMs": 3890,
+        "durationMs": 3834,
         "finalUrl": "http://localhost:3000/en/explore",
-        "body": "27°\nClear\nEnglish\n\nFOR A GOOD TRIP\n\nMay the Korea you meet today stay with you.\n\nMake it a good day\n\nPlaces\nCulture\nFood\nHappening\nLocation access is blocked\nREGION\nAnywhere in Korea\nMost viewed\nMost liked\nFind a place\nSearch\nNO IMAGE AVAILABLE\nGyeongbokgung Palace\n\n경복궁\n\nRoyal Palaces\n\n161, Sajik-ro, Jongno-gu, Seoul\n\n0\n9\n\nNO IMAGE AVAILABLE\nCheonggyecheon Stream\n\n청계천\n\nLakes\n\nChangsin-dong, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nAchasan Mountain\n\n아차산\n\nRare Flora and Fauna\n\nGwangjang-dong, Gwangjin-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nBukchon Hanok Village\n\n북촌한옥마을\n\nFortress\n\n37 Gyedong-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nN Seoul Tower\n\n남산서울타워\n\nCitizen Parks\n\n105 Namsangongwon-gil, Jung-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nChangdeokgung Palace\n\n창덕궁\n\nRoyal Palaces\n\n99 Yulgok-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nSeoul Forest\n\n서울숲\n\nRivers\n\n273 Ttukseom-ro, Seongdong-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHongdae Street\n\n홍대거리\n\nMini Parks\n\nEoulmadang-ro, Mapo-gu, Seoul\n\n0\n0\n\nIhwa Mural Village\n\n이화벽화마을\n\nMini Parks\n\n49 Naksan 4-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nGwangjang Market\n\n광장시장\n\n88 Changgyeonggung-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHwaseong Fortress\n\n수원화성\n\nFortress\n\n320-2 Yeonghwa-dong, Jangan-gu, Suwon-si, Gyeonggi-do\n\n0\n0\n\nMore places\n\nPlace data from the Korea Tourism Organization.",
+        "body": "27°\nClear\nEnglish\n\nFOR A GOOD TRIP\n\nMay the Korea you meet today stay with you.\n\nMake it a good day\n\nPlaces\nCulture\nFood\nHappening\nLocation access is blocked\nREGION\nAnywhere in Korea\nMost viewed\nMost liked\nFind a place\nSearch\nNO IMAGE AVAILABLE\nGyeongbokgung Palace\n\n경복궁\n\nRoyal Palaces\n\n161, Sajik-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nCheonggyecheon Stream\n\n청계천\n\nLakes\n\nChangsin-dong, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nAchasan Mountain\n\n아차산\n\nRare Flora and Fauna\n\nGwangjang-dong, Gwangjin-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nBukchon Hanok Village\n\n북촌한옥마을\n\nFortress\n\n37 Gyedong-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nN Seoul Tower\n\n남산서울타워\n\nCitizen Parks\n\n105 Namsangongwon-gil, Jung-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nChangdeokgung Palace\n\n창덕궁\n\nRoyal Palaces\n\n99 Yulgok-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nSeoul Forest\n\n서울숲\n\nRivers\n\n273 Ttukseom-ro, Seongdong-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHongdae Street\n\n홍대거리\n\nMini Parks\n\nEoulmadang-ro, Mapo-gu, Seoul\n\n0\n0\n\nIhwa Mural Village\n\n이화벽화마을\n\nMini Parks\n\n49 Naksan 4-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nGwangjang Market\n\n광장시장\n\n88 Changgyeonggung-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHwaseong Fortress\n\n수원화성\n\nFortress\n\n320-2 Yeonghwa-dong, Jangan-gu, Suwon-si, Gyeonggi-do\n\n0\n0\n\nMore places\n\nPlace data from the Korea Tourism Organization.",
         "evaluated": true
       },
       "verdict": {
@@ -471,7 +471,7 @@
       },
       "evidence": {
         "mode": "browser",
-        "durationMs": 4120,
+        "durationMs": 4085,
         "finalUrl": "http://localhost:3000/en/explore?category=food",
         "body": "27°\nClear\nEnglish\n\nFOR A GOOD TRIP\n\nMay the Korea you meet today stay with you.\n\nMake it a good day\n\nPlaces\nCulture\nFood\nHappening\nLocation access is blocked\nREGION\nAnywhere in Korea\nMost viewed\nMost liked\nFind a place\nSearch\nNO IMAGE AVAILABLE\nARTEASPOON\n\n아티스푼\n\nKorean Food\n\nSeongdong-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nTosokchon Samgyetang\n\n토속촌삼계탕\n\nKorean Food\n\n5 Jahamun-ro 5-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nJinju Hoegwan\n\n진주회관\n\nKorean Food\n\n26 Sejong-daero 11-gil, Jung-gu, Seoul\n\n0\n0\n\nPlace data from the Korea Tourism Organization.",
         "evaluated": true
@@ -502,15 +502,7 @@
             },
             {
               "action": "click",
-              "selector": "[data-testid=area-select]"
-            },
-            {
-              "action": "wait",
-              "ms": 800
-            },
-            {
-              "action": "click",
-              "selector": "[data-testid=area-select] [data-region=\"1\"]"
+              "selector": "[data-region=1]"
             },
             {
               "action": "wait",
@@ -524,15 +516,13 @@
       },
       "evidence": {
         "mode": "browser",
-        "durationMs": 6679,
-        "finalUrl": "http://localhost:3000/en/explore?category=attraction&area=1",
-        "body": "27°\nClear\nEnglish\n\nFOR A GOOD TRIP\n\nMay the Korea you meet today stay with you.\n\nMake it a good day\n\nPlaces\nCulture\nFood\nHappening\nLocation access is blocked\nREGION\nSeoul\nDISTRICT\nAll districts\nMost viewed\nMost liked\nFind a place\nSearch\nNO IMAGE AVAILABLE\nGyeongbokgung Palace\nJONGNO-GU\n\n경복궁\n\nRoyal Palaces\n\n161, Sajik-ro, Jongno-gu, Seoul\n\n0\n9\n\nNO IMAGE AVAILABLE\nCheonggyecheon Stream\nJONGNO-GU\n\n청계천\n\nLakes\n\nChangsin-dong, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nAchasan Mountain\nGWANGJIN-GU\n\n아차산\n\nRare Flora and Fauna\n\nGwangjang-dong, Gwangjin-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nBukchon Hanok Village\nJONGNO-GU\n\n북촌한옥마을\n\nFortress\n\n37 Gyedong-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nN Seoul Tower\nJUNG-GU\n\n남산서울타워\n\nCitizen Parks\n\n105 Namsangongwon-gil, Jung-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nChangdeokgung Palace\nJONGNO-GU\n\n창덕궁\n\nRoyal Palaces\n\n99 Yulgok-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nSeoul Forest\nSEONGDONG-GU\n\n서울숲\n\nRivers\n\n273 Ttukseom-ro, Seongdong-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHongdae Street\nMAPO-GU\n\n홍대거리\n\nMini Parks\n\nEoulmadang-ro, Mapo-gu, Seoul\n\n0\n0\n\nIhwa Mural Village\nJONGNO-GU\n\n이화벽화마을\n\nMini Parks\n\n49 Naksan 4-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nGwangjang Market\nJONGNO-GU\n\n광장시장\n\n88 Changgyeonggung-ro, Jongno-gu, Seoul\n\n0\n0\n\nPlace data from the Korea Tourism Organization.",
-        "evaluated": true
+        "durationMs": 3275,
+        "error": "page.click: SyntaxError: Failed to execute 'querySelectorAll' on 'Document': '[data-region=1]' is not a valid selector.\n    at query (<anonymous>:5608:41)\n    at <anonymous>:5618:7\n    at SelectorEvaluatorImpl._cached (<anonymous>:5395:20)\n    at SelectorEvaluatorImpl._queryCSS (<anonymous>:5605:17)\n    at SelectorEvaluatorImpl._querySimple (<anonymous>:5485:19)\n    at <anonymous>:5433:29\n    at SelectorEvaluatorImpl._cached (<anonymous>:5395:20)\n    at SelectorEvaluatorImpl.query (<anonymous>:5426:19)\n    at Object.query (<anonymous>:5640:44)\n    at <anonymous>:5598:21\nCall log:\n\u001b[2m  - waiting for locator('[data-region=1]')\u001b[22m\n"
       },
       "verdict": {
-        "status": "pass",
-        "reason": "확인함 — 페이지 평가 location.search.includes(\"area=1\") && document.querySelector('[data-testid=district-select]') !== null",
-        "by": "rule"
+        "status": "fail",
+        "reason": "실행 자체가 실패했다: page.click: SyntaxError: Failed to execute 'querySelectorAll' on 'Document': '[data-region=1]' is not a valid selector.\n    at query (<anonymous>:5608:41)\n    at <anonymous>:5618:7\n    at SelectorEvaluatorImpl._cached (<anonymous>:5395:20)\n    at SelectorEvaluatorImpl._queryCSS (<anonymous>:5605:17)\n    at SelectorEvaluatorImpl._querySimple (<anonymous>:5485:19)\n    at <anonymous>:5433:29\n    at SelectorEvaluatorImpl._cached (<anonymous>:5395:20)\n    at SelectorEvaluatorImpl.query (<anonymous>:5426:19)\n    at Object.query (<anonymous>:5640:44)\n    at <anonymous>:5598:21\nCall log:\n\u001b[2m  - waiting for locator('[data-region=1]')\u001b[22m\n",
+        "by": "runner"
       }
     },
     {
@@ -555,15 +545,7 @@
             },
             {
               "action": "click",
-              "selector": "[data-testid=area-select]"
-            },
-            {
-              "action": "wait",
-              "ms": 800
-            },
-            {
-              "action": "click",
-              "selector": "[data-testid=area-select] [data-region=\"6\"]"
+              "selector": "[data-region=6]"
             },
             {
               "action": "wait",
@@ -577,15 +559,13 @@
       },
       "evidence": {
         "mode": "browser",
-        "durationMs": 6428,
-        "finalUrl": "http://localhost:3000/en/explore?category=attraction&area=6",
-        "body": "27°\nClear\nEnglish\n\nFOR A GOOD TRIP\n\nMay the Korea you meet today stay with you.\n\nMake it a good day\n\nPlaces\nCulture\nFood\nHappening\nLocation access is blocked\nREGION\nBusan\nMost viewed\nMost liked\nFind a place\nSearch\nHaeundae Beach\n\n해운대해수욕장\n\nWaterfalls\n\n264 Haeundaehaebyeon-ro, Haeundae-gu, Busan\n\n0\n0\n\nNO IMAGE AVAILABLE\nGamcheon Culture Village\n\n감천문화마을\n\nMini Parks\n\n203 Gamnae 2-ro, Saha-gu, Busan\n\n0\n0\n\nPlace data from the Korea Tourism Organization.",
-        "evaluated": true
+        "durationMs": 3010,
+        "error": "page.click: SyntaxError: Failed to execute 'querySelectorAll' on 'Document': '[data-region=6]' is not a valid selector.\n    at query (<anonymous>:5608:41)\n    at <anonymous>:5618:7\n    at SelectorEvaluatorImpl._cached (<anonymous>:5395:20)\n    at SelectorEvaluatorImpl._queryCSS (<anonymous>:5605:17)\n    at SelectorEvaluatorImpl._querySimple (<anonymous>:5485:19)\n    at <anonymous>:5433:29\n    at SelectorEvaluatorImpl._cached (<anonymous>:5395:20)\n    at SelectorEvaluatorImpl.query (<anonymous>:5426:19)\n    at Object.query (<anonymous>:5640:44)\n    at <anonymous>:5598:21\nCall log:\n\u001b[2m  - waiting for locator('[data-region=6]')\u001b[22m\n"
       },
       "verdict": {
-        "status": "pass",
-        "reason": "확인함 — 페이지 평가 location.search.includes(\"area=6\") && !location.search.includes(\"district=\")",
-        "by": "rule"
+        "status": "fail",
+        "reason": "실행 자체가 실패했다: page.click: SyntaxError: Failed to execute 'querySelectorAll' on 'Document': '[data-region=6]' is not a valid selector.\n    at query (<anonymous>:5608:41)\n    at <anonymous>:5618:7\n    at SelectorEvaluatorImpl._cached (<anonymous>:5395:20)\n    at SelectorEvaluatorImpl._queryCSS (<anonymous>:5605:17)\n    at SelectorEvaluatorImpl._querySimple (<anonymous>:5485:19)\n    at <anonymous>:5433:29\n    at SelectorEvaluatorImpl._cached (<anonymous>:5395:20)\n    at SelectorEvaluatorImpl.query (<anonymous>:5426:19)\n    at Object.query (<anonymous>:5640:44)\n    at <anonymous>:5598:21\nCall log:\n\u001b[2m  - waiting for locator('[data-region=6]')\u001b[22m\n",
+        "by": "runner"
       }
     },
     {
@@ -627,14 +607,14 @@
       },
       "evidence": {
         "mode": "http",
-        "durationMs": 167,
+        "durationMs": 145,
         "status": 200,
         "headers": {
           "cache-control": "no-cache, must-revalidate",
           "connection": "keep-alive",
           "content-encoding": "gzip",
           "content-type": "text/html; charset=utf-8",
-          "date": "Sat, 29 Aug 2026 07:39:01 GMT",
+          "date": "Sat, 29 Aug 2026 07:30:28 GMT",
           "keep-alive": "timeout=5",
           "link": "</_next/static/media/5f402bd2d8eef81a-s.p.40bho2kviej2o.woff2>; rel=preload; as=\"font\"; crossorigin=\"\"; type=\"font/woff2\", </_next/static/chunks/%5Broot-of-the-server%5D__0pliwnd._.css>; rel=preload; as=\"style\"",
           "transfer-encoding": "chunked",
@@ -671,14 +651,14 @@
       },
       "evidence": {
         "mode": "http",
-        "durationMs": 127,
+        "durationMs": 126,
         "status": 200,
         "headers": {
           "cache-control": "no-cache, must-revalidate",
           "connection": "keep-alive",
           "content-encoding": "gzip",
           "content-type": "text/html; charset=utf-8",
-          "date": "Sat, 29 Aug 2026 07:39:01 GMT",
+          "date": "Sat, 29 Aug 2026 07:30:28 GMT",
           "keep-alive": "timeout=5",
           "link": "</_next/static/media/5f402bd2d8eef81a-s.p.40bho2kviej2o.woff2>; rel=preload; as=\"font\"; crossorigin=\"\"; type=\"font/woff2\", </_next/static/chunks/%5Broot-of-the-server%5D__0pliwnd._.css>; rel=preload; as=\"style\"",
           "transfer-encoding": "chunked",
@@ -722,7 +702,7 @@
           "connection": "keep-alive",
           "content-encoding": "gzip",
           "content-type": "text/html; charset=utf-8",
-          "date": "Sat, 29 Aug 2026 07:39:01 GMT",
+          "date": "Sat, 29 Aug 2026 07:30:28 GMT",
           "keep-alive": "timeout=5",
           "link": "</_next/static/media/5f402bd2d8eef81a-s.p.40bho2kviej2o.woff2>; rel=preload; as=\"font\"; crossorigin=\"\"; type=\"font/woff2\", </_next/static/chunks/%5Broot-of-the-server%5D__0pliwnd._.css>; rel=preload; as=\"style\"",
           "transfer-encoding": "chunked",
@@ -765,7 +745,7 @@
       },
       "evidence": {
         "mode": "browser",
-        "durationMs": 2943,
+        "durationMs": 2960,
         "finalUrl": "http://localhost:3000/en/explore?area=99",
         "body": "27°\nClear\nEnglish\n\nFOR A GOOD TRIP\n\nMay the Korea you meet today stay with you.\n\nMake it a good day\n\nPlaces\nCulture\nFood\nHappening\nLocation access is blocked\nREGION\nAnywhere in Korea\nMost viewed\nMost liked\nFind a place\nSearch\n\nNothing matches that combination.\n\nClear the filter\n\nPlace data from the Korea Tourism Organization.",
         "evaluated": true
@@ -802,9 +782,9 @@
       },
       "evidence": {
         "mode": "browser",
-        "durationMs": 3257,
+        "durationMs": 3199,
         "finalUrl": "http://localhost:3000/en/explore?area=99999",
-        "body": "27°\nClear\nEnglish\n\nFOR A GOOD TRIP\n\nMay the Korea you meet today stay with you.\n\nMake it a good day\n\nPlaces\nCulture\nFood\nHappening\nLocation access is blocked\nREGION\nAnywhere in Korea\nMost viewed\nMost liked\nFind a place\nSearch\nNO IMAGE AVAILABLE\nGyeongbokgung Palace\n\n경복궁\n\nRoyal Palaces\n\n161, Sajik-ro, Jongno-gu, Seoul\n\n0\n9\n\nNO IMAGE AVAILABLE\nCheonggyecheon Stream\n\n청계천\n\nLakes\n\nChangsin-dong, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nAchasan Mountain\n\n아차산\n\nRare Flora and Fauna\n\nGwangjang-dong, Gwangjin-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nBukchon Hanok Village\n\n북촌한옥마을\n\nFortress\n\n37 Gyedong-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nN Seoul Tower\n\n남산서울타워\n\nCitizen Parks\n\n105 Namsangongwon-gil, Jung-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nChangdeokgung Palace\n\n창덕궁\n\nRoyal Palaces\n\n99 Yulgok-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nSeoul Forest\n\n서울숲\n\nRivers\n\n273 Ttukseom-ro, Seongdong-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHongdae Street\n\n홍대거리\n\nMini Parks\n\nEoulmadang-ro, Mapo-gu, Seoul\n\n0\n0\n\nIhwa Mural Village\n\n이화벽화마을\n\nMini Parks\n\n49 Naksan 4-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nGwangjang Market\n\n광장시장\n\n88 Changgyeonggung-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHwaseong Fortress\n\n수원화성\n\nFortress\n\n320-2 Yeonghwa-dong, Jangan-gu, Suwon-si, Gyeonggi-do\n\n0\n0\n\nMore places\n\nPlace data from the Korea Tourism Organization.",
+        "body": "27°\nClear\nEnglish\n\nFOR A GOOD TRIP\n\nMay the Korea you meet today stay with you.\n\nMake it a good day\n\nPlaces\nCulture\nFood\nHappening\nLocation access is blocked\nREGION\nAnywhere in Korea\nMost viewed\nMost liked\nFind a place\nSearch\nNO IMAGE AVAILABLE\nGyeongbokgung Palace\n\n경복궁\n\nRoyal Palaces\n\n161, Sajik-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nCheonggyecheon Stream\n\n청계천\n\nLakes\n\nChangsin-dong, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nAchasan Mountain\n\n아차산\n\nRare Flora and Fauna\n\nGwangjang-dong, Gwangjin-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nBukchon Hanok Village\n\n북촌한옥마을\n\nFortress\n\n37 Gyedong-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nN Seoul Tower\n\n남산서울타워\n\nCitizen Parks\n\n105 Namsangongwon-gil, Jung-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nChangdeokgung Palace\n\n창덕궁\n\nRoyal Palaces\n\n99 Yulgok-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nSeoul Forest\n\n서울숲\n\nRivers\n\n273 Ttukseom-ro, Seongdong-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHongdae Street\n\n홍대거리\n\nMini Parks\n\nEoulmadang-ro, Mapo-gu, Seoul\n\n0\n0\n\nIhwa Mural Village\n\n이화벽화마을\n\nMini Parks\n\n49 Naksan 4-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nGwangjang Market\n\n광장시장\n\n88 Changgyeonggung-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHwaseong Fortress\n\n수원화성\n\nFortress\n\n320-2 Yeonghwa-dong, Jangan-gu, Suwon-si, Gyeonggi-do\n\n0\n0\n\nMore places\n\nPlace data from the Korea Tourism Organization.",
         "evaluated": true
       },
       "verdict": {
@@ -927,7 +907,7 @@
       },
       "evidence": {
         "mode": "browser",
-        "durationMs": 3478,
+        "durationMs": 3500,
         "finalUrl": "http://localhost:3000/en/explore?q=zzzzzzzz",
         "body": "27°\nClear\nEnglish\n\nFOR A GOOD TRIP\n\nMay the Korea you meet today stay with you.\n\nMake it a good day\n\nPlaces\nCulture\nFood\nHappening\nLocation access is blocked\nREGION\nAnywhere in Korea\nMost viewed\nMost liked\nFind a place\nSearch\n\nNothing matches “zzzzzzzz”.\n\nClear search\n\nPlace data from the Korea Tourism Organization.",
         "evaluated": true
@@ -983,9 +963,9 @@
       },
       "evidence": {
         "mode": "browser",
-        "durationMs": 3865,
+        "durationMs": 3762,
         "finalUrl": "http://localhost:3000/en/explore?q=%20",
-        "body": "27°\nClear\nEnglish\n\nFOR A GOOD TRIP\n\nMay the Korea you meet today stay with you.\n\nMake it a good day\n\nPlaces\nCulture\nFood\nHappening\nLocation access is blocked\nREGION\nAnywhere in Korea\nMost viewed\nMost liked\nFind a place\nSearch\nNO IMAGE AVAILABLE\nGyeongbokgung Palace\n\n경복궁\n\nRoyal Palaces\n\n161, Sajik-ro, Jongno-gu, Seoul\n\n0\n9\n\nNO IMAGE AVAILABLE\nCheonggyecheon Stream\n\n청계천\n\nLakes\n\nChangsin-dong, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nAchasan Mountain\n\n아차산\n\nRare Flora and Fauna\n\nGwangjang-dong, Gwangjin-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nBukchon Hanok Village\n\n북촌한옥마을\n\nFortress\n\n37 Gyedong-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nN Seoul Tower\n\n남산서울타워\n\nCitizen Parks\n\n105 Namsangongwon-gil, Jung-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nChangdeokgung Palace\n\n창덕궁\n\nRoyal Palaces\n\n99 Yulgok-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nSeoul Forest\n\n서울숲\n\nRivers\n\n273 Ttukseom-ro, Seongdong-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHongdae Street\n\n홍대거리\n\nMini Parks\n\nEoulmadang-ro, Mapo-gu, Seoul\n\n0\n0\n\nIhwa Mural Village\n\n이화벽화마을\n\nMini Parks\n\n49 Naksan 4-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nGwangjang Market\n\n광장시장\n\n88 Changgyeonggung-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHwaseong Fortress\n\n수원화성\n\nFortress\n\n320-2 Yeonghwa-dong, Jangan-gu, Suwon-si, Gyeonggi-do\n\n0\n0\n\nMore places\n\nPlace data from the Korea Tourism Organization.",
+        "body": "27°\nClear\nEnglish\n\nFOR A GOOD TRIP\n\nMay the Korea you meet today stay with you.\n\nMake it a good day\n\nPlaces\nCulture\nFood\nHappening\nLocation access is blocked\nREGION\nAnywhere in Korea\nMost viewed\nMost liked\nFind a place\nSearch\nNO IMAGE AVAILABLE\nGyeongbokgung Palace\n\n경복궁\n\nRoyal Palaces\n\n161, Sajik-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nCheonggyecheon Stream\n\n청계천\n\nLakes\n\nChangsin-dong, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nAchasan Mountain\n\n아차산\n\nRare Flora and Fauna\n\nGwangjang-dong, Gwangjin-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nBukchon Hanok Village\n\n북촌한옥마을\n\nFortress\n\n37 Gyedong-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nN Seoul Tower\n\n남산서울타워\n\nCitizen Parks\n\n105 Namsangongwon-gil, Jung-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nChangdeokgung Palace\n\n창덕궁\n\nRoyal Palaces\n\n99 Yulgok-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nSeoul Forest\n\n서울숲\n\nRivers\n\n273 Ttukseom-ro, Seongdong-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHongdae Street\n\n홍대거리\n\nMini Parks\n\nEoulmadang-ro, Mapo-gu, Seoul\n\n0\n0\n\nIhwa Mural Village\n\n이화벽화마을\n\nMini Parks\n\n49 Naksan 4-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nGwangjang Market\n\n광장시장\n\n88 Changgyeonggung-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHwaseong Fortress\n\n수원화성\n\nFortress\n\n320-2 Yeonghwa-dong, Jangan-gu, Suwon-si, Gyeonggi-do\n\n0\n0\n\nMore places\n\nPlace data from the Korea Tourism Organization.",
         "evaluated": true
       },
       "verdict": {
@@ -1066,9 +1046,9 @@
       },
       "evidence": {
         "mode": "browser",
-        "durationMs": 5607,
+        "durationMs": 5579,
         "finalUrl": "http://localhost:3000/en/explore?category=attraction&sort=likes",
-        "body": "27°\nClear\nEnglish\n\nFOR A GOOD TRIP\n\nMay the Korea you meet today stay with you.\n\nMake it a good day\n\nPlaces\nCulture\nFood\nHappening\nLocation access is blocked\nREGION\nAnywhere in Korea\nMost viewed\nMost liked\nFind a place\nSearch\nNO IMAGE AVAILABLE\nGyeongbokgung Palace\n\n경복궁\n\nRoyal Palaces\n\n161, Sajik-ro, Jongno-gu, Seoul\n\n0\n9\n\nNO IMAGE AVAILABLE\nCheonggyecheon Stream\n\n청계천\n\nLakes\n\nChangsin-dong, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nAchasan Mountain\n\n아차산\n\nRare Flora and Fauna\n\nGwangjang-dong, Gwangjin-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nBukchon Hanok Village\n\n북촌한옥마을\n\nFortress\n\n37 Gyedong-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nN Seoul Tower\n\n남산서울타워\n\nCitizen Parks\n\n105 Namsangongwon-gil, Jung-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nChangdeokgung Palace\n\n창덕궁\n\nRoyal Palaces\n\n99 Yulgok-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nSeoul Forest\n\n서울숲\n\nRivers\n\n273 Ttukseom-ro, Seongdong-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHongdae Street\n\n홍대거리\n\nMini Parks\n\nEoulmadang-ro, Mapo-gu, Seoul\n\n0\n0\n\nIhwa Mural Village\n\n이화벽화마을\n\nMini Parks\n\n49 Naksan 4-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nGwangjang Market\n\n광장시장\n\n88 Changgyeonggung-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHwaseong Fortress\n\n수원화성\n\nFortress\n\n320-2 Yeonghwa-dong, Jangan-gu, Suwon-si, Gyeonggi-do\n\n0\n0\n\nMore places\n\nPlace data from the Korea Tourism Organization.",
+        "body": "27°\nClear\nEnglish\n\nFOR A GOOD TRIP\n\nMay the Korea you meet today stay with you.\n\nMake it a good day\n\nPlaces\nCulture\nFood\nHappening\nLocation access is blocked\nREGION\nAnywhere in Korea\nMost viewed\nMost liked\nFind a place\nSearch\nNO IMAGE AVAILABLE\nGyeongbokgung Palace\n\n경복궁\n\nRoyal Palaces\n\n161, Sajik-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nCheonggyecheon Stream\n\n청계천\n\nLakes\n\nChangsin-dong, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nAchasan Mountain\n\n아차산\n\nRare Flora and Fauna\n\nGwangjang-dong, Gwangjin-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nBukchon Hanok Village\n\n북촌한옥마을\n\nFortress\n\n37 Gyedong-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nN Seoul Tower\n\n남산서울타워\n\nCitizen Parks\n\n105 Namsangongwon-gil, Jung-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nChangdeokgung Palace\n\n창덕궁\n\nRoyal Palaces\n\n99 Yulgok-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nSeoul Forest\n\n서울숲\n\nRivers\n\n273 Ttukseom-ro, Seongdong-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHongdae Street\n\n홍대거리\n\nMini Parks\n\nEoulmadang-ro, Mapo-gu, Seoul\n\n0\n0\n\nIhwa Mural Village\n\n이화벽화마을\n\nMini Parks\n\n49 Naksan 4-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nGwangjang Market\n\n광장시장\n\n88 Changgyeonggung-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHwaseong Fortress\n\n수원화성\n\nFortress\n\n320-2 Yeonghwa-dong, Jangan-gu, Suwon-si, Gyeonggi-do\n\n0\n0\n\nMore places\n\nPlace data from the Korea Tourism Organization.",
         "evaluated": true
       },
       "verdict": {
@@ -1111,9 +1091,9 @@
       },
       "evidence": {
         "mode": "browser",
-        "durationMs": 5784,
+        "durationMs": 5799,
         "finalUrl": "http://localhost:3000/en/explore?category=attraction",
-        "body": "27°\nClear\nEnglish\n\nFOR A GOOD TRIP\n\nMay the Korea you meet today stay with you.\n\nMake it a good day\n\nPlaces\nCulture\nFood\nHappening\nLocation access is blocked\nREGION\nAnywhere in Korea\nMost viewed\nMost liked\nFind a place\nSearch\nNO IMAGE AVAILABLE\nGyeongbokgung Palace\n\n경복궁\n\nRoyal Palaces\n\n161, Sajik-ro, Jongno-gu, Seoul\n\n0\n9\n\nNO IMAGE AVAILABLE\nCheonggyecheon Stream\n\n청계천\n\nLakes\n\nChangsin-dong, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nAchasan Mountain\n\n아차산\n\nRare Flora and Fauna\n\nGwangjang-dong, Gwangjin-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nBukchon Hanok Village\n\n북촌한옥마을\n\nFortress\n\n37 Gyedong-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nN Seoul Tower\n\n남산서울타워\n\nCitizen Parks\n\n105 Namsangongwon-gil, Jung-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nChangdeokgung Palace\n\n창덕궁\n\nRoyal Palaces\n\n99 Yulgok-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nSeoul Forest\n\n서울숲\n\nRivers\n\n273 Ttukseom-ro, Seongdong-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHongdae Street\n\n홍대거리\n\nMini Parks\n\nEoulmadang-ro, Mapo-gu, Seoul\n\n0\n0\n\nIhwa Mural Village\n\n이화벽화마을\n\nMini Parks\n\n49 Naksan 4-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nGwangjang Market\n\n광장시장\n\n88 Changgyeonggung-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHwaseong Fortress\n\n수원화성\n\nFortress\n\n320-2 Yeonghwa-dong, Jangan-gu, Suwon-si, Gyeonggi-do\n\n0\n0\n\nMore places\n\nPlace data from the Korea Tourism Organization.",
+        "body": "27°\nClear\nEnglish\n\nFOR A GOOD TRIP\n\nMay the Korea you meet today stay with you.\n\nMake it a good day\n\nPlaces\nCulture\nFood\nHappening\nLocation access is blocked\nREGION\nAnywhere in Korea\nMost viewed\nMost liked\nFind a place\nSearch\nNO IMAGE AVAILABLE\nGyeongbokgung Palace\n\n경복궁\n\nRoyal Palaces\n\n161, Sajik-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nCheonggyecheon Stream\n\n청계천\n\nLakes\n\nChangsin-dong, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nAchasan Mountain\n\n아차산\n\nRare Flora and Fauna\n\nGwangjang-dong, Gwangjin-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nBukchon Hanok Village\n\n북촌한옥마을\n\nFortress\n\n37 Gyedong-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nN Seoul Tower\n\n남산서울타워\n\nCitizen Parks\n\n105 Namsangongwon-gil, Jung-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nChangdeokgung Palace\n\n창덕궁\n\nRoyal Palaces\n\n99 Yulgok-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nSeoul Forest\n\n서울숲\n\nRivers\n\n273 Ttukseom-ro, Seongdong-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHongdae Street\n\n홍대거리\n\nMini Parks\n\nEoulmadang-ro, Mapo-gu, Seoul\n\n0\n0\n\nIhwa Mural Village\n\n이화벽화마을\n\nMini Parks\n\n49 Naksan 4-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nGwangjang Market\n\n광장시장\n\n88 Changgyeonggung-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHwaseong Fortress\n\n수원화성\n\nFortress\n\n320-2 Yeonghwa-dong, Jangan-gu, Suwon-si, Gyeonggi-do\n\n0\n0\n\nMore places\n\nPlace data from the Korea Tourism Organization.",
         "evaluated": true
       },
       "verdict": {
@@ -1156,9 +1136,9 @@
       },
       "evidence": {
         "mode": "browser",
-        "durationMs": 5745,
+        "durationMs": 5594,
         "finalUrl": "http://localhost:3000/en/explore?category=attraction&more=1",
-        "body": "27°\nClear\nEnglish\n\nFOR A GOOD TRIP\n\nMay the Korea you meet today stay with you.\n\nMake it a good day\n\nPlaces\nCulture\nFood\nHappening\nLocation access is blocked\nREGION\nAnywhere in Korea\nMost viewed\nMost liked\nFind a place\nSearch\nNO IMAGE AVAILABLE\nGyeongbokgung Palace\n\n경복궁\n\nRoyal Palaces\n\n161, Sajik-ro, Jongno-gu, Seoul\n\n0\n9\n\nNO IMAGE AVAILABLE\nCheonggyecheon Stream\n\n청계천\n\nLakes\n\nChangsin-dong, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nAchasan Mountain\n\n아차산\n\nRare Flora and Fauna\n\nGwangjang-dong, Gwangjin-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nBukchon Hanok Village\n\n북촌한옥마을\n\nFortress\n\n37 Gyedong-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nN Seoul Tower\n\n남산서울타워\n\nCitizen Parks\n\n105 Namsangongwon-gil, Jung-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nChangdeokgung Palace\n\n창덕궁\n\nRoyal Palaces\n\n99 Yulgok-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nSeoul Forest\n\n서울숲\n\nRivers\n\n273 Ttukseom-ro, Seongdong-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHongdae Street\n\n홍대거리\n\nMini Parks\n\nEoulmadang-ro, Mapo-gu, Seoul\n\n0\n0\n\nIhwa Mural Village\n\n이화벽화마을\n\nMini Parks\n\n49 Naksan 4-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nGwangjang Market\n\n광장시장\n\n88 Changgyeonggung-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHwaseong Fortress\n\n수원화성\n\nFortress\n\n320-2 Yeonghwa-dong, Jangan-gu, Suwon-si, Gyeonggi-do\n\n0\n0\n\nNO IMAGE AVAILABLE\nEverland\n\n에버랜드\n\nBuildings\n\n199 Everland-ro, Cheoin-gu, Yongin-si, Gyeonggi-do\n\n0\n0\n\nNO IMAGE AVAILABLE\nSeongsan Ilchulbong Peak\n\n성산일출봉\n\n284-12 Ilchul-ro, Seogwipo-si, Jeju-do\n\n0\n0\n\nNO IMAGE AVAILABLE\nHallasan Mountain\n\n한라산\n\nJeju-si, Jeju-do\n\n0\n0\n\nHaeundae Beach\n\n해운대해수욕장\n\nWaterfalls\n\n264 Haeundaehaebyeon-ro, Haeundae-gu, Busan\n\n0\n0\n\nNO IMAGE AVAILABLE\nGamcheon Culture Village\n\n감천문화마을\n\nMini Parks\n\n203 Gamnae 2-ro, Saha-gu, Busan\n\n0\n0\n\nPlace data from the Korea Tourism Organization.",
+        "body": "27°\nClear\nEnglish\n\nFOR A GOOD TRIP\n\nMay the Korea you meet today stay with you.\n\nMake it a good day\n\nPlaces\nCulture\nFood\nHappening\nLocation access is blocked\nREGION\nAnywhere in Korea\nMost viewed\nMost liked\nFind a place\nSearch\nNO IMAGE AVAILABLE\nGyeongbokgung Palace\n\n경복궁\n\nRoyal Palaces\n\n161, Sajik-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nCheonggyecheon Stream\n\n청계천\n\nLakes\n\nChangsin-dong, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nAchasan Mountain\n\n아차산\n\nRare Flora and Fauna\n\nGwangjang-dong, Gwangjin-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nBukchon Hanok Village\n\n북촌한옥마을\n\nFortress\n\n37 Gyedong-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nN Seoul Tower\n\n남산서울타워\n\nCitizen Parks\n\n105 Namsangongwon-gil, Jung-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nChangdeokgung Palace\n\n창덕궁\n\nRoyal Palaces\n\n99 Yulgok-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nSeoul Forest\n\n서울숲\n\nRivers\n\n273 Ttukseom-ro, Seongdong-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHongdae Street\n\n홍대거리\n\nMini Parks\n\nEoulmadang-ro, Mapo-gu, Seoul\n\n0\n0\n\nIhwa Mural Village\n\n이화벽화마을\n\nMini Parks\n\n49 Naksan 4-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nGwangjang Market\n\n광장시장\n\n88 Changgyeonggung-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHwaseong Fortress\n\n수원화성\n\nFortress\n\n320-2 Yeonghwa-dong, Jangan-gu, Suwon-si, Gyeonggi-do\n\n0\n0\n\nNO IMAGE AVAILABLE\nEverland\n\n에버랜드\n\nBuildings\n\n199 Everland-ro, Cheoin-gu, Yongin-si, Gyeonggi-do\n\n0\n0\n\nNO IMAGE AVAILABLE\nSeongsan Ilchulbong Peak\n\n성산일출봉\n\n284-12 Ilchul-ro, Seogwipo-si, Jeju-do\n\n0\n0\n\nNO IMAGE AVAILABLE\nHallasan Mountain\n\n한라산\n\nJeju-si, Jeju-do\n\n0\n0\n\nHaeundae Beach\n\n해운대해수욕장\n\nWaterfalls\n\n264 Haeundaehaebyeon-ro, Haeundae-gu, Busan\n\n0\n0\n\nNO IMAGE AVAILABLE\nGamcheon Culture Village\n\n감천문화마을\n\nMini Parks\n\n203 Gamnae 2-ro, Saha-gu, Busan\n\n0\n0\n\nPlace data from the Korea Tourism Organization.",
         "evaluated": true
       },
       "verdict": {
@@ -1220,7 +1200,7 @@
       },
       "evidence": {
         "mode": "browser",
-        "durationMs": 5303,
+        "durationMs": 5268,
         "finalUrl": "http://localhost:3000/en/explore?category=food",
         "body": "27°\nClear\nEnglish\n\nFOR A GOOD TRIP\n\nMay the Korea you meet today stay with you.\n\nMake it a good day\n\nPlaces\nCulture\nFood\nHappening\nLocation access is blocked\nREGION\nAnywhere in Korea\nMost viewed\nMost liked\nFind a place\nSearch\nNO IMAGE AVAILABLE\nARTEASPOON\n\n아티스푼\n\nKorean Food\n\nSeongdong-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nTosokchon Samgyetang\n\n토속촌삼계탕\n\nKorean Food\n\n5 Jahamun-ro 5-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nJinju Hoegwan\n\n진주회관\n\nKorean Food\n\n26 Sejong-daero 11-gil, Jung-gu, Seoul\n\n0\n0\n\nPlace data from the Korea Tourism Organization.",
         "evaluated": true
@@ -1447,9 +1427,9 @@
       },
       "evidence": {
         "mode": "browser",
-        "durationMs": 3884,
+        "durationMs": 3873,
         "finalUrl": "http://localhost:3000/en/spots/264337",
-        "body": "←\nBACK TO PLACES\n27°\nClear\nEnglish\n\nPLACES\n\nGyeongbokgung Palace\n\n경복궁\n\n0\n10\n\nNO IMAGE AVAILABLE\n\nGyeongbokgung Palace was the main royal palace of the Joseon dynasty.<br>Built in 1395, it is the largest of the Five Grand Palaces.\n\nADDRESS\n161, Sajik-ro, Jongno-gu, Seoul\nHOURS\n09:00-18:00\nCLOSED\nTuesdays\nADMISSION\nNot published\nENQUIRIES\n+82-2-3700-3900\nPARKING\nNot published\nSave\nOpen in maps\nOfficial site\n↗\n\nPlace data from the Korea Tourism Organization. Photo used unmodified.",
+        "body": "←\nBACK TO PLACES\n27°\nClear\nEnglish\n\nPLACES\n\nGyeongbokgung Palace\n\n경복궁\n\n0\n1\n\nNO IMAGE AVAILABLE\n\nGyeongbokgung Palace was the main royal palace of the Joseon dynasty.<br>Built in 1395, it is the largest of the Five Grand Palaces.\n\nADDRESS\n161, Sajik-ro, Jongno-gu, Seoul\nHOURS\n09:00-18:00\nCLOSED\nTuesdays\nADMISSION\nNot published\nENQUIRIES\n+82-2-3700-3900\nPARKING\nNot published\nSave\nOpen in maps\nOfficial site\n↗\n\nPlace data from the Korea Tourism Organization. Photo used unmodified.",
         "evaluated": true
       },
       "verdict": {
@@ -1520,12 +1500,11 @@
       "suite": "상세 화면",
       "name": "“Open in maps” 클릭",
       "priority": "P1",
-      "expected": "`map.kakao.com/link/map/{한글명},{lat},{lng}` 로 열린다. 한글명이 인코딩돼 있다",
       "plan": {
         "tcId": "TC-DTL-05",
         "mode": "browser",
         "reason": "문서 실행 칸에 적힌 대로 실행한다",
-        "tcHash": "4a1132e4889b",
+        "tcHash": "455ca5132195",
         "browser": {
           "path": "/en/spots/264337",
           "actions": [
@@ -1536,20 +1515,18 @@
           ]
         },
         "expect": {
-          "evaluate": "document.querySelector('[data-testid=map-link]')?.href.includes('map.kakao.com/link/map/') === true"
+          "evaluate": "(document.querySelector('[data-testid=map-link]')"
         }
       },
       "evidence": {
         "mode": "browser",
-        "durationMs": 3419,
-        "finalUrl": "http://localhost:3000/en/spots/264337",
-        "body": "←\nBACK TO PLACES\n27°\nClear\nEnglish\n\nPLACES\n\nGyeongbokgung Palace\n\n경복궁\n\n0\n11\n\nNO IMAGE AVAILABLE\n\nGyeongbokgung Palace was the main royal palace of the Joseon dynasty.<br>Built in 1395, it is the largest of the Five Grand Palaces.\n\nADDRESS\n161, Sajik-ro, Jongno-gu, Seoul\nHOURS\n09:00-18:00\nCLOSED\nTuesdays\nADMISSION\nNot published\nENQUIRIES\n+82-2-3700-3900\nPARKING\nNot published\nSave\nOpen in maps\nOfficial site\n↗\n\nPlace data from the Korea Tourism Organization. Photo used unmodified.",
-        "evaluated": true
+        "durationMs": 3455,
+        "error": "page.evaluate: SyntaxError: Unexpected end of input\n    at eval (<anonymous>)\n    at UtilityScript.evaluate (<anonymous>:311:30)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)"
       },
       "verdict": {
-        "status": "pass",
-        "reason": "확인함 — 페이지 평가 document.querySelector('[data-testid=map-link]')?.href.includes('map.kakao.com/link/map/') === true",
-        "by": "rule"
+        "status": "fail",
+        "reason": "실행 자체가 실패했다: page.evaluate: SyntaxError: Unexpected end of input\n    at eval (<anonymous>)\n    at UtilityScript.evaluate (<anonymous>:311:30)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)",
+        "by": "runner"
       }
     },
     {
@@ -1576,12 +1553,11 @@
       "suite": "상세 화면",
       "name": "“Official site” 클릭",
       "priority": "P1",
-      "expected": "공식 사이트가 새 탭으로 열린다",
       "plan": {
         "tcId": "TC-DTL-07",
         "mode": "browser",
         "reason": "문서 실행 칸에 적힌 대로 실행한다",
-        "tcHash": "744724425fae",
+        "tcHash": "7026adc2b9b0",
         "browser": {
           "path": "/en/spots/264337",
           "actions": [
@@ -1592,20 +1568,18 @@
           ]
         },
         "expect": {
-          "evaluate": "document.querySelector('[data-testid=official-link]')?.target === '_blank'"
+          "evaluate": "(document.querySelector('[data-testid=official-link]')"
         }
       },
       "evidence": {
         "mode": "browser",
-        "durationMs": 3399,
-        "finalUrl": "http://localhost:3000/en/spots/264337",
-        "body": "←\nBACK TO PLACES\n27°\nClear\nEnglish\n\nPLACES\n\nGyeongbokgung Palace\n\n경복궁\n\n0\n12\n\nNO IMAGE AVAILABLE\n\nGyeongbokgung Palace was the main royal palace of the Joseon dynasty.<br>Built in 1395, it is the largest of the Five Grand Palaces.\n\nADDRESS\n161, Sajik-ro, Jongno-gu, Seoul\nHOURS\n09:00-18:00\nCLOSED\nTuesdays\nADMISSION\nNot published\nENQUIRIES\n+82-2-3700-3900\nPARKING\nNot published\nSave\nOpen in maps\nOfficial site\n↗\n\nPlace data from the Korea Tourism Organization. Photo used unmodified.",
-        "evaluated": true
+        "durationMs": 3436,
+        "error": "page.evaluate: SyntaxError: Unexpected end of input\n    at eval (<anonymous>)\n    at UtilityScript.evaluate (<anonymous>:311:30)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)"
       },
       "verdict": {
-        "status": "pass",
-        "reason": "확인함 — 페이지 평가 document.querySelector('[data-testid=official-link]')?.target === '_blank'",
-        "by": "rule"
+        "status": "fail",
+        "reason": "실행 자체가 실패했다: page.evaluate: SyntaxError: Unexpected end of input\n    at eval (<anonymous>)\n    at UtilityScript.evaluate (<anonymous>:311:30)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)",
+        "by": "runner"
       }
     },
     {
@@ -1634,7 +1608,7 @@
       },
       "evidence": {
         "mode": "browser",
-        "durationMs": 3339,
+        "durationMs": 3321,
         "finalUrl": "http://localhost:3000/en/spots/99999999",
         "body": "←\nBACK TO PLACES\n27°\nClear\nEnglish\n\nWe couldn't find this place.\n\nBack to places",
         "evaluated": true
@@ -2030,12 +2004,11 @@
       "suite": "담기·좋아요·조회 화면 동작",
       "name": "카드에서 담기를 누른다",
       "priority": "P0",
-      "expected": "아이콘이 채워지고 `localStorage[\"seoul-tour:saved\"]` 에 키가 들어간다. 새로고침해도 유지",
       "plan": {
         "tcId": "TC-RCT-01",
         "mode": "browser",
         "reason": "문서 실행 칸에 적힌 대로 실행한다",
-        "tcHash": "79a063590ec4",
+        "tcHash": "aa58cdf03c11",
         "browser": {
           "path": "/en/explore",
           "actions": [
@@ -2054,20 +2027,18 @@
           ]
         },
         "expect": {
-          "evaluate": "document.querySelector('[data-testid=save-toggle][aria-pressed=true]') !== null && (localStorage.getItem('seoul-tour:saved') ?? '').length > 2"
+          "evaluate": "document.querySelector('[data-testid=save-toggle][aria-pressed=true]') !== null && (localStorage.getItem('seoul-tour:saved')"
         }
       },
       "evidence": {
         "mode": "browser",
-        "durationMs": 4787,
-        "finalUrl": "http://localhost:3000/en/explore",
-        "body": "27°\nClear\nEnglish\n\nFOR A GOOD TRIP\n\nMay the Korea you meet today stay with you.\n\nMake it a good day\n\nPlaces\nCulture\nFood\nHappening\nLocation access is blocked\nREGION\nAnywhere in Korea\nMost viewed\nMost liked\nFind a place\nSearch\nNO IMAGE AVAILABLE\nGyeongbokgung Palace\n\n경복궁\n\nRoyal Palaces\n\n161, Sajik-ro, Jongno-gu, Seoul\n\n0\n12\n\nNO IMAGE AVAILABLE\nCheonggyecheon Stream\n\n청계천\n\nLakes\n\nChangsin-dong, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nAchasan Mountain\n\n아차산\n\nRare Flora and Fauna\n\nGwangjang-dong, Gwangjin-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nBukchon Hanok Village\n\n북촌한옥마을\n\nFortress\n\n37 Gyedong-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nN Seoul Tower\n\n남산서울타워\n\nCitizen Parks\n\n105 Namsangongwon-gil, Jung-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nChangdeokgung Palace\n\n창덕궁\n\nRoyal Palaces\n\n99 Yulgok-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nSeoul Forest\n\n서울숲\n\nRivers\n\n273 Ttukseom-ro, Seongdong-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHongdae Street\n\n홍대거리\n\nMini Parks\n\nEoulmadang-ro, Mapo-gu, Seoul\n\n0\n0\n\nIhwa Mural Village\n\n이화벽화마을\n\nMini Parks\n\n49 Naksan 4-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nGwangjang Market\n\n광장시장\n\n88 Changgyeonggung-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHwaseong Fortress\n\n수원화성\n\nFortress\n\n320-2 Yeonghwa-dong, Jangan-gu, Suwon-si, Gyeonggi-do\n\n0\n0\n\nMore places\n\nPlace data from the Korea Tourism Organization.",
-        "evaluated": true
+        "durationMs": 4804,
+        "error": "page.evaluate: SyntaxError: Unexpected end of input\n    at eval (<anonymous>)\n    at UtilityScript.evaluate (<anonymous>:311:30)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)"
       },
       "verdict": {
-        "status": "pass",
-        "reason": "확인함 — 페이지 평가 document.querySelector('[data-testid=save-toggle][aria-pressed=true]') !== null && (localStorage.getItem('seoul-tour:saved') ?? '').length > 2",
-        "by": "rule"
+        "status": "fail",
+        "reason": "실행 자체가 실패했다: page.evaluate: SyntaxError: Unexpected end of input\n    at eval (<anonymous>)\n    at UtilityScript.evaluate (<anonymous>:311:30)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)",
+        "by": "runner"
       }
     },
     {
@@ -2962,7 +2933,7 @@
       },
       "evidence": {
         "mode": "command",
-        "durationMs": 41,
+        "durationMs": 38,
         "exitCode": 1,
         "stdout": "",
         "stderr": ""
@@ -3037,9 +3008,9 @@
       },
       "evidence": {
         "mode": "browser",
-        "durationMs": 3274,
+        "durationMs": 3267,
         "finalUrl": "http://localhost:3000/en/explore",
-        "body": "27°\nClear\nEnglish\n\nFOR A GOOD TRIP\n\nMay the Korea you meet today stay with you.\n\nMake it a good day\n\nPlaces\nCulture\nFood\nHappening\nLocation access is blocked\nREGION\nAnywhere in Korea\nMost viewed\nMost liked\nFind a place\nSearch\nNO IMAGE AVAILABLE\nGyeongbokgung Palace\n\n경복궁\n\nRoyal Palaces\n\n161, Sajik-ro, Jongno-gu, Seoul\n\n0\n12\n\nNO IMAGE AVAILABLE\nCheonggyecheon Stream\n\n청계천\n\nLakes\n\nChangsin-dong, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nAchasan Mountain\n\n아차산\n\nRare Flora and Fauna\n\nGwangjang-dong, Gwangjin-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nBukchon Hanok Village\n\n북촌한옥마을\n\nFortress\n\n37 Gyedong-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nN Seoul Tower\n\n남산서울타워\n\nCitizen Parks\n\n105 Namsangongwon-gil, Jung-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nChangdeokgung Palace\n\n창덕궁\n\nRoyal Palaces\n\n99 Yulgok-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nSeoul Forest\n\n서울숲\n\nRivers\n\n273 Ttukseom-ro, Seongdong-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHongdae Street\n\n홍대거리\n\nMini Parks\n\nEoulmadang-ro, Mapo-gu, Seoul\n\n0\n0\n\nIhwa Mural Village\n\n이화벽화마을\n\nMini Parks\n\n49 Naksan 4-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nGwangjang Market\n\n광장시장\n\n88 Changgyeonggung-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHwaseong Fortress\n\n수원화성\n\nFortress\n\n320-2 Yeonghwa-dong, Jangan-gu, Suwon-si, Gyeonggi-do\n\n0\n0\n\nMore places\n\nPlace data from the Korea Tourism Organization.",
+        "body": "27°\nClear\nEnglish\n\nFOR A GOOD TRIP\n\nMay the Korea you meet today stay with you.\n\nMake it a good day\n\nPlaces\nCulture\nFood\nHappening\nLocation access is blocked\nREGION\nAnywhere in Korea\nMost viewed\nMost liked\nFind a place\nSearch\nNO IMAGE AVAILABLE\nGyeongbokgung Palace\n\n경복궁\n\nRoyal Palaces\n\n161, Sajik-ro, Jongno-gu, Seoul\n\n0\n3\n\nNO IMAGE AVAILABLE\nCheonggyecheon Stream\n\n청계천\n\nLakes\n\nChangsin-dong, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nAchasan Mountain\n\n아차산\n\nRare Flora and Fauna\n\nGwangjang-dong, Gwangjin-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nBukchon Hanok Village\n\n북촌한옥마을\n\nFortress\n\n37 Gyedong-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nN Seoul Tower\n\n남산서울타워\n\nCitizen Parks\n\n105 Namsangongwon-gil, Jung-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nChangdeokgung Palace\n\n창덕궁\n\nRoyal Palaces\n\n99 Yulgok-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nSeoul Forest\n\n서울숲\n\nRivers\n\n273 Ttukseom-ro, Seongdong-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHongdae Street\n\n홍대거리\n\nMini Parks\n\nEoulmadang-ro, Mapo-gu, Seoul\n\n0\n0\n\nIhwa Mural Village\n\n이화벽화마을\n\nMini Parks\n\n49 Naksan 4-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nGwangjang Market\n\n광장시장\n\n88 Changgyeonggung-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHwaseong Fortress\n\n수원화성\n\nFortress\n\n320-2 Yeonghwa-dong, Jangan-gu, Suwon-si, Gyeonggi-do\n\n0\n0\n\nMore places\n\nPlace data from the Korea Tourism Organization.",
         "evaluated": true
       },
       "verdict": {
@@ -3072,12 +3043,11 @@
       "suite": "접근성",
       "name": "담기·좋아요 버튼 확인",
       "priority": "P1",
-      "expected": "`aria-pressed` 로 상태를 알리고 라벨에 장소명이 들어간다",
       "plan": {
         "tcId": "TC-A11Y-04",
         "mode": "browser",
         "reason": "문서 실행 칸에 적힌 대로 실행한다",
-        "tcHash": "5f80c68882c9",
+        "tcHash": "b90edba5d550",
         "browser": {
           "path": "/en/explore",
           "actions": [
@@ -3088,20 +3058,18 @@
           ]
         },
         "expect": {
-          "evaluate": "[...document.querySelectorAll('[data-testid=save-toggle]')].every(b => b.hasAttribute('aria-pressed') && (b.getAttribute('aria-label') ?? '').length > 5)"
+          "evaluate": "[...document.querySelectorAll('[data-testid=save-toggle]')].every(b => b.hasAttribute('aria-pressed') && (b.getAttribute('aria-label')"
         }
       },
       "evidence": {
         "mode": "browser",
-        "durationMs": 3256,
-        "finalUrl": "http://localhost:3000/en/explore",
-        "body": "27°\nClear\nEnglish\n\nFOR A GOOD TRIP\n\nMay the Korea you meet today stay with you.\n\nMake it a good day\n\nPlaces\nCulture\nFood\nHappening\nLocation access is blocked\nREGION\nAnywhere in Korea\nMost viewed\nMost liked\nFind a place\nSearch\nNO IMAGE AVAILABLE\nGyeongbokgung Palace\n\n경복궁\n\nRoyal Palaces\n\n161, Sajik-ro, Jongno-gu, Seoul\n\n0\n12\n\nNO IMAGE AVAILABLE\nCheonggyecheon Stream\n\n청계천\n\nLakes\n\nChangsin-dong, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nAchasan Mountain\n\n아차산\n\nRare Flora and Fauna\n\nGwangjang-dong, Gwangjin-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nBukchon Hanok Village\n\n북촌한옥마을\n\nFortress\n\n37 Gyedong-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nN Seoul Tower\n\n남산서울타워\n\nCitizen Parks\n\n105 Namsangongwon-gil, Jung-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nChangdeokgung Palace\n\n창덕궁\n\nRoyal Palaces\n\n99 Yulgok-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nSeoul Forest\n\n서울숲\n\nRivers\n\n273 Ttukseom-ro, Seongdong-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHongdae Street\n\n홍대거리\n\nMini Parks\n\nEoulmadang-ro, Mapo-gu, Seoul\n\n0\n0\n\nIhwa Mural Village\n\n이화벽화마을\n\nMini Parks\n\n49 Naksan 4-gil, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nGwangjang Market\n\n광장시장\n\n88 Changgyeonggung-ro, Jongno-gu, Seoul\n\n0\n0\n\nNO IMAGE AVAILABLE\nHwaseong Fortress\n\n수원화성\n\nFortress\n\n320-2 Yeonghwa-dong, Jangan-gu, Suwon-si, Gyeonggi-do\n\n0\n0\n\nMore places\n\nPlace data from the Korea Tourism Organization.",
-        "evaluated": true
+        "durationMs": 3298,
+        "error": "page.evaluate: SyntaxError: Unexpected end of input\n    at eval (<anonymous>)\n    at UtilityScript.evaluate (<anonymous>:311:30)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)"
       },
       "verdict": {
-        "status": "pass",
-        "reason": "확인함 — 페이지 평가 [...document.querySelectorAll('[data-testid=save-toggle]')].every(b => b.hasAttribute('aria-pressed') && (b.getAttribute('aria-label') ?? '').length > 5)",
-        "by": "rule"
+        "status": "fail",
+        "reason": "실행 자체가 실패했다: page.evaluate: SyntaxError: Unexpected end of input\n    at eval (<anonymous>)\n    at UtilityScript.evaluate (<anonymous>:311:30)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)",
+        "by": "runner"
       }
     },
     {
@@ -3185,9 +3153,9 @@
       },
       "evidence": {
         "mode": "browser",
-        "durationMs": 588,
+        "durationMs": 522,
         "finalUrl": "http://localhost:3000/en/explore",
-        "body": "English\n\nFOR A GOOD TRIP\n\nMay the Korea you meet today stay with you.\n\nMake it a good day\n\nPlaces\nCulture\nFood\nHappening\nShow distance from me\nMost viewed\nMost liked\nFind a place\nSearch\n\nPlace data from the Korea Tourism Organization.",
+        "body": "27°\nClear\nEnglish\n\nFOR A GOOD TRIP\n\nMay the Korea you meet today stay with you.\n\nMake it a good day\n\nPlaces\nCulture\nFood\nHappening\nLocation access is blocked\nREGION\nAnywhere in Korea\nMost viewed\nMost liked\nFind a place\nSearch\n\nPlace data from the Korea Tourism Organization.",
         "evaluated": true
       },
       "verdict": {
@@ -3290,9 +3258,9 @@
       },
       "evidence": {
         "mode": "command",
-        "durationMs": 1491,
+        "durationMs": 1343,
         "exitCode": 0,
-        "stdout": "\n RUN  v4.1.10 /Users/kim/Workspace/tour\n\n\n Test Files  20 passed (20)\n      Tests  196 passed (196)\n   Start at  16:40:09\n   Duration  661ms (transform 1.03s, setup 0ms, import 1.54s, tests 152ms, environment 2ms)\n\n",
+        "stdout": "\n RUN  v4.1.10 /Users/kim/Workspace/tour\n\n\n Test Files  20 passed (20)\n      Tests  196 passed (196)\n   Start at  16:31:35\n   Duration  531ms (transform 843ms, setup 0ms, import 1.18s, tests 98ms, environment 2ms)\n\n",
         "stderr": "$ vitest run\n"
       },
       "verdict": {
@@ -3319,7 +3287,7 @@
       },
       "evidence": {
         "mode": "command",
-        "durationMs": 1871,
+        "durationMs": 1912,
         "exitCode": 0,
         "stdout": "Generating route types...\n✓ Types generated successfully\n",
         "stderr": "$ next typegen && tsc --noEmit\n"
@@ -3348,7 +3316,7 @@
       },
       "evidence": {
         "mode": "command",
-        "durationMs": 4129,
+        "durationMs": 4022,
         "exitCode": 0,
         "stdout": "",
         "stderr": "$ eslint\n"

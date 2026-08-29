@@ -31,6 +31,9 @@ export function NoImage({
 
   return (
     <div
+      // 사진이 없거나 뜨지 않은 자리. 목록에서 이것이 하나라도 세어지면
+      // `isDisplayableOnWall` 이 걸러야 할 것을 놓친 것이다
+      data-testid="no-image"
       className={
         "flex w-full flex-col items-center justify-center gap-2.5 bg-surface px-4 text-center text-muted " +
         (size === "lg" ? "h-full" : "h-[180px]")
