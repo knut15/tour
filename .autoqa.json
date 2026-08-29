@@ -1,0 +1,15 @@
+{
+  "project": "tour (Life is Nearby)",
+  "description": "Next.js 16 App Router · 로케일 6종. 수동 QA 케이스는 docs/qa/test-cases.md 가 원본이다.",
+  "sources": [
+    {
+      "adapter": "markdown",
+      "file": "docs/qa/test-cases.md"
+    }
+  ],
+  "app": {
+    "start": "pnpm dev",
+    "baseUrl": "http://localhost:3000",
+    "readyTimeoutMs": 120000
+  }
+}
