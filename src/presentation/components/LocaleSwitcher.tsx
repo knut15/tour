@@ -25,8 +25,10 @@ export function LocaleSwitcher({
   note?: string;
 }) {
   return (
-    <details className="relative" data-dismissable>
+    <details data-testid="locale-select" className="relative" data-dismissable>
       <summary
+        // 여는 자리. 안의 항목은 `hrefLang` 으로 이미 갈려 있어 따로 이름을 주지 않는다 —
+        // `[data-testid=locale-select] [hreflang=ko]` 로 집힌다
         className={`${CONTROL_SM} cursor-pointer list-none px-3`}
         aria-label={label}
       >
