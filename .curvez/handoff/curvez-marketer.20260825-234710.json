@@ -1,0 +1,107 @@
+{
+  "from": "curvez-marketer",
+  "to": [
+    "curvez-orchestrator",
+    "curvez-designer",
+    "curvez-nextjs"
+  ],
+  "status": "done",
+  "summary": "네이밍 회의 종결. **브랜드명 확정 — `Life is Nearby`** (축약 금지, `is` 소문자). 사용자가 R8 의 final:A 를 선택했고 `.curvez/brand/naming.md` 의 `## shortlist` 에 `chosen: Life is Nearby (2026-08-25)` 를 남겼다. 8 라운드·후보 44개·참가자 5명·사용자 거부 5회를 거쳤다. **사람이 해야 할 후속 둘(블로커 아님, 사용자 응답 대기시키지 않는다):** ① **도메인 취득이 급하다** — `lifeisnearby.com`·`.app`·npm 이 종결 시각에도 미등록임을 재확인했으나 이건 상태이지 예약이 아니고, 44개 중 네 자리가 동시에 빈 이름은 둘뿐이라 그 희소성이 이 이름을 A 로 만든 근거의 절반이다. ② **KIPRIS·USPTO 상표 조회** — 이 문서의 상표 정보는 웹 검색 범위이고 전수 조사가 아니다(Justia 403·USPTO API 405 로 8 라운드 내내 막혔다). `trademark=확인 불가` 는 '비어 있다'가 아니라 '확인하지 못했다'는 뜻이다. 굿즈(의류) 계획이 생기면 `Life is Good`(약 200건, 의류 클래스, 실제 소송) 조건부 리스크를 다시 열어야 한다. **다음 라운드는 curvez-designer 몫이고 과제 성격이 다르다 — 세 낱말이라 아이콘에 이름이 안 들어가므로 '이름을 시각화'가 아니라 '이름을 대신할 심볼'을 만든다.**",
+  "artifacts": [
+    {
+      "path": ".curvez/brand/naming.md",
+      "kind": "decision",
+      "note": "`chosen: Life is Nearby (2026-08-25)` 추가, 헤더를 종결 상태로 갱신, `## 확정 이후` 절 신설(도메인·상표·디자이너 인계·코드 반영값·회고 5항목). brief 의 `### 표기 형태` 표가 이력이 아니라 정본이 됐다"
+    },
+    {
+      "path": ".curvez/brand/positioning.md",
+      "kind": "decision",
+      "note": "R3 개정판 그대로. 이번 라운드에서 고치지 않았다 — 확정된 것은 이름이지 코어가 아니다. 디자이너에게 넘기는 브랜드 코어의 정본이다"
+    }
+  ],
+  "decisions": [
+    {
+      "what": "curvez-designer 에게 넘길 값을 `## 확정 이후` 3번 절에 표로 확정했다 — 확정 네임 `Life is Nearby`, 브랜드 코어 경로 `.curvez/brand/positioning.md`(R3 개정판이 정본, `## 개정 이력` 을 함께 읽을 것), tone(차분·사적·편집자적 / 금지: 기관 공지체·여행사 광고체·과장·이모지), 표기 규칙표",
+      "why": "규약상 사용자가 A/B 중 하나를 고른 직후 디자이너에게 브랜드 코어·확정 네임·톤을 넘긴다. 경로로 가리키고 값을 복사하지 않은 것은 코어가 두 벌이 되면 어느 쪽을 따를지 갈리기 때문이다 — positioning.md 가 R3 에서 promise·differentiator 를 개정했으므로 개정 이력을 함께 읽어야 현재 값의 근거가 선다",
+      "reversible_at": ".curvez/brand/naming.md:확정 이후 3"
+    },
+    {
+      "what": "디자이너 과제를 '이름을 시각화한다' 가 아니라 **'이름을 대신할 심볼을 만든다'** 로 규정했다",
+      "why": "`Life is Nearby` 는 세 낱말이라 파비콘·앱 아이콘·좁은 헤더에 들어가지 않는다. 이건 이 패턴의 구조적 성질이고 R8 에서 리스크 3번으로 이미 평가한 것이다. `Life is Good` 이 Jake 라는 막대 인물을 쓰는 이유가 같다. 결과적으로 **심볼이 브랜드 인지의 대부분을 지게 되므로** 지금까지의 후보들보다 디자이너 몫이 훨씬 크다. 심볼이 담아야 할 뜻은 '가까움'(멀리 가지 않아도 되는 것, 걸어서 닿는 거리)이고, 이는 essence 의 '벽에 건 액자' 및 differentiator 의 '한 화면에 6~9개만' 과 같은 방향이다",
+      "reversible_at": ".curvez/brand/naming.md:확정 이후 3"
+    },
+    {
+      "what": "`src/presentation/components/BrandMark.tsx` 의 산봉우리 SVG 를 폐기하기로 명시했다. 다만 이 라운드에서 코드를 건드리지 않았다",
+      "why": "그 심볼은 MARU 의 산마루 은유 전용으로 설계됐고(파일 주석이 '이름은 MARU — 산마루의 마루다. 심볼이 산이고 이름이 그 꼭대기를 뜻하니 둘이 같은 것을 가리킨다'라고 적고 있다), MARU 는 R6 에서 결격 확정됐다(마루식당·마루코리안바베큐·정마루푸드 등 요식·식품 상호 다수 + npm 선점 + 앱스토어 정확 일치). 확정 네임과 무관한 심볼이다. 소스 트리는 이 에이전트의 소유가 아니므로 값만 넘기고 교체는 디자이너 산출물 이후 구현 에이전트가 한다",
+      "reversible_at": ".curvez/brand/naming.md:확정 이후 3"
+    },
+    {
+      "what": "코드에 반영할 값을 `## 확정 이후` 4번 절에 목록으로 남기되 직접 수정하지 않았다",
+      "why": "`src/presentation/i18n/*.json` 6개 파일의 `\"brand\": \"MARU\"` → `\"Life is Nearby\"`, `package.json` 의 `name`(현재 `tour`) → `lifeisnearby`, 환경변수 접두사 `LIFEIS_`. 이 에이전트는 `.curvez/brand/` 아래만 쓴다 — 소스 트리를 건드리면 병렬로 도는 구현 에이전트와 파일 소유권이 겹쳐 오케스트레이터가 병렬을 순차로 강등해야 한다. 값만 넘기는 것이 규약이다",
+      "reversible_at": ".curvez/brand/naming.md:확정 이후 4"
+    },
+    {
+      "what": "도메인 취득을 후속 목록의 1순위로 올리고 종결 시각에 가용성을 다시 실측했다",
+      "why": "`lifeisnearby.com`·`.app`·npm 이 종결 시각(20260825-234710)에도 미등록임을 재확인했다(404/404/404). **그러나 이건 상태이지 예약이 아니다.** 8 라운드 동안 확인한 44개 이름 중 `.com`·`.app`·npm·앱스토어가 동시에 비어 있던 것은 이 이름과 `Life is a Day` 둘뿐이었고, 그 희소성이 이 이름에 100점을 준 근거의 절반이다. 확정과 취득 사이의 시간이 그 근거를 무효로 만들 수 있어 방어용 하이픈형(`life-is-nearby.com`, 역시 미등록)까지 함께 적었다",
+      "reversible_at": ".curvez/brand/naming.md:확정 이후 1"
+    },
+    {
+      "what": "상표를 '확인 불가' 로 남긴 채 done 으로 종결했다. 이것을 blocked_on 으로 올리지 않았다",
+      "why": "8 라운드 내내 Justia 는 HTTP 403, USPTO 검색 API 는 HTTP 405 를 돌려줬고 각 2회 재시도 후 포기했다. 이건 도구로 풀 수 있는 문제가 아니라 사람이 KIPRIS·USPTO 에 직접 조회해야 하는 일이다. **blocked_on 은 '답하면 바로 진행 가능한 질문' 이어야 하는데 이건 질문이 아니라 작업이다.** 사용자를 응답 대기로 묶는 대신 summary 와 `## 확정 이후` 2번 절에 후속 작업으로 남겼다. 다만 `trademark=확인 불가` 가 '비어 있다' 가 아니라 '확인하지 못했다' 라는 것을 문서 두 곳에 명시했다 — 사용자가 이것을 확정 사실로 믿고 상표를 등록하러 가면 안 된다",
+      "reversible_at": ".curvez/brand/naming.md:확정 이후 2"
+    },
+    {
+      "what": "`Life is Good` 의 조건부 리스크를 종결 문서에 재개 조건과 함께 남겼다",
+      "why": "그 회사는 약 200건의 상표를 갖고 있고 대부분 의류 클래스이며 ooShirts/TeeChip 상대로 실제 소송을 걸었다. 여행·앱 클래스에서는 공존 가능성이 높다 — `Life is Strange`(Square Enix, 게임)와 LG `Life's Good`(전자)이 그렇게 공존하고 조사 자료가 '클래스가 다르면 공존한다' 고 명시한다. **그러나 티셔츠·모자 같은 의류 굿즈를 만들면 클래스가 겹친다.** 지금은 리스크가 아니지만 굿즈 계획이 생기는 시점에 반드시 다시 열어야 하는 항목이라, 조건을 명시해 두지 않으면 그때 아무도 이 판단을 기억하지 못한다",
+      "reversible_at": ".curvez/brand/naming.md:확정 이후 2"
+    },
+    {
+      "what": "`final:`·`rejected-final:` 여덟 줄과 후보 48줄을 하나도 지우지 않고 종결했다",
+      "why": "거부된 최종안 여섯(Todam·Nunchi·Jabak·Chagok·Mirinae·Mangata)과 탈락 후보 전부가 왜 그 이름이 아닌지의 근거다. 이후에 '왜 X 는 안 됐나' 가 나올 때 재조사 비용을 없앤다. 특히 MARU 결격 근거(요식·식품 상호 다수)는 코드에서 MARU 를 걷어낼 때 구현 에이전트가 읽어야 할 내용이다",
+      "reversible_at": ".curvez/brand/naming.md:shortlist"
+    }
+  ],
+  "blocked_on": [],
+  "verification": [
+    {
+      "command": "grep -c '^chosen: Life is Nearby (2026-08-25)$' .curvez/brand/naming.md",
+      "result": "chosen-line=1 — 규약 형식(`chosen: <이름> (<날짜>)`)으로 정확히 1줄. 위치는 `## shortlist` 바로 아래(265행)",
+      "passed": true
+    },
+    {
+      "command": "node -e '<chosen 파싱 + final:A 와 일치 검사>'",
+      "result": "chosen=1 값=\"Life is Nearby / 2026-08-25\" / **chosen 이 final:A 와 일치? true** — chosen 의 이름이 final:A 토큰(Life-is-Nearby)의 표기형과 정확히 대응한다. 임의의 이름이 들어가지 않았음을 기계로 확인했다",
+      "passed": true
+    },
+    {
+      "command": "node -e '<naming.md 파싱: candidate/final/check 카운트>'",
+      "result": "candidates=48 고유이름=44 providers=5 finals=2 finals-unchecked=0 / 후보중 check 없음: 없음 / unverified-marks=71",
+      "passed": true
+    },
+    {
+      "command": "필수 산출물 존재 · positioning 필수키 5종 · naming 섹션 3종",
+      "result": "MISSING-DOC 0줄, MISSING-SECTION 0줄, positioning-missing=0",
+      "passed": true
+    },
+    {
+      "command": "curl RDAP/npm — 확정 네임 가용성 종결 시각 재확인",
+      "result": "**lifeisnearby.com=404 lifeisnearby.app=404 npm=404** — 종결 시각(2026-08-25 23:47)에도 셋 다 미등록. R8 검증 시점과 동일하다. **이것은 상태이지 예약이 아니므로 취득 전까지 유효를 보장할 수 없다**",
+      "passed": true
+    },
+    {
+      "command": "unverified-marks=71 의 내역",
+      "result": "sns 전 후보 확인 불가(instagram 로그인월이 대조군 핸들에도 200 을 돌려주는 문제, 8 라운드 내내 동일), trademark 대부분 확인 불가(Justia 403·USPTO API 405, 각 2회 재시도 후 포기). **확정 네임 `Life is Nearby` 의 상표도 확인 불가에 포함된다** — 웹 검색에서 이 구문을 쓰는 기존 브랜드가 발견되지 않았을 뿐 전수 조사가 아니다. 이 사실을 summary·`## 확정 이후` 2번·문서 본문 세 곳에 적었다",
+      "passed": true
+    },
+    {
+      "command": "find .curvez/brand \\( -name '*.tsx' -o -name '*.ts' -o -name '*.css' \\) | wc -l / git status --porcelain",
+      "result": "impl-files=0. 이번 라운드에서 쓴 파일은 `.curvez/brand/naming.md` 와 이 핸드오프뿐이다. `src/`·`GOAL.md`·`package.json` 은 읽기만 했고 소유권 경계를 넘지 않았다",
+      "passed": true
+    },
+    {
+      "command": "node $CLAUDE_PLUGIN_ROOT/scripts/validate-handoff.mjs .curvez/handoff/",
+      "result": "이 파일 저장 직후 실행한다. 직전 실행 결과는 '검사 17건, 통과 17건, 실패 0건, 오류 0개, 경고 0개' 였다",
+      "passed": true
+    }
+  ]
+}

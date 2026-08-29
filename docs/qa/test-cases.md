@@ -29,20 +29,20 @@
 
 근거: `src/proxy.ts`, `src/app/[locale]/layout.tsx`, `src/domain/shared/locale.ts`
 
-| ID | P | 사전조건 | 절차 | 기대 결과 |
-|---|---|---|---|---|
-| TC-RTE-01 | P0 | — | `Accept-Language` 없이 `/` 요청 | `/en` 으로 307. 기본 로케일은 en |
-| TC-RTE-02 | P0 | — | `Accept-Language: ko-KR,ko;q=0.9` 로 `/` 요청 | `/ko` 로 307 |
-| TC-RTE-03 | P1 | — | `Accept-Language: zh-TW` / `zh-HK` / `zh-Hant` 각각으로 `/` 요청 | 셋 다 `/zh-Hant` |
-| TC-RTE-04 | P1 | — | `Accept-Language: zh-CN` 으로 `/` 요청 | 간체는 미지원이므로 건너뛰고 `/en` |
-| TC-RTE-05 | P1 | — | `Accept-Language: de-AT,de;q=0.9` 로 `/explore` 요청 | `/de/explore` 로 307 (하위 태그는 base 로 매칭) |
-| TC-RTE-06 | P1 | — | `/fr/explore` 직접 요청 | 리다이렉트 없이 200 |
-| TC-RTE-07 | P1 | — | `/es/explore` 요청 | `/en/es/explore` 로 간 뒤 404. 5xx 나 빈 화면이 아니어야 한다 |
-| TC-RTE-08 | P0 | — | `/api/spots/x/like` 로 POST | 로케일 리다이렉트(307) 없이 라우트에 닿는다. `matcher` 가 `api` 를 뺀다 |
-| TC-RTE-09 | P1 | — | `/ja` 접속 후 HTML 확인 | `<html lang="ja">`. 6개 로케일 각각 `LOCALE_HTML_LANG` 값과 일치 |
-| TC-RTE-10 | P1 | — | 홈에서 언어 드롭다운으로 6개 언어를 차례로 전환 | 매번 홈(`/{locale}`)에 머문다. 드롭다운에 English·한국어·日本語·繁體中文·Deutsch·Français 6개 |
-| TC-RTE-11 | P0 | 탐색에서 카테고리·시도·시군구·검색어·정렬·더보기를 모두 건 상태 | 언어 전환 | 같은 조건 그대로 다른 언어 목록. `category`·`area`·`district`·`q`·`sort`·`more` 파라미터가 전부 유지 |
-| TC-RTE-12 | P1 | — | 6개 로케일에서 홈·탐색을 열어 문구 확인 | 번역 키가 그대로 노출된 자리(`explore.title` 같은 원문 키)나 빈 문자열이 없다 |
+| ID | P | 사전조건 | 절차 | 실행 | 판정 | 기대 결과 |
+|---|---|---|---|---|---|---|
+| TC-RTE-01 | P0 | — | `Accept-Language` 없이 `/` 요청 | GET / | status 307 ; -> /en | `/en` 으로 307. 기본 로케일은 en |
+| TC-RTE-02 | P0 | — | `Accept-Language: ko-KR,ko;q=0.9` 로 `/` 요청 | GET / [Accept-Language: ko-KR,ko;q=0.9] | status 307 ; -> /ko | `/ko` 로 307 |
+| TC-RTE-03 | P1 | — | `Accept-Language: zh-TW` / `zh-HK` / `zh-Hant` 각각으로 `/` 요청 |  |  | 셋 다 `/zh-Hant` |
+| TC-RTE-04 | P1 | — | `Accept-Language: zh-CN` 으로 `/` 요청 | GET / [Accept-Language: zh-CN] | status 307 ; -> /en | 간체는 미지원이므로 건너뛰고 `/en` |
+| TC-RTE-05 | P1 | — | `Accept-Language: de-AT,de;q=0.9` 로 `/explore` 요청 |  |  | `/de/explore` 로 307 (하위 태그는 base 로 매칭) |
+| TC-RTE-06 | P1 | — | `/fr/explore` 직접 요청 | GET /fr/explore | status 200 | 리다이렉트 없이 200 |
+| TC-RTE-07 | P1 | — | `/es/explore` 요청 |  |  | `/en/es/explore` 로 간 뒤 404. 5xx 나 빈 화면이 아니어야 한다 |
+| TC-RTE-08 | P0 | — | `/api/spots/x/like` 로 POST |  |  | 로케일 리다이렉트(307) 없이 라우트에 닿는다. `matcher` 가 `api` 를 뺀다 |
+| TC-RTE-09 | P1 | — | `/ja` 접속 후 HTML 확인 |  |  | `<html lang="ja">`. 6개 로케일 각각 `LOCALE_HTML_LANG` 값과 일치 |
+| TC-RTE-10 | P1 | — | 홈에서 언어 드롭다운으로 6개 언어를 차례로 전환 |  |  | 매번 홈(`/{locale}`)에 머문다. 드롭다운에 English·한국어·日本語·繁體中文·Deutsch·Français 6개 |
+| TC-RTE-11 | P0 | 탐색에서 카테고리·시도·시군구·검색어·정렬·더보기를 모두 건 상태 | 언어 전환 |  |  | 같은 조건 그대로 다른 언어 목록. `category`·`area`·`district`·`q`·`sort`·`more` 파라미터가 전부 유지 |
+| TC-RTE-12 | P1 | — | 6개 로케일에서 홈·탐색을 열어 문구 확인 |  |  | 번역 키가 그대로 노출된 자리(`explore.title` 같은 원문 키)나 빈 문자열이 없다 |
 
 ## 2. 탐색 화면 — 필터 (EXP)
 
@@ -254,22 +254,22 @@
 
 ## 16. 반응형·성능 (RSP)
 
-| ID | P | 사전조건 | 절차 | 기대 결과 |
-|---|---|---|---|---|
-| TC-RSP-01 | P0 | — | 375px 폭에서 홈·탐색·상세를 훑는다 | **가로 스크롤이 없다** (GOAL.md §6) |
-| TC-RSP-02 | P1 | 375px | 필터 바 확인 | 검색·정렬이 줄바꿈되어 잘리지 않는다 |
-| TC-RSP-03 | P2 | 좁은 화면 | 홈 확인 | 연결망 그림이 숨고 글만 남는다 |
-| TC-RSP-04 | P1 | 느린 3G throttling | 탐색 진입 | 머리말·카테고리 탭이 먼저 뜨고 목록만 스켈레톤. 필터는 그동안에도 조작 가능하다 |
-| TC-RSP-05 | P2 | — | 상세 진입 | 대표 이미지가 우선 로드된다(`priority`) |
+| ID | P | 사전조건 | 절차 | 실행 | 판정 | 기대 결과 |
+|---|---|---|---|---|---|---|
+| TC-RSP-01 | P0 | — | 375px 폭에서 홈·탐색·상세를 훑는다 | open /en/explore @375x812 | js document.documentElement.scrollWidth <= document.documentElement.clientWidth | **가로 스크롤이 없다** (GOAL.md §6) |
+| TC-RSP-02 | P1 | 375px | 필터 바 확인 |  |  | 검색·정렬이 줄바꿈되어 잘리지 않는다 |
+| TC-RSP-03 | P2 | 좁은 화면 | 홈 확인 |  |  | 연결망 그림이 숨고 글만 남는다 |
+| TC-RSP-04 | P1 | 느린 3G throttling | 탐색 진입 |  |  | 머리말·카테고리 탭이 먼저 뜨고 목록만 스켈레톤. 필터는 그동안에도 조작 가능하다 |
+| TC-RSP-05 | P2 | — | 상세 진입 |  |  | 대표 이미지가 우선 로드된다(`priority`) |
 
 ## 17. 정적 검증 (AUTO)
 
-| ID | P | 명령 | 기대 결과 |
-|---|---|---|---|
-| TC-AUTO-01 | P0 | `pnpm test` | 전 테스트 통과. skip 이 있으면 개수와 이유를 보고에 적는다 |
-| TC-AUTO-02 | P0 | `pnpm typecheck` | 에러 0 |
-| TC-AUTO-03 | P1 | `pnpm lint` | 에러 0 |
-| TC-AUTO-04 | P0 | `pnpm build` | 빌드 성공 (GOAL.md §6) |
+| ID | P | 명령 | 실행 | 판정 | 기대 결과 |
+|---|---|---|---|---|---|
+| TC-AUTO-01 | P0 | `pnpm test` | `$ pnpm test` | exit 0 | 전 테스트 통과. skip 이 있으면 개수와 이유를 보고에 적는다 |
+| TC-AUTO-02 | P0 | `pnpm typecheck` | `$ pnpm typecheck` | exit 0 | 에러 0 |
+| TC-AUTO-03 | P1 | `pnpm lint` | `$ pnpm lint` | exit 0 | 에러 0 |
+| TC-AUTO-04 | P0 | `pnpm build` |  |  | 빌드 성공 (GOAL.md §6) |
 
 기존 자동화 테스트(`tests/`, 20개 파일)가 이미 덮는 영역 — 아래는 수동 TC 를 만들지 않았다.
 

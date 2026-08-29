@@ -9,11 +9,11 @@
   "finishedAt": "2026-08-29T06:35:51.935Z",
   "baseUrl": "http://localhost:3000",
   "counts": {
-    "pass": 9,
+    "pass": 8,
     "fail": 0,
     "running": 0,
     "pending": 0,
-    "skipped": 128
+    "skipped": 129
   },
   "results": [
     {
@@ -109,10 +109,9 @@
       },
       "evidence": null,
       "verdict": {
-        "status": "pass",
-        "reason": "zh-TW / zh-HK / zh-Hant 셋 다 /zh-Hant 로 갔다. 브라우저에서 직접 확인함",
-        "by": "human",
-        "at": "2026-08-29T06:36:19.277Z"
+        "status": "skipped",
+        "reason": "계획을 세우지 못했다.",
+        "by": "runner"
       }
     },
     {

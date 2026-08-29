@@ -23,9 +23,8 @@ const newsreader = Newsreader({
 export const metadata: Metadata = {
   /*
     브랜드명 하나만 둔다. 탭에는 열 몇 자만 보이므로 설명을 붙이면 이름이 잘린다.
-    MARU 는 산마루의 마루 — 심볼이 산이고 이름이 그 꼭대기를 가리킨다.
   */
-  title: "MARU",
+  title: "Life is Nearby",
   description: "A small, edited selection of Korea. Not a directory.",
 };
 

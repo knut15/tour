@@ -1,0 +1,21 @@
+$ next dev
+▲ Next.js 16.3.1 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.35.195:3000
+- Environments: .env.local
+✓ Ready in 389ms
+✓ Running next.config.ts took 85ms
+
+ GET /en 200 in 885ms (next.js: 273ms, proxy.ts: 4ms, generate-params: 322ms, application-code: 287ms)
+ GET /en 200 in 888ms (next.js: 282ms, proxy.ts: 4ms, generate-params: 330ms, application-code: 272ms)
+ GET /fr/explore 200 in 1871ms (next.js: 41ms, proxy.ts: 3ms, generate-params: 327ms, application-code: 1500ms)
+ GET /fr/explore 200 in 1870ms (next.js: 36ms, proxy.ts: 3ms, generate-params: 326ms, application-code: 1505ms)
+ GET /en/explore 200 in 534ms (next.js: 4ms, proxy.ts: 2ms, generate-params: 1.8ms, application-code: 526ms)
+ GET /en/explore 200 in 539ms (next.js: 18ms, proxy.ts: 2ms, generate-params: 0.0ms, application-code: 519ms)
+[TypeError: fetch failed] {
+  [cause]: Error [ConnectTimeoutError]: Connect Timeout Error (attempted address: apis.data.go.kr:443, timeout: 10000ms)
+      at ignore-listed frames {
+    code: 'UND_ERR_CONNECT_TIMEOUT'
+  }
+}
+[?25h

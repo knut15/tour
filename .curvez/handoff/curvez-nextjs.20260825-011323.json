@@ -1,0 +1,50 @@
+{
+  "from": "curvez-nextjs",
+  "to": [
+    "curvez-orchestrator",
+    "curvez-marketer"
+  ],
+  "status": "done",
+  "summary": "네이밍 R4 재요청(개정 브리프 기준)에 응답했다. `.curvez/brand/naming.md` 의 개정된 `## brief` — 향토·식품 연상 금지 신설, 의미(30) 정의를 '첫 접촉 즉시 이해'로 재정의 + 한 문장 테스트, 의성어·의태어 1순위 탐색 축 — 를 다시 읽고 `## candidates` 의 기존 13개(및 by:user MARU 포함)와 겹치지 않는 신규 후보 4개(Jabak / Sabujak / Gomgom / Georeum, 이 중 3개가 의성어·의태어)를 냈다. Doran(도란도란)이 '방향은 맞았으나 충돌로 죽었다'는 신호를 따라, 조용하고 개인적인 걸음·궁리의 소리를 어원으로 삼되 향토·식품 연상이 없는 낱말만 골랐다. 각 후보에 사용자에게 그대로 보여줄 한 문장과, 코드 식별자 관점 결격 유무 + 된소리 겹자음 로마자화 판정을 담았다. Gomgom 은 One Piece 의 능력명 'Gomu Gomu' 와의 근접 충돌 가능성을 알고 있어 명시적으로 낮은 우선순위로 표시했다. `.curvez/brand/`, `src/`, `package.json` 어디에도 쓰지 않았다 — 유일한 산출물은 이 핸드오프 파일이다",
+  "artifacts": [],
+  "decisions": [
+    {
+      "what": "naming-candidate: Jabak",
+      "why": "① 한 문장 소개(사용자용): \"Jabak — 오늘 하루, 발끝이 이끄는 대로 한 곳 한 곳 걸어서 이어 붙인 길.\" ② 코드 식별자 결격 없음 — 소문자 ASCII 5자 'jabak', 하이픈·숫자 없음, 2음절(4~8자·1~3음절 충족). `grep -rniE \"jabak\" --include='*.ts' --include='*.tsx' --include='*.json' .`(node_modules·.curvez 제외) 결과 0건, `src/app` 기존 디렉터리(`[locale]`·`api`)와도 무충돌, `JABAK_` 환경변수 접두사·package.json name·npm 패키지명으로 그대로 쓸 수 있다. 된소리 겹자음(ㄲㅉㅃㄸ→kk/jj/pp/tt) 없음 — 원어 '자박자박'(발이 물기 있는 땅을 밟을 때 나는 조용한 소리, 반복형의 앞 절만 취함)의 자음이 ㅈ·ㅂ·ㄱ 순한 소리라 로마자 j·b·k 로 영어권 독자가 그대로 소리 내어 읽을 수 있다 — 이 축에서 결격 없음. 아는 상표·서비스명 충돌은 없다(실검색은 하지 않았다)",
+      "reversible_at": ".curvez/brand/naming.md:## candidates"
+    },
+    {
+      "what": "naming-candidate: Sabujak",
+      "why": "① 한 문장 소개(사용자용): \"Sabujak — 정하지 않고 나섰다가, 한 곳씩 들르다 보면 어느새 하루의 동선이 되어 있다.\" ② 코드 식별자 결격 없음 — 소문자 ASCII 7자 'sabujak', 하이픈·숫자 없음, 3음절로 상한에 걸리지만 충족(4~8자·1~3음절). grep 결과 0건(위와 동일 범위), 기존 라우트·환경변수와 무충돌. `SABUJAK_` 접두사·npm 패키지명 사용 가능. 된소리 겹자음 없음 — 원어 '사부작사부작'(느긋하게 이것저것 하며 움직이는 소리, 앞 절만 취함)의 자음이 모두 순한 소리라 's' 'b' 'j' 로 영어권 독자가 오독 없이 읽는다 — 이 축에서 결격 없음. 3음절이라 Nadeuri 가 상한 초과로 감점됐던 것과 같은 리스크가 있을 수 있다는 점은 참고로 밝혀 둔다. 아는 상표·서비스명 충돌은 없다",
+      "reversible_at": ".curvez/brand/naming.md:## candidates"
+    },
+    {
+      "what": "naming-candidate: Gomgom",
+      "why": "① 한 문장 소개(사용자용): \"Gomgom — 왜 이 장소를 골랐는지, 그 이유까지 곰곰이 챙겨서 함께 건넨다.\" ② 코드 식별자 자체는 결격 없음 — 소문자 ASCII 6자 'gomgom', 하이픈·숫자 없음, 2음절, grep 0건, `GOMGOM_` 접두사 사용 가능, 된소리 겹자음도 없어 로마자 그대로 읽힌다. **다만 아는 충돌이 있어 우선순위를 낮춘다** — 스펠링·발음이 『원피스』의 능력명 'Gomu Gomu'(고무고무)와 근접해 en 검색에서 그 프랜차이즈에 밀릴 위험이 있다. 이것은 Doran 이 죽은 이유(LoL `Doran's Blade` 가 en 검색을 지배)와 같은 실패 유형이다 — 방향(의태어, 향토·식품 연상 없음, 코어의 differentiator '고른 이유를 붙인다'와 직접 연결)은 맞지만 대중문화 IP 충돌 가능성을 미리 적어 둔다. 정식 상표·도메인 실검색은 하지 않았다",
+      "reversible_at": ".curvez/brand/naming.md:## candidates"
+    },
+    {
+      "what": "naming-candidate: Georeum",
+      "why": "① 한 문장 소개(사용자용): \"Georeum — 오늘 갈 곳을 정하고 나면, 그 걸음이 다음 장소까지 자연스럽게 이어진다.\" ② 코드 식별자 결격 없음 — 소문자 ASCII 7자 'georeum', 하이픈·숫자 없음, 2음절. grep 0건, `GEOREUM_` 접두사 사용 가능. 한국어 '걸음'(발걸음/보행) — 의성어·의태어는 아니고 평범한 명사라 브리프의 겹자음 판정 대상이 아니다. 세 의성어 후보와 어원 축을 갈라 두려고 함께 냈다 — R4 개정 내역이 'A/B 가 둘 다 한국어 명사여서 어원 축이 안 갈렸다'를 A/B 동반 거부의 구조적 원인으로 지목했으므로, 이번 라운드 안에서도 후보군의 어원을 한 갈래로 몰지 않는 편이 R6 조합의 폭을 넓힌다. 아는 상표·서비스명 충돌은 없다",
+      "reversible_at": ".curvez/brand/naming.md:## candidates"
+    }
+  ],
+  "blocked_on": [],
+  "verification": [
+    {
+      "command": "grep -rniE \"jabak|sabujak|gomgom|georeum\" --include='*.ts' --include='*.tsx' --include='*.json' . | grep -v node_modules | grep -v '\\.curvez/'",
+      "result": "0건 — 네 후보 모두 기존 코드·설정과 식별자 충돌 없음",
+      "passed": true
+    },
+    {
+      "command": "cat package.json | grep '\"name\"' && ls src/app",
+      "result": "현재 name=\"tour\". src/app 하위: [locale], api, apple-icon.png, globals.css, icon.svg — 네 후보 중 어느 것과도 겹치지 않는다",
+      "passed": true
+    },
+    {
+      "command": "naming.md ## candidates 의 기존 13개 이름과 신규 4개 비교(육안) — 한 글자 차이·동음 여부",
+      "result": "MARU/Damda/Nunchi/Nadeuri/Gyeol(x2)/Dulle/Nooka/Golla/Framea/Todam/Doran 어느 것과도 철자·발음이 겹치지 않는다",
+      "passed": true
+    }
+  ]
+}

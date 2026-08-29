@@ -1,0 +1,49 @@
+{
+  "from": "curvez-designer",
+  "to": ["curvez-orchestrator", "curvez-marketer"],
+  "status": "done",
+  "summary": "네이밍 R2 참가 — curvez-marketer 의 요청에 답해 시각·발음·로고 글자 균형 관점에서 후보 3개(Dulle / Gyeol / Nooka)를 냈다. 셋 다 promise 또는 differentiator 와 직접 연결했고, 두 후보(Dulle·Gyeol)는 관점상 결격 사유가 있다고 명시했다. MARU 는 BrandMark.tsx 를 읽고 실제 구현(소문자 처리로 산 심볼의 각진 형태와 자간·굵기를 맞춘 설계)을 확인했으나 근거 있는 시각적 결격 사유를 찾지 못해 note 를 내지 않았다 — 없는 결함을 지어내지 않았다. 이번 라운드는 화면 설계·토큰 작업이 아니므로 `.curvez/design/` 에는 아무것도 쓰지 않았다.",
+  "artifacts": [],
+  "decisions": [
+    {
+      "what": "naming-candidate: Dulle",
+      "why": "둘레(길) — promise 의 '오늘 갈 곳이 하루 동선 하나로 정해진다' 를 하루를 한 바퀴 도는 순환 동선 이미지로 직결한다. 결격 있음 — 로마자 겹자음 'll' 이 영어권 독자에게 'dull'(따분한) 로 먼저 읽혀 부정 함의가 생기고, 로고에서 l-l 두 세로획이 붙어 반복되며 소문자 조판의 좌우 무게가 오른쪽으로 쏠린다."
+    },
+    {
+      "what": "naming-candidate: Gyeol",
+      "why": "결(무늬·흐름) — differentiator 의 '데이터에 비어 있는 맥락과 동선을 채운다' 를 흩어진 것에 결을 잡아 준다는 뜻으로 잇는다. 결격 있음 — 로마자 'gy' 자음군과 'eo' 이중모음이 영어·독어·불어 화자에게 고정된 발음 규칙이 없어 'gee-ol' / 'jee-yol' 등으로 갈리고, 로고에서 5글자 중 앞 두 글자(gy)만 시각적으로 뭉쳐 보여 자수 균형이 깨진다."
+    },
+    {
+      "what": "naming-candidate: Nooka",
+      "why": "영어 nook(아늑한 구석)의 조어 — differentiator 의 '한 화면에 6~9개만 편집해 건다' 는 좁게 편집된 개인 공간을 그대로 가리킨다. 결격 없음(시각·발음·자수 균형 기준) — 5글자 중 상승선을 가진 글자가 k 하나뿐이라 낮고 안정적인 실루엣이 되고, 이중 o 가 대칭축을 만들어 균형이 좋으며 영어 화자 발음도 'noo-ka' 로 갈릴 여지가 적다. 다만 6개 언어 부정 함의 전수 검색은 하지 않았다 — R3 실검색 필요"
+    }
+  ],
+  "blocked_on": [],
+  "verification": [
+    {
+      "command": "후보 3개 각각 길이(4~8자)·음절(1~3)·소문자 ASCII 여부·하이픈/숫자 포함 여부를 수동 확인",
+      "result": "dulle=5자/2음절, gyeol=5자/1음절, nooka=5자/2음절. 셋 다 소문자 ASCII 만이고 하이픈·숫자 없음 — 코드 식별자 제약 통과",
+      "passed": true
+    },
+    {
+      "command": "풀(.curvez/brand/naming.md ## candidates 의 MARU / Damda / Nunchi / Nadeuri)과 한 글자 차이·동음 여부 대조",
+      "result": "3개 후보 모두 풀과 철자·발음이 겹치지 않음",
+      "passed": true
+    },
+    {
+      "command": "카테고리어(tour/trip/travel/korea/visit/guide/place) 및 포털 조어(-portal/-info/-data/K- 접두) 포함 여부 확인",
+      "result": "3개 후보 모두 해당 문자열을 포함하지 않음",
+      "passed": true
+    },
+    {
+      "command": "src/presentation/components/BrandMark.tsx 를 읽어 MARU 워드마크의 실제 시각 설계(소문자 처리로 각진 산 심볼과 자간·굵기를 맞춘 근거)를 확인",
+      "result": "설계 의도(소문자로 각을 눌러 심볼과 균형을 맞춤, 자간 0.12em, 크기 0.68em)가 문서화돼 있고 실측 근거가 있어 designer 관점의 결격 사유를 찾지 못함. naming-candidate-note: MARU 를 내지 않음",
+      "passed": true
+    },
+    {
+      "command": "find .curvez/design -newer .curvez/handoff/curvez-marketer.20260825-003259.json 2>/dev/null | wc -l",
+      "result": "0 — 이번 라운드에 .curvez/design/ 아래 아무 파일도 쓰지 않았다",
+      "passed": true
+    }
+  ]
+}
