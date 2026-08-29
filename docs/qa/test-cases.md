@@ -18,6 +18,7 @@
 |---|---|
 | 기동 | `pnpm dev` (개발 3000 / 검증 3001) |
 | 검증 위치 | 전용 워크트리 `../tour-qa`. **Next 16 은 같은 디렉터리에 dev 서버를 둘 띄우지 못한다** — 포트가 달라도 거부하므로 트리를 갈라야 개발과 검증이 공존한다 |
+| 앱 주소 | **실행 칸에 주소를 직접 적지 않는다. `$BASE_URL` 을 쓴다.** 박아 두면 검증이 자기가 띄운 앱이 아니라 그 주소에 떠 있는 아무 앱이나 검증하게 된다 — 실제로 그 일이 났고, 개발 서버를 검증하고 통과를 보고했다 |
 | 데이터 | `.env.local` 이 정한다. 검증도 그것을 그대로 따른다 — 설정으로 덮지 않는다 |
 | mock 전환 | `USE_MOCK_DATA` 가 `"false"` 가 **아니면 전부 mock** (`src/infrastructure/config/env.ts:isMockEnabled`) |
 | 실데이터 | `USE_MOCK_DATA=false` + `TOUR_API_KEY` 필요 |
@@ -44,7 +45,7 @@
 |---|---|---|---|---|---|---|
 | TC-RTE-01 | P0 | — | `Accept-Language` 없이 `/` 요청 | GET / | status 307 ; -> /en | `/en` 으로 307. 기본 로케일은 en |
 | TC-RTE-02 | P0 | — | `Accept-Language: ko-KR,ko;q=0.9` 로 `/` 요청 | GET / [Accept-Language: ko-KR,ko;q=0.9] | status 307 ; -> /ko | `/ko` 로 307 |
-| TC-RTE-03 | P1 | — | `Accept-Language: zh-TW` / `zh-HK` / `zh-Hant` 각각으로 `/` 요청 | $ for h in zh-TW zh-HK zh-Hant; do curl -s -o /dev/null -w "%{redirect_url} " -H "Accept-Language: $h" http://localhost:3001/; done | stdout has http://localhost:3001/zh-Hant http://localhost:3001/zh-Hant http://localhost:3001/zh-Hant | 셋 다 `/zh-Hant` |
+| TC-RTE-03 | P1 | — | `Accept-Language: zh-TW` / `zh-HK` / `zh-Hant` 각각으로 `/` 요청 | $ for h in zh-TW zh-HK zh-Hant; do curl -s -o /dev/null -w "%{redirect_url} " -H "Accept-Language: $h" $BASE_URL/; done | stdout has $BASE_URL/zh-Hant $BASE_URL/zh-Hant $BASE_URL/zh-Hant | 셋 다 `/zh-Hant` |
 | TC-RTE-04 | P1 | — | `Accept-Language: zh-CN` 으로 `/` 요청 | GET / [Accept-Language: zh-CN] | status 307 ; -> /en | 간체는 미지원이므로 건너뛰고 `/en` |
 | TC-RTE-05 | P1 | — | `Accept-Language: de-AT,de;q=0.9` 로 `/explore` 요청 | GET /explore [Accept-Language: de-AT,de;q=0.9] | status 307 ; -> /de/explore | `/de/explore` 로 307 (하위 태그는 base 로 매칭) |
 | TC-RTE-06 | P1 | — | `/fr/explore` 직접 요청 | GET /fr/explore | status 200 | 리다이렉트 없이 200 |
@@ -53,7 +54,7 @@
 | TC-RTE-09 | P1 | — | `/ja` 접속 후 HTML 확인 | GET /ja | status 200 ; body has lang="ja" | `<html lang="ja">`. 6개 로케일 각각 `LOCALE_HTML_LANG` 값과 일치 |
 | TC-RTE-10 | P1 | — | 홈에서 언어 드롭다운으로 6개 언어를 차례로 전환 | open /en > wait 3000 > click text=English > wait 1000 | js ['한국어','日本語','繁體中文','Deutsch','Français'].every(t => document.body.innerText.includes(t)) | 매번 홈(`/{locale}`)에 머문다. 드롭다운에 English·한국어·日本語·繁體中文·Deutsch·Français 6개 |
 | TC-RTE-11 | P0 | 탐색에서 카테고리·시도·시군구·검색어·정렬·더보기를 모두 건 상태 | 언어 전환 | open /en/explore?category=food&sort=likes > wait 3500 > click text=English > wait 1000 > click text=한국어 > wait 4000 | js location.pathname.startsWith('/ko') && location.search.includes('category=food') && location.search.includes('sort=likes') | 같은 조건 그대로 다른 언어 목록. `category`·`area`·`district`·`q`·`sort`·`more` 파라미터가 전부 유지 |
-| TC-RTE-12 | P1 | — | 6개 로케일에서 홈·탐색을 열어 문구 확인 | $ for l in en ko ja zh-Hant de fr; do curl -s http://localhost:3001/$l ; curl -s http://localhost:3001/$l/explore ; done \| grep -oE ">(explore\|state\|frame\|detail\|category\|nav\|a11y\|weather)\.[a-zA-Z]+<" | stdout empty | 번역 키가 그대로 노출된 자리(`explore.title` 같은 원문 키)나 빈 문자열이 없다 |
+| TC-RTE-12 | P1 | — | 6개 로케일에서 홈·탐색을 열어 문구 확인 | $ for l in en ko ja zh-Hant de fr; do curl -s $BASE_URL/$l ; curl -s $BASE_URL/$l/explore ; done \| grep -oE ">(explore\|state\|frame\|detail\|category\|nav\|a11y\|weather)\.[a-zA-Z]+<" | stdout empty | 번역 키가 그대로 노출된 자리(`explore.title` 같은 원문 키)나 빈 문자열이 없다 |
 
 ## 2. 탐색 화면 — 필터 (EXP)
 
@@ -146,7 +147,7 @@
 |---|---|---|---|---|---|---|
 | TC-API-01 | P0 | Supabase 설정 | `POST /api/spots/경복궁/like` body `{"visitorId":"uuid"}` (키는 URL 인코딩) | manual: 성공 경로가 실제 저장소에 좋아요를 남긴다 — §8 의 "서버에 남는가" 규칙에 따라 자동화하지 않는다 |  | 200 + 바뀐 총수 JSON |
 | TC-API-02 | P0 | 위와 같음 | 같은 방문자로 한 번 더 | manual: 토글이 저장소의 좋아요 상태를 뒤집는다 — QA 실행 횟수가 지표에 섞인다 |  | 좋아요가 해제되고 총수가 1 줄어든다. 화면 상태를 서버가 받지 않는다 |
-| TC-API-03 | P0 | — | body 를 `{}` 로 POST | $ curl -s -w " %{http_code}" -X POST -H "content-type: application/json" -d "{}" http://localhost:3001/api/spots/x/like | stdout has bad-request"} 400 | 400 `bad-request` |
+| TC-API-03 | P0 | — | body 를 `{}` 로 POST | $ curl -s -w " %{http_code}" -X POST -H "content-type: application/json" -d "{}" $BASE_URL/api/spots/x/like | stdout has bad-request"} 400 | 400 `bad-request` |
 | TC-API-04 | P0 | — | body 를 JSON 으로 읽을 수 없게 POST (본문 없음 — `request.json()` 이 던지는 같은 경로다) | POST /api/spots/x/like | status 400 ; body has bad-request | 400 `bad-request` |
 | TC-API-05 | P0 | Supabase 미설정 | like / view 각각 POST | manual: 이 검증 환경에는 Supabase 키가 있어 503 경로 자체가 나오지 않는다 |  | 503 `stats-disabled` |
 | TC-API-06 | P1 | 저장소 오류를 만들 수 있는 환경 | like POST | manual: 저장소를 실패시킬 주입 지점이 앱에 없다 |  | 502 `upstream`. 200 으로 삼키면 실패 |
@@ -155,7 +156,7 @@
 | TC-API-09 | P1 | 위와 같음 | 다른 방문자 id 로 호출 | manual: 회차마다 조회수가 실제로 올라 지표를 QA 실행 횟수로 만든다 |  | `views` 가 오른다 |
 | TC-API-10 | P1 | 조회 기록은 되지만 읽기가 실패하는 상황 | view POST | manual: 기록은 되고 읽기만 실패하는 상황을 만들 수 없다 |  | 200 + 빈 JSON 또는 204. 사용자에게 오류가 노출되지 않는다 |
 | TC-API-11 | P1 | — | 한글·공백이 든 키를 인코딩해 호출 | manual: 디코딩이 통했음을 보려면 200 경로까지 가야 하고 그 경로가 저장소에 쓴다 |  | 정상 처리. 서버가 `decodeURIComponent` 로 푼다 |
-| TC-API-12 | P2 | — | 통계 키가 될 수 없는 값(빈 문자열 등)으로 like | $ curl -s -w " %{http_code}" -X POST -H "content-type: application/json" -d '{"visitorId":"autoqa-probe"}' "http://localhost:3001/api/spots/%20/like" | stdout has not-countable"} 400 | 400 `not-countable` |
+| TC-API-12 | P2 | — | 통계 키가 될 수 없는 값(빈 문자열 등)으로 like | $ curl -s -w " %{http_code}" -X POST -H "content-type: application/json" -d '{"visitorId":"autoqa-probe"}' "$BASE_URL/api/spots/%20/like" | stdout has not-countable"} 400 | 400 `not-countable` |
 
 ## 8. 담기·좋아요·조회 화면 동작 (RCT)
 
