@@ -47,6 +47,9 @@ export function SaveChip({
   return (
     <button
       type="button"
+      // 카드 안의 담기 버튼(`CardActions`)과 **같은 이름**이다. 화면이 달라도
+      // 같은 일을 하므로, 어느 쪽에서 눌러도 같은 TC 가 돈다
+      data-testid="save-toggle"
       onClick={onClick}
       aria-pressed={saved}
       // 아이콘 전용일 때만 라벨이 필요하다. inline 은 텍스트를 갖고 있어 중복 지정하지 않는다

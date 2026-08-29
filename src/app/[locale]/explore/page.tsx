@@ -333,6 +333,7 @@ async function Areas({
       current={current}
       label={t.explore.areaLabel}
       allLabel={t.explore.allAreas}
+      testId="area-select"
       // 시도를 바꾸면 시군구는 버린다. 다른 시도에서 같은 번호는 다른 곳이다
       hrefFor={(code) => exploreHref(locale, { category, keyword, areaCode: code })}
     />
@@ -368,6 +369,7 @@ async function Districts({
       current={current}
       label={t.explore.districtLabel}
       allLabel={t.explore.allDistricts}
+      testId="district-select"
       hrefFor={(code) => exploreHref(locale, { category, keyword, areaCode, districtCode: code })}
     />
   );
