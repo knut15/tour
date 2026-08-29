@@ -1,0 +1,53 @@
+{
+  "project": "tour (Life is Nearby)",
+  "startedAt": "2026-08-29T05:55:08.747Z",
+  "finishedAt": "2026-08-29T05:55:10.745Z",
+  "baseUrl": "http://localhost:3000",
+  "counts": {
+    "pass": 0,
+    "fail": 1,
+    "running": 0,
+    "pending": 0,
+    "skipped": 0
+  },
+  "results": [
+    {
+      "tcId": "TC-RTE-01",
+      "suite": "라우팅·로케일",
+      "name": "`Accept-Language` 없이 `/` 요청",
+      "priority": "P0",
+      "expected": "`/en` 으로 307. 기본 로케일은 en",
+      "plan": {
+        "tcId": "TC-RTE-01",
+        "mode": "http",
+        "reason": "기본 로케일 리다이렉트",
+        "http": {
+          "path": "/"
+        },
+        "expect": {
+          "status": 307,
+          "redirectsTo": "/ko"
+        },
+        "tcHash": "2665d389d2f1"
+      },
+      "evidence": {
+        "mode": "http",
+        "durationMs": 7,
+        "status": 307,
+        "headers": {
+          "connection": "keep-alive",
+          "date": "Sat, 29 Aug 2026 05:55:10 GMT",
+          "keep-alive": "timeout=5",
+          "location": "/en",
+          "transfer-encoding": "chunked"
+        },
+        "body": "/en"
+      },
+      "verdict": {
+        "status": "fail",
+        "reason": "\"/ko\" 로 가야 하는데 \"/en\" 이다",
+        "by": "rule"
+      }
+    }
+  ]
+}
