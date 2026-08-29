@@ -52,8 +52,8 @@
 |---|---|---|---|---|---|---|
 | TC-EXP-01 | P0 | — | `/en/explore` 진입 | open /en/explore > wait 2500 | js document.querySelectorAll('[data-testid=category-tab]').length === 4 && document.querySelectorAll('[data-testid=spot-card]').length >= 10 | 카테고리 기본 `attraction`, 필터 바에 카테고리·거리·지역·정렬·검색이 선다. **카드는 최대 12장(BATCH)이고 그보다 적을 수 있다** — 공급자가 준 12건 중 이미지 없는 것과 배제 분류(EX050800)가 걸러지기 때문이다. mock 에서는 11장이다 |
 | TC-EXP-02 | P0 | — | 카테고리 탭 4개(Places/Culture/Food/Happening)를 차례로 누른다 | open /en/explore > wait 2000 > click [data-category=food] > wait 1500 | js location.search.includes("category=food") | URL `category` 가 바뀌고 목록이 갱신된다. 각 탭에서 결과가 나온다 |
-| TC-EXP-03 | P1 | — | 시도(Region)를 고른다 |  |  | URL 에 `area` 가 붙고, 그 아래에 시군구(District) 선택이 새로 나타난다 |
-| TC-EXP-04 | P0 | 시도+시군구를 고른 상태 | 다른 시도를 고른다 |  |  | `district` 파라미터가 **사라진다**. 시군구 코드는 시도 안에서만 고유하므로 남으면 안 된다 |
+| TC-EXP-03 | P1 | — | 시도(Region)를 고른다 | open /en/explore > wait 2500 > click [data-testid=area-select] > wait 800 > click [data-testid=area-select] [data-region="1"] > wait 2500 | js location.search.includes("area=1") && document.querySelector('[data-testid=district-select]') !== null | URL 에 `area` 가 붙고, 그 아래에 시군구(District) 선택이 새로 나타난다 |
+| TC-EXP-04 | P0 | 시도+시군구를 고른 상태 | 다른 시도를 고른다 | open /en/explore?area=1&district=23 > wait 2500 > click [data-testid=area-select] > wait 800 > click [data-testid=area-select] [data-region="6"] > wait 2500 | js location.search.includes("area=6") && !location.search.includes("district=") | `district` 파라미터가 **사라진다**. 시군구 코드는 시도 안에서만 고유하므로 남으면 안 된다 |
 | TC-EXP-05 | P1 | — | `?district=23` 만 붙여 접속 (`area` 없이) |  |  | `district` 는 통째로 무시되고 전국 목록이 나온다 |
 | TC-EXP-06 | P1 | — | `?category=zzz` 로 접속 | GET /en/explore?category=zzz | status 200 | `attraction` 목록. 에러 화면이 아니다 |
 | TC-EXP-07 | P1 | — | `?sort=zzz` 로 접속 | GET /en/explore?sort=zzz | status 200 | 기본 정렬(조회순)로 그린다 |
@@ -73,8 +73,8 @@
 | TC-SRC-04 | P1 | — | `?q=%20` (공백만) 으로 접속 | open /en/explore?q=%20 > wait 3000 | js document.querySelectorAll('[data-testid=spot-card]').length >= 10 | 빈 검색이 아니라 일반 목록 |
 | TC-SRC-05 | P1 | 검색을 한 상태 | 브라우저 뒤로가기 |  |  | 목록이 검색 전으로 돌아가고 **검색칸도 함께 비워진다**. 칸과 목록이 다른 말을 하면 실패 |
 | TC-SRC-06 | P2 | 검색 결과 화면 | 연달아 다른 말로 검색 |  |  | 입력 칸에서 포커스가 빠지지 않는다 |
-| TC-SRC-07 | P1 | — | 정렬을 Most liked 로 바꾼다 |  |  | URL `sort=likes`, 목록 상단 순서 변경. **스크롤 위치가 유지된다**(맨 위로 튀지 않는다) |
-| TC-SRC-08 | P2 | — | 정렬을 다시 Most viewed 로 |  |  | 기본값이므로 URL 에서 `sort` 가 **빠진다** |
+| TC-SRC-07 | P1 | — | 정렬을 Most liked 로 바꾼다 | open /en/explore > wait 2500 > click [data-sort=likes] > wait 2500 | js location.search.includes("sort=likes") | URL `sort=likes`, 목록 상단 순서 변경. **스크롤 위치가 유지된다**(맨 위로 튀지 않는다) |
+| TC-SRC-08 | P2 | — | 정렬을 다시 Most viewed 로 | open /en/explore?sort=likes > wait 2500 > click [data-sort=views] > wait 2500 | js !location.search.includes("sort=") | 기본값이므로 URL 에서 `sort` 가 **빠진다** |
 | TC-SRC-09 | P0 | — | 더보기를 1회 누른다 | open /en/explore > wait 2500 > click [data-testid=load-more] > wait 2500 | js location.search.includes("more=1") && document.querySelectorAll('[data-testid=spot-card]').length >= 12 | URL `more=1` 이 붙고 카드가 늘어난다(실데이터 24장, mock 은 표시 가능한 만큼). **기존 카드는 그대로 남고** 새 묶음만 등장 애니메이션. 스켈레톤이 다시 뜨면 실패 |
 | TC-SRC-10 | P1 | — | 더보기를 반복해 상한까지 누른다 |  |  | `more` 는 최대 15, 최대 192개. 그 이상 눌러도 파라미터가 안 오른다 |
 | TC-SRC-11 | P1 | — | 더보기로 늘린 상태에서 카테고리를 바꾼다 | open /en/explore?more=1 > wait 2500 > click [data-category=food] > wait 2000 | js !location.search.includes("more=") | `more` 가 초기화되고 12개부터 다시 시작 |
@@ -102,13 +102,13 @@
 
 | ID | P | 사전조건 | 절차 | 실행 | 판정 | 기대 결과 |
 |---|---|---|---|---|---|---|
-| TC-DTL-01 | P0 | — | 카드를 눌러 상세로 들어간다 |  |  | 분류·제목·한글명·사진·소개·사실 표가 한 흐름으로 위에서 아래로 놓인다 |
+| TC-DTL-01 | P0 | — | 카드를 눌러 상세로 들어간다 | open /en/spots/264337 > wait 3000 | js document.querySelector('[data-testid=spot-title]') !== null && document.querySelector('[data-testid=spot-facts]') !== null | 분류·제목·한글명·사진·소개·사실 표가 한 흐름으로 위에서 아래로 놓인다 |
 | TC-DTL-02 | P0 | 값이 비어 있는 항목이 있는 스팟 | 사실 표 확인 |  |  | 빈 항목도 행이 남고 값 자리에 “Not published” 가 이탤릭 회색으로 온다. 행을 숨기면 실패 (GOAL.md §5-3) |
 | TC-DTL-03 | P1 | — | 사실 표의 좌우 단 확인 |  |  | 앞 절반이 왼쪽, 뒤 절반이 오른쪽. 지그재그가 아니다 |
 | TC-DTL-04 | P1 | 한글명이 영문명과 다른 스팟 | 제목 아래 확인 |  |  | 한글 원명이 병기된다 (GOAL.md §5-2). 기울임꼴이 아니다 |
-| TC-DTL-05 | P1 | 좌표가 있는 스팟 | “Open in maps” 클릭 |  |  | `map.kakao.com/link/map/{한글명},{lat},{lng}` 로 열린다. 한글명이 인코딩돼 있다 |
+| TC-DTL-05 | P1 | 좌표가 있는 스팟 | “Open in maps” 클릭 | open /en/spots/264337 > wait 3000 | js document.querySelector('[data-testid=map-link]')?.href.includes('map.kakao.com/link/map/') === true | `map.kakao.com/link/map/{한글명},{lat},{lng}` 로 열린다. 한글명이 인코딩돼 있다 |
 | TC-DTL-06 | P1 | 좌표가 없는 스팟 | 하단 액션 확인 |  |  | 지도 버튼이 없다. 죽은 링크가 남으면 실패 |
-| TC-DTL-07 | P1 | 홈페이지 값이 있는 스팟 | “Official site” 클릭 |  |  | 공식 사이트가 새 탭으로 열린다 |
+| TC-DTL-07 | P1 | 홈페이지 값이 있는 스팟 | “Official site” 클릭 | open /en/spots/264337 > wait 3000 | js document.querySelector('[data-testid=official-link]')?.target === '_blank' | 공식 사이트가 새 탭으로 열린다 |
 | TC-DTL-08 | P0 | — | `/en/spots/99999999` 접속 | open /en/spots/99999999 > wait 3000 | js document.body.innerText.includes("find this place") | “We couldn't find this place.” + 재시도/목록 버튼. 500 이 아니다 |
 | TC-DTL-09 | P1 | — | 페이지 전체를 훑는다 |  |  | 제공기관 표기가 **하단 한 곳에만** 있다 (GOAL.md §0.5-6) |
 | TC-DTL-10 | P2 | 소개가 긴 스팟 | 소개 확인 |  |  | 잘리거나 “이어서 읽기” 링크가 없다. 통째로 보인다 |
@@ -149,19 +149,19 @@
 
 근거: `personal-set.ts`, `use-spot-like.ts`, `live-stats.ts`, `visitor.ts`, `ViewCounter.tsx`
 
-| ID | P | 사전조건 | 절차 | 기대 결과 |
-|---|---|---|---|---|
-| TC-RCT-01 | P0 | — | 카드에서 담기를 누른다 | 아이콘이 채워지고 `localStorage["seoul-tour:saved"]` 에 키가 들어간다. 새로고침해도 유지 |
-| TC-RCT-02 | P1 | — | 상세에서 담기 → 목록으로 돌아온다 | 같은 스팟 카드가 담긴 상태로 보인다 |
-| TC-RCT-03 | P1 | 탭 2개에 같은 목록 | 한쪽에서 담기 | 다른 탭에도 즉시 반영된다(`storage` 이벤트) |
-| TC-RCT-04 | P0 | Supabase 설정 | 좋아요를 누른다 | 하트가 켜지고 **서버가 돌려준 총수**로 숫자가 갱신된다. 낙관적 +1 로 먼저 오르면 실패 |
-| TC-RCT-05 | P0 | 좋아요 API 를 502 로 만들 수 있는 환경 | 좋아요를 누른다 | 하트가 **원래대로 되돌아간다.** 켜진 채 남으면 실패 |
-| TC-RCT-06 | P1 | 같은 장소가 목록에 두 번 이상 뜨는 상태 | 한쪽에서 좋아요 | 같은 장소의 다른 카드 숫자도 함께 바뀐다 |
-| TC-RCT-07 | P2 | — | 좋아요를 켠다 / 끈다 | 켤 때만 하트 버스트가 재생된다. 해제 때는 없다 |
-| TC-RCT-08 | P1 | 저장소를 막은 브라우저(사생활 모드) | 담기·좋아요를 누른다 | 예외로 화면이 죽지 않는다. 방문자 id 가 없어 좋아요 요청은 나가지 않는다 |
-| TC-RCT-09 | P0 | Supabase 설정 | 상세를 연다 | `POST /view` 가 **1회만** 나간다. 서버 렌더에서 세지 않는다 |
-| TC-RCT-10 | P1 | 위와 같음 | 상세를 새로고침 | 조회수가 오르지 않는다(같은 방문자·같은 날) |
-| TC-RCT-11 | P2 | — | 좋아요 직후 바로 숫자를 본다 | 하트 애니메이션(420ms)이 끝난 뒤 숫자가 바뀐다. 애니메이션 중간에 튀지 않는다 |
+| ID | P | 사전조건 | 절차 | 실행 | 판정 | 기대 결과 |
+|---|---|---|---|---|---|---|
+| TC-RCT-01 | P0 | — | 카드에서 담기를 누른다 | open /en/explore > wait 2500 > click [data-testid=spot-card] [data-testid=save-toggle] > wait 1500 | js document.querySelector('[data-testid=save-toggle][aria-pressed=true]') !== null && (localStorage.getItem('seoul-tour:saved') ?? '').length > 2 | 아이콘이 채워지고 `localStorage["seoul-tour:saved"]` 에 키가 들어간다. 새로고침해도 유지 |
+| TC-RCT-02 | P1 | — | 상세에서 담기 → 목록으로 돌아온다 |  |  | 같은 스팟 카드가 담긴 상태로 보인다 |
+| TC-RCT-03 | P1 | 탭 2개에 같은 목록 | 한쪽에서 담기 |  |  | 다른 탭에도 즉시 반영된다(`storage` 이벤트) |
+| TC-RCT-04 | P0 | Supabase 설정 | 좋아요를 누른다 |  |  | 하트가 켜지고 **서버가 돌려준 총수**로 숫자가 갱신된다. 낙관적 +1 로 먼저 오르면 실패 |
+| TC-RCT-05 | P0 | 좋아요 API 를 502 로 만들 수 있는 환경 | 좋아요를 누른다 |  |  | 하트가 **원래대로 되돌아간다.** 켜진 채 남으면 실패 |
+| TC-RCT-06 | P1 | 같은 장소가 목록에 두 번 이상 뜨는 상태 | 한쪽에서 좋아요 |  |  | 같은 장소의 다른 카드 숫자도 함께 바뀐다 |
+| TC-RCT-07 | P2 | — | 좋아요를 켠다 / 끈다 |  |  | 켤 때만 하트 버스트가 재생된다. 해제 때는 없다 |
+| TC-RCT-08 | P1 | 저장소를 막은 브라우저(사생활 모드) | 담기·좋아요를 누른다 |  |  | 예외로 화면이 죽지 않는다. 방문자 id 가 없어 좋아요 요청은 나가지 않는다 |
+| TC-RCT-09 | P0 | Supabase 설정 | 상세를 연다 |  |  | `POST /view` 가 **1회만** 나간다. 서버 렌더에서 세지 않는다 |
+| TC-RCT-10 | P1 | 위와 같음 | 상세를 새로고침 |  |  | 조회수가 오르지 않는다(같은 방문자·같은 날) |
+| TC-RCT-11 | P2 | — | 좋아요 직후 바로 숫자를 본다 |  |  | 하트 애니메이션(420ms)이 끝난 뒤 숫자가 바뀐다. 애니메이션 중간에 튀지 않는다 |
 
 ## 9. 내 위치·거리 (NEAR)
 
@@ -248,7 +248,7 @@
 | TC-A11Y-01 | P1 | — | 키보드만으로 탐색 화면을 조작 |  |  | 카테고리·지역·정렬·검색·카드까지 Tab 으로 닿고 Enter 로 동작한다 |
 | TC-A11Y-02 | P1 | — | 스크린 리더로 필터 확인 | open /en/explore > wait 2500 | js document.querySelectorAll('[data-testid=category-tab][aria-current=page]').length === 1 | 선택된 탭·정렬에 `aria-current`, 정렬 묶음에 이름(“Sort”)이 있다 |
 | TC-A11Y-03 | P1 | — | 목록의 접근성 이름 확인 |  |  | “{카테고리} — {지역}” 형태로 읽힌다. 내부 은유(‘벽’ 등)가 노출되지 않는다 |
-| TC-A11Y-04 | P1 | — | 담기·좋아요 버튼 확인 |  |  | `aria-pressed` 로 상태를 알리고 라벨에 장소명이 들어간다 |
+| TC-A11Y-04 | P1 | — | 담기·좋아요 버튼 확인 | open /en/explore > wait 2500 | js [...document.querySelectorAll('[data-testid=save-toggle]')].every(b => b.hasAttribute('aria-pressed') && (b.getAttribute('aria-label') ?? '').length > 5) | `aria-pressed` 로 상태를 알리고 라벨에 장소명이 들어간다 |
 | TC-A11Y-05 | P2 | — | 포커스 이동 |  |  | 포커스 링이 모든 컨트롤에서 보인다 |
 | TC-A11Y-06 | P1 | — | 다국어 본문 확인 |  |  | 소개·주소 등 본문 블록에 `lang` 속성이 붙는다 |
 | TC-A11Y-07 | P2 | — | 날씨 패널 확인 |  |  | `role="group"` + 이름이 있고 초점을 가두지 않는다 |
