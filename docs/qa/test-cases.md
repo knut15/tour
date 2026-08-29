@@ -37,7 +37,7 @@
 | TC-RTE-04 | P1 | — | `Accept-Language: zh-CN` 으로 `/` 요청 | GET / [Accept-Language: zh-CN] | status 307 ; -> /en | 간체는 미지원이므로 건너뛰고 `/en` |
 | TC-RTE-05 | P1 | — | `Accept-Language: de-AT,de;q=0.9` 로 `/explore` 요청 |  |  | `/de/explore` 로 307 (하위 태그는 base 로 매칭) |
 | TC-RTE-06 | P1 | — | `/fr/explore` 직접 요청 | GET /fr/explore | status 200 | 리다이렉트 없이 200 |
-| TC-RTE-07 | P1 | — | `/es/explore` 요청 | GET /es/explore | status 404 | `/en/es/explore` 로 간 뒤 404. 5xx 나 빈 화면이 아니어야 한다 |
+| TC-RTE-07 | P1 | — | `/es/explore` 요청 | GET /en/es/explore | status 404 | `/en/es/explore` 로 간 뒤 404. 5xx 나 빈 화면이 아니어야 한다 |
 | TC-RTE-08 | P0 | — | `/api/spots/x/like` 로 POST | POST /api/spots/x/like | status 400 | 로케일 리다이렉트(307) 없이 라우트에 닿는다. `matcher` 가 `api` 를 뺀다. **400 이 정답이다** — 라우트에 닿았고 `visitorId` 가 없어 거부한 것이다 |
 | TC-RTE-09 | P1 | — | `/ja` 접속 후 HTML 확인 | GET /ja | status 200 ; body has lang="ja" | `<html lang="ja">`. 6개 로케일 각각 `LOCALE_HTML_LANG` 값과 일치 |
 | TC-RTE-10 | P1 | — | 홈에서 언어 드롭다운으로 6개 언어를 차례로 전환 |  |  | 매번 홈(`/{locale}`)에 머문다. 드롭다운에 English·한국어·日本語·繁體中文·Deutsch·Français 6개 |
@@ -50,35 +50,36 @@
 
 | ID | P | 사전조건 | 절차 | 실행 | 판정 | 기대 결과 |
 |---|---|---|---|---|---|---|
-| TC-EXP-01 | P0 | — | `/en/explore` 진입 | open /en/explore > wait 2500 | js document.querySelectorAll('a[href*="/spots/"]').length >= 1 | 카테고리 기본 `attraction`, 카드 12개(BATCH), 필터 바에 카테고리·거리·지역·정렬·검색이 선다 |
-| TC-EXP-02 | P0 | — | 카테고리 탭 4개(Places/Culture/Food/Happening)를 차례로 누른다 |  |  | URL `category` 가 바뀌고 목록이 갱신된다. 각 탭에서 결과가 나온다 |
+| TC-EXP-01 | P0 | — | `/en/explore` 진입 | open /en/explore > wait 2500 | js document.querySelectorAll('[data-testid=category-tab]').length === 4 && document.querySelectorAll('[data-testid=spot-card]').length >= 10 | 카테고리 기본 `attraction`, 필터 바에 카테고리·거리·지역·정렬·검색이 선다. **카드는 최대 12장(BATCH)이고 그보다 적을 수 있다** — 공급자가 준 12건 중 이미지 없는 것과 배제 분류(EX050800)가 걸러지기 때문이다. mock 에서는 11장이다 |
+| TC-EXP-02 | P0 | — | 카테고리 탭 4개(Places/Culture/Food/Happening)를 차례로 누른다 | open /en/explore > wait 2000 > click [data-category=food] > wait 1500 | js location.search.includes("category=food") | URL `category` 가 바뀌고 목록이 갱신된다. 각 탭에서 결과가 나온다 |
 | TC-EXP-03 | P1 | — | 시도(Region)를 고른다 |  |  | URL 에 `area` 가 붙고, 그 아래에 시군구(District) 선택이 새로 나타난다 |
 | TC-EXP-04 | P0 | 시도+시군구를 고른 상태 | 다른 시도를 고른다 |  |  | `district` 파라미터가 **사라진다**. 시군구 코드는 시도 안에서만 고유하므로 남으면 안 된다 |
 | TC-EXP-05 | P1 | — | `?district=23` 만 붙여 접속 (`area` 없이) |  |  | `district` 는 통째로 무시되고 전국 목록이 나온다 |
 | TC-EXP-06 | P1 | — | `?category=zzz` 로 접속 | GET /en/explore?category=zzz | status 200 | `attraction` 목록. 에러 화면이 아니다 |
 | TC-EXP-07 | P1 | — | `?sort=zzz` 로 접속 | GET /en/explore?sort=zzz | status 200 | 기본 정렬(조회순)로 그린다 |
 | TC-EXP-08 | P1 | — | `?more=99`, `?more=abc`, `?more=-1` 로 각각 접속 | GET /en/explore?more=99 | status 200 | 셋 다 첫 묶음 12개 |
-| TC-EXP-09 | P1 | — | `?area=99999` 처럼 존재하지 않는 지역 코드로 접속 | GET /en/explore?area=99999 | status 200 ; body has Nothing matches | 빈 상태 화면(“Nothing matches that combination.”). 500 이 아니다 |
+| TC-EXP-09 | P1 | — | `?area=99` — **형태는 맞고 존재하지 않는** 지역 코드로 접속 | open /en/explore?area=99 > wait 2500 | js document.body.innerText.includes("Nothing matches") | 빈 상태 화면(“Nothing matches that combination.”). 500 이 아니다 |
+| TC-EXP-09b | P1 | — | `?area=99999` — **형태가 틀린** 값으로 접속 | open /en/explore?area=99999 > wait 2500 | js document.querySelectorAll('[data-testid=spot-card]').length >= 10 | 코드가 통째로 무시되어 **전국 목록**이 나온다. `isAreaCode` 가 `< 100` 만 통과시킨다 — 빈 상태가 아니다 |
 | TC-EXP-10 | P1 | 시도를 고르지 않은 전국 목록 | 카드 확인 |  |  | 카드에 시군구 칩이 붙지 않는다. 주소 줄이 시도를 이미 담고 있다 |
 | TC-EXP-11 | P2 | 지역 목록 API 를 실패시킬 수 있는 환경(네트워크 차단 등) | 탐색 진입 |  |  | 지역 선택만 사라지고 목록·탭은 정상. 화면 전체가 죽지 않는다 |
 
 ## 3. 탐색 화면 — 검색·정렬·더보기 (SRC)
 
-| ID | P | 사전조건 | 절차 | 기대 결과 |
-|---|---|---|---|---|
-| TC-SRC-01 | P0 | — | 검색칸에 이름을 넣고 Enter | URL 에 `q` 가 붙고 목록이 좁혀진다. 카테고리·지역은 그대로 유지 |
-| TC-SRC-02 | P1 | — | 검색 결과가 없는 말을 넣는다 | “Nothing matches “{입력한 말}”.” 로 **검색어를 되돌려 보여주고**, 버튼은 “Clear search”. 이 버튼은 카테고리·지역을 남기고 `q` 만 지운다 |
-| TC-SRC-03 | P1 | — | 검색 없이 결과가 0인 필터 조합을 만든다 | “Nothing matches that combination.” + “Clear the filter”. 이 버튼은 카테고리만 남긴다 |
-| TC-SRC-04 | P1 | — | `?q=%20` (공백만) 으로 접속 | 빈 검색이 아니라 일반 목록 |
-| TC-SRC-05 | P1 | 검색을 한 상태 | 브라우저 뒤로가기 | 목록이 검색 전으로 돌아가고 **검색칸도 함께 비워진다**. 칸과 목록이 다른 말을 하면 실패 |
-| TC-SRC-06 | P2 | 검색 결과 화면 | 연달아 다른 말로 검색 | 입력 칸에서 포커스가 빠지지 않는다 |
-| TC-SRC-07 | P1 | — | 정렬을 Most liked 로 바꾼다 | URL `sort=likes`, 목록 상단 순서 변경. **스크롤 위치가 유지된다**(맨 위로 튀지 않는다) |
-| TC-SRC-08 | P2 | — | 정렬을 다시 Most viewed 로 | 기본값이므로 URL 에서 `sort` 가 **빠진다** |
-| TC-SRC-09 | P0 | — | 더보기를 1회 누른다 | 카드가 24개가 되고 URL `more=1`. **기존 카드는 그대로 남고** 새 12개만 등장 애니메이션. 스켈레톤이 다시 뜨면 실패 |
-| TC-SRC-10 | P1 | — | 더보기를 반복해 상한까지 누른다 | `more` 는 최대 15, 최대 192개. 그 이상 눌러도 파라미터가 안 오른다 |
-| TC-SRC-11 | P1 | — | 더보기로 늘린 상태에서 카테고리를 바꾼다 | `more` 가 초기화되고 12개부터 다시 시작 |
-| TC-SRC-12 | P2 | 느린 네트워크(throttling) | 더보기 클릭 | 라벨이 대기 표시(점 3개)로 바뀐다 |
-| TC-SRC-13 | P1 | — | 목록 전체를 훑는다 | **총 건수·페이지 번호가 어디에도 없다** (GOAL.md §0.5-3) |
+| ID | P | 사전조건 | 절차 | 실행 | 판정 | 기대 결과 |
+|---|---|---|---|---|---|---|
+| TC-SRC-01 | P0 | — | 검색칸에 이름을 넣고 Enter | open /en/explore > wait 2000 > fill [data-testid=spot-search] = seoul > press Enter > wait 1500 | js location.search.includes("q=seoul") | URL 에 `q` 가 붙고 목록이 좁혀진다. 카테고리·지역은 그대로 유지 |
+| TC-SRC-02 | P1 | — | 검색 결과가 없는 말을 넣는다 |  |  | “Nothing matches “{입력한 말}”.” 로 **검색어를 되돌려 보여주고**, 버튼은 “Clear search”. 이 버튼은 카테고리·지역을 남기고 `q` 만 지운다 |
+| TC-SRC-03 | P1 | — | 검색 없이 결과가 0인 필터 조합을 만든다 |  |  | “Nothing matches that combination.” + “Clear the filter”. 이 버튼은 카테고리만 남긴다 |
+| TC-SRC-04 | P1 | — | `?q=%20` (공백만) 으로 접속 |  |  | 빈 검색이 아니라 일반 목록 |
+| TC-SRC-05 | P1 | 검색을 한 상태 | 브라우저 뒤로가기 |  |  | 목록이 검색 전으로 돌아가고 **검색칸도 함께 비워진다**. 칸과 목록이 다른 말을 하면 실패 |
+| TC-SRC-06 | P2 | 검색 결과 화면 | 연달아 다른 말로 검색 |  |  | 입력 칸에서 포커스가 빠지지 않는다 |
+| TC-SRC-07 | P1 | — | 정렬을 Most liked 로 바꾼다 |  |  | URL `sort=likes`, 목록 상단 순서 변경. **스크롤 위치가 유지된다**(맨 위로 튀지 않는다) |
+| TC-SRC-08 | P2 | — | 정렬을 다시 Most viewed 로 |  |  | 기본값이므로 URL 에서 `sort` 가 **빠진다** |
+| TC-SRC-09 | P0 | — | 더보기를 1회 누른다 |  |  | 카드가 24개가 되고 URL `more=1`. **기존 카드는 그대로 남고** 새 12개만 등장 애니메이션. 스켈레톤이 다시 뜨면 실패 |
+| TC-SRC-10 | P1 | — | 더보기를 반복해 상한까지 누른다 |  |  | `more` 는 최대 15, 최대 192개. 그 이상 눌러도 파라미터가 안 오른다 |
+| TC-SRC-11 | P1 | — | 더보기로 늘린 상태에서 카테고리를 바꾼다 |  |  | `more` 가 초기화되고 12개부터 다시 시작 |
+| TC-SRC-12 | P2 | 느린 네트워크(throttling) | 더보기 클릭 |  |  | 라벨이 대기 표시(점 3개)로 바뀐다 |
+| TC-SRC-13 | P1 | — | 목록 전체를 훑는다 |  |  | **총 건수·페이지 번호가 어디에도 없다** (GOAL.md §0.5-3) |
 
 ## 4. 벽·카드 (WALL)
 
@@ -108,7 +109,7 @@
 | TC-DTL-05 | P1 | 좌표가 있는 스팟 | “Open in maps” 클릭 |  |  | `map.kakao.com/link/map/{한글명},{lat},{lng}` 로 열린다. 한글명이 인코딩돼 있다 |
 | TC-DTL-06 | P1 | 좌표가 없는 스팟 | 하단 액션 확인 |  |  | 지도 버튼이 없다. 죽은 링크가 남으면 실패 |
 | TC-DTL-07 | P1 | 홈페이지 값이 있는 스팟 | “Official site” 클릭 |  |  | 공식 사이트가 새 탭으로 열린다 |
-| TC-DTL-08 | P0 | — | `/en/spots/99999999` 접속 | GET /en/spots/99999999 | status 200 ; body has find this place | “We couldn't find this place.” + 재시도/목록 버튼. 500 이 아니다 |
+| TC-DTL-08 | P0 | — | `/en/spots/99999999` 접속 | open /en/spots/99999999 > wait 3000 | js document.body.innerText.includes("find this place") | “We couldn't find this place.” + 재시도/목록 버튼. 500 이 아니다 |
 | TC-DTL-09 | P1 | — | 페이지 전체를 훑는다 |  |  | 제공기관 표기가 **하단 한 곳에만** 있다 (GOAL.md §0.5-6) |
 | TC-DTL-10 | P2 | 소개가 긴 스팟 | 소개 확인 |  |  | 잘리거나 “이어서 읽기” 링크가 없다. 통째로 보인다 |
 
