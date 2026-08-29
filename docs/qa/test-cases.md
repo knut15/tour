@@ -37,9 +37,9 @@
 | TC-RTE-04 | P1 | — | `Accept-Language: zh-CN` 으로 `/` 요청 | GET / [Accept-Language: zh-CN] | status 307 ; -> /en | 간체는 미지원이므로 건너뛰고 `/en` |
 | TC-RTE-05 | P1 | — | `Accept-Language: de-AT,de;q=0.9` 로 `/explore` 요청 |  |  | `/de/explore` 로 307 (하위 태그는 base 로 매칭) |
 | TC-RTE-06 | P1 | — | `/fr/explore` 직접 요청 | GET /fr/explore | status 200 | 리다이렉트 없이 200 |
-| TC-RTE-07 | P1 | — | `/es/explore` 요청 |  |  | `/en/es/explore` 로 간 뒤 404. 5xx 나 빈 화면이 아니어야 한다 |
-| TC-RTE-08 | P0 | — | `/api/spots/x/like` 로 POST |  |  | 로케일 리다이렉트(307) 없이 라우트에 닿는다. `matcher` 가 `api` 를 뺀다 |
-| TC-RTE-09 | P1 | — | `/ja` 접속 후 HTML 확인 |  |  | `<html lang="ja">`. 6개 로케일 각각 `LOCALE_HTML_LANG` 값과 일치 |
+| TC-RTE-07 | P1 | — | `/es/explore` 요청 | GET /es/explore | status 404 | `/en/es/explore` 로 간 뒤 404. 5xx 나 빈 화면이 아니어야 한다 |
+| TC-RTE-08 | P0 | — | `/api/spots/x/like` 로 POST | POST /api/spots/x/like | status 400 | 로케일 리다이렉트(307) 없이 라우트에 닿는다. `matcher` 가 `api` 를 뺀다. **400 이 정답이다** — 라우트에 닿았고 `visitorId` 가 없어 거부한 것이다 |
+| TC-RTE-09 | P1 | — | `/ja` 접속 후 HTML 확인 | GET /ja | status 200 ; body has lang="ja" | `<html lang="ja">`. 6개 로케일 각각 `LOCALE_HTML_LANG` 값과 일치 |
 | TC-RTE-10 | P1 | — | 홈에서 언어 드롭다운으로 6개 언어를 차례로 전환 |  |  | 매번 홈(`/{locale}`)에 머문다. 드롭다운에 English·한국어·日本語·繁體中文·Deutsch·Français 6개 |
 | TC-RTE-11 | P0 | 탐색에서 카테고리·시도·시군구·검색어·정렬·더보기를 모두 건 상태 | 언어 전환 |  |  | 같은 조건 그대로 다른 언어 목록. `category`·`area`·`district`·`q`·`sort`·`more` 파라미터가 전부 유지 |
 | TC-RTE-12 | P1 | — | 6개 로케일에서 홈·탐색을 열어 문구 확인 |  |  | 번역 키가 그대로 노출된 자리(`explore.title` 같은 원문 키)나 빈 문자열이 없다 |
@@ -48,19 +48,19 @@
 
 근거: `src/app/[locale]/explore/page.tsx`, `src/presentation/lib/explore-href.ts`, `explore-paging.ts`
 
-| ID | P | 사전조건 | 절차 | 기대 결과 |
-|---|---|---|---|---|
-| TC-EXP-01 | P0 | — | `/en/explore` 진입 | 카테고리 기본 `attraction`, 카드 12개(BATCH), 필터 바에 카테고리·거리·지역·정렬·검색이 선다 |
-| TC-EXP-02 | P0 | — | 카테고리 탭 4개(Places/Culture/Food/Happening)를 차례로 누른다 | URL `category` 가 바뀌고 목록이 갱신된다. 각 탭에서 결과가 나온다 |
-| TC-EXP-03 | P1 | — | 시도(Region)를 고른다 | URL 에 `area` 가 붙고, 그 아래에 시군구(District) 선택이 새로 나타난다 |
-| TC-EXP-04 | P0 | 시도+시군구를 고른 상태 | 다른 시도를 고른다 | `district` 파라미터가 **사라진다**. 시군구 코드는 시도 안에서만 고유하므로 남으면 안 된다 |
-| TC-EXP-05 | P1 | — | `?district=23` 만 붙여 접속 (`area` 없이) | `district` 는 통째로 무시되고 전국 목록이 나온다 |
-| TC-EXP-06 | P1 | — | `?category=zzz` 로 접속 | `attraction` 목록. 에러 화면이 아니다 |
-| TC-EXP-07 | P1 | — | `?sort=zzz` 로 접속 | 기본 정렬(조회순)로 그린다 |
-| TC-EXP-08 | P1 | — | `?more=99`, `?more=abc`, `?more=-1` 로 각각 접속 | 셋 다 첫 묶음 12개 |
-| TC-EXP-09 | P1 | — | `?area=99999` 처럼 존재하지 않는 지역 코드로 접속 | 빈 상태 화면(“Nothing matches that combination.”). 500 이 아니다 |
-| TC-EXP-10 | P1 | 시도를 고르지 않은 전국 목록 | 카드 확인 | 카드에 시군구 칩이 붙지 않는다. 주소 줄이 시도를 이미 담고 있다 |
-| TC-EXP-11 | P2 | 지역 목록 API 를 실패시킬 수 있는 환경(네트워크 차단 등) | 탐색 진입 | 지역 선택만 사라지고 목록·탭은 정상. 화면 전체가 죽지 않는다 |
+| ID | P | 사전조건 | 절차 | 실행 | 판정 | 기대 결과 |
+|---|---|---|---|---|---|---|
+| TC-EXP-01 | P0 | — | `/en/explore` 진입 | open /en/explore > wait 2500 | js document.querySelectorAll('a[href*="/spots/"]').length >= 1 | 카테고리 기본 `attraction`, 카드 12개(BATCH), 필터 바에 카테고리·거리·지역·정렬·검색이 선다 |
+| TC-EXP-02 | P0 | — | 카테고리 탭 4개(Places/Culture/Food/Happening)를 차례로 누른다 |  |  | URL `category` 가 바뀌고 목록이 갱신된다. 각 탭에서 결과가 나온다 |
+| TC-EXP-03 | P1 | — | 시도(Region)를 고른다 |  |  | URL 에 `area` 가 붙고, 그 아래에 시군구(District) 선택이 새로 나타난다 |
+| TC-EXP-04 | P0 | 시도+시군구를 고른 상태 | 다른 시도를 고른다 |  |  | `district` 파라미터가 **사라진다**. 시군구 코드는 시도 안에서만 고유하므로 남으면 안 된다 |
+| TC-EXP-05 | P1 | — | `?district=23` 만 붙여 접속 (`area` 없이) |  |  | `district` 는 통째로 무시되고 전국 목록이 나온다 |
+| TC-EXP-06 | P1 | — | `?category=zzz` 로 접속 | GET /en/explore?category=zzz | status 200 | `attraction` 목록. 에러 화면이 아니다 |
+| TC-EXP-07 | P1 | — | `?sort=zzz` 로 접속 | GET /en/explore?sort=zzz | status 200 | 기본 정렬(조회순)로 그린다 |
+| TC-EXP-08 | P1 | — | `?more=99`, `?more=abc`, `?more=-1` 로 각각 접속 | GET /en/explore?more=99 | status 200 | 셋 다 첫 묶음 12개 |
+| TC-EXP-09 | P1 | — | `?area=99999` 처럼 존재하지 않는 지역 코드로 접속 | GET /en/explore?area=99999 | status 200 ; body has Nothing matches | 빈 상태 화면(“Nothing matches that combination.”). 500 이 아니다 |
+| TC-EXP-10 | P1 | 시도를 고르지 않은 전국 목록 | 카드 확인 |  |  | 카드에 시군구 칩이 붙지 않는다. 주소 줄이 시도를 이미 담고 있다 |
+| TC-EXP-11 | P2 | 지역 목록 API 를 실패시킬 수 있는 환경(네트워크 차단 등) | 탐색 진입 |  |  | 지역 선택만 사라지고 목록·탭은 정상. 화면 전체가 죽지 않는다 |
 
 ## 3. 탐색 화면 — 검색·정렬·더보기 (SRC)
 
@@ -99,18 +99,18 @@
 
 근거: `src/app/[locale]/spots/[id]/page.tsx`
 
-| ID | P | 사전조건 | 절차 | 기대 결과 |
-|---|---|---|---|---|
-| TC-DTL-01 | P0 | — | 카드를 눌러 상세로 들어간다 | 분류·제목·한글명·사진·소개·사실 표가 한 흐름으로 위에서 아래로 놓인다 |
-| TC-DTL-02 | P0 | 값이 비어 있는 항목이 있는 스팟 | 사실 표 확인 | 빈 항목도 행이 남고 값 자리에 “Not published” 가 이탤릭 회색으로 온다. 행을 숨기면 실패 (GOAL.md §5-3) |
-| TC-DTL-03 | P1 | — | 사실 표의 좌우 단 확인 | 앞 절반이 왼쪽, 뒤 절반이 오른쪽. 지그재그가 아니다 |
-| TC-DTL-04 | P1 | 한글명이 영문명과 다른 스팟 | 제목 아래 확인 | 한글 원명이 병기된다 (GOAL.md §5-2). 기울임꼴이 아니다 |
-| TC-DTL-05 | P1 | 좌표가 있는 스팟 | “Open in maps” 클릭 | `map.kakao.com/link/map/{한글명},{lat},{lng}` 로 열린다. 한글명이 인코딩돼 있다 |
-| TC-DTL-06 | P1 | 좌표가 없는 스팟 | 하단 액션 확인 | 지도 버튼이 없다. 죽은 링크가 남으면 실패 |
-| TC-DTL-07 | P1 | 홈페이지 값이 있는 스팟 | “Official site” 클릭 | 공식 사이트가 새 탭으로 열린다 |
-| TC-DTL-08 | P0 | — | `/en/spots/99999999` 접속 | “We couldn't find this place.” + 재시도/목록 버튼. 500 이 아니다 |
-| TC-DTL-09 | P1 | — | 페이지 전체를 훑는다 | 제공기관 표기가 **하단 한 곳에만** 있다 (GOAL.md §0.5-6) |
-| TC-DTL-10 | P2 | 소개가 긴 스팟 | 소개 확인 | 잘리거나 “이어서 읽기” 링크가 없다. 통째로 보인다 |
+| ID | P | 사전조건 | 절차 | 실행 | 판정 | 기대 결과 |
+|---|---|---|---|---|---|---|
+| TC-DTL-01 | P0 | — | 카드를 눌러 상세로 들어간다 |  |  | 분류·제목·한글명·사진·소개·사실 표가 한 흐름으로 위에서 아래로 놓인다 |
+| TC-DTL-02 | P0 | 값이 비어 있는 항목이 있는 스팟 | 사실 표 확인 |  |  | 빈 항목도 행이 남고 값 자리에 “Not published” 가 이탤릭 회색으로 온다. 행을 숨기면 실패 (GOAL.md §5-3) |
+| TC-DTL-03 | P1 | — | 사실 표의 좌우 단 확인 |  |  | 앞 절반이 왼쪽, 뒤 절반이 오른쪽. 지그재그가 아니다 |
+| TC-DTL-04 | P1 | 한글명이 영문명과 다른 스팟 | 제목 아래 확인 |  |  | 한글 원명이 병기된다 (GOAL.md §5-2). 기울임꼴이 아니다 |
+| TC-DTL-05 | P1 | 좌표가 있는 스팟 | “Open in maps” 클릭 |  |  | `map.kakao.com/link/map/{한글명},{lat},{lng}` 로 열린다. 한글명이 인코딩돼 있다 |
+| TC-DTL-06 | P1 | 좌표가 없는 스팟 | 하단 액션 확인 |  |  | 지도 버튼이 없다. 죽은 링크가 남으면 실패 |
+| TC-DTL-07 | P1 | 홈페이지 값이 있는 스팟 | “Official site” 클릭 |  |  | 공식 사이트가 새 탭으로 열린다 |
+| TC-DTL-08 | P0 | — | `/en/spots/99999999` 접속 | GET /en/spots/99999999 | status 200 ; body has find this place | “We couldn't find this place.” + 재시도/목록 버튼. 500 이 아니다 |
+| TC-DTL-09 | P1 | — | 페이지 전체를 훑는다 |  |  | 제공기관 표기가 **하단 한 곳에만** 있다 (GOAL.md §0.5-6) |
+| TC-DTL-10 | P2 | 소개가 긴 스팟 | 소개 확인 |  |  | 잘리거나 “이어서 읽기” 링크가 없다. 통째로 보인다 |
 
 ## 6. 상세에서 언어 전환 (RSV)
 
@@ -233,12 +233,12 @@
 
 ## 14. 보안 (SEC)
 
-| ID | P | 사전조건 | 절차 | 기대 결과 |
-|---|---|---|---|---|
-| TC-SEC-01 | P0 | `pnpm build` 완료 | `grep -r "$TOUR_API_KEY" .next/static` | 결과 없음. 클라이언트 번들에 인증키가 없다 (GOAL.md §6) |
-| TC-SEC-02 | P0 | 실데이터 모드 | 브라우저 Network 탭 확인 | `apis.data.go.kr` 로 나가는 요청이 브라우저에서 하나도 없다. TourAPI 는 서버에서만 부른다 |
-| TC-SEC-03 | P0 | — | `grep -r "SERVICE_ROLE" src` | 서버 코드에서도 service role 키를 쓰지 않는다. 공개키만 쓴다 |
-| TC-SEC-04 | P1 | — | like/view 에 남의 `visitorId` 를 넣어 호출 | 임의 조작은 가능하지만 총수 외 개인정보가 응답에 없다 (현 설계상 익명 id 임을 확인만 한다) |
+| ID | P | 사전조건 | 절차 | 실행 | 판정 | 기대 결과 |
+|---|---|---|---|---|---|---|
+| TC-SEC-01 | P0 | `pnpm build` 완료 | `grep -r "$TOUR_API_KEY" .next/static` |  |  | 결과 없음. 클라이언트 번들에 인증키가 없다 (GOAL.md §6) |
+| TC-SEC-02 | P0 | 실데이터 모드 | 브라우저 Network 탭 확인 |  |  | `apis.data.go.kr` 로 나가는 요청이 브라우저에서 하나도 없다. TourAPI 는 서버에서만 부른다 |
+| TC-SEC-03 | P0 | — | `grep -r "SERVICE_ROLE" src` | $ grep -r SERVICE_ROLE src | stdout empty | 서버 코드에서도 service role 키를 쓰지 않는다. 공개키만 쓴다 |
+| TC-SEC-04 | P1 | — | like/view 에 남의 `visitorId` 를 넣어 호출 |  |  | 임의 조작은 가능하지만 총수 외 개인정보가 응답에 없다 (현 설계상 익명 id 임을 확인만 한다) |
 
 ## 15. 접근성 (A11Y)
 

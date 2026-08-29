@@ -86,7 +86,9 @@ export function SpotFrame({
     // 아이템이라 기본 폭이 max-content 다. 지금까지는 `<img>` 의 고유 폭이 열을
     // 채워 줘서 가려져 있었는데, 사진이 없는 카드는 채울 것이 글자뿐이라
     // 그 카드만 열보다 좁아진다.
-    <article className="relative flex h-full w-full min-w-0 flex-col">
+    // `data-testid` 는 QA 가 카드를 세는 손잡이다. 벽에 몇 장이 걸렸는지가
+    // 더보기·필터·빈 상태를 판정하는 근거라, 세는 대상이 흔들리지 않아야 한다
+    <article data-testid="spot-card" className="relative flex h-full w-full min-w-0 flex-col">
       {/*
         호버 대상은 **사진뿐이다.** 카드 전체로 잡으면 제목이나 주소 위를 지나갈 때도
         버튼이 떠올라, 읽으려던 글자를 가린다.
