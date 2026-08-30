@@ -7,7 +7,7 @@ import { toSpotView } from "@/application/spot/to-view";
 /**
  * 스팟 하나를 조회한다.
  *
- * **벽 판정(이미지 필수·의료관광 배제)을 적용하지 않는다.** 직접 링크나 공유로 들어온
+ * **목록 노출 판정(이미지 필수·의료관광 배제)을 적용하지 않는다.** 직접 링크나 공유로 들어온
  * 스팟은 보여준다. 그 판정은 목록에 걸 것을 고르는 규칙이지 존재 여부의 규칙이 아니다.
  */
 export function makeGetSpotDetail(repo: SpotRepository) {

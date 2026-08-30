@@ -4,7 +4,7 @@ import { STATS_SORTS, type StatsSort } from "@/domain/spot/spot-stats";
 import { exploreHref } from "@/presentation/lib/explore-href";
 
 /**
- * 벽을 무엇으로 세울지 고르는 스위치 — 조회순과 좋아요순.
+ * 목록을 무엇으로 세울지 고르는 스위치 — 조회순과 좋아요순.
  *
  * **링크 두 개다.** 상태를 브라우저에 두면 새로고침이나 공유에서 사라지고, 옆의
  * 다른 컨트롤들은 전부 주소에 사는데 이것만 아니면 뒤로가기가 어긋난다.

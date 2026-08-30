@@ -2,7 +2,10 @@ import type { SpotView } from "@/application/spot/dto";
 import { SpotFrame } from "@/presentation/components/SpotFrame";
 
 /**
- * **크기가 다른 액자가 걸린 벽** (GOAL.md §0.5-2).
+ * **크기가 다른 액자를 비대칭으로 놓은 배치** (GOAL.md §0.5-2).
+ *
+ * 파일명의 `Wall` 은 설계 초기 은유가 남은 것이다. 문서·주석은 '목록' 으로 쓴다 —
+ * 그 은유를 글에 쓰자 읽는 사람이 '차단됐다' 는 뜻으로 이해한 일이 있었다.
  *
  * "균일 그리드를 쓰지 않는다. 균일한 격자는 기계가 만든 것처럼 보이고, 불균일한
  * 배치는 사람이 건 것처럼 보인다" 는 문서의 원칙을 그대로 구현한 것이다.

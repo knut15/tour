@@ -97,7 +97,7 @@ describe("listSpots", () => {
   });
 
   it("기본 페이지 크기가 9다", async () => {
-    // 한 벽에 6~9개만 건다 (GOAL.md §0.5-3)
+    // 한 화면에 6~9개만 놓는다 (GOAL.md §0.5-3)
     const repo = new FakeRepo([]);
     await makeListSpots(repo)({ locale: "en", category: "attraction" });
     expect(repo.lastList?.page).toEqual({ page: 1, size: 9 });
@@ -168,7 +168,7 @@ describe("listNearbySpots", () => {
 });
 
 describe("getSpotDetail", () => {
-  it("벽 판정을 적용하지 않는다", async () => {
+  it("목록 노출 판정을 적용하지 않는다", async () => {
     // 직접 링크나 공유로 들어온 스팟은 이미지가 없어도 보여준다
     const repo = new FakeRepo([spot({ id: { contentId: "x", locale: "en" }, image: null })]);
     const out = await makeGetSpotDetail(repo)({ locale: "en", contentId: "x" });
