@@ -18,24 +18,32 @@ import type { Category } from "@/domain/spot/category";
  * 라틴으로 잘라 413KB 로 만들어 저장소에 두고, 그 바이트를 직접 넘긴다.
  * (원본 6MB → 서브셋 413KB. `ImageResponse` 예산이 500KB 다)
  *
- * 크기는 **940×627**. TourAPI 사진이 전부 이 크기이고, 캐러셀은 첫 장 비율로
- * 나머지를 자르므로 커버가 사진과 정확히 같아야 사진이 안 잘린다.
+ * **크기는 함께 실을 사진에 맞춘다.** 캐러셀은 첫 장 비율로 나머지를 자르므로
+ * 커버가 사진과 다르면 사진이 잘린다.
  */
 
-/** 사진과 같은 크기. 여기가 갈리면 캐러셀에서 사진이 잘린다 */
+/**
+ * 기본 크기. **장소마다 다르므로 부르는 쪽이 사진 크기를 넘겨야 한다.**
+ *
+ * 처음에는 TourAPI 사진이 전부 940×627(3:2)인 줄 알았는데 아니었다 —
+ * 실측 2026-08-31: 북촌한옥마을 940×627(1.499), 경포호수광장 **940×705**(1.333).
+ * 캐러셀은 첫 장 비율로 나머지를 자르므로, 커버가 사진과 다르면 **사진이 잘린다.**
+ * 공공누리 제3유형은 변경금지라 그것이 곧 위반이다.
+ */
 export const COVER_WIDTH = 940;
 export const COVER_HEIGHT = 627;
 
 /**
- * 프로필 그리드는 **가운데 정사각으로 자른다**(940 → 가운데 627). 글자가 그 밖에
- * 있으면 썸네일에서 사라진다.
+ * 프로필 그리드는 **가운데 정사각으로 자른다.** 글자가 그 밖에 있으면 썸네일에서
+ * 사라진다.
  *
  * 실측 2026-08-31: 내용을 `x=190` 에 두었더니 크롭 경계까지 34px 밖에 안 남아
  * 잘린 것처럼 보였다. 정사각 안쪽으로 60px 을 더 들여 안전영역을 잡는다.
  */
-const SQUARE_LEFT = (COVER_WIDTH - COVER_HEIGHT) / 2; // 156.5
-export const SAFE_LEFT = Math.round(SQUARE_LEFT + 60); // 216
-export const SAFE_WIDTH = COVER_HEIGHT - 120; // 507
+export function safeLeft(width: number, height: number): number {
+  const square = Math.min(width, height);
+  return Math.round((width - square) / 2 + 60);
+}
 
 /**
  * 바탕 사다리. **액센트가 하나뿐이라 색상이 아니라 명도가 분류를 진다.**
@@ -72,6 +80,9 @@ export type CoverInput = {
   /** 바탕. 생략하면 카테고리가 정한다 */
   tone?: CoverTone;
   category?: Category;
+  /** **함께 실을 사진과 같은 크기.** 생략하면 940×627 이다 */
+  width?: number;
+  height?: number;
 };
 
 let cachedFont: ArrayBuffer | null = null;
@@ -90,17 +101,19 @@ async function loadFont(): Promise<ArrayBuffer> {
  * satori 가 flex 자식으로 함께 계산해 자리가 밀린다(실측 2026-08-31: 오른쪽 위로
  * 보낸 원이 아래로 내려가 잘렸다). 층을 따로 깔면 본문과 서로 간섭하지 않는다.
  *
- * 원의 중심은 `(742, 188)` 이다 — 안전영역 오른쪽 밖이라 썸네일에서 일부가
- * 잘리는데, 장식이므로 의도한 것이다.
+ * 중심은 오른쪽에서 198px, 위에서 높이의 30% 자리다 — 안전영역 밖이라 썸네일에서
+ * 일부가 잘리는데, 장식이므로 의도한 것이다.
  */
-function Rings({ color }: { color: string }) {
+function Rings({ color, width, height }: { color: string; width: number; height: number }) {
+  const cx = width - 198;
+  const cy = Math.round(height * 0.3);
   const ring = (size: number, width: number, opacity: number) => ({
     display: "flex" as const,
     position: "absolute" as const,
     width: size,
     height: size,
-    top: 188 - size / 2,
-    left: 742 - size / 2,
+    top: cy - size / 2,
+    left: cx - size / 2,
     borderRadius: size,
     border: `${width}px solid ${color}`,
     opacity,
@@ -112,8 +125,8 @@ function Rings({ color }: { color: string }) {
         position: "absolute",
         top: 0,
         left: 0,
-        width: COVER_WIDTH,
-        height: COVER_HEIGHT,
+        width,
+        height,
       }}
     >
       <div style={ring(300, 4, 0.28)} />
@@ -129,6 +142,8 @@ function lines(headline: string): string[] {
 }
 
 export async function renderCoverJpeg(input: CoverInput): Promise<Buffer> {
+  const width = input.width ?? COVER_WIDTH;
+  const height = input.height ?? COVER_HEIGHT;
   const tone = input.tone ?? (input.category ? TONE_OF[input.category] : "navy");
   const c = PALETTE[tone];
   const font = await loadFont();
@@ -140,8 +155,8 @@ export async function renderCoverJpeg(input: CoverInput): Promise<Buffer> {
     (
       <div
         style={{
-          width: COVER_WIDTH,
-          height: COVER_HEIGHT,
+          width,
+          height,
           display: "flex",
           flexDirection: "column",
           justifyContent: "flex-end",
@@ -149,11 +164,11 @@ export async function renderCoverJpeg(input: CoverInput): Promise<Buffer> {
           color: c.fg,
           fontFamily: "NotoKR",
           position: "relative",
-          paddingLeft: SAFE_LEFT,
+          paddingLeft: safeLeft(width, height),
           paddingBottom: 68,
         }}
       >
-        <Rings color={c.ring} />
+        <Rings color={c.ring} width={width} height={height} />
         <div
           style={{
             display: "flex",
@@ -183,8 +198,8 @@ export async function renderCoverJpeg(input: CoverInput): Promise<Buffer> {
       </div>
     ),
     {
-      width: COVER_WIDTH,
-      height: COVER_HEIGHT,
+      width,
+      height,
       fonts: [{ name: "NotoKR", data: font, weight: 700, style: "normal" }],
     },
   ).arrayBuffer();

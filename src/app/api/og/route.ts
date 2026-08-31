@@ -36,6 +36,13 @@ export async function GET(request: Request) {
   const pin = q.get("pin")?.trim() ?? "";
   const categoryRaw = q.get("category");
   const tone = (q.get("tone") ?? undefined) as CoverTone | undefined;
+  /*
+    **사진 크기를 받는다.** TourAPI 사진은 장소마다 크기가 다르다 — 실측 2026-08-31:
+    북촌 940×627, 경포호수광장 940×705. 커버가 사진과 다르면 캐러셀에서 사진이
+    잘리고, 공공누리 제3유형은 변경금지라 그것이 위반이다.
+  */
+  const width = Number(q.get("w")) || undefined;
+  const height = Number(q.get("h")) || undefined;
 
   if (!chip || !headline || !pin) {
     return NextResponse.json({ error: "chip·headline·pin 이 모두 필요하다" }, { status: 400 });
@@ -57,6 +64,8 @@ export async function GET(request: Request) {
       pin,
       tone,
       category: isCategory(categoryRaw) ? categoryRaw : undefined,
+      width,
+      height,
     });
 
     return new NextResponse(new Uint8Array(jpeg), {
