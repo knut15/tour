@@ -59,7 +59,13 @@ function pinOf(address: string | null, name: string): string {
 }
 
 /** 해시태그. 장소 이름과 지역에서 만든다 — 새 낱말을 지어내지 않는다 */
-function tagsOf(name: string, address: string | null, category: Category): string[] {
+function tagsOf(
+  name: string,
+  address: string | null,
+  category: Category,
+  /** 영문 블록이 붙는가. 없으면 영어권을 겨냥한 태그를 달지 않는다 */
+  hasEnglish: boolean,
+): string[] {
   const region = (address ?? "").split(/\s+/)[1]?.replace(/[^가-힣]/g, "") ?? "";
   const base = name.replace(/[^가-힣A-Za-z0-9]/g, "");
   const byCategory: Record<Category, string> = {
@@ -68,7 +74,14 @@ function tagsOf(name: string, address: string | null, category: Category): strin
     food: "먹을곳",
     festival: "축제",
   };
-  return [base, region && `${region}여행`, byCategory[category], "VisitKorea", "headlandtravel"]
+  return [
+    base,
+    region && `${region}여행`,
+    byCategory[category],
+    /* 한글로만 나가는 글에 VisitKorea 를 달면 영어권이 들어와 읽을 것이 없다 */
+    hasEnglish ? "VisitKorea" : "",
+    "headlandtravel",
+  ]
     .filter((t): t is string => !!t)
     .slice(0, 8);
 }
@@ -214,7 +227,12 @@ export async function GET(request: Request) {
       pin: pinOf(detail.address, name),
       category,
       photoIds,
-      caption: draftCaption(detail, trait, tagsOf(name, detail.address, category), english),
+      caption: draftCaption(
+        detail,
+        trait,
+        tagsOf(name, detail.address, category, !!english?.name),
+        english,
+      ),
     });
 
     return NextResponse.json({

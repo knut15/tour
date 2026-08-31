@@ -328,32 +328,41 @@ export function draftCaption(
     .join("\n")
     .trim();
 
-  const en = [
-    c.hookEn,
-    "",
-    EN_TODO_MARK,
-    "",
-    /*
-      영문 소개는 **번역하지 않는다.** 국문 overview 를 기계로 옮기면 사실이
-      틀어질 수 있고, 이 계정은 사실로 신뢰를 사는 곳이다. 대신 사람이 큐에서
-      채우도록 자리와 사실만 남긴다.
-    */
-    english?.name || name,
-    [english?.address || address, english?.facts].filter(Boolean).join(" · "),
-    /* 사실이 없으면 그 자리를 사람이 채우도록 표시를 남긴다 */
-    english?.facts ? null : EN_FACTS_MARK,
-  ]
-    .join("\n")
-    .trim();
+  /*
+    **영문이 없으면 영문 블록을 아예 두지 않는다.**
+
+    이름과 주소만 남기고 나머지에 표시를 넣어 두면, 채우지 않은 채로 나갈 위험이
+    있고 채운다 해도 사람이 매번 같은 일을 한다. 영문 카탈로그에 없는 장소는
+    한글로만 내는 편이 낫다 — 반쪽짜리 영문보다 없는 편이 정직하다.
+
+    분류가 달라 걸러진 경우도 여기로 온다(이름만 같은 다른 장소).
+  */
+  const en = english?.name
+    ? [
+        c.hookEn,
+        "",
+        EN_TODO_MARK,
+        "",
+        english.name,
+        [english.address || address, english.facts].filter(Boolean).join(" · "),
+        /* 사실이 없으면 그 자리를 사람이 채우도록 표시를 남긴다 */
+        english.facts ? null : EN_FACTS_MARK,
+      ]
+        .filter((line) => line !== null)
+        .join("\n")
+        .trim()
+    : null;
+
+  /* 출처 표기도 영문 블록 유무에 맞춘다 */
+  const credit = en
+    ? "사진 · 한국관광공사 / Photo · Korea Tourism Organization"
+    : "사진 · 한국관광공사";
 
   return [
     ko,
+    ...(en ? ["", "⸻", "", en] : []),
     "",
-    "⸻",
-    "",
-    en,
-    "",
-    "사진 · 한국관광공사 / Photo · Korea Tourism Organization",
+    credit,
     "",
     tags.map((t) => `#${t}`).join(" "),
   ].join("\n");
