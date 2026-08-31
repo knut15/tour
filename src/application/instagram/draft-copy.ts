@@ -225,6 +225,24 @@ function hoursLine(raw: string | null, style: FactStyle): string | null {
 }
 
 export /**
+ * 요금 줄. **여러 등급 중 첫 항목만 쓴다.**
+ *
+ * 원문이 대괄호 라벨과 하이픈 목록으로 온다 — 실측 2026-08-31, 예아리박물관:
+ * `[개인]- 일반 5,000원- 청소년 4,000원- 어린이 3,000원`. 그대로 자르면
+ * `[개인]- 일반 5,000원- 청소년…` 이 되어 읽히지 않는다.
+ *
+ * 라벨을 걷어내고 첫 항목만 남긴다. 등급별 요금 전체는 캡션이 아니라 공식 사이트가
+ * 할 일이다.
+ */
+function admissionLine(raw: string | null): string | null {
+  if (!raw) return null;
+  const plain = raw.replace(/<[^>]*>/g, " ").replace(/\[[^\]]*\]/g, " ").replace(/\s+/g, " ").trim();
+  if (!plain) return null;
+  const first = plain.split(/\s*[-–·]\s*/).map((x) => x.trim()).filter(Boolean)[0] ?? plain;
+  return first.length > 22 ? `${first.slice(0, 22).trim()}…` : first;
+}
+
+/**
  * 휴무 줄. **"연중무휴" 에 "휴무" 를 붙이지 않는다.**
  *
  * 라벨을 기계적으로 붙이면 "연중무휴 휴무" 가 된다 — 쉬는 날이 없다는 값에
@@ -248,7 +266,7 @@ export function factLine(detail: SpotDetailView, lang: "ko" | "en" = "ko"): stri
     tidy(fact(detail, "eventPeriod"), style, 30),
     hoursLine(fact(detail, "openingHours"), style),
     closed ? closedLine(closed, style) : null,
-    tidy(fact(detail, "admission"), style, 20),
+    admissionLine(fact(detail, "admission")),
     parking ? style.parking(parking) : null,
     tidy(fact(detail, "inquiry"), style, 30),
   ]
@@ -360,7 +378,7 @@ export function infoRows(detail: SpotDetailView): { label: string; value: string
     { label: "기간", value: tidy(fact(detail, "eventPeriod"), style, 26) ?? "" },
     { label: "관람시간", value: hoursLine(fact(detail, "openingHours"), style) ?? "" },
     { label: "휴무일", value: tidy(fact(detail, "closedDays"), style, 24) ?? "" },
-    { label: "이용요금", value: tidy(fact(detail, "admission"), style, 20) ?? "" },
+    { label: "이용요금", value: admissionLine(fact(detail, "admission")) ?? "" },
     { label: "주차", value: parking ?? "" },
     { label: "문의", value: tidy(fact(detail, "inquiry"), style, 28) ?? "" },
   ].filter((row) => row.value.length > 0);
@@ -397,7 +415,7 @@ export function coverChips(detail: SpotDetailView): { icon: string; text: string
 export function coverHighlight(
   detail: SpotDetailView,
 ): { label: string; value: string } | null {
-  const admission = tidy(fact(detail, "admission"), STYLE.ko, 16);
+  const admission = admissionLine(fact(detail, "admission"));
   if (!admission) return null;
   return { label: "이용요금", value: admission };
 }
