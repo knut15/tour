@@ -78,6 +78,33 @@ const COPY: Record<Trait, Copy> = {
   },
 };
 
+const SIDO_SHORT: Record<string, string> = {
+  서울특별시: "서울", 부산광역시: "부산", 대구광역시: "대구", 인천광역시: "인천",
+  광주광역시: "광주", 대전광역시: "대전", 울산광역시: "울산", 세종특별자치시: "세종",
+  경기도: "경기", 강원특별자치도: "강원", 강원도: "강원", 충청북도: "충북",
+  충청남도: "충남", 전라북도: "전북", 전북특별자치도: "전북", 전라남도: "전남",
+  경상북도: "경북", 경상남도: "경남", 제주특별자치도: "제주",
+};
+
+/**
+ * 광주광역시의 자치구 다섯. **합쳐진 시·도 이름을 가르는 유일한 단서다.**
+ *
+ * TourAPI 가 광주와 전남을 `전남광주통합특별시` 하나로 준다 — 실측 2026-08-31:
+ * 함평군(전남)과 충장로(광주 동구)의 주소가 같은 접두어로 시작한다. `areacode` 는
+ * 비어 오는 항목이 있어 기댈 수 없으므로 시·군·구 이름으로 가른다.
+ */
+const GWANGJU_GU = new Set(["동구", "서구", "남구", "북구", "광산구"]);
+
+const MERGED_JN_GJ = "전남광주통합특별시";
+
+/** 주소에서 시·도 통칭을 읽는다. 못 알아보면 원문 첫 마디를 그대로 쓴다 */
+export function regionOf(address: string | null): string {
+  if (!address) return "";
+  const [sido, sigungu = ""] = address.split(/\s+/);
+  if (sido === MERGED_JN_GJ) return GWANGJU_GU.has(sigungu) ? "광주" : "전남";
+  return SIDO_SHORT[sido] ?? sido;
+}
+
 /**
  * 주소의 시·도를 통칭으로 줄인다.
  *
@@ -86,17 +113,9 @@ const COPY: Record<Trait, Copy> = {
  */
 export function shortenAddress(address: string | null): string {
   if (!address) return "";
-  return address.replace(
-    /^(서울특별시|부산광역시|대구광역시|인천광역시|광주광역시|대전광역시|울산광역시|세종특별자치시|경기도|강원특별자치도|강원도|충청북도|충청남도|전라북도|전북특별자치도|전라남도|경상북도|경상남도|제주특별자치도)/,
-    (m) =>
-      ({
-        서울특별시: "서울", 부산광역시: "부산", 대구광역시: "대구", 인천광역시: "인천",
-        광주광역시: "광주", 대전광역시: "대전", 울산광역시: "울산", 세종특별자치시: "세종",
-        경기도: "경기", 강원특별자치도: "강원", 강원도: "강원", 충청북도: "충북",
-        충청남도: "충남", 전라북도: "전북", 전북특별자치도: "전북", 전라남도: "전남",
-        경상북도: "경북", 경상남도: "경남", 제주특별자치도: "제주",
-      })[m] ?? m,
-  );
+  const short = regionOf(address);
+  const rest = address.split(/\s+/).slice(1).join(" ");
+  return [short, rest].filter(Boolean).join(" ");
 }
 
 /** 값이 "가능/불가능" 처럼 짧은 판정어인지 본다 */
