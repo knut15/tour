@@ -33,6 +33,9 @@ import type { Category } from "@/domain/spot/category";
 export const COVER_WIDTH = 940;
 export const COVER_HEIGHT = 627;
 
+/** 레터박스 여백 색. 브랜드 잉크다 — `/api/photo` 와 같은 값을 쓴다 */
+const PAD_COLOR = "#1e1613";
+
 /**
  * 프로필 그리드가 자르는 비율. **정사각이 아니라 4:5 세로다.**
  *
@@ -195,6 +198,23 @@ export async function renderCoverJpeg(input: CoverInput): Promise<Buffer> {
     const res = await fetch(input.photoUrl);
     if (!res.ok) throw new Error(`사진을 받지 못했다: HTTP ${res.status}`);
     photo = Buffer.from(await res.arrayBuffer());
+
+    /*
+      액자 크기를 함께 받았으면 커버도 같은 액자에 담는다. **커버만 원본 크기로
+      두면 캐러셀 첫 장이 되어 나머지가 그 비율로 잘린다** — 레터박스를 쓰는
+      의미가 사라진다.
+    */
+    if (input.width && input.height) {
+      photo = await sharp(photo)
+        .resize(input.width, input.height, {
+          fit: "contain",
+          background: PAD_COLOR,
+          withoutEnlargement: true,
+        })
+        .jpeg({ quality: 92, chromaSubsampling: "4:4:4" })
+        .toBuffer();
+    }
+
     const meta = await sharp(photo).metadata();
     if (!meta.width || !meta.height) throw new Error("사진 크기를 읽지 못했다");
     photoSize = { width: meta.width, height: meta.height };
