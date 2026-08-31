@@ -16,6 +16,7 @@ import {
   draftCaption,
   draftHeadline,
   factLine,
+  hasEnded,
   regionOf,
 } from "@/application/instagram/draft-copy";
 
@@ -159,6 +160,13 @@ export async function GET(request: Request) {
       한 장짜리 장소는 보여 줄 것이 부족해 글이 얇아진다.
     */
     if (photoIds.length < 2) continue;
+
+    /*
+      **끝난 행사는 올리지 않는다.** 축제 목록은 날짜로 걸러지지 않아 지난 것이
+      섞여 온다 — 실측 2026-08-31: 4월에 끝난 함평나비대축제가 8월 목록에 있었다.
+      "지금 열리는" 이라고 붙여 올리면 거짓말이 된다.
+    */
+    if (hasEnded(detail)) continue;
 
     const trait = deriveTrait(detail, category);
     const name = detail.titlePrimary;

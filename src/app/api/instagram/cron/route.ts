@@ -5,6 +5,8 @@ import { InstagramClient, MAX_CAROUSEL_ITEMS } from "@/infrastructure/instagram/
 import { exclusionReason, isExcluded } from "@/infrastructure/instagram/excluded-spots";
 import { findCaptionProblems } from "@/infrastructure/instagram/caption-rules";
 import { makeIgQueueRepository } from "@/infrastructure/instagram/ig-queue-repository";
+import { hasEnded } from "@/application/instagram/draft-copy";
+import { getSpotDetail } from "@/presentation/lib/container";
 
 /**
  * 정해진 시각에 큐의 다음 한 건을 발행한다.
@@ -67,6 +69,15 @@ export async function GET(request: Request) {
     }
 
     /*
+      **발행 직전에 한 번 더 본다.** 초안이 큐에 머무는 동안 축제가 끝날 수 있다 —
+      초안 생성 때 걸렀다고 발행 시점에도 유효하다는 보장이 없다.
+    */
+    const detail = await getSpotDetail({ contentId: row.contentId, locale: "ko" }).catch(() => null);
+    if (detail && hasEnded(detail)) {
+      throw new Error("이미 끝난 행사다. 큐에서 빼거나 기간을 확인하라");
+    }
+
+    /*
       **액자 크기를 사진에서 정한다.** 같은 장소 안에서도 크기가 다르다 —
       실측 2026-08-31, 서울거리예술축제 8장이 940×627 / 940×625 / 940×529 로 갈렸다.
       가장 세로로 긴 것에 맞추면 어느 장도 잘리지 않고, 짧은 장은 여백이 붙는다.
@@ -90,6 +101,8 @@ export async function GET(request: Request) {
     cover.searchParams.set("pin", row.pin);
     cover.searchParams.set("category", row.category);
     cover.searchParams.set("photo", row.photoIds[0]);
+    /* 칩·요금은 커버가 `contentId` 로 직접 읽는다 — 캡션·정보카드와 같은 원천 */
+    cover.searchParams.set("contentId", row.contentId);
     cover.searchParams.set("w", String(boxWidth));
     cover.searchParams.set("h", String(boxHeight));
 

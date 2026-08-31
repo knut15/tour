@@ -348,3 +348,62 @@ export function infoRows(detail: SpotDetailView): { label: string; value: string
     { label: "문의", value: tidy(fact(detail, "inquiry"), style, 28) ?? "" },
   ].filter((row) => row.value.length > 0);
 }
+
+/**
+ * 커버에 얹을 칩.
+ *
+ * **가기 전에 알아야 하는 것만 고른다** — 시간·휴무·주차·기간. 소개나 분류처럼
+ * 캡션이 이미 말하는 것은 넣지 않는다. 칩이 많아지면 사진을 가린다.
+ *
+ * 이모지는 그림이 아니라 **눈이 줄을 찾는 표시**다. 없어도 뜻이 통하도록 글자를
+ * 함께 둔다 — `ImageResponse` 가 이모지를 외부에서 받아 오므로 실패할 수 있다.
+ */
+export function coverChips(detail: SpotDetailView): { icon: string; text: string }[] {
+  const style = STYLE.ko;
+  const hours = hoursLine(fact(detail, "openingHours"), style);
+  const closed = tidy(fact(detail, "closedDays"), style, 14);
+  const parking = tidy(fact(detail, "parking"), style, 8);
+  const period = tidy(fact(detail, "eventPeriod"), style, 22);
+
+  return [
+    period ? { icon: "📅", text: period } : null,
+    hours ? { icon: "🕘", text: hours.replace(" (계절별 상이)", "") } : null,
+    closed ? { icon: "🚫", text: `${closed} 휴무` } : null,
+    parking ? { icon: "🅿️", text: `주차 ${parking}` } : null,
+  ].filter((c): c is { icon: string; text: string } => c !== null);
+}
+
+/**
+ * 하단 왼쪽의 큰 값. **요금이 있으면 요금이다** — 갈지 말지를 가르는 값이라
+ * 한눈에 보여야 한다. 없으면 표시하지 않는다.
+ */
+export function coverHighlight(
+  detail: SpotDetailView,
+): { label: string; value: string } | null {
+  const admission = tidy(fact(detail, "admission"), STYLE.ko, 16);
+  if (!admission) return null;
+  return { label: "이용요금", value: admission };
+}
+
+/**
+ * 이미 끝난 행사인가.
+ *
+ * **축제 목록은 날짜로 걸러지지 않는다.** `areaBasedList2` 는 지난 축제도 그대로
+ * 준다 — 실측 2026-08-31: 함평나비대축제(507598)가 4월 24일~5월 5일인데 8월
+ * 목록에 올라왔다. 그것을 "지금 열리는" 으로 올리면 거짓말이 된다.
+ *
+ * 기간 문자열의 **마지막 날짜**를 읽어 오늘과 견준다. 못 읽으면 `false` 다 —
+ * 형식이 바뀌었을 때 멀쩡한 축제를 조용히 버리는 것보다, 사람이 큐에서 보는 편이 낫다.
+ */
+export function hasEnded(detail: SpotDetailView, today = new Date()): boolean {
+  const period = fact(detail, "eventPeriod");
+  if (!period) return false;
+
+  const dates = period.match(/(\d{4})[.\-/](\d{1,2})[.\-/](\d{1,2})/g);
+  if (!dates || dates.length === 0) return false;
+
+  const last = dates[dates.length - 1].split(/[.\-/]/).map(Number);
+  const end = Date.UTC(last[0], last[1] - 1, last[2]);
+  const now = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
+  return end < now;
+}

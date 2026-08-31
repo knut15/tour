@@ -106,6 +106,9 @@ const TONE_OF: Record<Category, CoverTone> = {
   festival: "deep",
 };
 
+/** 커버에 얹을 칩 한 개 */
+export type CoverChip = { icon: string; text: string };
+
 export type CoverInput = {
   /** 칩 문구. **앱의 카테고리 이름 그대로** 쓴다 — 새 단어를 만들지 않는다 */
   chip: string;
@@ -129,6 +132,13 @@ export type CoverInput = {
    * 캐러셀 다음 장에 **손대지 않은 같은 사진**을 함께 싣는 것을 전제로 쓴다.
    */
   photoUrl?: string;
+  /**
+   * 사실 칩. 운영시간·휴무·주차처럼 **가기 전에 알아야 하는 것**만 올린다.
+   * 다섯 개를 넘으면 두 줄이 되고 사진을 너무 가린다.
+   */
+  chips?: CoverChip[];
+  /** 하단 왼쪽 — 라벨과 큰 값. 요금처럼 한눈에 보여야 하는 값이다 */
+  highlight?: { label: string; value: string } | null;
 };
 
 let cachedFont: ArrayBuffer | null = null;
@@ -229,6 +239,9 @@ export async function renderCoverJpeg(input: CoverInput): Promise<Buffer> {
   const box = safeBox(width, height);
   // 세 줄이면 시작 크기를 낮춘 뒤, 거기서 다시 안전영역에 맞춰 줄인다
   const size = fitFontSize(rows, box.usable, rows.length >= 3 ? 46 : 54);
+  /* 칩과 하단 줄은 헤드라인에 비례한다 — 한 값이 판 전체의 크기를 정한다 */
+  const chipSize = Math.max(18, Math.round(size * 0.42));
+  const chips = (input.chips ?? []).slice(0, 5);
 
   const png = await new ImageResponse(
     (
@@ -270,23 +283,92 @@ export async function renderCoverJpeg(input: CoverInput): Promise<Buffer> {
         >
           {input.chip}
         </div>
-        {rows.map((line, i) => (
-          <div
-            key={i}
-            style={{ display: "flex", fontSize: size, letterSpacing: -2.4, lineHeight: 1.2 }}
-          >
-            {line}
+        {/*
+          **줄마다 첫 낱말을 강조한다.** 레퍼런스는 굵기로 가르지만 폰트 서브셋이
+          한 굵기(700)뿐이라 — 두 굵기를 실으면 `ImageResponse` 500KB 예산을 넘는다 —
+          밝기로 가른다. 사진 위 그라디언트에서는 이 대비로 충분하다.
+        */}
+        {rows.map((line, i) => {
+          const [head, ...rest] = line.split(" ");
+          return (
+            <div
+              key={i}
+              style={{ display: "flex", fontSize: size, letterSpacing: -2.4, lineHeight: 1.2 }}
+            >
+              <div style={{ display: "flex" }}>{head}</div>
+              {rest.length > 0 && (
+                <div style={{ display: "flex", opacity: 0.78, marginLeft: size * 0.22 }}>
+                  {rest.join(" ")}
+                </div>
+              )}
+            </div>
+          );
+        })}
+
+        {chips.length > 0 && (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 22 }}>
+            {chips.map((chip) => (
+              <div
+                key={chip.text}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 7,
+                  fontSize: chipSize,
+                  padding: `${Math.round(chipSize * 0.42)}px ${Math.round(chipSize * 0.72)}px`,
+                  borderRadius: 999,
+                  background: photo ? "rgba(0,0,0,0.42)" : c.chipBg,
+                  color: photo ? "#ffffff" : c.chipFg,
+                  border: photo ? "1px solid rgba(255,255,255,0.28)" : "none",
+                }}
+              >
+                {chip.icon ? <div style={{ display: "flex" }}>{chip.icon}</div> : null}
+                <div style={{ display: "flex" }}>{chip.text}</div>
+              </div>
+            ))}
           </div>
-        ))}
+        )}
+
         <div
           style={{
             display: "flex",
-            fontSize: fitFontSize([input.pin], box.usable, 26, 16),
-            opacity: 0.72,
-            marginTop: 14,
+            alignItems: "flex-end",
+            justifyContent: "space-between",
+            marginTop: 26,
+            width: box.usable,
           }}
         >
-          {input.pin}
+          {input.highlight ? (
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <div style={{ display: "flex", fontSize: chipSize, opacity: 0.72 }}>
+                {`| ${input.highlight.label}`}
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  fontSize: Math.round(size * 0.66),
+                  letterSpacing: -1.4,
+                  marginTop: 4,
+                }}
+              >
+                {input.highlight.value}
+              </div>
+            </div>
+          ) : (
+            <div style={{ display: "flex" }} />
+          )}
+          <div
+            style={{
+              display: "flex",
+              fontSize: chipSize,
+              padding: `${Math.round(chipSize * 0.5)}px ${Math.round(chipSize * 0.95)}px`,
+              borderRadius: 999,
+              background: c.chipBg,
+              color: c.chipFg,
+            }}
+          >
+            {input.pin}
+          </div>
         </div>
       </div>
     ),

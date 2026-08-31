@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { CATEGORIES, type Category } from "@/domain/spot/category";
 import { renderCoverJpeg, type CoverTone } from "@/presentation/lib/ig-cover";
+import { getSpotDetail } from "@/presentation/lib/container";
+import { coverChips, coverHighlight } from "@/application/instagram/draft-copy";
 
 /**
  * 인스타 커버를 그려 JPEG 으로 돌려준다.
@@ -56,6 +58,17 @@ export async function GET(request: Request) {
   }
   const photoUrl = photoId ? new URL(`/api/photo/${photoId}`, request.url).toString() : undefined;
 
+  /*
+    **사실은 `contentId` 로 직접 읽는다.** 칩에 넣을 값을 손으로 넘기면 캡션·정보
+    카드와 갈린다 — 세 곳이 같은 원천에서 같은 다듬기를 거쳐야 한다.
+    없으면 칩 없이 그린다.
+  */
+  const contentId = q.get("contentId")?.trim();
+  const detail =
+    contentId && /^\d{4,12}$/.test(contentId)
+      ? await getSpotDetail({ contentId, locale: "ko" }).catch(() => null)
+      : null;
+
   if (!chip || !headline || !pin) {
     return NextResponse.json({ error: "chip·headline·pin 이 모두 필요하다" }, { status: 400 });
   }
@@ -79,6 +92,8 @@ export async function GET(request: Request) {
       width,
       height,
       photoUrl,
+      chips: detail ? coverChips(detail) : undefined,
+      highlight: detail ? coverHighlight(detail) : null,
     });
 
     return new NextResponse(new Uint8Array(jpeg), {
