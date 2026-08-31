@@ -22,12 +22,25 @@ const FORBIDDEN: { pattern: RegExp; why: string }[] = [
   { pattern: /\b(tap|open the app|click)\b/i, why: "앱 조작 안내 — tap/open/click" },
 ];
 
+/**
+ * **사람이 채울 자리가 남은 채로 나가지 않는다.**
+ *
+ * `draft-copy.ts` 는 소개 한 문장을 비워 두고 `[여기에 한 문장 …]` 을 넣는다 —
+ * 눈에 띄라고 대괄호를 쓴다. 그 표시가 그대로 발행되면 게시물에 대괄호가 박힌 채
+ * 남고 **인스타는 캡션을 고칠 수 없다.** 컨펌 절차를 건너뛰는 발행이 생긴 이상
+ * 사람의 눈이 아니라 검사기가 막아야 한다.
+ */
+const UNFILLED = /\[[^\]]{4,}\]/;
+
 export type CaptionProblem = { why: string; found: string };
 
 /** 캡션이 규약을 어겼는지 본다. 빈 배열이면 통과다 */
 export function findCaptionProblems(caption: string): CaptionProblem[] {
   const out: CaptionProblem[] = [];
-  for (const { pattern, why } of FORBIDDEN) {
+  for (const { pattern, why } of [
+    ...FORBIDDEN,
+    { pattern: UNFILLED, why: "채우지 않은 자리 — 대괄호 표시가 남아 있다" },
+  ]) {
     const m = caption.match(pattern);
     if (m) {
       /*
