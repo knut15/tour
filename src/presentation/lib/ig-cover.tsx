@@ -304,3 +304,84 @@ export async function renderCoverJpeg(input: CoverInput): Promise<Buffer> {
   const out = photo ? sharp(photo).composite([{ input: layer, top: 0, left: 0 }]) : sharp(layer);
   return out.jpeg({ quality: 92, chromaSubsampling: "4:4:4" }).toBuffer();
 }
+
+/* ── 정보 카드 ──────────────────────────────────────────────── */
+
+export type InfoRow = { label: string; value: string };
+
+export type InfoInput = {
+  title: string;
+  rows: InfoRow[];
+  /** 커버·사진과 같은 크기여야 한다. 다르면 캐러셀에서 잘린다 */
+  width: number;
+  height: number;
+};
+
+/**
+ * 캐러셀 마지막 장. **주소·시간·휴무를 한 판에 세운다.**
+ *
+ * 캡션에도 같은 값이 들어가지만, 캡션은 접혀 있고 사진을 넘기는 사람은 캡션을
+ * 안 볼 수 있다. 저장해 두고 나중에 볼 때 **그림 하나로 끝나는 것**이 낫다.
+ *
+ * 커버와 같은 폰트·안전영역을 쓴다 — 프로필 그리드가 4:5 로 자르므로 글자가 그
+ * 밖에 있으면 썸네일에서 사라진다.
+ */
+export async function renderInfoJpeg(input: InfoInput): Promise<Buffer> {
+  const { width, height } = input;
+  const font = await loadFont();
+  const box = safeBox(width, height);
+  const c = PALETTE.cream;
+
+  /*
+    줄 수에 따라 글자를 줄인다. 다섯 줄이 넘으면 고정 크기로는 판을 넘긴다 —
+    커버가 겪은 것과 같은 문제라 같은 방식으로 푼다.
+  */
+  const rows = input.rows.slice(0, 6);
+  const size = rows.length >= 5 ? 22 : 25;
+  const labelWidth = Math.round(box.usable * 0.26);
+
+  const png = await new ImageResponse(
+    (
+      <div
+        style={{
+          width,
+          height,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          background: c.bg,
+          color: c.fg,
+          fontFamily: "NotoKR",
+          position: "relative",
+          paddingLeft: box.left,
+          paddingRight: width - box.left - box.usable,
+        }}
+      >
+        <Rings color={c.ring} width={width} height={height} />
+        <div
+          style={{
+            display: "flex",
+            fontSize: Math.round(size * 1.75),
+            letterSpacing: -1.8,
+            marginBottom: 30,
+          }}
+        >
+          {input.title}
+        </div>
+        {rows.map((row) => (
+          <div key={row.label} style={{ display: "flex", marginBottom: 14, fontSize: size }}>
+            <div style={{ display: "flex", width: labelWidth, color: "#547080", flexShrink: 0 }}>
+              {row.label}
+            </div>
+            <div style={{ display: "flex", flex: 1 }}>{row.value}</div>
+          </div>
+        ))}
+      </div>
+    ),
+    { width, height, fonts: [{ name: "NotoKR", data: font, weight: 700, style: "normal" }] },
+  ).arrayBuffer();
+
+  return sharp(Buffer.from(png))
+    .jpeg({ quality: 92, chromaSubsampling: "4:4:4" })
+    .toBuffer();
+}

@@ -93,6 +93,19 @@ export async function GET(request: Request) {
     cover.searchParams.set("w", String(boxWidth));
     cover.searchParams.set("h", String(boxHeight));
 
+    /*
+      **마지막 장은 정보 카드다.** 캡션에도 같은 값이 있지만 캡션은 접혀 있고,
+      사진만 넘겨 보는 사람은 열지 않는다. 저장해 두고 나중에 볼 때 그림 하나로
+      끝나는 편이 낫다. 사실이 하나도 없는 장소면 404 가 오므로 그때는 뺀다.
+    */
+    const info = new URL(`${origin}/api/og/info`);
+    info.searchParams.set("contentId", row.contentId);
+    info.searchParams.set("w", String(boxWidth));
+    info.searchParams.set("h", String(boxHeight));
+    const hasInfo = await fetch(info, { method: "HEAD" })
+      .then((r) => r.ok)
+      .catch(() => false);
+
     const images = [
       { url: cover.toString(), alt: `${row.chip} — ${row.headline.replace(/\n/g, " ")}. ${row.pin}` },
       /*
@@ -103,6 +116,9 @@ export async function GET(request: Request) {
         url: `${origin}/api/photo/${id}?w=${boxWidth}&h=${boxHeight}`,
         alt: `${row.pin} — ${row.chip}`,
       })),
+      ...(hasInfo
+        ? [{ url: info.toString(), alt: `${row.pin} 정보 — 주소·시간·휴무` }]
+        : []),
     ].slice(0, MAX_CAROUSEL_ITEMS);
 
     const client = new InstagramClient(config);

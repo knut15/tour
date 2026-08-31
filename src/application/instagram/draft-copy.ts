@@ -304,3 +304,28 @@ export function draftCaption(
     tags.map((t) => `#${t}`).join(" "),
   ].join("\n");
 }
+
+/**
+ * 정보 카드에 세울 줄.
+ *
+ * **캡션의 사실 줄과 같은 다듬기를 쓴다.** 두 곳이 다른 값을 말하면 어느 쪽이
+ * 맞는지 알 수 없다 — 캐러셀 마지막 장과 캡션이 서로 어긋나는 것이 가장 나쁘다.
+ *
+ * 값이 없는 항목은 **뺀다.** 화면(GOAL.md §5-3)은 "정보 없음" 과 "그런 항목 없음"
+ * 을 구분하려고 빈 행을 남기지만, 여기는 판이 좁아 빈 줄이 자리를 먹는다.
+ */
+export function infoRows(detail: SpotDetailView): { label: string; value: string }[] {
+  const style = STYLE.ko;
+  const address = shortenAddress(detail.address);
+  const parking = tidy(fact(detail, "parking"), style, 14);
+
+  return [
+    { label: "주소", value: address },
+    { label: "기간", value: tidy(fact(detail, "eventPeriod"), style, 26) ?? "" },
+    { label: "관람시간", value: hoursLine(fact(detail, "openingHours"), style) ?? "" },
+    { label: "휴무일", value: tidy(fact(detail, "closedDays"), style, 24) ?? "" },
+    { label: "이용요금", value: tidy(fact(detail, "admission"), style, 20) ?? "" },
+    { label: "주차", value: parking ?? "" },
+    { label: "문의", value: tidy(fact(detail, "inquiry"), style, 28) ?? "" },
+  ].filter((row) => row.value.length > 0);
+}
