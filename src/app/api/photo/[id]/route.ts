@@ -40,13 +40,20 @@ const PAD_COLOR = "#1e1613";
  * 관광공사 CDN 은 **id 의 끝 두 자리를 디렉터리로** 쓴다 —
  * `3304399` → `/cms/resource/99/3304399_image2_1.jpg` (실측 2026-08-31).
  *
- * **확장자 대소문자가 섞여 있다.** 서울거리예술축제(706180)의 이미지 8장 중 2장이
- * `.JPG` 였다(실측 2026-08-31: 4103251·4103253). 소문자만 시도하면 그 장들이 404 가
- * 되므로 둘 다 시도한다.
+ * **디렉터리와 확장자가 둘 다 갈린다.**
+ * - 디렉터리: `resource` 와 `resource_photo` 두 갈래다. 이화벽화마을(1102845)의
+ *   이미지 9장이 전부 `resource_photo` 였다(실측 2026-08-31)
+ * - 확장자: 서울거리예술축제(706180)의 8장 중 2장이 `.JPG` 였다
+ *
+ * 네 조합을 차례로 시도한다. **원본 URL 을 그대로 받지 않는 대가**이고,
+ * 열린 프록시가 되지 않는 값어치가 그보다 크다.
  */
 function originUrls(id: string): string[] {
-  const base = `${HOST}/cms/resource/${id.slice(-2)}/${id}_image2_1`;
-  return [`${base}.jpg`, `${base}.JPG`];
+  const dir = id.slice(-2);
+  return ["resource", "resource_photo"].flatMap((root) => {
+    const base = `${HOST}/cms/${root}/${dir}/${id}_image2_1`;
+    return [`${base}.jpg`, `${base}.JPG`];
+  });
 }
 
 /**
