@@ -75,3 +75,36 @@ export function readSupabaseConfig(): SupabaseConfig | null {
   if (!url || !publishableKey) return null;
   return { url, publishableKey };
 }
+
+export type InstagramConfig = {
+  /** Graph API 호출 대상. **OAuth 가 준 `user_id` 가 아니라 `/me` 가 준 값이다** */
+  userId: string;
+  /** 장기 토큰. 60일마다 갱신하지 않으면 되살릴 수 없다 */
+  accessToken: string;
+};
+
+/**
+ * 인스타 발행 설정. **없으면 `null` 이다 — 던지지 않는다.**
+ *
+ * 발행은 cron 이 부르는 곁가지라, 키가 없다고 앱 전체가 뜨지 않으면 안 된다.
+ *
+ * **`INSTAGRAM_USER_ID` 는 `/me` 가 돌려준 값을 넣는다.** OAuth 토큰 교환이 함께
+ * 주는 `user_id` 는 값이 1 다르고(실측 2026-08-31: `...020` vs `...019`),
+ * 그것으로 Graph API 를 부르면 `Object with ID ... does not exist` 가 난다.
+ */
+export function readInstagramConfig(): InstagramConfig | null {
+  const userId = process.env.INSTAGRAM_USER_ID?.trim();
+  const accessToken = process.env.INSTAGRAM_ACCESS_TOKEN?.trim();
+  if (!userId || !accessToken) return null;
+  return { userId, accessToken };
+}
+
+/**
+ * cron·수동 호출을 가르는 열쇠. 없으면 그 경로를 아예 막는다.
+ *
+ * 발행 route 는 부르면 실제로 게시물이 올라간다. 열려 있으면 남이 우리 계정에
+ * 글을 쓸 수 있다는 뜻이라, 값이 없을 때 통과시키는 기본값을 두지 않는다.
+ */
+export function readCronSecret(): string | null {
+  return process.env.CRON_SECRET?.trim() || null;
+}
