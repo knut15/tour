@@ -90,12 +90,22 @@ export function WeatherWidget({
       lang={lang}
       className={
         // 겹침은 역할로 고른다. 숫자를 여기서 정하지 않는다 (globals.css 의 --layer-*)
-        "absolute right-0 top-[calc(100%+8px)] z-[var(--layer-popover)] " +
-        "w-[min(21.25rem,calc(100vw-2rem))] " +
+        /*
+          **좁은 화면에서는 화면에 붙인다.** 칩 기준 `right-0` 으로 두면 패널이
+          칩의 오른쪽 끝에서 왼쪽으로 21rem 을 뻗는데, 칩 오른쪽에 테마·언어 컨트롤이
+          더 있어서 칩이 화면 오른쪽 끝에 있지 않다. 그만큼 패널 왼쪽이 화면 밖으로
+          나간다(실측 2026-08-31, 모바일에서 왼쪽이 잘렸다).
+
+          머리말 높이는 스크롤에 따라 줄어들므로 `--masthead-h` 를 그대로 쓴다.
+        */
+        "fixed inset-x-4 top-[calc(var(--masthead-h)+8px)] w-auto " +
+        "sm:absolute sm:inset-x-auto sm:right-0 sm:top-[calc(100%+8px)] " +
+        "sm:w-[min(21.25rem,calc(100vw-2rem))] " +
+        "z-[var(--layer-popover)] " +
         "rounded-[22px] border border-line bg-canvas/85 p-2 backdrop-blur-xl " +
         "shadow-[0_18px_48px_-16px_rgba(0,0,0,0.28)] " +
         "animate-[weather-panel-in_0.18s_var(--ease-signature)_both] " +
-        "origin-top-right"
+        "origin-top sm:origin-top-right"
       }
     >
       <h2 id={labelId} className="sr-only">

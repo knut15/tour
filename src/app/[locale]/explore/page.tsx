@@ -236,7 +236,7 @@ export default async function ExplorePage({ params, searchParams }: PageProps<"/
                   순서는 "무엇으로 세울까" 다음에 "무엇을 찾을까" 다 — 앞의 것은
                   지금 보이는 목록을 다시 세우고, 뒤의 것은 목록 자체를 갈아치운다.
                 */}
-                <div className="ms-auto flex min-w-0 flex-wrap items-center justify-end gap-3">
+                <div className="flex min-w-0 flex-wrap items-center justify-start gap-3 sm:ms-auto sm:justify-end">
                   <SortToggle
                     locale={locale}
                     category={category}

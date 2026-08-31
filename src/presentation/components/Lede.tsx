@@ -78,6 +78,27 @@ const LEDE = {
 const TITLE_WIDTH = { ko: "max-w-[12ch]", latin: "max-w-[12ch]" } as const;
 
 /**
+ * 이 길이까지만 강조를 한 덩어리로 묶는다. 넘으면 줄바꿈을 허용한다.
+ *
+ * 로케일별 강조 길이 — 한국어 8 · 중국어 5 · 일본어 10 · 영어 14 · 프랑스어 21 ·
+ * 독일어 22. 12 를 경계로 두면 짧은 쪽은 묶이고 긴 쪽은 흐른다.
+ */
+const ACCENT_NOWRAP_MAX = 12;
+
+/**
+ * 좁은 화면에서 제목을 줄이는 로케일.
+ *
+ * 같은 문장이라도 언어마다 길이가 크게 다르다 — 한국어 23자에 견줘 독일어는 53자다.
+ * 기본 크기(`clamp(3rem,9vw,5rem)`)로는 좁은 화면에서 줄 수가 불어나 화면을 넘긴다.
+ * **넓은 화면에서는 건드리지 않는다** — 거기서는 기본 크기가 문제되지 않는다.
+ */
+const NARROW_TITLE: Partial<Record<Locale, string>> = {
+  ja: "max-sm:text-[clamp(2.25rem,7vw,3.5rem)]",
+  fr: "max-sm:text-[clamp(2rem,6.5vw,3.25rem)]",
+  de: "max-sm:text-[clamp(2rem,6.5vw,3.25rem)]",
+};
+
+/**
  * 방향별로 어느 스냅샷을 남길지. 세 요소가 **같은 표를 쓴다** — 눈썹줄만 다른
  * 규칙으로 움직이면 한 덩어리가 아니라 세 조각이 따로 노는 것으로 보인다.
  */
@@ -115,7 +136,13 @@ function withAccent(title: string, accent: string | undefined) {
         남아 있지만 이제 쓰이지 않는다.
       */}
       <span
-        className="whitespace-nowrap"
+        /*
+          **짧을 때만 한 덩어리로 묶는다.** 한국어 강조는 8자라 묶어야 가운데서
+          쪼개지지 않는데, 프랑스어 21자·독일어 22자는 제목 폭(12ch)을 넘겨서
+          묶으면 그릇 밖으로 나간다(실측 2026-08-31, 모바일에서 잘려 보였다).
+          폰트를 줄여도 `ch` 는 글자 크기에 비례하므로 그릇이 같이 줄어 해결되지 않는다.
+        */
+        className={accent.length <= ACCENT_NOWRAP_MAX ? "whitespace-nowrap" : undefined}
         style={{ color: "var(--brand-coral)" }}
       >
         {accent}
@@ -177,7 +204,8 @@ export function Lede({
             "mt-7 font-bold leading-[0.98] tracking-[-0.07em] " +
             v.title +
             " " +
-            (locale === "ko" ? TITLE_WIDTH.ko : TITLE_WIDTH.latin)
+            (locale === "ko" ? TITLE_WIDTH.ko : TITLE_WIDTH.latin) +
+            (NARROW_TITLE[locale] ? " " + NARROW_TITLE[locale] : "")
           }
           style={{ fontFamily: "var(--font-brand)", color: "var(--brand-word)" }}
         >
