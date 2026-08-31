@@ -414,7 +414,11 @@ export async function renderInfoJpeg(input: InfoInput): Promise<Buffer> {
   const { width, height } = input;
   const font = await loadFont();
   const box = safeBox(width, height);
-  const c = PALETTE.cream;
+  /*
+    **정보 카드도 검정이다.** 사진 여백이 검정인데 이 장만 크림이면 넘길 때 튄다.
+    캐러셀은 한 덩어리로 읽혀야 한다.
+  */
+  const c = { bg: "#000000", fg: "#faece7", ring: "#d85a30" };
 
   /*
     줄 수에 따라 글자를 줄인다. 다섯 줄이 넘으면 고정 크기로는 판을 넘긴다 —
@@ -454,7 +458,9 @@ export async function renderInfoJpeg(input: InfoInput): Promise<Buffer> {
         </div>
         {rows.map((row) => (
           <div key={row.label} style={{ display: "flex", marginBottom: 14, fontSize: size }}>
-            <div style={{ display: "flex", width: labelWidth, color: "#547080", flexShrink: 0 }}>
+            <div
+              style={{ display: "flex", width: labelWidth, opacity: 0.55, flexShrink: 0 }}
+            >
               {row.label}
             </div>
             <div style={{ display: "flex", flex: 1 }}>{row.value}</div>
