@@ -34,15 +34,48 @@ export const COVER_WIDTH = 940;
 export const COVER_HEIGHT = 627;
 
 /**
- * 프로필 그리드는 **가운데 정사각으로 자른다.** 글자가 그 밖에 있으면 썸네일에서
- * 사라진다.
+ * 프로필 그리드가 자르는 비율. **정사각이 아니라 4:5 세로다.**
  *
- * 실측 2026-08-31: 내용을 `x=190` 에 두었더니 크롭 경계까지 34px 밖에 안 남아
- * 잘린 것처럼 보였다. 정사각 안쪽으로 60px 을 더 들여 안전영역을 잡는다.
+ * 처음에는 가운데 정사각으로 자른다고 보고 안전영역을 잡았는데 틀렸다 —
+ * 실측 2026-08-31: 940×705 커버에서 정사각 기준 안전영역은 `x=178` 인데 4:5 크롭은
+ * `x=188` 부터라 10px 이 밖으로 나가 글자가 잘렸다. 940×627 도 3px 모자랐다.
  */
+const GRID_RATIO = 4 / 5;
+
+/** 크롭 경계에서 안쪽으로 더 들이는 여백 */
+const SAFE_PAD = 60;
+
+/** 그리드에서 살아남는 가로 구간 */
+function safeBox(width: number, height: number): { left: number; usable: number } {
+  const cropWidth = Math.min(width, height * GRID_RATIO);
+  return {
+    left: Math.round((width - cropWidth) / 2 + SAFE_PAD),
+    usable: Math.round(cropWidth - SAFE_PAD * 2),
+  };
+}
+
 export function safeLeft(width: number, height: number): number {
-  const square = Math.min(width, height);
-  return Math.round((width - square) / 2 + 60);
+  return safeBox(width, height).left;
+}
+
+/**
+ * 안전영역 안에 들어가는 가장 큰 글자 크기를 찾는다.
+ *
+ * **고정 크기로 두면 문구가 길어질 때 조용히 잘린다.** 한글은 글자당 폭이 크기의
+ * 약 0.98배, 공백과 라틴은 그보다 좁다. 그 어림으로 재서 넘치면 한 단계씩 줄인다.
+ */
+function fitFontSize(rows: string[], usable: number, max: number, min = 30): number {
+  const widthAt = (line: string, size: number) =>
+    [...line].reduce((sum, ch) => {
+      if (ch === " ") return sum + size * 0.3;
+      // 한글·한자·가나는 전각으로 본다
+      return sum + size * (/[\u1100-\u11FF\u3040-\u30FF\u3400-\u9FFF\uAC00-\uD7AF]/.test(ch) ? 0.98 : 0.55);
+    }, 0);
+
+  for (let size = max; size > min; size -= 2) {
+    if (rows.every((line) => widthAt(line, size) <= usable)) return size;
+  }
+  return min;
 }
 
 /**
@@ -148,8 +181,9 @@ export async function renderCoverJpeg(input: CoverInput): Promise<Buffer> {
   const c = PALETTE[tone];
   const font = await loadFont();
   const rows = lines(input.headline);
-  // 세 줄이면 글자를 줄여야 안전영역 안에 선다
-  const size = rows.length >= 3 ? 46 : 54;
+  const box = safeBox(width, height);
+  // 세 줄이면 시작 크기를 낮춘 뒤, 거기서 다시 안전영역에 맞춰 줄인다
+  const size = fitFontSize(rows, box.usable, rows.length >= 3 ? 46 : 54);
 
   const png = await new ImageResponse(
     (
@@ -164,7 +198,8 @@ export async function renderCoverJpeg(input: CoverInput): Promise<Buffer> {
           color: c.fg,
           fontFamily: "NotoKR",
           position: "relative",
-          paddingLeft: safeLeft(width, height),
+          paddingLeft: box.left,
+          paddingRight: width - box.left - box.usable,
           paddingBottom: 68,
         }}
       >
@@ -175,7 +210,7 @@ export async function renderCoverJpeg(input: CoverInput): Promise<Buffer> {
             alignSelf: "flex-start",
             background: c.chipBg,
             color: c.chipFg,
-            fontSize: 24,
+            fontSize: Math.min(24, Math.round(size * 0.44)),
             letterSpacing: 2.2,
             padding: "8px 14px",
             borderRadius: 4,
@@ -192,7 +227,14 @@ export async function renderCoverJpeg(input: CoverInput): Promise<Buffer> {
             {line}
           </div>
         ))}
-        <div style={{ display: "flex", fontSize: 26, opacity: 0.72, marginTop: 14 }}>
+        <div
+          style={{
+            display: "flex",
+            fontSize: fitFontSize([input.pin], box.usable, 26, 16),
+            opacity: 0.72,
+            marginTop: 14,
+          }}
+        >
           {input.pin}
         </div>
       </div>
