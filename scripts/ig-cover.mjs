@@ -22,6 +22,42 @@ import sharp from "sharp";
 /** 인스타가 받는 가장 세로로 긴 비율. `api/instagram/cron` 과 같은 값이어야 한다 */
 const PORTRAIT_RATIO = 4 / 5;
 
+/**
+ * 계정에 실제로 올라간 글을 본다.
+ *
+ * **발행 응답을 믿지 않는다.** 실측 2026-09-01: `media_publish` 가 403 을 주면서도
+ * 게시물은 만들어졌다. 응답만 보고 재시도해 같은 글이 20건 올라갔고, 인스타 API 에는
+ * 삭제가 없어 사람이 앱에서 하나씩 지웠다. **발행이 실패했다고 판단하기 전에 여기를
+ * 먼저 본다.**
+ */
+async function posted() {
+  const uid = process.env.INSTAGRAM_USER_ID?.trim();
+  const tok = process.env.INSTAGRAM_ACCESS_TOKEN?.trim();
+  if (!uid || !tok) throw new Error("INSTAGRAM_USER_ID 와 INSTAGRAM_ACCESS_TOKEN 이 필요하다");
+
+  const u = new URL(`https://graph.instagram.com/v23.0/${uid}/media`);
+  u.searchParams.set("fields", "id,caption,timestamp,permalink");
+  u.searchParams.set("limit", "25");
+  u.searchParams.set("access_token", tok);
+  const j = await (await fetch(u)).json();
+  if (j.error) throw new Error(`목록을 읽지 못했다: ${j.error.message}`);
+
+  const rows = j.data ?? [];
+  const times = new Map();
+  const keyOf = (c) => (c ?? "").replace(/\s+/g, " ").trim().slice(0, 200);
+  for (const m of rows) times.set(keyOf(m.caption), (times.get(keyOf(m.caption)) ?? 0) + 1);
+
+  for (const m of rows) {
+    const n = times.get(keyOf(m.caption));
+    console.log(
+      `${m.timestamp}  ${m.id}  ${(m.caption ?? "").split("\n")[0].slice(0, 34)}` +
+        (n > 1 ? `  ← 같은 글 ${n}건` : ""),
+    );
+  }
+  const dup = [...times.values()].filter((n) => n > 1).length;
+  console.log(`\n최근 ${rows.length}건${dup ? `, 중복 ${dup}종 — 인스타 앱에서 지워야 한다 (API 삭제 없음)` : ""}`);
+}
+
 /** 커버를 저장할 곳. `spot/<contentId>.jpg` 로 장소마다 한 장이다 */
 const COVER_DIR = "assets/spot";
 
@@ -235,6 +271,7 @@ async function approve(id) {
 const [command, ...args] = process.argv.slice(2);
 const run = {
   list: () => list(),
+  posted: () => posted(),
   make: () => Promise.all(args.map(make)),
   headline: () => Promise.all(args.map(headline)),
   "set-headline": () => setHeadline(args[0], args[1]),
@@ -244,7 +281,7 @@ const run = {
 }[command];
 
 if (!run) {
-  console.error("사용법: ig-cover.mjs list | headline <큐id...> | set-headline <큐id> <두 줄> | set-caption <큐id> <파일> | set-cover-photo <큐id> <사진id> | make <큐id...> | approve <큐id...>");
+  console.error("사용법: ig-cover.mjs list | posted | headline <큐id...> | set-headline <큐id> <두 줄> | set-caption <큐id> <파일> | set-cover-photo <큐id> <사진id> | make <큐id...> | approve <큐id...>");
   process.exit(1);
 }
 

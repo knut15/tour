@@ -22,6 +22,18 @@ const BASE = "https://graph.instagram.com/v23.0";
 /** 캐러셀 상한. 넘겨 보내면 API 가 거절하므로 부르기 전에 자른다 */
 export const MAX_CAROUSEL_ITEMS = 10;
 
+/**
+ * 두 캡션이 같은 글인가.
+ *
+ * 인스타가 캡션을 그대로 돌려주지만 공백·개행이 정규화돼 오기도 한다. 앞부분
+ * 200자만 공백을 접어 견준다 — 해시태그까지 갈 것 없이 도입부가 같으면 같은 글이다.
+ */
+export function sameCaption(a: string, b: string): boolean {
+  const key = (v: string) => v.replace(/\s+/g, " ").trim().slice(0, 200);
+  const ka = key(a);
+  return ka.length > 0 && ka === key(b);
+}
+
 export class InstagramError extends Error {
   constructor(
     message: string,
@@ -71,6 +83,35 @@ export class InstagramClient {
     const row = json.data?.[0];
     if (!row) return null;
     return { used: row.quota_usage ?? 0, total: row.config?.quota_total ?? 100 };
+  }
+
+  /**
+   * 최근 게시물. **발행 응답을 믿지 못해서 두는 창구다.**
+   *
+   * 실측 2026-09-01: `media_publish` 가 403 을 돌려주면서도 게시물은 실제로
+   * 만들어졌다. 응답만 보고 재시도해 같은 글이 20건 올라갔고, 인스타 API 에는
+   * 삭제가 없어 사람이 앱에서 하나씩 지워야 했다.
+   */
+  async recentMedia(limit = 25): Promise<{ id: string; caption: string }[]> {
+    const url = new URL(`${BASE}/${this.config.userId}/media`);
+    url.searchParams.set("fields", "id,caption");
+    url.searchParams.set("limit", String(limit));
+    url.searchParams.set("access_token", this.config.accessToken);
+    const res = await fetch(url);
+    const json = (await res.json()) as {
+      data?: { id: string; caption?: string }[];
+      error?: { message?: string };
+    };
+    if (!res.ok || json.error) {
+      throw new InstagramError(json.error?.message ?? "목록을 읽지 못했다", "recentMedia", res.status);
+    }
+    return (json.data ?? []).map((m) => ({ id: m.id, caption: m.caption ?? "" }));
+  }
+
+  /** 같은 캡션으로 이미 나간 게시물의 id. 없으면 `null` */
+  async findByCaption(caption: string): Promise<string | null> {
+    const media = await this.recentMedia();
+    return media.find((m) => sameCaption(m.caption, caption))?.id ?? null;
   }
 
   /**
@@ -194,6 +235,19 @@ export class InstagramClient {
     images: { url: string; alt?: string }[],
     caption: string,
   ): Promise<{ mediaId: string; children: ContainerId[] }> {
+    /*
+      **시작하기 전에 같은 글이 이미 나갔는지 본다.** 컨테이너를 아홉 개 만든 뒤
+      마지막에야 알면 늦다 — 그 사이에 또 한 건이 올라갈 수 있다.
+    */
+    const already = await this.findByCaption(caption).catch(() => null);
+    if (already) {
+      throw new InstagramError(
+        `같은 캡션이 이미 발행돼 있다 (media ${already}). 재시도가 아니라 중복이다`,
+        "publishCarousel",
+        0,
+      );
+    }
+
     const children: ContainerId[] = [];
     for (const image of images) {
       const id = await this.createImageItem(image.url, image.alt);
@@ -203,7 +257,23 @@ export class InstagramClient {
     }
     const carousel = await this.createCarousel(children, caption);
     await this.waitUntilReady(carousel);
-    const { mediaId } = await this.publish(carousel);
-    return { mediaId, children };
+
+    try {
+      const { mediaId } = await this.publish(carousel);
+      return { mediaId, children };
+    } catch (error) {
+      /*
+        **실패 응답이 왔다고 안 나간 것이 아니다.**
+
+        실측 2026-09-01: `media_publish` 가 403 `Application request limit reached`
+        를 주면서도 게시물은 만들어졌다. 그 응답을 믿고 재시도해 같은 글이 20건
+        올라갔다. 인스타 API 에는 삭제가 없어 사람이 앱에서 하나씩 지웠다.
+
+        그래서 던지기 전에 **계정에 실제로 있는지 본다.** 있으면 그것이 답이다.
+      */
+      const landed = await this.findByCaption(caption).catch(() => null);
+      if (landed) return { mediaId: landed, children };
+      throw error;
+    }
   }
 }
