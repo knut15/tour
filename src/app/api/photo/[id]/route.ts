@@ -24,11 +24,15 @@ const HOST = "https://tong.visitkorea.or.kr";
  * 이미지 id 로 원본 경로를 만든다.
  *
  * 관광공사 CDN 은 **id 의 끝 두 자리를 디렉터리로** 쓴다 —
- * `3304399` → `/cms/resource/99/3304399_image2_1.jpg` (실측 2026-08-31,
- * `detailImage2` 응답 10건 전부 이 규칙이었다).
+ * `3304399` → `/cms/resource/99/3304399_image2_1.jpg` (실측 2026-08-31).
+ *
+ * **확장자 대소문자가 섞여 있다.** 서울거리예술축제(706180)의 이미지 8장 중 2장이
+ * `.JPG` 였다(실측 2026-08-31: 4103251·4103253). 소문자만 시도하면 그 장들이 404 가
+ * 되므로 둘 다 시도한다.
  */
-function originUrl(id: string): string {
-  return `${HOST}/cms/resource/${id.slice(-2)}/${id}_image2_1.jpg`;
+function originUrls(id: string): string[] {
+  const base = `${HOST}/cms/resource/${id.slice(-2)}/${id}_image2_1`;
+  return [`${base}.jpg`, `${base}.JPG`];
 }
 
 /**
@@ -45,15 +49,21 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
     return NextResponse.json({ error: "bad-id" }, { status: 400 });
   }
 
-  let upstream: Response;
-  try {
-    upstream = await fetch(originUrl(id), { next: { revalidate: CACHE_SECONDS } });
-  } catch {
-    return NextResponse.json({ error: "upstream-unreachable" }, { status: 502 });
+  let upstream: Response | null = null;
+  for (const url of originUrls(id)) {
+    try {
+      const res = await fetch(url, { next: { revalidate: CACHE_SECONDS } });
+      if (res.ok) {
+        upstream = res;
+        break;
+      }
+    } catch {
+      // 다음 후보를 시도한다. 전부 실패하면 아래에서 502 를 돌려준다
+    }
   }
 
-  if (!upstream.ok) {
-    return NextResponse.json({ error: "upstream-error" }, { status: upstream.status });
+  if (!upstream) {
+    return NextResponse.json({ error: "upstream-error" }, { status: 404 });
   }
 
   /*

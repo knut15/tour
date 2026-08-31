@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { readCronSecret, readInstagramConfig } from "@/infrastructure/config/env";
 import { InstagramClient, MAX_CAROUSEL_ITEMS } from "@/infrastructure/instagram/instagram-client";
+import { exclusionReason, isExcluded } from "@/infrastructure/instagram/excluded-spots";
 
 /**
  * 캐러셀 한 건을 실제로 발행한다.
@@ -26,6 +27,12 @@ export const maxDuration = 300;
 type PublishBody = {
   images?: { url?: unknown; alt?: unknown }[];
   caption?: unknown;
+  /**
+   * 어느 장소인지. **넘기면 제외 목록과 대조한다.**
+   *
+   * 없어도 발행되지만 그때는 걸러 낼 방법이 없다. 초안 생성기는 늘 채운다.
+   */
+  contentId?: unknown;
 };
 
 export async function POST(request: Request) {
@@ -51,6 +58,17 @@ export async function POST(request: Request) {
     body = (await request.json()) as PublishBody;
   } catch {
     return NextResponse.json({ error: "bad-request" }, { status: 400 });
+  }
+
+  /*
+    **한 번 내린 장소는 다시 올리지 않는다.** 이유는 `excluded-spots.ts` 에 남아 있다.
+  */
+  const contentId = typeof body.contentId === "string" ? body.contentId.trim() : "";
+  if (isExcluded(contentId)) {
+    return NextResponse.json(
+      { error: "excluded-spot", contentId, detail: exclusionReason(contentId) },
+      { status: 409 },
+    );
   }
 
   const caption = typeof body.caption === "string" ? body.caption.trim() : "";
@@ -87,6 +105,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       ok: true,
       mediaId: result.mediaId,
+      contentId: contentId || null,
       images: images.length,
       quotaBefore: quota,
     });
