@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { readCronSecret, readInstagramConfig } from "@/infrastructure/config/env";
 import { InstagramClient, MAX_CAROUSEL_ITEMS } from "@/infrastructure/instagram/instagram-client";
 import { exclusionReason, isExcluded } from "@/infrastructure/instagram/excluded-spots";
+import { CAPTION_MAX, findCaptionProblems } from "@/infrastructure/instagram/caption-rules";
 
 /**
  * 캐러셀 한 건을 실제로 발행한다.
@@ -10,8 +11,16 @@ import { exclusionReason, isExcluded } from "@/infrastructure/instagram/excluded
  * `CRON_SECRET` 이 없으면 route 자체가 503 이고, 있어도 헤더가 맞아야 한다.
  * 값이 없을 때 통과시키는 기본값을 두지 않는다.
  *
- * 이미지는 **공개 URL** 이어야 한다. 사진은 `/api/photo/[id]` 가 HTTPS 로 중계하고,
- * 커버는 지금 `public/ig/` 의 정적 파일이다 — 커버 자동 생성은 다음 증분이다.
+ * 이미지는 **공개 URL** 이어야 한다. 사진은 `/api/photo/[id]` 가 HTTPS 로 중계한다.
+ *
+ * **첫 장도 사진이다. 그린 커버를 앞에 두지 않는다.** 피드는 그 장소가 실제로 어떻게
+ * 생겼는지를 먼저 보여야 하고, 그래픽 커버는 그 자리를 한 장 잡아먹는다.
+ * `/api/og` 는 남겨 두지만 캐러셀에는 쓰지 않는다.
+ *
+ * **캐러셀에 넣는 사진은 비율이 전부 같아야 한다.** 첫 장 비율로 나머지가 잘리고,
+ * 공공누리 제3유형은 변경금지라 그것이 곧 위반이다. 같은 장소 안에서도 크기가
+ * 다르다 — 실측 2026-08-31, 서울거리예술축제 8장 중 940×627 이 5장, 940×625 가 1장,
+ * 940×529 가 1장이었다. **고르는 쪽이 재서 맞춘다.**
  */
 
 /** 이 route 는 외부 API 를 부르므로 Node 런타임에서 돈다 */
@@ -87,6 +96,21 @@ export async function POST(request: Request) {
   }
   if (!caption) {
     return NextResponse.json({ error: "bad-caption" }, { status: 400 });
+  }
+  if (caption.length > CAPTION_MAX) {
+    return NextResponse.json(
+      { error: "caption-too-long", detail: `${caption.length}자 (상한 ${CAPTION_MAX})` },
+      { status: 400 },
+    );
+  }
+  /*
+    **규약 위반은 발행 전에 막는다.** 올라간 뒤에는 캡션을 고칠 수 없다 —
+    인스타 API 에 캡션 수정이 없고(실측 2026-08-31: 그 엔드포인트는 댓글 토글용이다),
+    앱에서 손으로 고쳐야 한다.
+  */
+  const problems = findCaptionProblems(caption);
+  if (problems.length > 0) {
+    return NextResponse.json({ error: "caption-rule-violation", problems }, { status: 400 });
   }
 
   const client = new InstagramClient(config);
