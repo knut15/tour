@@ -50,7 +50,7 @@ export function categoryOfContentTypeId(id: number, locale: Locale): Category | 
 }
 
 /**
- * 신분류체계 소분류 중 관광지 벽에서 배제할 코드.
+ * 신분류체계 소분류 중 관광지 목록에서 배제할 코드.
  *
  * `EX050800 = Other Medical Tourism` 이다. 서울 관광지 405건 중 205건(51%)이 여기 속하며
  * 성형외과·피부과·안과가 그대로 들어온다. 여행 앱의 관광지 목록에 클리닉이 뜨면 신뢰를 잃는다.

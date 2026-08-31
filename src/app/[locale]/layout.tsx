@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Newsreader } from "next/font/google";
+import { DM_Sans, Newsreader } from "next/font/google";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { LOCALES, LOCALE_HTML_LANG, isLocale } from "@/domain/shared/locale";
@@ -17,6 +17,17 @@ const newsreader = Newsreader({
   variable: "--font-newsreader",
   subsets: ["latin"],
   weight: ["300", "400", "500"],
+  display: "swap",
+});
+
+/**
+ * 로고 전용 서체. 시안 04 의 스탬프가 DM Sans 로 짜여 있어 다른 서체로 그리면
+ * 모노그램의 글자 폭이 달라져 원 안에서 균형이 무너진다. **본문에는 쓰지 않는다.**
+ */
+const dmSans = DM_Sans({
+  variable: "--font-stamp",
+  subsets: ["latin"],
+  weight: ["600"],
   display: "swap",
 });
 
@@ -48,7 +59,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
   return (
     <html
       lang={LOCALE_HTML_LANG[locale]}
-      className={`${newsreader.variable} h-full antialiased`}
+      className={`${newsreader.variable} ${dmSans.variable} h-full antialiased`}
       data-theme={theme}
     >
       <head>

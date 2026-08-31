@@ -108,7 +108,18 @@ function withAccent(title: string, accent: string | undefined) {
   return (
     <>
       {title.slice(0, at)}
-      <mark className="lede-mark">{accent}</mark>
+      {/*
+        Skyway 시안은 강조 구간을 **색면이 아니라 글자색**으로 처리한다("한눈에."가
+        코랄이다). 형광펜(`.lede-mark`)은 세리프 헤드라인 전제로 만든 장치라 산세리프
+        볼드에 얹으면 색면이 글자보다 커진다. `.lede-mark` 규칙은 globals.css 에
+        남아 있지만 이제 쓰이지 않는다.
+      */}
+      <span
+        className="whitespace-nowrap"
+        style={{ color: "var(--brand-coral)" }}
+      >
+        {accent}
+      </span>
       {title.slice(at + accent.length)}
     </>
   );
@@ -138,24 +149,47 @@ export function Lede({
     */
     <header className={v.frame}>
       <ViewTransition name="lede-eyebrow" share={SHARE} default="none">
-        <p className="text-[13px] uppercase tracking-[0.18em] text-muted">{t.explore.eyebrow}</p>
+        {/*
+          시안의 `TRAVEL MADE CLEAR` 칩 — 실선 테두리 알약에 굵은 소문자 대문자화,
+          자간 0.12em, 앞에 코랄 점 하나. 시안은 lucide `Sparkles` 를 쓰는데 이
+          저장소는 아이콘 라이브러리를 두지 않아 점으로 대신한다.
+        */}
+        <p
+          className="inline-flex items-center gap-[7px] rounded-full border px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.12em]"
+          style={{
+            borderColor: "var(--brand-hairline)",
+            color: "var(--brand-slate)",
+            fontFamily: "var(--font-brand)",
+          }}
+        >
+          <span
+            className="inline-block size-[5px] rounded-full"
+            style={{ background: "var(--brand-coral)" }}
+          />
+          {t.explore.eyebrow}
+        </p>
       </ViewTransition>
       <ViewTransition name="lede-title" share={SHARE} default="none">
         <h1
           lang={locale}
           className={
-            // Direction A: 세리프 헤드라인. 가볍게, 크게, 자간은 건드리지 않는다
-            "mt-5 font-display font-light leading-[1.02] text-ink " +
+            // Skyway 시안: 산세리프 볼드에 자간 -0.07em, 행간 0.98
+            "mt-7 font-bold leading-[0.98] tracking-[-0.07em] " +
             v.title +
             " " +
             (locale === "ko" ? TITLE_WIDTH.ko : TITLE_WIDTH.latin)
           }
+          style={{ fontFamily: "var(--font-brand)", color: "var(--brand-word)" }}
         >
           {withAccent(t.explore.title, t.explore.titleAccent)}
         </h1>
       </ViewTransition>
       <ViewTransition name="lede-subtitle" share={SHARE} default="none">
-        <p lang={locale} className="mt-5 max-w-[42ch] text-[16px] leading-[24px] text-body">
+        <p
+          lang={locale}
+          className="mt-7 max-w-[42ch] text-[16px] leading-[28px]"
+          style={{ color: "var(--brand-slate)" }}
+        >
           {t.explore.subtitle}
         </p>
       </ViewTransition>

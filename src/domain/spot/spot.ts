@@ -121,7 +121,7 @@ export function parseSpotName(rawTitle: string, locale: Locale): SpotName {
 }
 
 /**
- * 벽에 걸 수 있는 스팟인가.
+ * 목록에 실을 수 있는 스팟인가.
  *
  * 두 조건을 모두 만족해야 한다.
  * 1. 이미지가 있다 — 액자 디자인의 전제다. 영문 관광지는 34%만 이미지를 갖는다

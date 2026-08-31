@@ -7,7 +7,7 @@ export type ExploreFilter = {
   districtCode?: number;
   /** 검색어. 비었거나 공백뿐이면 URL 에 쓰지 않는다 */
   keyword?: string;
-  /** 벽을 세우는 기준. 기본(조회)이면 URL 에 쓰지 않는다 */
+  /** 목록을 세우는 기준. 기본(조회)이면 URL 에 쓰지 않는다 */
   sort?: StatsSort;
   /**
    * 더보기를 **몇 번 눌렀는가**. 0 이면 첫 묶음만 본다.

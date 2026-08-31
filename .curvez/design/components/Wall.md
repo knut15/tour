@@ -7,7 +7,7 @@ purpose: SpotFrame 을 **비대칭으로 거는 배치 컨테이너**. 균일 �
 |---|---|---|---|---|
 | items | SpotFrameProps[] | O | — | 6~9개. 10개 이상 넘기면 앞에서 9개만 렌더한다 |
 | ~~pattern~~ | — | — | — | **폐기.** 구현 결과 패턴 3종을 돌릴 만큼 항목이 다양하지 않았다. 단일 9슬롯 패턴을 쓴다 |
-| accent | attraction \| culture \| food \| festival | X | attraction | 이 벽의 지배 액센트. 한 화면에 하나뿐이다 (GOAL §2.3) |
+| accent | attraction \| culture \| food \| festival | X | attraction | 이 목록의 지배 액센트. 한 화면에 하나뿐이다 (GOAL §2.3) |
 | onOpenItem | (spotId: string) => void | O | — | 액자 클릭 위임 |
 
 **배치: 인스타그램 피드형 균일 그리드다.** 모바일 2열, 데스크톱 3열, 정사각 타일, 좁은 간격.
@@ -34,12 +34,12 @@ purpose: SpotFrame 을 **비대칭으로 거는 배치 컨테이너**. 균일 �
 |---|---|---|
 | default | items.length >= 1 | pattern 대로 배치. gap=--space-6 |
 | loading | 상위가 지시 | items 자리에 SpotFrame(loading) 을 패턴 그대로 배치. **개수와 크기를 유지한다** — 레이아웃 점프 금지 |
-| empty | items.length === 0 | 컨테이너를 접지 않고 최소 높이를 유지한 채 상위가 준 빈 문구를 중앙에 놓는다. 벽이 사라지면 화면 구조가 무너진다 |
+| empty | items.length === 0 | 컨테이너를 접지 않고 최소 높이를 유지한 채 상위가 준 빈 문구를 중앙에 놓는다. 목록이 사라지면 화면 구조가 무너진다 |
 | error | 상위가 지시 | 컨테이너 자리에 ErrorPanel. 부분 실패면 성공한 액자는 남기고 실패 슬롯만 --color-bg-sunken 면으로 |
 | hover | — | Wall 자체는 hover 를 갖지 않는다. 개별 SpotFrame 이 처리한다 |
 
 ## a11y
-- a11y:label — Wall 은 `aria-label` 로 이 벽이 무엇인지 알린다. 예: "Featured places in Seoul" / "종로구의 음식점". 건수를 읽지 않는다 (GOAL §0.5-3)
+- a11y:label — Wall 은 `aria-label` 로 이 목록이 무엇인지 알린다. 예: "Featured places in Seoul" / "종로구의 음식점". 건수를 읽지 않는다 (GOAL §0.5-3)
 - a11y:focus — DOM 순서 = 시각 순서. 비대칭 배치를 CSS `order` 나 `grid-auto-flow: dense` 로 만들지 않는다. 두 방식 모두 키보드 순서를 시각 순서와 어긋나게 만든다. 명시적 `grid-column` / `grid-row` 로만 배치한다
 - a11y:contrast — Wall 자체는 색을 갖지 않는다. 배경은 --color-bg-canvas 를 상속한다. 해당 없음
 - a11y:target — Wall 자체는 클릭 대상이 아니다. 해당 없음. 자식 SpotFrame 이 타깃 크기를 보장한다

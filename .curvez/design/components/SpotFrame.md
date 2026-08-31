@@ -1,6 +1,6 @@
 # component: SpotFrame
 platform: nextjs
-purpose: 스팟 하나를 **액자**로 감싼다. 이 앱의 시그니처이며, 카탈로그를 벽처럼 보이게 만드는 유일한 장치다. 썸네일+제목+설명의 반복 카드로 만들지 않는다.
+purpose: 스팟 하나를 **액자**로 감싼다. 이 앱의 시그니처이며, 카탈로그를 한 사람이 고른 것처럼 보이게 만드는 유일한 장치다. 썸네일+제목+설명의 반복 카드로 만들지 않는다.
 
 **카드는 컨테이너를 갖지 않는다.** 이미지가 곧 카드이고 글자는 바탕 위에 그대로 앉는다.
 근거: `docs/ref/IMG_card-reference.png`
@@ -47,9 +47,9 @@ purpose: 스팟 하나를 **액자**로 감싼다. 이 앱의 시그니처이며
 | titleKo | string | O | — | 한글 이름. 캡션 2행. **생략 불가** — 현장에서 대조해야 한다 |
 | imageUrl | string \| null | O | — | null 이면 카테고리 색 면으로 대체. 회색 플레이스홀더 금지 |
 | category | attraction \| culture \| food \| festival | O | — | 매트 하단 띠의 색을 정한다 |
-| size | sm \| md \| lg | X | md | 벽의 비대칭을 만드는 축. sm=192, md=280, lg=400 (폭 px) |
+| size | sm \| md \| lg | X | md | 목록의 비대칭을 만드는 축. sm=192, md=280, lg=400 (폭 px) |
 | matte | photo \| portrait | X | photo | 액자 **안쪽 영역** 비율. 3:2 는 TourAPI `firstimage` 실측 최빈값이다. `matte=tall` 이면 4:5 — **3:4 는 쓰지 않는다.** 구현해 보니 원본이 3:2 뿐이라 여백이 그림보다 커졌다 |
-| matte | even \| tall | X | even | 매트 비율. `tall` 은 위아래 매트를 두껍게 해 **가로 이미지를 세로 액자로** 만든다. 벽의 비대칭은 여기서 나온다 |
+| matte | even \| tall | X | even | 매트 비율. `tall` 은 위아래 매트를 두껍게 해 **가로 이미지를 세로 액자로** 만든다. 목록의 비대칭은 여기서 나온다 |
 | seen | boolean | X | false | true 면 매트가 --color-bg-sunken 으로. 손때 (GOAL §0.5-5) |
 | saved | boolean | X | false | true 면 우상단에 SaveChip(saved) 표식 |
 | order | number \| null | X | null | DayLane 안에서만 쓴다. 순서 숫자를 매트 좌상단에 표기 |
@@ -71,7 +71,7 @@ purpose: 스팟 하나를 **액자**로 감싼다. 이 앱의 시그니처이며
 
 ## a11y
 - a11y:label — 액자 전체가 링크다. 접근 이름은 `titleEn` + `titleKo` 를 이어 읽는다. 이미지 alt 는 스팟 이름이며 장식이 아니다. SaveChip 은 별도 접근 이름을 갖는다
-- a11y:focus — 액자와 내부 SaveChip 은 각각 포커스를 받는다. 포커스 순서는 액자 → SaveChip. 벽의 비대칭 배치에서도 DOM 순서와 시각 순서를 일치시킨다 (CSS order 금지)
+- a11y:focus — 액자와 내부 SaveChip 은 각각 포커스를 받는다. 포커스 순서는 액자 → SaveChip. 목록의 비대칭 배치에서도 DOM 순서와 시각 순서를 일치시킨다 (CSS order 금지)
 - a11y:contrast — 캡션 --color-text-primary on --color-bg-surface = 14.69:1, seen 상태에서 on --color-bg-sunken 도 4.5:1 이상. 카테고리 색 띠는 정보를 단독으로 전달하지 않는다 — 카테고리는 캡션 텍스트로도 표기한다
 - a11y:target — 액자 전체가 클릭 영역이며 최소 24x24 px 이상. SaveChip 은 인접 8px 를 확보한다
 - a11y:role — link (article 아님). 안의 SaveChip 은 button

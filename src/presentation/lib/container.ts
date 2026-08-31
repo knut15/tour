@@ -95,7 +95,7 @@ export const statsEnabled = spotStatsRepository !== null;
 export const getSpotStats = spotStatsRepository
   ? makeGetSpotStats(spotStatsRepository)
   : null;
-/** 반응이 가장 많은 장소의 키. 벽의 맨 앞을 채운다 */
+/** 반응이 가장 많은 장소의 키. 목록의 맨 앞을 채운다 */
 export const getTopSpotKeys = spotStatsRepository
   ? makeGetTopSpotKeys(spotStatsRepository)
   : null;

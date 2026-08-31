@@ -44,7 +44,7 @@ describe("requestSize", () => {
   });
 
   it("한 묶음이 열 수로 나누어떨어진다", () => {
-    // 아니면 마지막 줄만 이가 빠진 채 남는다. 벽은 최대 4열이다
+    // 아니면 마지막 줄만 이가 빠진 채 남는다. 목록은 최대 4열이다
     for (const columns of [1, 2, 3, 4]) expect(BATCH % columns).toBe(0);
   });
 });

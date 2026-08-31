@@ -75,7 +75,7 @@ export function Masthead({
                 값이 로고 전체를 정한다. 획은 `currentColor` 라 `text-ink` 를
                 물려받아 테마를 따라간다.
               */}
-              <BrandMark className="text-[30px] text-ink sm:text-[34px]" />
+              <BrandMark className="masthead-brand" />
             </Link>
           )}
           <div className="flex items-center gap-2">

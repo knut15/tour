@@ -2,7 +2,7 @@ import { ViewTransition } from "react";
 import { notFound } from "next/navigation";
 import { isLocale } from "@/domain/shared/locale";
 import { getDictionary } from "@/presentation/i18n/dictionaries";
-import { ButtonLink } from "@/presentation/components/Button";
+import { BrandCtaLink } from "@/presentation/components/Button";
 import { Lede, SHARE } from "@/presentation/components/Lede";
 import { Masthead } from "@/presentation/components/Masthead";
 import { NetworkArt } from "@/presentation/components/NetworkArt";
@@ -33,9 +33,9 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
           <Lede locale={locale} t={t} size="hero" />
           <div className="mt-12">
             {/* 내려가는 방향. 머리말이 이 크기에서 탐색 화면 크기로 줄어든다 */}
-            <ButtonLink href={`/${locale}/explore`} transitionTypes={["to-explore"]}>
+            <BrandCtaLink href={`/${locale}/explore`} transitionTypes={["to-explore"]}>
               {t.nav.explore}
-            </ButtonLink>
+            </BrandCtaLink>
           </div>
         </div>
 

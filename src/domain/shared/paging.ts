@@ -1,4 +1,4 @@
-/** 목록 조회의 페이지 요청. 이 앱은 한 벽에 6~9개만 쓰므로 기본값이 작다 (GOAL.md §0.5-3). */
+/** 목록 조회의 페이지 요청. 이 앱은 한 화면에 6~9개만 쓰므로 기본값이 작다 (GOAL.md §0.5-3). */
 export type PageRequest = {
   page: number;
   size: number;

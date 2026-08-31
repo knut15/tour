@@ -44,7 +44,7 @@ export interface SpotRepository {
   nearby(query: NearbySpotsQuery): Promise<Page<Spot>>;
   /**
    * 상세 조회. 목록보다 많은 사실을 가져오므로 공급자 호출 수가 더 든다.
-   * 벽 판정(이미지 필수·의료관광 배제)을 적용하지 않는다 — 직접 링크로 들어온 스팟은 보여준다.
+   * 목록 노출 판정(이미지 필수·의료관광 배제)을 적용하지 않는다 — 직접 링크로 들어온 스팟은 보여준다.
    */
   findDetail(id: SpotId): Promise<SpotDetail | null>;
   /**

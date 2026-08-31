@@ -322,7 +322,7 @@ export function NetworkArt({ className = "" }: { className?: string }) {
           흐려지므로 그 바깥에서 도는 것은 보이지 않는다.
 
           되튈 때 좌표도 안으로 되민다. 방향만 뒤집으면 도는 각도에 따라 경계 밖에
-          머문 채 부호가 계속 뒤집혀 점이 벽에 붙어 떠는 수가 있다.
+          머문 채 부호가 계속 뒤집혀 점이 경계에 붙어 떠는 수가 있다.
         */
         if (n.x < -MARGIN) {
           n.x = -MARGIN;

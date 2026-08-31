@@ -26,7 +26,7 @@ describe("isDisplayableOnWall", () => {
   });
 
   it("이미지가 없으면 걸지 않는다", () => {
-    // 영문 관광지의 66% 가 이미지가 없다. 그대로 두면 벽이 색면으로 뒤덮인다
+    // 영문 관광지의 66% 가 이미지가 없다. 그대로 두면 목록이 색면으로 뒤덮인다
     expect(isDisplayableOnWall(makeSpot({ image: null }), isExcludedClassification)).toBe(false);
   });
 
