@@ -43,6 +43,18 @@ export async function GET(request: Request) {
   */
   const width = Number(q.get("w")) || undefined;
   const height = Number(q.get("h")) || undefined;
+  /*
+    `photo` 는 바탕에 깔 사진의 id 다. 주면 색면 대신 사진 위에 글자를 얹고,
+    크기도 사진에서 읽는다 — `w`·`h` 를 넘길 필요가 없다.
+
+    **열린 프록시가 되지 않게 여기서도 숫자 id 만 받는다.** URL 을 그대로 받으면
+    임의 주소를 대신 내려받는 발판이 된다.
+  */
+  const photoId = q.get("photo")?.trim();
+  if (photoId && !/^\d{4,12}$/.test(photoId)) {
+    return NextResponse.json({ error: "bad-photo-id" }, { status: 400 });
+  }
+  const photoUrl = photoId ? new URL(`/api/photo/${photoId}`, request.url).toString() : undefined;
 
   if (!chip || !headline || !pin) {
     return NextResponse.json({ error: "chip·headline·pin 이 모두 필요하다" }, { status: 400 });
@@ -66,6 +78,7 @@ export async function GET(request: Request) {
       category: isCategory(categoryRaw) ? categoryRaw : undefined,
       width,
       height,
+      photoUrl,
     });
 
     return new NextResponse(new Uint8Array(jpeg), {

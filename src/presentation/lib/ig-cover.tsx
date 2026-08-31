@@ -116,6 +116,16 @@ export type CoverInput = {
   /** **함께 실을 사진과 같은 크기.** 생략하면 940×627 이다 */
   width?: number;
   height?: number;
+  /**
+   * 바탕에 깔 사진의 원본 URL. 주면 색면 대신 **사진 위에 글자를 얹는다.**
+   *
+   * 크기는 사진에서 읽으므로 `width`·`height` 를 따로 넘길 필요가 없다 —
+   * 같은 장소 안에서도 사진마다 크기가 달라(실측 2026-08-31) 손으로 맞추면 틀린다.
+   *
+   * **공공누리 제3유형은 변경금지다.** 글자를 얹은 이 한 장은 개변물이므로,
+   * 캐러셀 다음 장에 **손대지 않은 같은 사진**을 함께 싣는 것을 전제로 쓴다.
+   */
+  photoUrl?: string;
 };
 
 let cachedFont: ArrayBuffer | null = null;
@@ -175,8 +185,23 @@ function lines(headline: string): string[] {
 }
 
 export async function renderCoverJpeg(input: CoverInput): Promise<Buffer> {
-  const width = input.width ?? COVER_WIDTH;
-  const height = input.height ?? COVER_HEIGHT;
+  /*
+    사진을 깔 때는 크기를 사진에서 읽는다. 넘겨받은 값을 믿으면 어긋난 순간
+    합성이 밀리거나 캐러셀에서 다른 장이 잘린다.
+  */
+  let photo: Buffer | null = null;
+  let photoSize: { width: number; height: number } | null = null;
+  if (input.photoUrl) {
+    const res = await fetch(input.photoUrl);
+    if (!res.ok) throw new Error(`사진을 받지 못했다: HTTP ${res.status}`);
+    photo = Buffer.from(await res.arrayBuffer());
+    const meta = await sharp(photo).metadata();
+    if (!meta.width || !meta.height) throw new Error("사진 크기를 읽지 못했다");
+    photoSize = { width: meta.width, height: meta.height };
+  }
+
+  const width = photoSize?.width ?? input.width ?? COVER_WIDTH;
+  const height = photoSize?.height ?? input.height ?? COVER_HEIGHT;
   const tone = input.tone ?? (input.category ? TONE_OF[input.category] : "navy");
   const c = PALETTE[tone];
   const font = await loadFont();
@@ -194,8 +219,14 @@ export async function renderCoverJpeg(input: CoverInput): Promise<Buffer> {
           display: "flex",
           flexDirection: "column",
           justifyContent: "flex-end",
-          background: c.bg,
-          color: c.fg,
+          /*
+            사진 위에서는 바탕을 칠하지 않는다. 대신 아래쪽에 어두운 그라디언트를
+            깔아 글자가 사진 위에서도 읽히게 한다 — 사진 픽셀을 가리는 최소한이다.
+          */
+          background: photo
+            ? "linear-gradient(to bottom, rgba(0,0,0,0) 38%, rgba(0,0,0,0.72) 100%)"
+            : c.bg,
+          color: photo ? "#ffffff" : c.fg,
           fontFamily: "NotoKR",
           position: "relative",
           paddingLeft: box.left,
@@ -203,7 +234,7 @@ export async function renderCoverJpeg(input: CoverInput): Promise<Buffer> {
           paddingBottom: 68,
         }}
       >
-        <Rings color={c.ring} width={width} height={height} />
+        {!photo && <Rings color={c.ring} width={width} height={height} />}
         <div
           style={{
             display: "flex",
@@ -248,7 +279,8 @@ export async function renderCoverJpeg(input: CoverInput): Promise<Buffer> {
 
   /*
     **JPEG 으로 바꾸는 것이 선택이 아니다.** 인스타 발행 API 는 JPEG 만 받는다.
-    품질 92 는 앞서 손으로 만든 커버와 같은 값이다.
   */
-  return sharp(Buffer.from(png)).jpeg({ quality: 92, chromaSubsampling: "4:4:4" }).toBuffer();
+  const layer = Buffer.from(png);
+  const out = photo ? sharp(photo).composite([{ input: layer, top: 0, left: 0 }]) : sharp(layer);
+  return out.jpeg({ quality: 92, chromaSubsampling: "4:4:4" }).toBuffer();
 }
