@@ -147,7 +147,7 @@ export function deriveTrait(detail: SpotDetailView, category: Category): Trait {
   const text = `${detail.overview ?? ""} ${hours ?? ""}`;
 
   if (category === "festival") return "festival-short";
-  if (says(hours, "24시", "24시간") || says(closed, "24시")) return "always-open";
+  if (says(hours, "24시", "24시간", "상시") || says(closed, "24시", "상시")) return "always-open";
   if (says(text, "실내")) return "indoor";
   if (says(admission, "무료")) return "free";
   if (says(hours, "21:00", "22:00", "23:00", "야간")) return "evening";
@@ -224,6 +224,17 @@ function hoursLine(raw: string | null, style: FactStyle): string | null {
   return uniq.length === 1 ? uniq[0] : `${uniq[0]} ${style.seasonal}`;
 }
 
+export /**
+ * 휴무 줄. **"연중무휴" 에 "휴무" 를 붙이지 않는다.**
+ *
+ * 라벨을 기계적으로 붙이면 "연중무휴 휴무" 가 된다 — 쉬는 날이 없다는 값에
+ * 쉰다는 말을 덧댄 셈이다(실측 2026-08-31, 이화벽화마을).
+ */
+function closedLine(value: string, style: FactStyle): string {
+  const noClosing = /연중무휴|무휴|없음|open all year|no closing/i.test(value);
+  return noClosing ? value : style.closed(value);
+}
+
 export function factLine(detail: SpotDetailView, lang: "ko" | "en" = "ko"): string {
   const style = STYLE[lang];
   /*
@@ -236,7 +247,7 @@ export function factLine(detail: SpotDetailView, lang: "ko" | "en" = "ko"): stri
   return [
     tidy(fact(detail, "eventPeriod"), style, 30),
     hoursLine(fact(detail, "openingHours"), style),
-    closed ? style.closed(closed) : null,
+    closed ? closedLine(closed, style) : null,
     tidy(fact(detail, "admission"), style, 20),
     parking ? style.parking(parking) : null,
     tidy(fact(detail, "inquiry"), style, 30),
@@ -257,8 +268,14 @@ export function factLine(detail: SpotDetailView, lang: "ko" | "en" = "ko"): stri
  */
 export const TODO_MARK = "[여기에 한 문장 — 이 장소를 왜 가는지]";
 
-/** 영문 문단의 빈 자리. 국문 표시가 영어 문단에 섞이지 않게 따로 둔다 */
-export const EN_TODO_MARK = "[one line here — why go, plus hours and fees]";
+/**
+ * 영문 문단의 빈 자리. 국문 표시가 영어 문단에 섞이지 않게 따로 둔다.
+ *
+ * **소개용과 사실용을 가른다.** 같은 문구를 두 자리에 쓰면 치환할 때 첫 것만
+ * 바뀌고 하나가 남는다 — 실측 2026-08-31, 이화벽화마을 초안에서 실제로 났다.
+ */
+export const EN_TODO_MARK = "[one line here — why go]";
+export const EN_FACTS_MARK = "[hours, fees and closing days here]";
 
 /**
  * 캡션 초안. **앱 조작을 안내하는 문장을 넣지 않는다** —
@@ -306,7 +323,7 @@ export function draftCaption(
     english?.name || name,
     [english?.address || address, english?.facts].filter(Boolean).join(" · "),
     /* 사실이 없으면 그 자리를 사람이 채우도록 표시를 남긴다 */
-    english?.facts ? null : EN_TODO_MARK,
+    english?.facts ? null : EN_FACTS_MARK,
   ]
     .join("\n")
     .trim();
@@ -368,7 +385,7 @@ export function coverChips(detail: SpotDetailView): { icon: string; text: string
   return [
     period ? { icon: "📅", text: period } : null,
     hours ? { icon: "🕘", text: hours.replace(" (계절별 상이)", "") } : null,
-    closed ? { icon: "🚫", text: `${closed} 휴무` } : null,
+    closed ? { icon: "🚫", text: closedLine(closed, style) } : null,
     parking ? { icon: "🅿️", text: `주차 ${parking}` } : null,
   ].filter((c): c is { icon: string; text: string } => c !== null);
 }
