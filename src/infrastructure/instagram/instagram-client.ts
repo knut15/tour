@@ -110,6 +110,49 @@ export class InstagramClient {
     );
   }
 
+  /**
+   * 컨테이너가 발행 가능한 상태가 될 때까지 기다린다.
+   *
+   * **만들자마자 발행하면 실패한다.** 메타가 `image_url` 을 직접 받아 가는 데
+   * 시간이 걸리고, 그전에 `media_publish` 를 부르면 `Media ID is not available`
+   * 이 온다(실측 2026-08-31 — 이 단계를 빠뜨려 첫 발행이 깨졌다).
+   *
+   * 상태는 `IN_PROGRESS` → `FINISHED` 로 간다. `ERROR` 나 `EXPIRED` 면 기다려도
+   * 바뀌지 않으므로 즉시 던진다.
+   */
+  async waitUntilReady(containerId: ContainerId, timeoutMs = 60_000): Promise<void> {
+    const startedAt = Date.now();
+    let delay = 2_000;
+
+    while (Date.now() - startedAt < timeoutMs) {
+      const url = new URL(`${BASE}/${containerId}`);
+      url.searchParams.set("fields", "status_code,status");
+      url.searchParams.set("access_token", this.config.accessToken);
+
+      const res = await fetch(url);
+      const json = (await res.json()) as { status_code?: string; status?: string };
+
+      if (json.status_code === "FINISHED") return;
+      if (json.status_code === "ERROR" || json.status_code === "EXPIRED") {
+        throw new InstagramError(
+          `컨테이너 ${json.status_code}: ${json.status ?? "상세 없음"}`,
+          "waitUntilReady",
+          res.status,
+        );
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, delay));
+      // 조금씩 늘린다. 대개 몇 초면 끝나지만 오래 걸릴 때 호출 수가 불어나지 않게 한다
+      delay = Math.min(delay * 1.5, 8_000);
+    }
+
+    throw new InstagramError(
+      `${timeoutMs / 1000}초 안에 컨테이너가 준비되지 않았다`,
+      "waitUntilReady",
+      0,
+    );
+  }
+
   /** 발행. 여기서부터 되돌릴 수 없다 */
   async publish(containerId: ContainerId): Promise<{ mediaId: string }> {
     const id = await this.post(
@@ -132,9 +175,13 @@ export class InstagramClient {
   ): Promise<{ mediaId: string; children: ContainerId[] }> {
     const children: ContainerId[] = [];
     for (const image of images) {
-      children.push(await this.createImageItem(image.url, image.alt));
+      const id = await this.createImageItem(image.url, image.alt);
+      // 장마다 기다린다. 한 장이라도 안 받아졌으면 묶어 봐야 발행이 깨진다
+      await this.waitUntilReady(id);
+      children.push(id);
     }
     const carousel = await this.createCarousel(children, caption);
+    await this.waitUntilReady(carousel);
     const { mediaId } = await this.publish(carousel);
     return { mediaId, children };
   }

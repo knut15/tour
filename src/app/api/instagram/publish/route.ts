@@ -17,6 +17,11 @@ import { InstagramClient, MAX_CAROUSEL_ITEMS } from "@/infrastructure/instagram/
 export const runtime = "nodejs";
 /** 발행은 절대 캐시되면 안 된다 */
 export const dynamic = "force-dynamic";
+/**
+ * 장마다 컨테이너가 준비되기를 기다리므로 기본 제한(10초)으로는 모자란다.
+ * 5장이면 대개 20~40초다.
+ */
+export const maxDuration = 300;
 
 type PublishBody = {
   images?: { url?: unknown; alt?: unknown }[];
