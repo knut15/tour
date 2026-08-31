@@ -130,7 +130,28 @@ export class InstagramClient {
       url.searchParams.set("access_token", this.config.accessToken);
 
       const res = await fetch(url);
-      const json = (await res.json()) as { status_code?: string; status?: string };
+      const json = (await res.json()) as {
+        status_code?: string;
+        status?: string;
+        error?: { message?: string; code?: number; error_subcode?: number; is_transient?: boolean };
+      };
+
+      /*
+        **조회가 거절된 것을 "아직 준비 안 됨" 으로 읽지 않는다.**
+
+        실측 2026-09-01: 계정 노드 사용 제한(code 4 / subcode 1349210 /
+        is_transient)에 걸리면 이 조회가 403 을 준다. status_code 가 없으니 루프가
+        끝까지 돌고 "60초 안에 준비되지 않았다" 로 끝났다 — 이미지가 안 받아진
+        것처럼 보여서 원인을 찾는 데 한참 걸렸다. 오는 대로 드러낸다.
+      */
+      if (json.error) {
+        throw new InstagramError(
+          `${json.error.message ?? "조회 실패"}` +
+            (json.error.is_transient ? " (일시적 — 잠시 뒤 다시 시도하면 된다)" : ""),
+          "waitUntilReady",
+          res.status,
+        );
+      }
 
       if (json.status_code === "FINISHED") return;
       if (json.status_code === "ERROR" || json.status_code === "EXPIRED") {

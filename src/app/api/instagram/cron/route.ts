@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
 import sharp from "sharp";
 import { readCronSecret, readInstagramConfig } from "@/infrastructure/config/env";
-import { InstagramClient, MAX_CAROUSEL_ITEMS } from "@/infrastructure/instagram/instagram-client";
+import {
+  InstagramClient,
+  InstagramError,
+  MAX_CAROUSEL_ITEMS,
+} from "@/infrastructure/instagram/instagram-client";
 import { exclusionReason, isExcluded } from "@/infrastructure/instagram/excluded-spots";
 import { findCaptionProblems } from "@/infrastructure/instagram/caption-rules";
 import { makeIgQueueRepository } from "@/infrastructure/instagram/ig-queue-repository";
@@ -185,7 +189,17 @@ export async function GET(request: Request) {
       것을 아무도 모른다. 큐에도 이유를 남기고, 자동으로 다시 시도하지 않는다 —
       같은 이유로 계속 실패하거나 최악의 경우 두 번 올라간다.
     */
-    const reason = error instanceof Error ? error.message : String(error);
+    /*
+      **어느 단계에서 깨졌는지 남긴다.** `InstagramError` 는 operation 을 들고 있는데
+      메시지만 남기면 큐의 last_error 를 봐도 컨테이너 생성인지 발행인지 알 수 없다 —
+      실측 2026-09-01: 원인을 찾으려고 발행 흐름을 손으로 재현해야 했다.
+    */
+    const reason =
+      error instanceof InstagramError
+        ? `[${error.operation}] ${error.message}`
+        : error instanceof Error
+          ? error.message
+          : String(error);
     await queue.markFailed(row.id, reason);
     return NextResponse.json(
       { error: "cron-publish-failed", queueId: row.id, contentId: row.contentId, detail: reason },
