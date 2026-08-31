@@ -78,6 +78,27 @@ const COPY: Record<Trait, Copy> = {
   },
 };
 
+/**
+ * 주소의 시·도를 통칭으로 줄인다.
+ *
+ * 핀만 고치고 본문 주소를 두면 한 캡션 안에서 "서울 종로구" 와 "서울특별시 종로구"
+ * 가 함께 보인다. 같은 곳을 두 이름으로 부르는 셈이다.
+ */
+export function shortenAddress(address: string | null): string {
+  if (!address) return "";
+  return address.replace(
+    /^(서울특별시|부산광역시|대구광역시|인천광역시|광주광역시|대전광역시|울산광역시|세종특별자치시|경기도|강원특별자치도|강원도|충청북도|충청남도|전라북도|전북특별자치도|전라남도|경상북도|경상남도|제주특별자치도)/,
+    (m) =>
+      ({
+        서울특별시: "서울", 부산광역시: "부산", 대구광역시: "대구", 인천광역시: "인천",
+        광주광역시: "광주", 대전광역시: "대전", 울산광역시: "울산", 세종특별자치시: "세종",
+        경기도: "경기", 강원특별자치도: "강원", 강원도: "강원", 충청북도: "충북",
+        충청남도: "충남", 전라북도: "전북", 전북특별자치도: "전북", 전라남도: "전남",
+        경상북도: "경북", 경상남도: "경남", 제주특별자치도: "제주",
+      })[m] ?? m,
+  );
+}
+
 /** 값이 "가능/불가능" 처럼 짧은 판정어인지 본다 */
 function says(value: string | null, ...words: string[]): boolean {
   if (!value) return false;
@@ -152,6 +173,14 @@ function hoursLine(raw: string | null): string | null {
   return uniq.length === 1 ? uniq[0] : `${uniq[0]} (계절별 상이)`;
 }
 
+/**
+ * 영문 사실 줄. **국문과 같은 다듬기를 쓴다** — 영문 서비스도 같은 필드 구조로
+ * 오고, 원문을 그대로 쏟으면 국문에서 겪은 문제가 그대로 재현된다.
+ */
+export function englishFactLine(detail: SpotDetailView): string {
+  return factLine(detail);
+}
+
 function factLine(detail: SpotDetailView): string {
   /*
     주차는 판정어 한 마디면 된다. **괄호 안 대수까지 실으면 잘려서 더 나빠진다** —
@@ -171,13 +200,17 @@ function factLine(detail: SpotDetailView): string {
     .join(" · ");
 }
 
-/** overview 첫 문장. 소개문은 길어서 통째로 실으면 캡션이 사실보다 홍보로 읽힌다 */
-function firstSentence(overview: string | null): string {
-  if (!overview) return "";
-  const plain = overview.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
-  const end = plain.search(/[.。]\s|다\.\s/);
-  return (end > 0 ? plain.slice(0, end + 1) : plain).slice(0, 160).trim();
-}
+/**
+ * 사람이 채울 자리 표시.
+ *
+ * **`overview` 를 요약해 넣지 않는다.** 첫 문장은 대개 사전 설명이라
+ * ("경복궁은 1392년 조선 건국 후 …") 이 계정이 쓰는 결과 다르다. 그럴듯한 문장이
+ * 채워져 있으면 사람이 그냥 넘길 위험이 있어, **비어 있다는 것을 눈에 띄게** 둔다.
+ *
+ * 발행 전에 이 표시가 남아 있으면 `caption-rules` 가 아니라 사람이 본다 —
+ * 큐를 훑을 때 무엇을 해야 하는지가 이 한 줄로 드러난다.
+ */
+export const TODO_MARK = "[여기에 한 문장 — 이 장소를 왜 가는지]";
 
 /**
  * 캡션 초안. **앱 조작을 안내하는 문장을 넣지 않는다** —
@@ -187,20 +220,20 @@ export function draftCaption(
   detail: SpotDetailView,
   trait: Trait,
   tags: string[],
-  /** 영문 서비스의 공식 표기. 없으면 국문 이름을 그대로 둔다 */
-  englishName?: string | null,
+  /** 영문 서비스에서 받은 표기와 사실. 없으면 국문 것을 그대로 둔다 */
+  english?: { name?: string | null; address?: string | null; facts?: string | null } | null,
 ): string {
   const c = COPY[trait];
   const name = detail.titlePrimary;
-  const address = detail.address ?? "";
+  const address = shortenAddress(detail.address);
   const facts = factLine(detail);
-  const intro = firstSentence(detail.overview);
 
   const ko = [
     c.hook,
     "",
-    `${name}${intro ? ` — ${intro}` : "."}`,
+    TODO_MARK,
     "",
+    name,
     [address, facts].filter(Boolean).join(" · "),
   ]
     .join("\n")
@@ -209,13 +242,15 @@ export function draftCaption(
   const en = [
     c.hookEn,
     "",
+    TODO_MARK,
+    "",
     /*
       영문 소개는 **번역하지 않는다.** 국문 overview 를 기계로 옮기면 사실이
       틀어질 수 있고, 이 계정은 사실로 신뢰를 사는 곳이다. 대신 사람이 큐에서
       채우도록 자리와 사실만 남긴다.
     */
-    englishName || name,
-    [address, facts].filter(Boolean).join(" · "),
+    english?.name || name,
+    [english?.address || address, english?.facts || facts].filter(Boolean).join(" · "),
   ]
     .join("\n")
     .trim();

@@ -11,7 +11,12 @@ import { TourApiClient } from "@/infrastructure/tourapi/tourapi-client";
 import { fetchSpotPhotoIds } from "@/infrastructure/tourapi/tourapi-photo-ids";
 import { isExcluded } from "@/infrastructure/instagram/excluded-spots";
 import { makeIgQueueRepository } from "@/infrastructure/instagram/ig-queue-repository";
-import { deriveTrait, draftCaption, draftHeadline } from "@/application/instagram/draft-copy";
+import {
+  deriveTrait,
+  draftCaption,
+  draftHeadline,
+  englishFactLine,
+} from "@/application/instagram/draft-copy";
 
 /**
  * 다음에 올릴 후보를 골라 **초안으로** 큐에 넣는다.
@@ -133,14 +138,23 @@ export async function GET(request: Request) {
     const name = detail.titlePrimary;
 
     /*
-      **영문 공식 표기를 받아 온다.** 국문 이름을 영어 문단에 그대로 두면 영어권
-      독자가 읽을 수 없다. 로케일마다 contentid 공간이 분리돼 있어 한글 원명으로
-      영문 카탈로그를 한 번 더 물어야 한다 — 없으면 국문 이름을 그대로 둔다.
+      **영문 카탈로그를 한 번 더 받는다.** 국문 이름·주소를 영어 문단에 그대로 두면
+      영어권 독자가 읽을 수 없다. 로케일마다 contentid 공간이 분리돼 있어 한글
+      원명으로 다시 물어야 하고, 못 찾으면 국문 것을 그대로 쓴다.
+
+      이름만 쓰고 나머지를 버리지 않는다 — 이미 받아 온 응답에 주소와 사실이
+      함께 들어 있어 호출이 더 들지 않는다.
     */
-    const englishName = await findSpotInLocale("en", name)
+    const englishDetail = await findSpotInLocale("en", name)
       .then((id) => (id ? getSpotDetail({ contentId: id, locale: "en" }) : null))
-      .then((d) => d?.titlePrimary ?? null)
       .catch(() => null);
+    const english = englishDetail
+      ? {
+          name: englishDetail.titlePrimary,
+          address: englishDetail.address,
+          facts: englishFactLine(englishDetail),
+        }
+      : null;
     const chip = { attraction: "가볼 곳", culture: "문화", food: "먹을 곳", festival: "지금 열리는" }[
       category
     ];
@@ -152,7 +166,7 @@ export async function GET(request: Request) {
       pin: pinOf(detail.address, name),
       category,
       photoIds,
-      caption: draftCaption(detail, trait, tagsOf(name, detail.address, category), englishName),
+      caption: draftCaption(detail, trait, tagsOf(name, detail.address, category), english),
     });
 
     return NextResponse.json({
@@ -161,7 +175,7 @@ export async function GET(request: Request) {
       contentId: candidate.contentId,
       name,
       trait,
-      englishName,
+      englishName: english?.name ?? null,
       photos: photoIds.length,
       note: "status=draft — 사람이 보고 approved 로 올려야 발행된다",
     });
