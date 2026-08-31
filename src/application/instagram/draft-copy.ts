@@ -18,6 +18,7 @@ export type Trait =
   | "indoor"
   | "free"
   | "evening"
+  | "closed-weekly"
   | "no-parking"
   | "festival-short"
   | "plain";
@@ -54,6 +55,11 @@ const COPY: Record<Trait, Copy> = {
     headline: "해 지고 나서\n더 좋아지는 곳",
     hook: "낮보다 저녁이 좋은 곳이 있습니다.",
     hookEn: "Some places are better after sunset.",
+  },
+  "closed-weekly": {
+    headline: "가기 전에\n요일부터 확인",
+    hook: "쉬는 날이 정해져 있는 곳입니다. 헛걸음하기 쉬워요.",
+    hookEn: "This one has a fixed closing day. Easy to get wrong.",
   },
   "no-parking": {
     headline: "차 두고\n걸어가야 하는 곳",
@@ -105,6 +111,7 @@ export function deriveTrait(detail: SpotDetailView, category: Category): Trait {
   if (says(text, "실내")) return "indoor";
   if (says(admission, "무료")) return "free";
   if (says(hours, "21:00", "22:00", "23:00", "야간")) return "evening";
+  if (/매주\s*[월화수목금토일]요일/.test(closed ?? "")) return "closed-weekly";
   if (says(parking, "불가")) return "no-parking";
   return "plain";
 }
@@ -115,16 +122,50 @@ export function draftHeadline(trait: Trait): string {
 }
 
 /** 값이 있는 사실만 `라벨 값` 으로 줄 세운다 */
+/**
+ * 공급자 원문을 캡션에 실을 한 조각으로 줄인다.
+ *
+ * **원문을 그대로 쏟지 않는다.** 경복궁의 운영시간은 계절별 세 구간에 휴무 예외
+ * 규정까지 붙어 200자가 넘는다(실측 2026-08-31) — 캡션에 실을 문장이 아니다.
+ * 괄호 주석과 `※` 이후를 걷어내고 길이를 자른다.
+ */
+function tidy(value: string | null, limit = 40): string | null {
+  if (!value) return null;
+  const plain = value
+    .replace(/<[^>]*>/g, " ")
+    .split("※")[0]
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!plain) return null;
+  return plain.length > limit ? `${plain.slice(0, limit).trim()}…` : plain;
+}
+
+/**
+ * 운영시간. **계절별로 여러 구간이면 첫 구간만 쓰고 그렇다고 밝힌다.**
+ * 전부 실으면 한 줄이 캡션을 삼킨다.
+ */
+function hoursLine(raw: string | null): string | null {
+  if (!raw) return null;
+  const ranges = raw.match(/\d{1,2}:\d{2}\s*[~-]\s*\d{1,2}:\d{2}/g) ?? [];
+  const uniq = [...new Set(ranges.map((r) => r.replace(/\s/g, "")))];
+  if (uniq.length === 0) return tidy(raw, 30);
+  return uniq.length === 1 ? uniq[0] : `${uniq[0]} (계절별 상이)`;
+}
+
 function factLine(detail: SpotDetailView): string {
-  const clean = (v: string | null) => v?.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() || null;
-  const parking = clean(fact(detail, "parking"));
+  /*
+    주차는 판정어 한 마디면 된다. **괄호 안 대수까지 실으면 잘려서 더 나빠진다** —
+    "가능 (승용차 240대 / 버스 50대)" 를 12자로 자르면 "가능 (승용차 240대…" 가 된다.
+  */
+  const parking = tidy(fact(detail, "parking")?.split("(")[0] ?? null, 12);
+  const closed = tidy(fact(detail, "closedDays"), 20);
   return [
-    clean(fact(detail, "eventPeriod")),
-    clean(fact(detail, "openingHours")),
-    clean(fact(detail, "closedDays")),
-    clean(fact(detail, "admission")),
+    tidy(fact(detail, "eventPeriod"), 30),
+    hoursLine(fact(detail, "openingHours")),
+    closed ? `${closed} 휴무` : null,
+    tidy(fact(detail, "admission"), 20),
     parking ? `주차 ${parking}` : null,
-    clean(fact(detail, "inquiry")),
+    tidy(fact(detail, "inquiry"), 30),
   ]
     .filter((v): v is string => !!v)
     .join(" · ");
@@ -142,7 +183,13 @@ function firstSentence(overview: string | null): string {
  * 캡션 초안. **앱 조작을 안내하는 문장을 넣지 않는다** —
  * `caption-rules.ts` 가 발행 직전에 다시 검사한다.
  */
-export function draftCaption(detail: SpotDetailView, trait: Trait, tags: string[]): string {
+export function draftCaption(
+  detail: SpotDetailView,
+  trait: Trait,
+  tags: string[],
+  /** 영문 서비스의 공식 표기. 없으면 국문 이름을 그대로 둔다 */
+  englishName?: string | null,
+): string {
   const c = COPY[trait];
   const name = detail.titlePrimary;
   const address = detail.address ?? "";
@@ -167,7 +214,7 @@ export function draftCaption(detail: SpotDetailView, trait: Trait, tags: string[
       틀어질 수 있고, 이 계정은 사실로 신뢰를 사는 곳이다. 대신 사람이 큐에서
       채우도록 자리와 사실만 남긴다.
     */
-    `${name}`,
+    englishName || name,
     [address, facts].filter(Boolean).join(" · "),
   ]
     .join("\n")

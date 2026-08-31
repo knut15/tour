@@ -1,7 +1,12 @@
 import { NextResponse } from "next/server";
 import { CATEGORIES, type Category } from "@/domain/spot/category";
 import { readCronSecret, readTourApiConfig } from "@/infrastructure/config/env";
-import { getSpotDetail, getTopSpotKeys, listSpots } from "@/presentation/lib/container";
+import {
+  findSpotInLocale,
+  getSpotDetail,
+  getTopSpotKeys,
+  listSpots,
+} from "@/presentation/lib/container";
 import { TourApiClient } from "@/infrastructure/tourapi/tourapi-client";
 import { fetchSpotPhotoIds } from "@/infrastructure/tourapi/tourapi-photo-ids";
 import { isExcluded } from "@/infrastructure/instagram/excluded-spots";
@@ -33,9 +38,26 @@ function isCategory(v: string | null): v is Category {
   return !!v && (CATEGORIES as readonly string[]).includes(v);
 }
 
+/**
+ * 시·도 이름을 통칭으로 줄인다.
+ *
+ * 주소 원문은 `서울특별시`·`강원특별자치도` 처럼 행정 표기다. 앱의 지역 필터와
+ * 피드 규약은 `서울`·`강원` 을 쓰므로 맞춘다 — 두 곳의 말이 갈리면 피드를 보고
+ * 앱에서 찾을 때 이어지지 않는다.
+ */
+function shortRegion(name: string): string {
+  return name
+    .replace(/특별자치도$|특별자치시$|광역시$|특별시$/, "")
+    .replace(/^(경기|강원|충청북|충청남|전라북|전라남|경상북|경상남|제주)도$/, "$1")
+    .replace(/^충청([북남])$/, "충$1")
+    .replace(/^전라([북남])$/, "전$1")
+    .replace(/^경상([북남])$/, "경$1");
+}
+
 /** 지역 이름을 핀 문구로. 주소 앞 두 마디면 시·도 + 시·군·구다 */
 function pinOf(address: string | null, name: string): string {
-  const head = (address ?? "").split(/\s+/).slice(0, 2).join(" ").trim();
+  const [sido, sigungu] = (address ?? "").split(/\s+/);
+  const head = [sido ? shortRegion(sido) : "", sigungu ?? ""].filter(Boolean).join(" ");
   return head ? `${head} · ${name}` : name;
 }
 
@@ -109,6 +131,16 @@ export async function GET(request: Request) {
 
     const trait = deriveTrait(detail, category);
     const name = detail.titlePrimary;
+
+    /*
+      **영문 공식 표기를 받아 온다.** 국문 이름을 영어 문단에 그대로 두면 영어권
+      독자가 읽을 수 없다. 로케일마다 contentid 공간이 분리돼 있어 한글 원명으로
+      영문 카탈로그를 한 번 더 물어야 한다 — 없으면 국문 이름을 그대로 둔다.
+    */
+    const englishName = await findSpotInLocale("en", name)
+      .then((id) => (id ? getSpotDetail({ contentId: id, locale: "en" }) : null))
+      .then((d) => d?.titlePrimary ?? null)
+      .catch(() => null);
     const chip = { attraction: "가볼 곳", culture: "문화", food: "먹을 곳", festival: "지금 열리는" }[
       category
     ];
@@ -120,7 +152,7 @@ export async function GET(request: Request) {
       pin: pinOf(detail.address, name),
       category,
       photoIds,
-      caption: draftCaption(detail, trait, tagsOf(name, detail.address, category)),
+      caption: draftCaption(detail, trait, tagsOf(name, detail.address, category), englishName),
     });
 
     return NextResponse.json({
@@ -129,6 +161,7 @@ export async function GET(request: Request) {
       contentId: candidate.contentId,
       name,
       trait,
+      englishName,
       photos: photoIds.length,
       note: "status=draft — 사람이 보고 approved 로 올려야 발행된다",
     });
