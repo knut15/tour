@@ -11,12 +11,7 @@ import { TourApiClient } from "@/infrastructure/tourapi/tourapi-client";
 import { fetchSpotPhotoIds } from "@/infrastructure/tourapi/tourapi-photo-ids";
 import { isExcluded } from "@/infrastructure/instagram/excluded-spots";
 import { makeIgQueueRepository } from "@/infrastructure/instagram/ig-queue-repository";
-import {
-  deriveTrait,
-  draftCaption,
-  draftHeadline,
-  englishFactLine,
-} from "@/application/instagram/draft-copy";
+import { deriveTrait, draftCaption, draftHeadline } from "@/application/instagram/draft-copy";
 
 /**
  * 다음에 올릴 후보를 골라 **초안으로** 큐에 넣는다.
@@ -142,18 +137,15 @@ export async function GET(request: Request) {
       영어권 독자가 읽을 수 없다. 로케일마다 contentid 공간이 분리돼 있어 한글
       원명으로 다시 물어야 하고, 못 찾으면 국문 것을 그대로 쓴다.
 
-      이름만 쓰고 나머지를 버리지 않는다 — 이미 받아 온 응답에 주소와 사실이
-      함께 들어 있어 호출이 더 들지 않는다.
+      **이름과 주소만 쓴다.** 사실 줄까지 영문으로 만들었더니 국문 규칙이 새어
+      나왔다(꼬리표·라벨이 한글, 절단 기준이 `※` 라 영문 괄호를 못 자름).
+      언어마다 규칙을 두는 대신 그 자리를 사람이 채우게 한다.
     */
     const englishDetail = await findSpotInLocale("en", name)
       .then((id) => (id ? getSpotDetail({ contentId: id, locale: "en" }) : null))
       .catch(() => null);
     const english = englishDetail
-      ? {
-          name: englishDetail.titlePrimary,
-          address: englishDetail.address,
-          facts: englishFactLine(englishDetail),
-        }
+      ? { name: englishDetail.titlePrimary, address: englishDetail.address }
       : null;
     const chip = { attraction: "가볼 곳", culture: "문화", food: "먹을 곳", festival: "지금 열리는" }[
       category

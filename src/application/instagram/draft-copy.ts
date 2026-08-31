@@ -173,14 +173,6 @@ function hoursLine(raw: string | null): string | null {
   return uniq.length === 1 ? uniq[0] : `${uniq[0]} (계절별 상이)`;
 }
 
-/**
- * 영문 사실 줄. **국문과 같은 다듬기를 쓴다** — 영문 서비스도 같은 필드 구조로
- * 오고, 원문을 그대로 쏟으면 국문에서 겪은 문제가 그대로 재현된다.
- */
-export function englishFactLine(detail: SpotDetailView): string {
-  return factLine(detail);
-}
-
 function factLine(detail: SpotDetailView): string {
   /*
     주차는 판정어 한 마디면 된다. **괄호 안 대수까지 실으면 잘려서 더 나빠진다** —
@@ -212,6 +204,9 @@ function factLine(detail: SpotDetailView): string {
  */
 export const TODO_MARK = "[여기에 한 문장 — 이 장소를 왜 가는지]";
 
+/** 영문 문단의 빈 자리. 국문 표시가 영어 문단에 섞이지 않게 따로 둔다 */
+export const EN_TODO_MARK = "[one line here — why go, plus hours and fees]";
+
 /**
  * 캡션 초안. **앱 조작을 안내하는 문장을 넣지 않는다** —
  * `caption-rules.ts` 가 발행 직전에 다시 검사한다.
@@ -220,8 +215,18 @@ export function draftCaption(
   detail: SpotDetailView,
   trait: Trait,
   tags: string[],
-  /** 영문 서비스에서 받은 표기와 사실. 없으면 국문 것을 그대로 둔다 */
-  english?: { name?: string | null; address?: string | null; facts?: string | null } | null,
+  /**
+   * 영문 서비스에서 받은 표기. **이름과 주소만 쓴다.**
+   *
+   * 사실 줄을 영문에도 만들었더니 국문 규칙이 그대로 새어 나왔다 — 실측
+   * 2026-08-31: `09:00-17:00 (계절별 상이) · Tuesdays (If Tuesday… 휴무 · 주차
+   * Available`. 꼬리표와 라벨이 한글이고, 영문 원문은 `※` 가 아니라 괄호로 예외를
+   * 달아 절단 규칙도 어긋난다.
+   *
+   * 언어마다 규칙을 따로 두는 대신 **영문 사실 줄을 만들지 않는다.** 캡션의 그
+   * 자리는 사람이 채운다 — 어차피 소개 문장도 사람이 쓰는 자리다.
+   */
+  english?: { name?: string | null; address?: string | null } | null,
 ): string {
   const c = COPY[trait];
   const name = detail.titlePrimary;
@@ -242,7 +247,7 @@ export function draftCaption(
   const en = [
     c.hookEn,
     "",
-    TODO_MARK,
+    EN_TODO_MARK,
     "",
     /*
       영문 소개는 **번역하지 않는다.** 국문 overview 를 기계로 옮기면 사실이
@@ -250,7 +255,8 @@ export function draftCaption(
       채우도록 자리와 사실만 남긴다.
     */
     english?.name || name,
-    [english?.address || address, english?.facts || facts].filter(Boolean).join(" · "),
+    english?.address || address,
+    EN_TODO_MARK,
   ]
     .join("\n")
     .trim();
