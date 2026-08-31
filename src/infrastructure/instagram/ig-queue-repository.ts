@@ -73,6 +73,48 @@ export class IgQueueRepository {
     };
   }
 
+  /** 이미 큐에 있거나 이미 나간 장소인가 */
+  async hasSpot(contentId: string): Promise<boolean> {
+    const { data, error } = await this.client
+      .from("ig_queue")
+      .select("id")
+      .eq("content_id", contentId)
+      .limit(1);
+    if (error) throw new Error(`큐를 조회하지 못했다: ${error.message}`);
+    return (data?.length ?? 0) > 0;
+  }
+
+  /**
+   * 초안을 넣는다. **`draft` 로만 들어간다** — 사람이 보고 `approved` 로 올려야
+   * 발행 cron 이 집는다. 생성기가 바로 나가는 글을 만들지 않는다.
+   */
+  async insertDraft(draft: {
+    contentId: string;
+    chip: string;
+    headline: string;
+    pin: string;
+    category: string;
+    photoIds: string[];
+    caption: string;
+  }): Promise<number> {
+    const { data, error } = await this.client
+      .from("ig_queue")
+      .insert({
+        content_id: draft.contentId,
+        chip: draft.chip,
+        headline: draft.headline,
+        pin: draft.pin,
+        category: draft.category,
+        photo_ids: draft.photoIds,
+        caption: draft.caption,
+        status: "draft",
+      })
+      .select("id")
+      .single();
+    if (error) throw new Error(`초안을 넣지 못했다: ${error.message}`);
+    return (data as { id: number }).id;
+  }
+
   async markPublished(id: number, mediaId: string): Promise<void> {
     const { error } = await this.client
       .from("ig_queue")
