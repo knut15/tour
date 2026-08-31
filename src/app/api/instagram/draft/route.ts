@@ -183,13 +183,26 @@ export async function GET(request: Request) {
     const englishDetail = await findSpotInLocale("en", name)
       .then((id) => (id ? getSpotDetail({ contentId: id, locale: "en" }) : null))
       .catch(() => null);
-    const english = englishDetail
-      ? {
-          name: englishDetail.titlePrimary,
-          address: englishDetail.address,
-          facts: factLine(englishDetail, "en") || null,
-        }
-      : null;
+
+    /*
+      **이름만 같은 다른 장소를 걸러낸다.**
+
+      로케일을 잇는 값이 한글 원명뿐이라 이름이 겹치면 엉뚱한 곳이 걸린다 —
+      실측 2026-08-31: 울산의 식당 "경복궁"(국문 3577022, 음식점)에 서울 경복궁
+      (영문 264337, 문화유적)의 영업시간과 전화번호가 붙었다. 그대로 나갔으면
+      식당 글에 궁궐 정보가 실렸다.
+
+      분류가 다르면 다른 장소다. 이름만으로 잇는 한 이 검사가 최소한의 방어다.
+    */
+    const englishMatches = englishDetail?.category === detail.category;
+    const english =
+      englishDetail && englishMatches
+        ? {
+            name: englishDetail.titlePrimary,
+            address: englishDetail.address,
+            facts: factLine(englishDetail, "en") || null,
+          }
+        : null;
     const chip = { attraction: "가볼 곳", culture: "문화", food: "먹을 곳", festival: "지금 열리는" }[
       category
     ];
@@ -213,6 +226,8 @@ export async function GET(request: Request) {
       trait,
       englishName: english?.name ?? null,
       englishFacts: english?.facts ?? null,
+      /* 이름은 찾았는데 분류가 달라 버린 경우를 드러낸다 */
+      englishRejected: englishDetail && !englishMatches ? englishDetail.titlePrimary : null,
       photos: photoIds.length,
       note: "status=draft — 사람이 보고 approved 로 올려야 발행된다",
     });
