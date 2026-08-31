@@ -48,3 +48,6 @@ next-env.d.ts
 
 # OMC 세션 상태 — 재현 가치가 없다
 .omc/
+
+# humanize-korean 윤문 작업 폴더 (중간 산출물)
+_workspace/

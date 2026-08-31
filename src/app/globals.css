@@ -101,8 +101,20 @@
 
   /* 브랜드 로고 스왑 — PNG 라 currentColor 를 못 따르므로 라이트/다크 변형 중
      어느 쪽을 보일지를 변수로 정한다. 테마 세 갈래마다 재선언한다 */
+  /*
+    Skyway 시안(`~/Downloads/travel-portal-logo`)에서 가져온 브랜드 상수.
+    Air Coral 은 테마를 타지 않는다 — 양쪽 바탕에서 다 읽히고, 바뀌면 다른 브랜드가 된다.
+    서체 스택도 시안의 `--font-sans` 그대로다. 본문(Pretendard)·헤드라인(Newsreader)과
+    **섞지 않는다** — 브랜드가 서는 자리에만 쓴다.
+  */
+  --brand-coral: #d85a30;
+  --brand-paper: #f7f4ed;
+  --font-brand: Arial, "Noto Sans KR", "Malgun Gothic", sans-serif;
   --brand-logo-light: inline-block;
   --brand-logo-dark: none;
+  --brand-word: #123d5a;
+  --brand-slate: #547080;
+  --brand-hairline: #c9d4d5;
 
   /* 컨트롤도 크림 위에 선다. 토스 파랑 대신 코발트가 1차 액션을 진다 */
   --toss-primary: var(--goal-cobalt);
@@ -154,6 +166,11 @@
   --masthead-h-base: 76px;
   --masthead-h-condensed: 52px;
   --masthead-h: var(--masthead-h-base);
+  /*
+    브랜드 락업의 축소 비율. **52 / 76 = 0.684** 로, 헤더 높이가 줄어드는 비율과 같다.
+    로고가 `em` 하나로 조립돼 있어 이 값 하나가 타일·아이콘·이름·간격을 함께 줄인다.
+  */
+  --brand-scale: 1;
 
   /*
    * 붙어 있는 필터 바 아래 드랍쉐도우.
@@ -202,6 +219,7 @@
 /* 필터가 헤더 밑에 붙는 순간 헤더가 줄어든다 */
 :root[data-condensed="true"] {
   --masthead-h: var(--masthead-h-condensed);
+  --brand-scale: 0.684;
 }
 
 
@@ -252,6 +270,9 @@
   --cat-festival: var(--goal-mustard);
   --brand-logo-light: none;
   --brand-logo-dark: inline-block;
+  --brand-word: #f7f4ed;
+  --brand-slate: #9db3bf;
+  --brand-hairline: #33454f;
   }
 }
 
@@ -281,6 +302,9 @@
   --cat-festival: var(--goal-mustard);
   --brand-logo-light: none;
   --brand-logo-dark: inline-block;
+  --brand-word: #f7f4ed;
+  --brand-slate: #9db3bf;
+  --brand-hairline: #33454f;
 }
 
 :root[data-theme="light"] {
@@ -308,6 +332,9 @@
   --cat-festival: #94640f;
   --brand-logo-light: inline-block;
   --brand-logo-dark: none;
+  --brand-word: #123d5a;
+  --brand-slate: #547080;
+  --brand-hairline: #c9d4d5;
 }
 
 /* 브랜드 로고 두 변형의 표시 여부는 위 테마 갈래가 정한 변수만 따른다 */
@@ -566,6 +593,24 @@ body {
   transition: height 0.28s var(--ease-signature);
 }
 
+/*
+ * 브랜드 락업. 헤더가 줄어들면 **같은 비율로 함께 줄어든다.**
+ *
+ * 크기를 `font-size` 하나로 주는 이유는 락업이 전부 `em` 이기 때문이다 —
+ * 타일·아이콘·이름·간격이 이 한 값에 비례한다. 높이와 같은 시간·같은 곡선이라
+ * 둘이 어긋나 보이지 않는다.
+ */
+.masthead-brand {
+  font-size: calc(30px * var(--brand-scale));
+  transition: font-size 0.28s var(--ease-signature);
+}
+
+@media (min-width: 640px) {
+  .masthead-brand {
+    font-size: calc(34px * var(--brand-scale));
+  }
+}
+
 .filter-sticky {
   top: var(--masthead-h);
   transition: top 0.28s var(--ease-signature);
@@ -627,7 +672,8 @@ body {
   .masthead-sticky,
   .filter-sticky,
   .filter-sticky::before,
-  .masthead-sticky::after {
+  .masthead-sticky::after,
+  .masthead-brand {
     transition: none;
   }
 }
