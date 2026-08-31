@@ -33,9 +33,6 @@ import type { Category } from "@/domain/spot/category";
 export const COVER_WIDTH = 940;
 export const COVER_HEIGHT = 627;
 
-/** 레터박스 여백 색. 브랜드 잉크다 — `/api/photo` 와 같은 값을 쓴다 */
-const PAD_COLOR = "#1e1613";
-
 /**
  * 프로필 그리드가 자르는 비율. **정사각이 아니라 4:5 세로다.**
  *
@@ -215,12 +212,17 @@ export async function renderCoverJpeg(input: CoverInput): Promise<Buffer> {
       의미가 사라진다.
     */
     if (input.width && input.height) {
+      /*
+        **커버만 잘라서 채운다.** 가장자리까지 사진이 차야 피드에서 시선을 잡는데,
+        가로 사진(940×627)을 4:5 액자에 채우려면 좌우를 47% 버려야 한다.
+
+        이 손실을 커버 한 장에만 진다. 캐러셀의 나머지 사진은 `/api/photo` 가
+        여백을 덧대 **한 픽셀도 자르지 않는다** — 장소가 실제로 어떻게 생겼는지는
+        그쪽이 전한다. 공공누리 제3유형(변경금지)을 감안한 절충이고, 이 판단은
+        사용자가 내렸다.
+      */
       photo = await sharp(photo)
-        .resize(input.width, input.height, {
-          fit: "contain",
-          background: PAD_COLOR,
-          withoutEnlargement: true,
-        })
+        .resize(input.width, input.height, { fit: "cover", position: "attention" })
         .jpeg({ quality: 92, chromaSubsampling: "4:4:4" })
         .toBuffer();
     }
@@ -257,7 +259,7 @@ export async function renderCoverJpeg(input: CoverInput): Promise<Buffer> {
             깔아 글자가 사진 위에서도 읽히게 한다 — 사진 픽셀을 가리는 최소한이다.
           */
           background: photo
-            ? "linear-gradient(to bottom, rgba(0,0,0,0) 38%, rgba(0,0,0,0.72) 100%)"
+            ? "linear-gradient(to bottom, rgba(0,0,0,0) 40%, rgba(0,0,0,0.35) 62%, rgba(0,0,0,0.82) 100%)"
             : c.bg,
           color: photo ? "#ffffff" : c.fg,
           fontFamily: "NotoKR",

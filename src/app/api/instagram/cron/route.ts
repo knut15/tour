@@ -30,6 +30,9 @@ export const dynamic = "force-dynamic";
 /** 사진을 재고 컨테이너를 기다리므로 기본 제한으로는 모자란다 */
 export const maxDuration = 300;
 
+/** 인스타가 받는 가장 세로로 긴 비율. 4:5 다 */
+const PORTRAIT_RATIO = 4 / 5;
+
 /** 큐가 비었을 때 돌려주는 이유들. 실패와 구분한다 */
 type Skipped = { ok: true; skipped: string };
 
@@ -92,8 +95,18 @@ export async function GET(request: Request) {
       }),
     );
 
+    /*
+      **액자를 4:5 세로로 고정한다.**
+
+      인스타가 받는 가장 세로로 긴 비율이라 피드에서 차지하는 높이가 가로(1.5)의
+      1.87배다 — 스크롤을 세우는 힘이 거기서 나온다.
+
+      커버는 잘라서 채우고(`/api/og`), 나머지 사진은 여백을 덧대 자르지 않는다
+      (`/api/photo`). 캐러셀은 첫 장 비율로 나머지를 자르므로 **모두 같은 액자**여야
+      한다.
+    */
     const boxWidth = Math.max(...sizes.map((s) => s.width));
-    const boxHeight = Math.max(...sizes.map((s) => s.height));
+    const boxHeight = Math.round(boxWidth / PORTRAIT_RATIO);
 
     const cover = new URL(`${origin}/api/og`);
     cover.searchParams.set("chip", row.chip);
