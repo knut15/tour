@@ -54,7 +54,12 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
     대가: `cookies()` 는 이 라우트를 동적 렌더링으로 만든다.
   */
   const stored = (await cookies()).get(THEME_COOKIE)?.value;
-  const theme: Theme | undefined = isTheme(stored) ? stored : undefined;
+  /*
+    **고르지 않았으면 라이트다.** 값을 비워 두면 `prefers-color-scheme` 이 정하는데,
+    이 앱의 그림과 사진은 크림 바탕을 전제로 골라져 있어 OS 설정이 다크인 사람에게
+    처음부터 다른 앱으로 보인다. 고른 사람의 선택은 그대로 따른다.
+  */
+  const theme: Theme = isTheme(stored) ? stored : "light";
 
   return (
     <html

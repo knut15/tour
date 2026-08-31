@@ -44,7 +44,12 @@ export function SortToggle({
       // 카테고리 탭과 같은 규칙이다 — 묶음은 `data-testid`, 안의 선택지는
       // `data-sort`. 둘을 합치면 "정렬 컨트롤 전체" 를 가리킬 수 없다
       data-testid="sort-select"
-      className="flex shrink-0 items-center rounded-btn border border-line bg-canvas p-1"
+      /*
+        **좁은 화면에서는 숨긴다.** 지역·검색과 나란히 서면 컨트롤이 한 줄을 넘겨
+        목록이 밀린다. 기본값(조회순)으로 세워진 목록은 그대로 보이므로 없어도
+        화면이 성립한다 — 정렬은 넓은 화면에서 고르는 것으로 둔다.
+      */
+      className="hidden shrink-0 items-center rounded-btn border border-line bg-canvas p-1 sm:flex"
     >
       {STATS_SORTS.map((sort) => {
         const active = sort === current;

@@ -115,6 +115,14 @@
   --brand-word: #123d5a;
   --brand-slate: #547080;
   --brand-hairline: #c9d4d5;
+  /*
+    브랜드 CTA 의 바탕·글자.
+    **`--brand-word` 와 `--brand-paper` 를 그대로 쓰면 다크에서 글자가 사라진다** —
+    둘 다 크림이라 크림 위 크림이 된다(실측 2026-08-31, "둘러보기" 가 안 보였다).
+    그래서 짝을 따로 둔다.
+  */
+  --brand-cta-bg: #123d5a;
+  --brand-cta-fg: #f7f4ed;
 
   /* 컨트롤도 크림 위에 선다. 토스 파랑 대신 코발트가 1차 액션을 진다 */
   --toss-primary: var(--goal-cobalt);
@@ -273,6 +281,8 @@
   --brand-word: #f7f4ed;
   --brand-slate: #9db3bf;
   --brand-hairline: #33454f;
+  --brand-cta-bg: #f7f4ed;
+  --brand-cta-fg: #123d5a;
   }
 }
 
@@ -305,6 +315,8 @@
   --brand-word: #f7f4ed;
   --brand-slate: #9db3bf;
   --brand-hairline: #33454f;
+  --brand-cta-bg: #f7f4ed;
+  --brand-cta-fg: #123d5a;
 }
 
 :root[data-theme="light"] {
@@ -335,6 +347,14 @@
   --brand-word: #123d5a;
   --brand-slate: #547080;
   --brand-hairline: #c9d4d5;
+  /*
+    브랜드 CTA 의 바탕·글자.
+    **`--brand-word` 와 `--brand-paper` 를 그대로 쓰면 다크에서 글자가 사라진다** —
+    둘 다 크림이라 크림 위 크림이 된다(실측 2026-08-31, "둘러보기" 가 안 보였다).
+    그래서 짝을 따로 둔다.
+  */
+  --brand-cta-bg: #123d5a;
+  --brand-cta-fg: #f7f4ed;
 }
 
 /* 브랜드 로고 두 변형의 표시 여부는 위 테마 갈래가 정한 변수만 따른다 */

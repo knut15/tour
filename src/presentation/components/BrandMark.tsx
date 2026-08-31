@@ -153,7 +153,11 @@ function DeilinoLockup({ className }: { className: string }) {
     <span className={`inline-flex items-center gap-[0.3em] ${className}`}>
       <DeilinoSymbol className="size-[1.2em] shrink-0" />
       <span
-        className="text-[0.75em] leading-none font-bold tracking-[-0.06em] whitespace-nowrap"
+        /*
+          **좁은 화면에서는 심볼만 남긴다.** 머리말에 컨트롤이 셋(날씨·테마·언어)
+          서 있어서 이름까지 두면 좁은 폭에서 서로 밀어낸다.
+        */
+        className="hidden text-[0.75em] leading-none font-bold tracking-[-0.06em] whitespace-nowrap sm:inline"
         style={{ fontFamily: "var(--font-brand)", color: "var(--brand-word)" }}
       >
         headland<span style={{ color: "var(--brand-coral)" }}>.</span>travel

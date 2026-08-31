@@ -88,8 +88,8 @@ export function BrandCtaLink({
       data-testid={testId}
       className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-[14px] font-bold transition-transform hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-focus"
       style={{
-        background: "var(--brand-word)",
-        color: "var(--brand-paper)",
+        background: "var(--brand-cta-bg)",
+        color: "var(--brand-cta-fg)",
         fontFamily: "var(--font-brand)",
       }}
     >
