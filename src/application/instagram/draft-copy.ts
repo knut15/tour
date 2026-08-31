@@ -144,17 +144,49 @@ export function draftHeadline(trait: Trait): string {
 
 /** 값이 있는 사실만 `라벨 값` 으로 줄 세운다 */
 /**
+ * 언어마다 다른 것은 **표 하나뿐이다.**
+ *
+ * 앞서 영문 사실 줄을 국문 함수로 만들었더니 꼬리표와 라벨이 한글로 새어 나왔고
+ * (실측 2026-08-31: `주차 Available`), 그렇다고 함수를 두 벌 두면 한쪽만 고쳐지는
+ * 날이 온다. **코드는 한 벌, 낱말만 갈라 둔다.**
+ *
+ * 예외 규정이 시작되는 자리도 언어마다 다르다 — 국문은 `※`, 영문은 괄호다
+ * (`Tuesdays (If Tuesday falls on a public holiday, …)`).
+ */
+type FactStyle = {
+  cutAt: RegExp;
+  seasonal: string;
+  closed: (value: string) => string;
+  parking: (value: string) => string;
+};
+
+const STYLE: Record<"ko" | "en", FactStyle> = {
+  ko: {
+    cutAt: /※|\(/,
+    seasonal: "(계절별 상이)",
+    closed: (v) => `${v} 휴무`,
+    parking: (v) => `주차 ${v}`,
+  },
+  en: {
+    cutAt: /\(/,
+    seasonal: "(varies by season)",
+    closed: (v) => `Closed ${v}`,
+    parking: (v) => `Parking ${v.toLowerCase()}`,
+  },
+};
+
+/**
  * 공급자 원문을 캡션에 실을 한 조각으로 줄인다.
  *
  * **원문을 그대로 쏟지 않는다.** 경복궁의 운영시간은 계절별 세 구간에 휴무 예외
  * 규정까지 붙어 200자가 넘는다(실측 2026-08-31) — 캡션에 실을 문장이 아니다.
  * 괄호 주석과 `※` 이후를 걷어내고 길이를 자른다.
  */
-function tidy(value: string | null, limit = 40): string | null {
+function tidy(value: string | null, style: FactStyle, limit = 40): string | null {
   if (!value) return null;
   const plain = value
     .replace(/<[^>]*>/g, " ")
-    .split("※")[0]
+    .split(style.cutAt)[0]
     .replace(/\s+/g, " ")
     .trim();
   if (!plain) return null;
@@ -165,28 +197,30 @@ function tidy(value: string | null, limit = 40): string | null {
  * 운영시간. **계절별로 여러 구간이면 첫 구간만 쓰고 그렇다고 밝힌다.**
  * 전부 실으면 한 줄이 캡션을 삼킨다.
  */
-function hoursLine(raw: string | null): string | null {
+function hoursLine(raw: string | null, style: FactStyle): string | null {
   if (!raw) return null;
   const ranges = raw.match(/\d{1,2}:\d{2}\s*[~-]\s*\d{1,2}:\d{2}/g) ?? [];
   const uniq = [...new Set(ranges.map((r) => r.replace(/\s/g, "")))];
-  if (uniq.length === 0) return tidy(raw, 30);
-  return uniq.length === 1 ? uniq[0] : `${uniq[0]} (계절별 상이)`;
+  if (uniq.length === 0) return tidy(raw, style, 30);
+  return uniq.length === 1 ? uniq[0] : `${uniq[0]} ${style.seasonal}`;
 }
 
-function factLine(detail: SpotDetailView): string {
+export function factLine(detail: SpotDetailView, lang: "ko" | "en" = "ko"): string {
+  const style = STYLE[lang];
   /*
-    주차는 판정어 한 마디면 된다. **괄호 안 대수까지 실으면 잘려서 더 나빠진다** —
-    "가능 (승용차 240대 / 버스 50대)" 를 12자로 자르면 "가능 (승용차 240대…" 가 된다.
+    주차는 판정어 한 마디면 된다. 괄호는 `cutAt` 이 이미 버린다 —
+    "가능 (승용차 240대 / 버스 50대)" 를 자르지 않고 12자로 줄이면
+    "가능 (승용차 240대…" 가 되어 안 자른 것만 못하다.
   */
-  const parking = tidy(fact(detail, "parking")?.split("(")[0] ?? null, 12);
-  const closed = tidy(fact(detail, "closedDays"), 20);
+  const parking = tidy(fact(detail, "parking"), style, 14);
+  const closed = tidy(fact(detail, "closedDays"), style, 24);
   return [
-    tidy(fact(detail, "eventPeriod"), 30),
-    hoursLine(fact(detail, "openingHours")),
-    closed ? `${closed} 휴무` : null,
-    tidy(fact(detail, "admission"), 20),
-    parking ? `주차 ${parking}` : null,
-    tidy(fact(detail, "inquiry"), 30),
+    tidy(fact(detail, "eventPeriod"), style, 30),
+    hoursLine(fact(detail, "openingHours"), style),
+    closed ? style.closed(closed) : null,
+    tidy(fact(detail, "admission"), style, 20),
+    parking ? style.parking(parking) : null,
+    tidy(fact(detail, "inquiry"), style, 30),
   ]
     .filter((v): v is string => !!v)
     .join(" · ");
@@ -216,17 +250,13 @@ export function draftCaption(
   trait: Trait,
   tags: string[],
   /**
-   * 영문 서비스에서 받은 표기. **이름과 주소만 쓴다.**
+   * 영문 서비스에서 받은 표기와 사실.
    *
-   * 사실 줄을 영문에도 만들었더니 국문 규칙이 그대로 새어 나왔다 — 실측
-   * 2026-08-31: `09:00-17:00 (계절별 상이) · Tuesdays (If Tuesday… 휴무 · 주차
-   * Available`. 꼬리표와 라벨이 한글이고, 영문 원문은 `※` 가 아니라 괄호로 예외를
-   * 달아 절단 규칙도 어긋난다.
-   *
-   * 언어마다 규칙을 따로 두는 대신 **영문 사실 줄을 만들지 않는다.** 캡션의 그
-   * 자리는 사람이 채운다 — 어차피 소개 문장도 사람이 쓰는 자리다.
+   * **사실은 있을 때만 싣는다.** 영문 카탈로그에 모든 장소가 있는 것은 아니고
+   * (실측 2026-08-31: 경복궁은 있고 경포호수광장은 없다), 사실 필드가 비어 있는
+   * 항목도 있다. 없으면 이름과 주소만 남기고 나머지는 사람이 채운다.
    */
-  english?: { name?: string | null; address?: string | null } | null,
+  english?: { name?: string | null; address?: string | null; facts?: string | null } | null,
 ): string {
   const c = COPY[trait];
   const name = detail.titlePrimary;
@@ -255,8 +285,9 @@ export function draftCaption(
       채우도록 자리와 사실만 남긴다.
     */
     english?.name || name,
-    english?.address || address,
-    EN_TODO_MARK,
+    [english?.address || address, english?.facts].filter(Boolean).join(" · "),
+    /* 사실이 없으면 그 자리를 사람이 채우도록 표시를 남긴다 */
+    english?.facts ? null : EN_TODO_MARK,
   ]
     .join("\n")
     .trim();
