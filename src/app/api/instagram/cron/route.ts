@@ -106,20 +106,26 @@ export async function GET(request: Request) {
       .then((r) => r.ok)
       .catch(() => false);
 
+    /*
+      **사진을 먼저 자르고 정보 카드를 붙인다.**
+
+      다 이어 붙인 뒤 자르면 사진이 많을 때 마지막 장인 정보 카드가 밀려난다 —
+      조용히 사라지므로 알아채기 어렵다. 커버와 정보 카드 자리를 먼저 빼 두고
+      남는 만큼만 사진을 싣는다.
+    */
+    const photoSlots = MAX_CAROUSEL_ITEMS - 1 - (hasInfo ? 1 : 0);
     const images = [
       { url: cover.toString(), alt: `${row.chip} — ${row.headline.replace(/\n/g, " ")}. ${row.pin}` },
       /*
         글자를 얹은 첫 장 바로 뒤에 **손대지 않은 같은 사진**이 온다.
         공공누리 제3유형(변경금지)을 감안한 구성이다.
       */
-      ...row.photoIds.map((id) => ({
+      ...row.photoIds.slice(0, photoSlots).map((id) => ({
         url: `${origin}/api/photo/${id}?w=${boxWidth}&h=${boxHeight}`,
         alt: `${row.pin} — ${row.chip}`,
       })),
-      ...(hasInfo
-        ? [{ url: info.toString(), alt: `${row.pin} 정보 — 주소·시간·휴무` }]
-        : []),
-    ].slice(0, MAX_CAROUSEL_ITEMS);
+      ...(hasInfo ? [{ url: info.toString(), alt: `${row.pin} 정보 — 주소·시간·휴무` }] : []),
+    ];
 
     const client = new InstagramClient(config);
     const quota = await client.quotaUsage();

@@ -36,8 +36,14 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
 
-/** 캐러셀 상한(10)에서 커버 한 장을 뺀 수 */
-const MAX_PHOTOS = 9;
+/** 캐러셀 상한(10)에서 커버와 정보 카드를 뺀 수 */
+const MAX_PHOTOS = 8;
+
+/**
+ * 한 분류에서 몇 페이지까지 훑을지. 한 장이 20곳이니 100곳이다.
+ * 그 안에 새 후보가 없으면 그 분류는 당분간 채울 것이 없다고 본다.
+ */
+const MAX_PAGES = 5;
 
 function isCategory(v: string | null): v is Category {
   return !!v && (CATEGORIES as readonly string[]).includes(v);
@@ -92,7 +98,21 @@ export async function GET(request: Request) {
   if (!queue) return NextResponse.json({ ok: true, skipped: "queue-not-configured" });
 
   const q = new URL(request.url).searchParams;
-  const category: Category = isCategory(q.get("category")) ? (q.get("category") as Category) : "attraction";
+
+  /*
+    **카테고리를 날마다 돌린다.**
+
+    고정해 두면 한 분류만 쌓여 피드가 한쪽으로 기운다. UTC 일수로 나누면
+    부르는 쪽이 아무것도 안 해도 네 분류를 고르게 돈다 — 무작위가 아니라서
+    "오늘은 무엇이 나올 차례인가" 를 미리 알 수 있고, 같은 날 두 번 불러도
+    같은 분류가 나온다.
+
+    `?category=` 를 주면 그것이 이긴다. 손으로 특정 분류를 채울 때 쓴다.
+  */
+  const dayIndex = Math.floor(Date.now() / 86_400_000);
+  const category: Category = isCategory(q.get("category"))
+    ? (q.get("category") as Category)
+    : CATEGORIES[dayIndex % CATEGORIES.length];
 
   /*
     **후보를 고른다.** 이번 주 많이 본 곳이 먼저다 — 앱 사용자가 고른 것을 옮기는
@@ -109,9 +129,30 @@ export async function GET(request: Request) {
     }
   }
 
+  /*
+    **한 페이지가 소진되면 다음 페이지로 간다.**
+
+    이미 큐에 있는 장소는 건너뛰므로 한 분류에서 스무 곳을 채우고 나면 1페이지에는
+    남는 것이 없다. 그때 멈추면 그 분류는 영영 더 나오지 않는다.
+
+    한 번에 다 받지 않고 필요할 때만 다음 장을 받는다 — TourAPI 개발계정 한도가
+    일 1,000건이라 안 쓸 페이지를 미리 받을 이유가 없다.
+  */
   if (candidates.length === 0) {
-    const page = await listSpots({ locale: "ko", category, page: 1, size: 20 });
-    candidates.push(...page.items.map((s) => ({ contentId: s.contentId, name: s.titlePrimary })));
+    for (let page = 1; page <= MAX_PAGES; page += 1) {
+      const list = await listSpots({ locale: "ko", category, page, size: 20 });
+      const fresh: { contentId: string; name: string }[] = [];
+      for (const item of list.items) {
+        if (isExcluded(item.contentId)) continue;
+        if (await queue.hasSpot(item.contentId)) continue;
+        fresh.push({ contentId: item.contentId, name: item.titlePrimary });
+      }
+      if (fresh.length > 0) {
+        candidates.push(...fresh);
+        break;
+      }
+      if (!list.hasMore) break;
+    }
   }
 
   const client = new TourApiClient(readTourApiConfig());
@@ -175,6 +216,7 @@ export async function GET(request: Request) {
       queueId: id,
       contentId: candidate.contentId,
       name,
+      category,
       trait,
       englishName: english?.name ?? null,
       englishFacts: english?.facts ?? null,
@@ -187,5 +229,10 @@ export async function GET(request: Request) {
     후보를 다 훑었는데 넣을 것이 없는 것은 실패가 아니다. 이미 큐에 다 있거나
     사진이 모자란 것뿐이다.
   */
-  return NextResponse.json({ ok: true, skipped: "no-new-candidate", tried: candidates.length });
+  return NextResponse.json({
+    ok: true,
+    skipped: "no-new-candidate",
+    category,
+    tried: candidates.length,
+  });
 }
