@@ -240,10 +240,31 @@ export async function renderCoverJpeg(input: CoverInput): Promise<Buffer> {
   const rows = lines(input.headline);
   const box = safeBox(width, height);
   // 세 줄이면 시작 크기를 낮춘 뒤, 거기서 다시 안전영역에 맞춰 줄인다
-  const size = fitFontSize(rows, box.usable, rows.length >= 3 ? 46 : 54);
-  /* 칩과 하단 줄은 헤드라인에 비례한다 — 한 값이 판 전체의 크기를 정한다 */
-  const chipSize = Math.max(18, Math.round(size * 0.42));
-  const chips = (input.chips ?? []).slice(0, 5);
+  /*
+    **글자를 액자 높이에 비례시킨다.**
+
+    고정 크기(54px)로 두면 액자가 커질 때 글자만 작아 보인다 — 실측 2026-08-31:
+    940×627 에서 헤드라인이 높이의 8.6% 였는데 940×1175 에서는 4.6% 로 절반이 됐다.
+    같은 코드인데 두 게시물의 인상이 갈렸다.
+
+    비율을 고정하면 어느 액자에서도 같은 무게로 읽힌다. 폭이 모자라면
+    `fitFontSize` 가 줄인다 — 비율은 목표값이지 강제값이 아니다.
+  */
+  const maxSize = Math.round(height * (rows.length >= 3 ? 0.072 : 0.086));
+  const size = fitFontSize(rows, box.usable, maxSize, 30);
+  /*
+    칩은 헤드라인에 비례하되 **상한을 둔다.** 헤드라인이 커진 만큼 칩까지 키우면
+    사실이 제목만큼 커져 위계가 사라진다.
+  */
+  const chipSize = Math.min(34, Math.max(18, Math.round(size * 0.34)));
+  /*
+    칩 글자가 길면 두 개가 한 줄을 넘긴다 — `매주 월요일 / 1월 1일… 휴무` 같은 값이
+    그렇다. 칩은 눈이 훑는 표지라 길면 표지 구실을 못 한다.
+  */
+  const chips = (input.chips ?? []).slice(0, 5).map((chip) => ({
+    ...chip,
+    text: [...chip.text].length > 14 ? `${[...chip.text].slice(0, 13).join("")}…` : chip.text,
+  }));
 
   const png = await new ImageResponse(
     (
@@ -348,8 +369,8 @@ export async function renderCoverJpeg(input: CoverInput): Promise<Buffer> {
               <div
                 style={{
                   display: "flex",
-                  fontSize: Math.round(size * 0.66),
-                  letterSpacing: -1.4,
+                  fontSize: Math.round(size * 0.42),
+                  letterSpacing: -1.2,
                   marginTop: 4,
                 }}
               >
@@ -369,7 +390,12 @@ export async function renderCoverJpeg(input: CoverInput): Promise<Buffer> {
               color: c.chipFg,
             }}
           >
-            {input.pin}
+            {/*
+              **지역까지만 싣는다.** 핀 전체(`경기 용인시 · 예아리박물관`)를 넣으면
+              요금과 한 줄에서 부딪혀 서로를 밀어낸다(실측 2026-08-31).
+              장소 이름은 캡션과 정보 카드가 말한다.
+            */}
+            {input.pin.split(" · ")[0]}
           </div>
         </div>
       </div>
