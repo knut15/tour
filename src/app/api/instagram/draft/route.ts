@@ -11,6 +11,7 @@ import { TourApiClient } from "@/infrastructure/tourapi/tourapi-client";
 import { fetchSpotPhotoIds } from "@/infrastructure/tourapi/tourapi-photo-ids";
 import { isExcluded } from "@/infrastructure/instagram/excluded-spots";
 import { makeIgQueueRepository } from "@/infrastructure/instagram/ig-queue-repository";
+import { writeCoverHeadline } from "@/infrastructure/claude/cover-headline";
 import {
   deriveTrait,
   draftCaption,
@@ -220,10 +221,31 @@ export async function GET(request: Request) {
       category
     ];
 
+    /*
+      **제목은 소개글에서 짓는다.** 성격별 고정 문구 여덟 개로는 같은 성격의 장소가
+      같은 제목을 단다 — 실측 2026-08-31: 큐 5건 중 3건이 같은 제목이었다.
+      모델이 안 되는 날에는 `null` 이 와서 예전 문구로 떨어진다.
+    */
+    const written = await writeCoverHeadline({
+      name,
+      chip,
+      overview: detail.overview,
+      facts: factLine(detail, "ko") || null,
+    });
+
+    const headline = written ?? draftHeadline(trait);
+    /*
+      **되풀이되는 제목을 드러낸다.** 고정 문구는 여덟 개뿐이라 성격이 같으면 지역이
+      달라도 같은 글자가 걸린다 — 그리드에 나란히 서면 계정이 자동 생성물로 읽힌다.
+      막지는 않는다. 장소는 멀쩡한데 제목만 겹치는 것이므로 사람이 다시 지으면 된다
+      (`ig-cover.mjs headline` 또는 `set-headline`).
+    */
+    const duplicate = (await queue.usedHeadlines()).includes(headline);
+
     const id = await queue.insertDraft({
       contentId: candidate.contentId,
       chip,
-      headline: draftHeadline(trait),
+      headline,
       pin: pinOf(detail.address, name),
       category,
       photoIds,
@@ -242,6 +264,11 @@ export async function GET(request: Request) {
       name,
       category,
       trait,
+      headline,
+      /* 소개글에서 지었는가, 고정 문구로 떨어졌는가 */
+      headlineFrom: written ? "overview" : "trait",
+      /** 이미 큐에 있는 제목인가. `true` 면 발행 전에 다시 지어야 한다 */
+      headlineDuplicate: duplicate,
       englishName: english?.name ?? null,
       englishFacts: english?.facts ?? null,
       /* 이름은 찾았는데 분류가 달라 버린 경우를 드러낸다 */

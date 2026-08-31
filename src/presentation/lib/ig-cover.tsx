@@ -258,6 +258,18 @@ export async function renderCoverJpeg(input: CoverInput): Promise<Buffer> {
   */
   const chipSize = Math.min(34, Math.max(18, Math.round(size * 0.34)));
   /*
+    **카테고리 라벨은 상한 없이 헤드라인에 비례한다.**
+
+    24px 상한을 두었더니 4:5 액자에서 라벨만 작아졌다. 그리드는 4:5 로 자르므로
+    3:2 액자(940×627)는 폭의 53%(502px)만 보이는데 4:5 액자(940×1175)는 940px 이
+    다 보인다 — 실측 2026-08-31: 같은 24px 라벨(알약 높이 51px)이 3:2 에서는
+    가시폭의 10.2% 였는데 4:5 에서는 5.4% 로 반이 됐다.
+
+    비례로 두면 어느 액자에서도 같게 읽힌다 — 4:5 에서 44px(알약 94px, 10.0%)이다.
+    안쪽 여백·자간·모서리도 함께 비례시킨다. 글자만 키우면 알약이 글자를 조인다.
+  */
+  const labelSize = Math.round(size * 0.44);
+  /*
     칩 글자가 길면 두 개가 한 줄을 넘긴다 — `매주 월요일 / 1월 1일… 휴무` 같은 값이
     그렇다. 칩은 눈이 훑는 표지라 길면 표지 구실을 못 한다.
   */
@@ -297,11 +309,11 @@ export async function renderCoverJpeg(input: CoverInput): Promise<Buffer> {
             alignSelf: "flex-start",
             background: c.chipBg,
             color: c.chipFg,
-            fontSize: Math.min(24, Math.round(size * 0.44)),
-            letterSpacing: 2.2,
-            padding: "8px 14px",
-            borderRadius: 4,
-            marginBottom: 26,
+            fontSize: labelSize,
+            letterSpacing: labelSize * 0.09,
+            padding: `${Math.round(labelSize * 0.33)}px ${Math.round(labelSize * 0.58)}px`,
+            borderRadius: Math.round(labelSize * 0.17),
+            marginBottom: Math.round(labelSize * 1.1),
           }}
         >
           {input.chip}
